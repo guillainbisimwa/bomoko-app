@@ -1,7 +1,7 @@
 {
-  "name": "now-ui-react-native",
+  "name": "bomoko-app",
   "version": "1.0.1",
-  "description": "Now UI React Native, based on Now UI Design System. Coded by Creative Tim",
+  "description": "Bomoko app",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/creativetimofficial/now-ui-react-native.git"
+    "url": "git+https://github.com/guillainbisimwa/bomoko-app.git"
   },
   "dependencies": {
     "expo": "^35.0.0",
@@ -39,9 +39,9 @@
   "keywords": [
     "BOMOKO react native"
   ],
-  "author": "Creative Tim <hello@creative-tim.com> (https://www.creative-tim.com/)",
+  "author": "weza lab",
   "bugs": {
-    "url": "https://github.com/creativetimofficial/now-ui-react-native/issues"
+    "url": "https://github.com/guillainbisimwa/bomoko-app/issues"
   },
-  "homepage": "https://demos.creative-tim.com/now-ui-react-native"
+  "homepage": "https://github.com/guillainbisimwa/bomoko-app"
 }
