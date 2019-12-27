@@ -3,8 +3,7 @@ export default [
     title: 'Nous sommes les femmes vendeuses des sambazas',
     image: require("../assets/imgs/project13.jpg"),
     cta: 'GROUPE DES MAMANS',
-    horizontal: true,
-    description: "description 1"
+    horizontal: true  
   },
   {
     title: 'Many limitations on what’s right',

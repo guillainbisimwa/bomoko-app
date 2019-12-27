@@ -52,11 +52,11 @@ class Login extends React.Component {
                         round
                         onlyIcon
                         shadowless
-                        icon="twitter"
+                        icon="lock"
                         iconFamily="Font-Awesome"
                         iconColor={theme.COLORS.WHITE}
                         iconSize={theme.SIZES.BASE * 1.625}
-                        color={nowTheme.COLORS.TWITTER}
+                        color={nowTheme.COLORS.WARNING}
                         style={[styles.social, styles.shadow]}
                       />
                     </Block>
@@ -74,8 +74,8 @@ class Login extends React.Component {
                                 <Icon
                                   size={16}
                                   color="#ADB5BD"
-                                  name="profile-circle"
-                                  family="NowExtra"
+                                  name="phone"
+                                  family="Font-Awesome"
                                   style={styles.inputIcons}
                                 />
                               }
@@ -84,13 +84,15 @@ class Login extends React.Component {
                           <Block width={width * 0.8}>
                             <Input
                               placeholder="Password"
+                              password
+                              viewPass
                               style={styles.inputs}
                               iconContent={
                                 <Icon
                                   size={16}
                                   color="#ADB5BD"
-                                  name="email-852x"
-                                  family="NowExtra"
+                                  name="key"
+                                  family="Font-Awesome"
                                   style={styles.inputIcons}
                                 />
                               }

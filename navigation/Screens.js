@@ -153,7 +153,7 @@ const LoginStack = createStackNavigator(
       screen: Login,
       navigationOptions: ({ navigation }) => ({
         header: (
-          <Header transparent title="Connexion" iconColor={'#333'} navigation={navigation} />
+          <Header left={<Block />} white transparent title="" navigation={navigation} />
         ),
         headerTransparent: true
       })

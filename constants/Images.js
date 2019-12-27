@@ -10,7 +10,7 @@ const androidLogo = require('../assets/imgs/android.png');
 const ProfilePicture = require('../assets/imgs/profile-img.jpg');
 const CreativeTimLogo = require('../assets/imgs/creative-tim-white-slim2.png');
 const InvisionLogo = require('../assets/imgs/invision-white-slim.png');
-const bomokoLogo = require('../assets/app-icon.png');
+const bomokoLogo = require('../assets/app-icon2.png');
 const bomokoBg = require('../assets/login1_bg.png');
 
 const Viewed = [

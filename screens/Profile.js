@@ -218,7 +218,7 @@ const styles = StyleSheet.create({
 
   profileContainer: {
     width,
-    height,
+    height: height * 0.6,
     padding: 0,
     zIndex: 1
   },

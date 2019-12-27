@@ -33,7 +33,7 @@ export default class Onboarding extends React.Component {
                     size={44}
                   >
                     BOMOKO 
-                    mobile app
+                    app
                   </Text>
                 </Block>
               </Block>
