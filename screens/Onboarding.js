@@ -32,8 +32,7 @@ export default class Onboarding extends React.Component {
                     color="white"
                     size={44}
                   >
-                    BOMOKO 
-                    app
+                    BOMOKO APP
                   </Text>
                 </Block>
               </Block>

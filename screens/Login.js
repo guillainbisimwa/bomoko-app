@@ -7,7 +7,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard
 } from 'react-native';
-import { Block, Text, Button as GaButton, theme } from 'galio-framework';
+import { Block, Text, Button as GaButton, theme, Checkbox } from 'galio-framework';
 
 import { Button, Icon, Input } from '../components';
 import { Images, nowTheme } from '../constants';
@@ -98,6 +98,24 @@ class Login extends React.Component {
                               }
                             />
                           </Block>
+                          <Block
+                            style={{ marginVertical: theme.SIZES.BASE, marginLeft: 15}}
+                            row
+                            width={width * 0.75}
+                          >
+                          <Text
+                               style={{
+                                fontFamily: 'montserrat-regular',
+                                textAlign: 'center'
+                              }}
+                              muted
+                              size={16}
+                              onPress={() => navigation.navigate('Singin')}
+                          >
+                            Etes-vous nouveau? Creer votre compte ici
+                          </Text>
+                            
+                          </Block>
                         </Block>
                         <Block center>
                           <Button color="primary" round style={styles.createButton}
@@ -105,8 +123,7 @@ class Login extends React.Component {
                             <Text
                               style={{ fontFamily: 'montserrat-bold' }}
                               size={14}
-                              color={nowTheme.COLORS.WHITE}
-                              
+                              color={nowTheme.COLORS.WHITE} 
                             >
                               Se connecter
                             </Text>
