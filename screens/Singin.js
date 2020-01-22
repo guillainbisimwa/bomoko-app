@@ -9,8 +9,11 @@ import {
 } from 'react-native';
 import { Block, Checkbox, Text, Button as GaButton, theme } from 'galio-framework';
 
-import { Button, Icon, Input } from '../components';
+import { Button, Icon, Input , Select} from '../components';
 import { Images, nowTheme } from '../constants';
+
+import SwitchSelector from "react-native-switch-selector";
+import { Image } from 'react-native-svg';
 
 const { width, height } = Dimensions.get('screen');
 
@@ -18,6 +21,21 @@ const DismissKeyboard = ({ children }) => (
   <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>{children}</TouchableWithoutFeedback>
 );
 
+const options = [
+  { label: "01:00", value: "1" },
+  { label: "01:30", value: "1.5" },
+  { label: "02:00", value: "2" }
+];
+
+// "nom":"Jean Marie",
+// "phone":"+2437",
+// "id_g" :"",
+// "num_carte_elec" :"",
+// "address" :"Kinshasa, drc",
+// "sexe" :"M",
+// "profession" :"Professeur",
+// "code_conf_sms" :"",
+// "password":"+2437"
 class Signin extends React.Component {
   render() {
     return (
@@ -41,7 +59,7 @@ class Signin extends React.Component {
                         color="#333"
                         size={24}
                       >
-                        Enregistrer
+                        S'enregistrer
                       </Text>
                     </Block>
 
@@ -55,18 +73,6 @@ class Signin extends React.Component {
                         iconColor={theme.COLORS.WHITE}
                         iconSize={theme.SIZES.BASE * 1.625}
                         color={nowTheme.COLORS.TWITTER}
-                        style={[styles.social, styles.shadow]}
-                      />
-
-                      <GaButton
-                        round
-                        onlyIcon
-                        shadowless
-                        icon="dribbble"
-                        iconFamily="Font-Awesome"
-                        iconColor={theme.COLORS.WHITE}
-                        iconSize={theme.SIZES.BASE * 1.625}
-                        color={nowTheme.COLORS.DRIBBBLE}
                         style={[styles.social, styles.shadow]}
                       />
                       <GaButton
@@ -91,7 +97,7 @@ class Signin extends React.Component {
                       muted
                       size={16}
                     >
-                      or be classical
+                      Let's go ...
                     </Text>
                   </Block>
                   <Block flex={1} middle space="between">
@@ -100,7 +106,7 @@ class Signin extends React.Component {
                         <Block>
                           <Block width={width * 0.8} style={{ marginBottom: 5 }}>
                             <Input
-                              placeholder="First Name"
+                              placeholder="Nom complet"
                               style={styles.inputs}
                               iconContent={
                                 <Icon
@@ -113,31 +119,88 @@ class Signin extends React.Component {
                               }
                             />
                           </Block>
+
+                          {/* <Block width={width * 0.8} style={{ marginBottom: 5 }}>
+                          <SwitchSelector
+                            options={options}
+                              initial={0}
+                              onPress={value => console.log(`Call onPress with value: ${value}`)}
+                            />
+                          </Block> */}
+
                           <Block width={width * 0.8} style={{ marginBottom: 5 }}>
                             <Input
-                              placeholder="Last Name"
+                              placeholder="Numero de telephone"
                               style={styles.inputs}
                               iconContent={
                                 <Icon
                                   size={16}
                                   color="#ADB5BD"
-                                  name="caps-small2x"
-                                  family="NowExtra"
+                                  name="mobile"
+                                  family="Font-Awesome"
                                   style={styles.inputIcons}
                                 />
                               }
                             />
                           </Block>
-                          <Block width={width * 0.8}>
+
+
+                          <Block width={width * 0.8} style={{ marginBottom: 5 }}>
+                            <SwitchSelector
+                              initial={0}
+                              onPress={value => this.setState({ gender: value })}
+                              textColor={nowTheme.COLORS.INPUT} //'#7a44cf'
+                              selectedColor={nowTheme.COLORS.WHITE}
+                              buttonColor={nowTheme.COLORS.PRIMARY}
+                              borderColor={nowTheme.COLORS.INPUT}
+                              hasPadding
+                              options={[
+                                { label: "Feminin", value: "f", imageIcon: Images.iconWoman }, 
+                                { label: "Masculin", value: "m", imageIcon: Images.iconMan } 
+                              ]}
+                            />
+                          </Block>
+
+                          <Block width={width * 0.8} style={{ marginBottom: 5 }}>
                             <Input
-                              placeholder="Email"
+                              placeholder="Adresse"
                               style={styles.inputs}
                               iconContent={
                                 <Icon
                                   size={16}
                                   color="#ADB5BD"
-                                  name="email-852x"
-                                  family="NowExtra"
+                                  name="map-marker"
+                                  family="Font-Awesome"
+                                  style={styles.inputIcons}
+                                />
+                              }
+                            />
+                          </Block>
+                          <Block width={width * 0.8} style={{ marginBottom: 5 }}>
+                            <Input
+                              placeholder="Mots de passe"
+                              style={styles.inputs}
+                              iconContent={
+                                <Icon
+                                  size={16}
+                                  color="#ADB5BD"
+                                  name="key"
+                                  family="Font-Awesome"
+                                  style={styles.inputIcons}
+                                />
+                              }
+                            />
+                          </Block>
+                          <Block width={width * 0.8} style={{ marginBottom: 5 }}>
+                            <Input
+                              placeholder="Confirmer le mots de passe"
+                              style={styles.inputs}
+                              iconContent={
+                                <Icon
+                                  size={16}
+                                  color="#ADB5BD"
+                                  name="key"
+                                  family="Font-Awesome"
                                   style={styles.inputIcons}
                                 />
                               }
@@ -159,7 +222,7 @@ class Signin extends React.Component {
                                 color: nowTheme.COLORS.HEADER,
                                 fontFamily: 'montserrat-regular'
                               }}
-                              label="I agree to the terms and conditions."
+                              label="J'accepte les conditions d'utilisation."
                             />
                           </Block>
                         </Block>
@@ -170,7 +233,7 @@ class Signin extends React.Component {
                               size={14}
                               color={nowTheme.COLORS.WHITE}
                             >
-                              Get Started
+                              Creer un compte
                             </Text>
                           </Button>
                         </Block>
