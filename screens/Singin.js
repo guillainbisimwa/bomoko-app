@@ -150,60 +150,79 @@ class Signin extends React.Component {
   handleChangePassword= password => this.setState({ password }, this.validatePassword_);
   handleChangeConfPassword= conf_password => this.setState({ conf_password }, this.confirmPassword_);
 
+  async createClient(){
+     //var nom_ = this.state.nom
+     var phone_ = this.state.phone
+     var nom_ = this.state.nom
+     var address_ = this.state.address
+     var sexe_ = this.state.sexe
+     var password = this.state.password
+     var conf_password = this.state.conf_password
+
+    await fetch('http://192.168.56.1:3000/register_client', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body:JSON.stringify({
+        nom: nom_,
+        phone: phone_,
+        id_g: "",
+        num_carte_elec: "",
+        address: address_,
+        sexe: sexe_,
+        profession: "",
+        code_conf_sms: "",
+        password:conf_password           
+      })
+    }).then((response) => response.json())
+    //If response is in json then in success
+    .then((responseJson) => {
+        //Success 
+        ToastAndroid.show(JSON.stringify(responseJson), ToastAndroid.SHORT)
+        // TODO if code == 200 then send code sms and open waitValidAccout screen
+
+    }) //If response is not in json then in error
+    .catch((error) => {
+        //Error 
+        alert(JSON.stringify(error));
+        console.error(error);
+        ToastAndroid.show('Une erreur est surnenue '+ error, ToastAndroid.LONG)
+    });
+  }
+
   async submitSignin() {
 
-    //this.setState({isShow: true})
-    //setShow(!isShow);
-    //var nom_ = this.state.nom
-    var phone_ = this.state.phone
-    var nom_ = this.state.nom
-    var address_ = this.state.address
-    var sexe_ = this.state.sexe
-    var password = this.state.password
-    var conf_password = this.state.conf_password
-    //console.log("bree: "+this.state.nom)
-    console.log("nom_ : ",nom_)
-    console.log("phone_ : ",phone_)
-    console.log("address_ : ",address_)
-    console.log("sexe_ : ",sexe_)
-    console.log("password : ",password)
-    console.log("conf_password : ",conf_password)
-
-    //ToastAndroid.show(nom_ +" \n"+ phone_ +" \n"+ address_ +" \n"+ sexe_ +" \n"+ conf_password +" \n", ToastAndroid.SHORT);
     //TODO Valider tout les champs
     if(this.state.name_valid && this.state.adresse_valid && this.state.phone_valid 
       && this.state.password_valid && this.state.password_confirm_valid){
-      
-      // TODO check if phone number exists from server
-      // await fetch('http://192.168.56.1:3000/register_client', {
-      //       method: 'POST',
-      //       headers: {
-      //         Accept: 'application/json',
-      //         'Content-Type': 'application/json',
-      //       },
-      //       body:JSON.stringify({
-      //         nom: nom_,
-      //         phone: phone_,
-      //         id_g: "",
-      //         num_carte_elec: "",
-      //         address: address_,
-      //         sexe: sexe_,
-      //         profession: "",
-      //         code_conf_sms: "",
-      //         password:conf_password           
-      //       })
-      //     }).then(
-      //         response => {
-      //           response.json()
-              
-      //         },
-      //         responseJson => ToastAndroid.show(responseJson, ToastAndroid.SHORT),
-      //         error => ToastAndroid.show('An error occurred'+ error, ToastAndroid.SHORT)
-      //       );
-      // TODO Add profile 
-      // TODO Wait until checking
-
-
+      var test = 0;
+      await fetch('http://192.168.56.1:3000/client_by_phone/'+this.state.phone, {
+          method: 'GET',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+      })
+      .then((response) => response.json())
+      //If response is in json then in success
+      .then((responseJson) => {
+          //Success 
+          var prop = 'message'; 
+          if (responseJson.hasOwnProperty(prop)) { 
+            this.createClient();
+          } else { 
+            ToastAndroid.show('Ce numero est dja utilise', ToastAndroid.LONG)
+            this.setState({phone_valid: false})
+          } 
+      })
+      //If response is not in json then in error
+      .catch((error) => {
+          //Error 
+          alert(JSON.stringify(error));
+          console.error(error);
+      });      
 
       // ToastAndroid.showWithGravityAndOffset(
       //   nom_ +" \n"+ phone_ +" \n"+ address_ +" \n"+ sexe_ +" \n"+ conf_password +" \n",
@@ -211,47 +230,11 @@ class Signin extends React.Component {
       //   ToastAndroid.BOTTOM,
       //   25,
       //   50,
-      // );
-      await fetch('http://192.168.56.1:3000/register_client', {
-            method: 'POST',
-            headers: {
-              Accept: 'application/json',
-              'Content-Type': 'application/json',
-            },
-            body:JSON.stringify({
-              nom: nom_,
-              phone: phone_,
-              id_g: "",
-              num_carte_elec: "",
-              address: address_,
-              sexe: sexe_,
-              profession: "",
-              code_conf_sms: "",
-              password:conf_password           
-            })
-          }).then((response) => response.json())
-          //If response is in json then in success
-          .then((responseJson) => {
-              //Success 
-              ToastAndroid.show(JSON.stringify(responseJson), ToastAndroid.SHORT)
-              // TODO if code == 200 then send code sms and open waitValidAccout screen
-              
-          }) //If response is not in json then in error
-          .catch((error) => {
-              //Error 
-              alert(JSON.stringify(error));
-              console.error(error);
-              ToastAndroid.show('Une erreur est surnenue '+ error, ToastAndroid.LONG)
-          });
-    
+      // );    
 
     }else {
       ToastAndroid.show("Veillez valider tous les champs SVP!", ToastAndroid.LONG);
     }
-
-   
-   
-
   }
 
   
