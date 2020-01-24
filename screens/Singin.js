@@ -5,9 +5,11 @@ import {
   Dimensions,
   StatusBar,
   TouchableWithoutFeedback,
-  Keyboard
+  Keyboard,
+  ScrollView,
+  ToastAndroid
 } from 'react-native';
-import { Block, Checkbox, Text, Button as GaButton, theme } from 'galio-framework';
+import { Block, Checkbox, Text, Button as GaButton, theme, Toast } from 'galio-framework';
 
 import { Button, Icon, Input , Select} from '../components';
 import { Images, nowTheme } from '../constants';
@@ -27,6 +29,8 @@ const options = [
   { label: "02:00", value: "2" }
 ];
 
+//const [isShow, setShow] = useState(false);
+
 // "nom":"Jean Marie",
 // "phone":"+2437",
 // "id_g" :"",
@@ -37,7 +41,164 @@ const options = [
 // "code_conf_sms" :"",
 // "password":"+2437"
 class Signin extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      nom: "",
+      phone: "",
+      id_g: "",
+      num_carte_elec: "",
+      address: "",
+      sexe: "f",
+      profession: "",
+      code_conf_sms: "",
+      password: "",
+      conf_password: "",
+      
+      sign_in_failed: false,
+      showLoading: false,
+
+      phone_valid: true,
+      name_valid: true,
+      password_confirm_valid: true,
+      password_valid: true,
+      adresse_valid: true,
+      isShow: false      
+    };
+    
+  }
+
+
+
+
+  // TODO Check if account is not activate
+  // TODO check if phone exists
+  // TODO check if all values are valid
+  // TODO create account
+  // TODO UI wait for code validation account
+
+  validateName(string) {
+
+    return string.trim().length > 3;
+  }
+
+  validateAdresse(string) {
+    return string.trim().length > 4;
+  }
+
+  validatePhone(string) {
+    return string.trim().length > 12;
+  }
+
+  validatePassword(string) {
+    return string.trim().length > 5;
+  }
+
+  confirmPassword(password, conf_password) {
+    //return string.trim().length > 3;
+    if(password.trim().length < 3){
+      return password.trim().length > 5;
+    }
+    return password.trim() == conf_password.trim()
+  }
+
+  validateName_ = () =>{
+    var nom = this.state.nom;
+    var name_valid = this.validateName(nom);
+    
+    this.setState({address: this.state.nom})
+    this.setState({name_valid: name_valid})
+  }
+
+  validateAdresse_ = () =>{
+    var address = this.state.address;
+    var adresse_valid = this.validateAdresse(address);
+    
+    this.setState({address: this.state.address})
+    this.setState({adresse_valid: adresse_valid})
+  }
+
+  validatePhone_ = () =>{
+    var phone = this.state.phone;
+    var phone_valid = this.validatePhone(phone);
+    
+    this.setState({phone: this.state.phone})
+    this.setState({phone_valid: phone_valid})
+  }
+
+  validatePassword_ = () =>{
+    var password = this.state.password;
+    var password_valid = this.validatePassword(password);
+    
+    this.setState({password: this.state.password})
+    this.setState({password_valid: password_valid})
+  }
+
+  confirmPassword_ = () =>{
+    var password = this.state.password;
+    var conf_password = this.state.conf_password;
+    var password_confirm_valid = this.confirmPassword(password, conf_password);
+    
+    this.setState({conf_password: this.state.conf_password})
+    this.setState({password_confirm_valid: password_confirm_valid})
+  }
+
+  handleChangeNom = nom => this.setState({ nom }, this.validateName_);
+  handleChangeAdresse = address => this.setState({ address }, this.validateAdresse_);
+  handleChangePhone = phone => this.setState({ phone }, this.validatePhone_);
+  handleChangePassword= password => this.setState({ password }, this.validatePassword_);
+  handleChangeConfPassword= conf_password => this.setState({ conf_password }, this.confirmPassword_);
+
+  submitSignin() {
+
+    //this.setState({isShow: true})
+    //setShow(!isShow);
+    //var nom_ = this.state.nom
+    var phone_ = this.state.phone
+    var nom_ = this.state.nom
+    var address_ = this.state.address
+    var sexe_ = this.state.sexe
+    var password = this.state.password
+    var conf_password = this.state.conf_password
+    //console.log("bree: "+this.state.nom)
+    console.log("nom_ : ",nom_)
+    console.log("phone_ : ",phone_)
+    console.log("address_ : ",address_)
+    console.log("sexe_ : ",sexe_)
+    console.log("password : ",password)
+    console.log("conf_password : ",conf_password)
+
+    //ToastAndroid.show(nom_ +" \n"+ phone_ +" \n"+ address_ +" \n"+ sexe_ +" \n"+ conf_password +" \n", ToastAndroid.SHORT);
+    //TODO Valider tout les champs
+    if(this.state.name_valid && this.state.adresse_valid && this.state.phone_valid 
+      && this.state.password_valid && this.state.password_confirm_valid){
+      ToastAndroid.showWithGravityAndOffset(
+        nom_ +" \n"+ phone_ +" \n"+ address_ +" \n"+ sexe_ +" \n"+ conf_password +" \n",
+        ToastAndroid.LONG,
+        ToastAndroid.BOTTOM,
+        25,
+        50,
+      );
+    }else {
+      ToastAndroid.show("Veillez valider tous les champs SVP!", ToastAndroid.LONG);
+    }
+
+   
+   
+
+  }
+
+  
   render() {
+    const {
+      nom,
+      phone,
+      address,
+      password,
+      conf_password,
+      isShow
+    } = this.state;
+
     return (
       <DismissKeyboard>
         <Block flex middle>
@@ -47,8 +208,11 @@ class Signin extends React.Component {
             imageStyle={styles.imageBackground}
           >
             <Block flex middle>
+           
+
               <Block style={styles.registerContainer}>
                 <Block flex space="evenly">
+                {/* <ScrollView> */}
                   <Block flex={0.4} middle style={styles.socialConnect}>
                     <Block flex={0.5} middle>
                       <Text
@@ -107,13 +271,21 @@ class Signin extends React.Component {
                           <Block width={width * 0.8} style={{ marginBottom: 5 }}>
                             <Input
                               placeholder="Nom complet"
-                              style={styles.inputs}
+                              style={[styles.inputs, {
+                                borderColor: this.state.name_valid
+                                      ? '#E3E3E3'
+                                      : '#a11'
+                              }]}
+
+                              onChangeText={this.handleChangeNom}
+
+                              value={nom}
                               iconContent={
                                 <Icon
                                   size={16}
                                   color="#ADB5BD"
-                                  name="profile-circle"
-                                  family="NowExtra"
+                                  name="user"
+                                  family="Font-Awesome"
                                   style={styles.inputIcons}
                                 />
                               }
@@ -130,8 +302,15 @@ class Signin extends React.Component {
 
                           <Block width={width * 0.8} style={{ marginBottom: 5 }}>
                             <Input
+                              type = "phone-pad"
                               placeholder="Numero de telephone"
-                              style={styles.inputs}
+                              style={[styles.inputs, {
+                                borderColor: this.state.phone_valid
+                                      ? '#E3E3E3'
+                                      : '#a11'
+                              }]}
+                              onChangeText={this.handleChangePhone}
+                              value={phone}
                               iconContent={
                                 <Icon
                                   size={16}
@@ -143,13 +322,11 @@ class Signin extends React.Component {
                               }
                             />
                           </Block>
-
-
                           <Block width={width * 0.8} style={{ marginBottom: 5 }}>
                             <SwitchSelector
                               initial={0}
-                              onPress={value => this.setState({ gender: value })}
-                              textColor={nowTheme.COLORS.INPUT} //'#7a44cf'
+                              onPress={value => this.setState({ sexe: value })}
+                              textColor={nowTheme.COLORS.INPUT}
                               selectedColor={nowTheme.COLORS.WHITE}
                               buttonColor={nowTheme.COLORS.PRIMARY}
                               borderColor={nowTheme.COLORS.INPUT}
@@ -164,7 +341,13 @@ class Signin extends React.Component {
                           <Block width={width * 0.8} style={{ marginBottom: 5 }}>
                             <Input
                               placeholder="Adresse"
-                              style={styles.inputs}
+                              style={[styles.inputs, {
+                                borderColor: this.state.adresse_valid
+                                      ? '#E3E3E3'
+                                      : '#a11'
+                              }]}
+                              onChangeText={this.handleChangeAdresse}
+                              value={address}
                               iconContent={
                                 <Icon
                                   size={16}
@@ -179,7 +362,15 @@ class Signin extends React.Component {
                           <Block width={width * 0.8} style={{ marginBottom: 5 }}>
                             <Input
                               placeholder="Mots de passe"
-                              style={styles.inputs}
+                              style={[styles.inputs, {
+                                borderColor: this.state.password_valid
+                                      ? '#E3E3E3'
+                                      : '#a11'
+                              }]}
+                              onChangeText={this.handleChangePassword}
+                              value={password}
+                              password
+                              viewPass
                               iconContent={
                                 <Icon
                                   size={16}
@@ -194,7 +385,15 @@ class Signin extends React.Component {
                           <Block width={width * 0.8} style={{ marginBottom: 5 }}>
                             <Input
                               placeholder="Confirmer le mots de passe"
-                              style={styles.inputs}
+                              style={[styles.inputs, {
+                                borderColor: this.state.password_confirm_valid
+                                      ? '#E3E3E3'
+                                      : '#a11'
+                              }]}
+                              onChangeText={this.handleChangeConfPassword}
+                              value={conf_password}
+                              password
+                              viewPass
                               iconContent={
                                 <Icon
                                   size={16}
@@ -227,7 +426,9 @@ class Signin extends React.Component {
                           </Block>
                         </Block>
                         <Block center>
-                          <Button color="primary" round style={styles.createButton}>
+
+                          <Button color="primary" round style={styles.createButton}
+                            onPress={this.submitSignin.bind(this)}>
                             <Text
                               style={{ fontFamily: 'montserrat-bold' }}
                               size={14}
@@ -236,13 +437,18 @@ class Signin extends React.Component {
                               Creer un compte
                             </Text>
                           </Button>
+                          {/* <Toast isShow={isShow} positionIndicator="bottom" color="warning">This is a bottom positioned toast</Toast> */}
                         </Block>
                       </Block>
+
                     </Block>
                   </Block>
+                  {/* </ScrollView> */}
                 </Block>
               </Block>
+              
             </Block>
+           
           </ImageBackground>
         </Block>
       </DismissKeyboard>
