@@ -7,6 +7,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   ScrollView,
+  Alert,
   ToastAndroid
 } from 'react-native';
 import { Block, Checkbox, Text, Button as GaButton, theme, Toast } from 'galio-framework';
@@ -44,16 +45,16 @@ class Signin extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      nom: "",
-      phone: "",
+      nom: "guillain",
+      phone: "+243988598204",
       id_g: "",
       num_carte_elec: "",
-      address: "",
+      address: "Boma matadi",
       sexe: "f",
       profession: "",
       code_conf_sms: "",
-      password: "",
-      conf_password: "",
+      password: "123456",
+      conf_password: "123456",
       
       sign_in_failed: false,
       showLoading: false,
@@ -149,7 +150,7 @@ class Signin extends React.Component {
   handleChangePassword= password => this.setState({ password }, this.validatePassword_);
   handleChangeConfPassword= conf_password => this.setState({ conf_password }, this.confirmPassword_);
 
-  submitSignin() {
+  async submitSignin() {
 
     //this.setState({isShow: true})
     //setShow(!isShow);
@@ -172,13 +173,78 @@ class Signin extends React.Component {
     //TODO Valider tout les champs
     if(this.state.name_valid && this.state.adresse_valid && this.state.phone_valid 
       && this.state.password_valid && this.state.password_confirm_valid){
-      ToastAndroid.showWithGravityAndOffset(
-        nom_ +" \n"+ phone_ +" \n"+ address_ +" \n"+ sexe_ +" \n"+ conf_password +" \n",
-        ToastAndroid.LONG,
-        ToastAndroid.BOTTOM,
-        25,
-        50,
-      );
+      
+      // TODO check if phone number exists from server
+      // await fetch('http://192.168.56.1:3000/register_client', {
+      //       method: 'POST',
+      //       headers: {
+      //         Accept: 'application/json',
+      //         'Content-Type': 'application/json',
+      //       },
+      //       body:JSON.stringify({
+      //         nom: nom_,
+      //         phone: phone_,
+      //         id_g: "",
+      //         num_carte_elec: "",
+      //         address: address_,
+      //         sexe: sexe_,
+      //         profession: "",
+      //         code_conf_sms: "",
+      //         password:conf_password           
+      //       })
+      //     }).then(
+      //         response => {
+      //           response.json()
+              
+      //         },
+      //         responseJson => ToastAndroid.show(responseJson, ToastAndroid.SHORT),
+      //         error => ToastAndroid.show('An error occurred'+ error, ToastAndroid.SHORT)
+      //       );
+      // TODO Add profile 
+      // TODO Wait until checking
+
+
+
+      // ToastAndroid.showWithGravityAndOffset(
+      //   nom_ +" \n"+ phone_ +" \n"+ address_ +" \n"+ sexe_ +" \n"+ conf_password +" \n",
+      //   ToastAndroid.LONG,
+      //   ToastAndroid.BOTTOM,
+      //   25,
+      //   50,
+      // );
+      await fetch('http://192.168.56.1:3000/register_client', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body:JSON.stringify({
+              nom: nom_,
+              phone: phone_,
+              id_g: "",
+              num_carte_elec: "",
+              address: address_,
+              sexe: sexe_,
+              profession: "",
+              code_conf_sms: "",
+              password:conf_password           
+            })
+          }).then((response) => response.json())
+          //If response is in json then in success
+          .then((responseJson) => {
+              //Success 
+              ToastAndroid.show(JSON.stringify(responseJson), ToastAndroid.SHORT)
+              // TODO if code == 200 then send code sms and open waitValidAccout screen
+              
+          }) //If response is not in json then in error
+          .catch((error) => {
+              //Error 
+              alert(JSON.stringify(error));
+              console.error(error);
+              ToastAndroid.show('Une erreur est surnenue '+ error, ToastAndroid.LONG)
+          });
+    
+
     }else {
       ToastAndroid.show("Veillez valider tous les champs SVP!", ToastAndroid.LONG);
     }
