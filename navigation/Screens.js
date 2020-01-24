@@ -170,7 +170,8 @@ const SinginStack = createStackNavigator(
       screen: Singin,
       navigationOptions: ({ navigation }) => ({
         header: (
-          <Header transparent title="S'enregistrer" iconColor={'#333'} navigation={navigation} />
+          // <Header transparent title="S'enregistrer" iconColor={'#333'} navigation={navigation} />
+          <Header left={<Block />} white transparent title="" navigation={navigation} />
         ),
         headerTransparent: true
       })
