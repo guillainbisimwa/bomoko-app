@@ -1,5 +1,15 @@
 import React from 'react';
-import { ImageBackground, Image, StyleSheet, StatusBar, Dimensions, Platform } from 'react-native';
+import { ImageBackground, 
+  Image, 
+  StyleSheet, 
+  StatusBar, 
+  Dimensions, 
+  Platform, 
+  AsyncStorage,
+  ToastAndroid,
+  Alert
+} from 'react-native';
+
 import { Block, Button, Text, theme } from 'galio-framework';
 
 const { height, width } = Dimensions.get('screen');
@@ -7,6 +17,84 @@ import { Images, nowTheme } from '../constants/';
 import { HeaderHeight } from '../constants/utils';
 
 export default class Onboarding extends React.Component {
+  constructor(props) {
+    super(props);
+    //this._bootstrapAsync();  
+    this.state = {
+      active_session: false
+    };
+  }
+
+  // Fetch the token from storage then navigate to our appropriate place
+  _bootstrapAsync = async () => {
+
+    const currentAccountObj = await AsyncStorage.getItem('currentAccount',function(error, result) {
+      if (error) {
+        ToastAndroid.show(" ERROR "+error, ToastAndroid.SHORT)
+      } else {
+        ToastAndroid.show(" OK ", ToastAndroid.SHORT)
+      }
+    });
+    ToastAndroid.show(currentAccountObj, ToastAndroid.SHORT)
+    if(currentAccountObj == null){
+      this.props.navigation.navigate('Login');
+    }
+    else{
+      currentAccount = JSON.parse(currentAccountObj)
+      // var pid = currentAccount["pid"];
+      // var phone = currentAccount["phone"];
+      //var code_conf_sms_account = currentAccount["code_conf_sms"];
+      /**
+       * ETAT
+       *======
+       *  0: en attente
+       *  1: valide
+       *  2: bloque
+       */
+      var etat_account = parseInt(currentAccount["etat"]); 
+      var password = currentAccount["password"];
+  
+      //ToastAndroid.show("Etat: "+etat_account, ToastAndroid.SHORT)
+      //alert(etat_account)
+  
+  
+      const currentSessionObj = await AsyncStorage.getItem('currentSession');
+      currentSession = JSON.parse(currentSessionObj);
+  
+      var sid = "";
+  
+      if(currentSession == null){      
+        sid = "";
+      }else if(currentSession != null){      
+        sid = currentSession["sid"];
+      }
+  
+  
+  
+      if(etat_account == 0){
+        ToastAndroid.show("En attente de validation:"+etat_account, ToastAndroid.SHORT)
+        this.props.navigation.navigate('WaitValidAccount');
+  
+        // this.props.navigation.navigate("WaitValidAccount", {
+        //   code_conf_sms_account: `${JSON.stringify(code_conf_sms_account)}`,
+        // });
+  
+      }else if(etat_account == 1 && sid == "" ){
+        ToastAndroid.show("Login ", ToastAndroid.SHORT)
+        this.props.navigation.navigate('Login');
+      }
+      else{
+        ToastAndroid.show("Bienvenue ", ToastAndroid.SHORT)
+        this.props.navigation.navigate('Home');
+      }
+    }
+
+   
+      
+
+  };
+
+
   render() {
     const { navigation } = this.props;
 
@@ -47,7 +135,7 @@ export default class Onboarding extends React.Component {
                   shadowless
                   style={styles.button}
                   color={nowTheme.COLORS.PRIMARY}
-                  onPress={() => navigation.navigate('Login')}
+                  onPress={this._bootstrapAsync}
                 >
                   <Text
                     style={{ fontFamily: 'montserrat-bold', fontSize: 14 }}

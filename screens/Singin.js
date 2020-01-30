@@ -8,9 +8,12 @@ import {
   Keyboard,
   ScrollView,
   Alert,
-  ToastAndroid
+  ToastAndroid,
+  NetInfo,
+  AsyncStorage,
+  ActivityIndicator
 } from 'react-native';
-import { Block, Checkbox, Text, Button as GaButton, theme, Toast } from 'galio-framework';
+import { Block, Checkbox, Text, Button as GaButton, theme } from 'galio-framework';
 
 import { Button, Icon, Input , Select} from '../components';
 import { Images, nowTheme } from '../constants';
@@ -45,12 +48,12 @@ class Signin extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      nom: "guillain",
-      phone: "+243988598204",
+      nom: "guillain BISIMWA",
+      phone: "+243828598304",
       id_g: "",
       num_carte_elec: "",
-      address: "Boma matadi",
-      sexe: "f",
+      address: "Goma Mimbi",
+      sexe: "m",
       profession: "",
       code_conf_sms: "",
       password: "123456",
@@ -68,9 +71,6 @@ class Signin extends React.Component {
     };
     
   }
-
-
-
 
   // TODO Check if account is not activate
   // TODO check if phone exists
@@ -180,8 +180,16 @@ class Signin extends React.Component {
     //If response is in json then in success
     .then((responseJson) => {
         //Success 
-        ToastAndroid.show(JSON.stringify(responseJson), ToastAndroid.SHORT)
-        // TODO if code == 200 then send code sms and open waitValidAccout screen
+        //ToastAndroid.show(JSON.stringify(responseJson), ToastAndroid.SHORT)
+        // TODO Save local variables
+        AsyncStorage.setItem('currentAccount', JSON.stringify(responseJson))
+        .then(json => ToastAndroid.show('currentAcount save locally', ToastAndroid.SHORT))
+        .catch(error => ToastAndroid.show('currentAcount error local memory', ToastAndroid.SHORT));
+        // TODO send code sms  
+        
+        // TODO open waitValidAccout screen
+          this.props.navigation.navigate("Onboarding");
+
 
     }) //If response is not in json then in error
     .catch((error) => {
@@ -192,45 +200,48 @@ class Signin extends React.Component {
     });
   }
 
-  async submitSignin() {
+  async CheckClientBeforeSave() {
 
     //TODO Valider tout les champs
     if(this.state.name_valid && this.state.adresse_valid && this.state.phone_valid 
       && this.state.password_valid && this.state.password_confirm_valid){
-      var test = 0;
-      await fetch('http://192.168.56.1:3000/client_by_phone/'+this.state.phone, {
-          method: 'GET',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-      })
-      .then((response) => response.json())
-      //If response is in json then in success
-      .then((responseJson) => {
-          //Success 
-          var prop = 'message'; 
-          if (responseJson.hasOwnProperty(prop)) { 
-            this.createClient();
-          } else { 
-            ToastAndroid.show('Ce numero est dja utilise', ToastAndroid.LONG)
-            this.setState({phone_valid: false})
-          } 
-      })
-      //If response is not in json then in error
-      .catch((error) => {
-          //Error 
-          alert(JSON.stringify(error));
-          console.error(error);
-      });      
 
-      // ToastAndroid.showWithGravityAndOffset(
-      //   nom_ +" \n"+ phone_ +" \n"+ address_ +" \n"+ sexe_ +" \n"+ conf_password +" \n",
-      //   ToastAndroid.LONG,
-      //   ToastAndroid.BOTTOM,
-      //   25,
-      //   50,
-      // );    
+          //AsyncStorage.clear();
+
+          await NetInfo.isConnected.fetch().then(async isConnected => {
+            if(isConnected){
+          
+              await fetch('http://192.168.56.1:3000/client_by_phone/'+this.state.phone, {
+                method: 'GET',
+                headers: {
+                  Accept: 'application/json',
+                  'Content-Type': 'application/json',
+                },
+              })
+              .then((response) => response.json())
+              //If response is in json then in success
+              .then((responseJson) => {
+                  //Success 
+                  var prop = 'message'; 
+                  if (responseJson.hasOwnProperty(prop)) { 
+                    this.createClient();
+                  } else { 
+                    ToastAndroid.show('Ce numero est dja utilise', ToastAndroid.LONG)
+                    this.setState({phone_valid: false})
+                  } 
+              })
+              //If response is not in json then in error
+              .catch((error) => {
+                  //Error 
+                  alert(JSON.stringify(error));
+                  console.error(error);
+              });  
+              
+            }
+            else{
+              ToastAndroid.show('Aucune connexion internet!', ToastAndroid.LONG)
+            }
+          })
 
     }else {
       ToastAndroid.show("Veillez valider tous les champs SVP!", ToastAndroid.LONG);
@@ -477,7 +488,7 @@ class Signin extends React.Component {
                         <Block center>
 
                           <Button color="primary" round style={styles.createButton}
-                            onPress={this.submitSignin.bind(this)}>
+                            onPress={this.CheckClientBeforeSave.bind(this)}>
                             <Text
                               style={{ fontFamily: 'montserrat-bold' }}
                               size={14}

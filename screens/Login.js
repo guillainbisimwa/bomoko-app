@@ -5,7 +5,11 @@ import {
   Dimensions,
   StatusBar,
   TouchableWithoutFeedback,
-  Keyboard
+  Keyboard,
+  ToastAndroid,
+  NetInfo,
+  AsyncStorage,
+  Alert
 } from 'react-native';
 import { Block, Text, Button as GaButton, theme, Checkbox } from 'galio-framework';
 
@@ -19,8 +23,156 @@ const DismissKeyboard = ({ children }) => (
 );
 
 class Login extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      password : "",
+      phone : "",
+      phone_valid: true,
+      password_valid: true,
+    };
+  }
+  validatePassword(string) {
+    return string.trim().length > 5;
+  }
+
+  validatePassword_ = () =>{
+    var password = this.state.password;
+    var password_valid = this.validatePassword(password);
+    
+    this.setState({password: this.state.password})
+    this.setState({password_valid: password_valid})
+  }
+
+  validatePhone(string) {
+    return string.trim().length > 12;
+  }
+
+  validatePhone_ = () =>{
+    var phone = this.state.phone;
+    var phone_valid = this.validatePhone(phone);
+    
+    this.setState({phone: this.state.phone})
+    this.setState({phone_valid: phone_valid})
+  }
+
+  handleChangePhone = phone => this.setState({ phone }, this.validatePhone_);
+  handleChangePassword = password => this.setState({ password }, this.validatePassword_);
+
+  async submitLogin() {
+
+    //TODO Valider tout les champs
+    if(this.state.phone_valid && this.state.password_valid ){
+      await NetInfo.isConnected.fetch().then(async isConnected => {
+        if(isConnected){
+      
+          await fetch('http://192.168.56.1:3000/login', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body:JSON.stringify({
+              phone: this.state.phone,
+              password: this.state.password    
+            })
+          }).then((response) => response.json())
+          //If response is in json then in success
+          .then((responseJson) => {
+            //Success 
+            ToastAndroid.show(JSON.stringify(responseJson), ToastAndroid.SHORT)
+            AsyncStorage.setItem('currentSession', JSON.stringify(responseJson))
+            .then(json => ToastAndroid.show('currentSession save locally', ToastAndroid.SHORT))
+            .catch(error => ToastAndroid.show('currentSession error local memory', ToastAndroid.SHORT));
+            // TODO fetch groups
+            // TODO fetch users
+            this.props.navigation.navigate("Home");
+          }) //If response is not in json then in error
+          .catch((error) => {
+              //Error 
+              alert(JSON.stringify(error));
+              console.error(error);
+              ToastAndroid.show('Une erreur est survenue '+ error, ToastAndroid.LONG)
+          });
+          
+        }
+        else{
+          ToastAndroid.show('Aucune connexion internet!', ToastAndroid.LONG)
+        }
+      })
+
+    } else{
+      ToastAndroid.show('Veillez entrer les identifiants valides svp!', ToastAndroid.LONG)
+    }
+  }
+
+  async CheckClientBeforeSave() {
+
+    //TODO Valider tout les champs
+    if(this.state.phone_valid && this.state.password_valid ){
+
+          await NetInfo.isConnected.fetch().then(async isConnected => {
+            if(isConnected){
+          
+              await fetch('http://192.168.56.1:3000/client_by_phone/'+this.state.phone, {
+                method: 'GET',
+                headers: {
+                  Accept: 'application/json',
+                  'Content-Type': 'application/json',
+                },
+              })
+              .then((response) => response.json())
+              //If response is in json then in success
+              .then((responseJson) => {
+
+                  //Success 
+                  ToastAndroid.show('Ce message '+JSON.stringify(responseJson["etat"]), ToastAndroid.LONG)
+
+                  var prop = 'message'; 
+                  if (responseJson.hasOwnProperty(prop)) { 
+                    //this.createClient();
+                    //ToastAndroid.show('Ce message '+responseJson, ToastAndroid.LONG)
+
+                  }else if(responseJson["etat"] == 0){
+                    AsyncStorage.setItem('currentAccount', JSON.stringify(responseJson))
+                    .then(json => ToastAndroid.show('currentAcount save locally', ToastAndroid.SHORT))
+                    .catch(error => ToastAndroid.show('currentAcount error local memory', ToastAndroid.SHORT));
+                    // TODO send code sms  
+                    
+                    // TODO open waitValidAccout screen
+                      this.props.navigation.navigate("Onboarding");
+                  }
+                   else { 
+                    //ToastAndroid.show('Ce numero '+responseJson, ToastAndroid.LONG)
+                    
+                    this.submitLogin();
+
+                  } 
+              })
+              //If response is not in json then in error
+              .catch((error) => {
+                  //Error 
+                  alert(JSON.stringify(error));
+                  console.error(error);
+              });  
+              
+            }
+            else{
+              ToastAndroid.show('Aucune connexion internet!', ToastAndroid.LONG)
+            }
+          })
+
+    }else {
+      ToastAndroid.show("Veillez valider tous les champs SVP!", ToastAndroid.LONG);
+    }
+  }
+
   render() {
     const { navigation } = this.props;
+    const {
+      phone,
+      password
+    } = this.state;
 
     return (
       <DismissKeyboard>
@@ -68,8 +220,15 @@ class Login extends React.Component {
                         <Block>
                           <Block width={width * 0.8} style={{ marginBottom: 5 }}>
                             <Input
+                              type = "phone-pad"
                               placeholder="Telephone"
-                              style={styles.inputs}
+                              style={[styles.inputs, {
+                                borderColor: this.state.phone_valid
+                                      ? '#E3E3E3'
+                                      : '#a11'
+                              }]}
+                              onChangeText={this.handleChangePhone}
+                              value={phone}
                               iconContent={
                                 <Icon
                                   size={16}
@@ -83,10 +242,16 @@ class Login extends React.Component {
                           </Block>
                           <Block width={width * 0.8}>
                             <Input
-                              placeholder="Password"
+                              style={[styles.inputs, {
+                              borderColor: this.state.password_valid
+                                    ? '#E3E3E3'
+                                    : '#a11'
+                              }]}
+                            onChangeText={this.handleChangePassword}
+                            value={password}
+                              placeholder="Mots de passe"
                               password
                               viewPass
-                              style={styles.inputs}
                               iconContent={
                                 <Icon
                                   size={16}
@@ -119,7 +284,8 @@ class Login extends React.Component {
                         </Block>
                         <Block center>
                           <Button color="primary" round style={styles.createButton}
-                          onPress={() => navigation.navigate('Home')}>
+                           onPress={this.CheckClientBeforeSave.bind(this)}
+                          >
                             <Text
                               style={{ fontFamily: 'montserrat-bold' }}
                               size={14}
