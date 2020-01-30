@@ -39,12 +39,12 @@ const BasketButton = ({ isWhite, style, navigation }) => (
 );
 
 
-
 class Header extends React.Component {
   handleLeftPress = () => {
     const { back, navigation } = this.props;
     return back ? navigation.goBack() : navigation.openDrawer();
   };
+
   renderRight = () => {
     const { white, title, navigation } = this.props;
     const { routeName } = navigation.state;
@@ -53,6 +53,11 @@ class Header extends React.Component {
       return [
         <BellButton key="chat-title" navigation={navigation} isWhite={white} />,
         <BasketButton key="basket-title" navigation={navigation} isWhite={white} />
+      ];
+    }
+    if (title === '') {
+      return [
+       
       ];
     }
 
@@ -220,9 +225,13 @@ class Header extends React.Component {
           rightStyle={{ alignItems: 'center' }}
           left={
             <Icon
-              name={back ? 'minimal-left2x' : 'align-left-22x'}
-              family="NowExtra"
+              name={back ? 'long-arrow-left' : 'bars'}
+              //family="NowExtra"
+              //size={16}
+              family="Font-Awesome"
               size={16}
+              //name="long-arrow-left"
+              //color={nowTheme.COLORS.ICON}
               onPress={this.handleLeftPress}
               color={iconColor || nowTheme.COLORS.ICON}
             />

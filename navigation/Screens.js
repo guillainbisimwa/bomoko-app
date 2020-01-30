@@ -16,6 +16,7 @@ import Parametres from '../screens/Parametres';
 import Login from '../screens/Login';
 import Singin from '../screens/Singin';
 import Groupes from '../screens/Groupes';
+import WaitValidAccount from '../screens/WaitValidAccount';
 
 // settings
 import SettingsScreen from '../screens/Settings';
@@ -147,41 +148,7 @@ const GroupesSatck = createStackNavigator(
     transitionConfig
   }
 );
-const LoginStack = createStackNavigator(
-  {
-    Account: {
-      screen: Login,
-      navigationOptions: ({ navigation }) => ({
-        header: (
-          <Header left={<Block />} white transparent title="" navigation={navigation} />
-        ),
-        headerTransparent: true
-      })
-    }
-  },
-  {
-    cardStyle: { backgroundColor: '#FFFFFF' },
-    transitionConfig
-  }
-);
-const SinginStack = createStackNavigator(
-  {
-    Account: {
-      screen: Singin,
-      navigationOptions: ({ navigation }) => ({
-        header: (
-          // <Header transparent title="S'enregistrer" iconColor={'#333'} navigation={navigation} />
-          <Header left={<Block />} white transparent title="" navigation={navigation} />
-        ),
-        headerTransparent: true
-      })
-    }
-  },
-  {
-    cardStyle: { backgroundColor: '#FFFFFF' },
-    transitionConfig
-  }
-);
+
 const ParametresSTack = createStackNavigator(
   {
     Account: {
@@ -233,7 +200,7 @@ const HomeStack = createStackNavigator(
         ),
         headerTransparent: true
       })
-    }
+    },
   },
   {
     cardStyle: {
@@ -243,10 +210,165 @@ const HomeStack = createStackNavigator(
   }
 );
 
-const AppStack = createDrawerNavigator(
+
+const SigninStack = createStackNavigator(
   {
     Onboarding: {
       screen: Onboarding,
+      navigationOptions: ({ navigation }) => ({
+        header: (
+          <Header
+              back
+              title=""
+              navigation={navigation}
+              titleColor="black"
+              iconColor="rgba(0,0,0,0)"
+              white={true}
+              transparent
+            />
+        ),
+        headerTransparent: true
+      })
+    },
+    Singin: {
+      screen: Singin,
+      navigationOptions: ({ navigation }) => ({
+        header: (
+          <Header
+              back
+              title=""
+              navigation={navigation}
+              titleColor="black"
+              iconColor="black"
+              white={false}
+              transparent
+            />
+        ),
+        headerTransparent: true
+      })
+    },
+  },
+  //Login
+  //WaitValidAccount
+  {
+    cardStyle: {
+      backgroundColor: '#FFFFFF'
+    },
+    transitionConfig
+  }
+);
+
+const LoginStack = createStackNavigator(
+  {
+    Onboarding: {
+      screen: Onboarding,
+      navigationOptions: ({ navigation }) => ({
+        header: (
+          <Header
+              back
+              title=""
+              navigation={navigation}
+              titleColor="black"
+              iconColor="rgba(0,0,0,0)"
+              white={true}
+              transparent
+            />
+        ),
+        headerTransparent: true
+      })
+    },
+    Login: {
+      screen: Login,
+      navigationOptions: ({ navigation }) => ({
+        header: (
+          <Header
+              back
+              title=""
+              navigation={navigation}
+              titleColor="black"
+              iconColor="black"
+              white={false}
+              transparent
+            />
+        ),
+        headerTransparent: true
+      })
+    },
+  },
+  //Login
+  //WaitValidAccount
+  {
+    cardStyle: {
+      backgroundColor: '#FFFFFF'
+    },
+    transitionConfig
+  }
+);
+
+const WaitValidAccountStack = createStackNavigator(
+  {
+    Onboarding: {
+      screen: Onboarding,
+      navigationOptions: ({ navigation }) => ({
+        header: (
+          <Header
+              back
+              title=""
+              navigation={navigation}
+              titleColor="black"
+              iconColor="rgba(0,0,0,0)"
+              white={true}
+              transparent
+            />
+        ),
+        headerTransparent: true
+      })
+    },
+    WaitValidAccount: {
+      screen: WaitValidAccount,
+      navigationOptions: ({ navigation }) => ({
+        header: (
+          <Header
+              back
+              title=""
+              navigation={navigation}
+              titleColor="black"
+              iconColor="black"
+              white={false}
+              transparent
+            />
+        ),
+        headerTransparent: true
+      })
+    },
+  },
+  //Login
+  //WaitValidAccount
+  {
+    cardStyle: {
+      backgroundColor: '#FFFFFF'
+    },
+    transitionConfig
+  }
+);
+
+
+const AppStack = createDrawerNavigator(
+  {
+    SigninStack: {
+      screen: SigninStack,
+      navigationOptions: {
+        drawerLabel: () => { }
+      }
+    },
+    LoginStack: {
+      screen: LoginStack,
+      navigationOptions: {
+        drawerLabel: () => { }
+      }
+    },
+    WaitValidAccountStack: {
+      screen: WaitValidAccountStack,
       navigationOptions: {
         drawerLabel: () => { }
       }
@@ -262,22 +384,6 @@ const AppStack = createDrawerNavigator(
       navigationOptions: navOpt => ({
         drawerLabel: ({ focused }) => (
           <DrawerItem focused={focused} screen="Groupes" title="Groupes" />
-        )
-      })
-    },
-    Login: {
-      screen: LoginStack,
-      navigationOptions: navOpt => ({
-        drawerLabel: ({ focused }) => (
-          <DrawerItem focused={focused} screen="Login" title="Login" />
-        )
-      })
-    },
-    Singin: {
-      screen: SinginStack,
-      navigationOptions: navOpt => ({
-        drawerLabel: ({ focused }) => (
-          <DrawerItem focused={focused} screen="Singin" title="Singin" />
         )
       })
     },
