@@ -1,6 +1,7 @@
 import React from 'react';
 import { DrawerNavigatorItems } from 'react-navigation-drawer';
-import { ScrollView, StyleSheet, Dimensions, Image, TouchableOpacity, Linking } from 'react-native';
+import { ScrollView, StyleSheet, Dimensions, Image, TouchableOpacity, Linking,AsyncStorage,
+  ToastAndroid } from 'react-native';
 import { Block, Text, theme } from 'galio-framework';
 import Icon from '../components/Icon';
 import Images from '../constants/Images';
@@ -13,9 +14,9 @@ const { width } = Dimensions.get('screen');
 const Drawer = props => (
   <Block style={styles.container} forceInset={{ top: 'always', horizontal: 'never' }}>
     <Block style={styles.header}>
-      <Image style={styles.logo} source={Images.Logo} />
+      <Image style={styles.logo} source={Images.bomokoLogo} />
       <Block right style={styles.headerIcon}>
-        <Icon name="align-left-22x" family="NowExtra" size={15} color={'white'} />
+        <Icon name="heart" family="Font-Awesome" size={15} color={'white'} />
       </Block>
     </Block>
 
@@ -30,29 +31,30 @@ const Drawer = props => (
             color={nowTheme.COLORS.WHITE}
             style={{ marginTop: 30, marginLeft: 20, marginBottom: 10, fontFamily: 'montserrat-regular', fontWeight: '300', fontSize: 12}}
           >
-            CONFIGURATION
+            INFORNATION
           </Text>
         </Block>
         <TouchableOpacity onPress={() => props.navigation.navigate('Components')}
           style={{ marginLeft: 10, fontFamily: 'montserrat-regular' }}
         >
-          <DrawerItem {...props} title="Components" />
+          <DrawerItem {...props} title="Langue" />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => props.navigation.navigate('Articles')}
+        <TouchableOpacity onPress={() => props.navigation.navigate('Components')}
           style={{ marginLeft: 10, fontFamily: 'montserrat-regular' }}
         >
-          <DrawerItem {...props} title="Articles" />
+          <DrawerItem {...props} title="Apropos" />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => props.navigation.navigate('Onboarding')}
+        <TouchableOpacity
+          onPress={() => {
+            AsyncStorage.clear();
+            ToastAndroid.show(" Bye bye", ToastAndroid.SHORT)
+            props.navigation.navigate('Onboarding')}
+          }
           style={{ marginLeft: 10, fontFamily: 'montserrat-regular' }}
         >
-          <DrawerItem {...props} title="Parametres2" />
+          <DrawerItem {...props} title="Deconnexion" />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => props.navigation.navigate('Onboarding')}
-          style={{ marginLeft: 10, fontFamily: 'montserrat-regular' }}
-        >
-          <DrawerItem {...props} title="DECONNEXION" />
-        </TouchableOpacity>
+      
       </ScrollView>
     </Block>
   </Block>

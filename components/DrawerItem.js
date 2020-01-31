@@ -13,71 +13,75 @@ class DrawerItem extends React.Component {
       case 'Home':
         return (
           <Icon
-            name="app2x"
-            family="NowExtra"
+            name="home"
+            family="Font-Awesome"
             size={18}
             color={focused ? nowTheme.COLORS.PRIMARY : 'white'}
-            style={{ opacity: 0.5 }}
-            />
-        );
-      case 'Groupes':
-        return (
-          <Icon
-            name="atom2x"
-            family="NowExtra"
-            size={18} color={focused ? nowTheme.COLORS.PRIMARY : 'white'}
             style={{ opacity: 0.5 }}
             />
         );
       case 'Profile':
         return (
           <Icon
-            name="profile-circle"
-            family="NowExtra"
+            name="user-circle"
+            family="Font-Awesome"
             size={18}
             color={focused ? nowTheme.COLORS.PRIMARY : 'white'}
             style={{ opacity: 0.5 }}
             />
         );
-      case 'Dashboard':
+     
+      case 'Mes Credits':
         return (
           <Icon
-            name="badge2x"
-            family="NowExtra"
+            name="money"
+            family="Font-Awesome"
             size={18}
             color={focused ? nowTheme.COLORS.PRIMARY : 'white'}
             style={{ opacity: 0.5 }}
-            />
-        );
-      case 'Examples':
-        return (
-          <Icon
-            name="album"
-            family="NowExtra"
-            size={14}
-            color={focused ? nowTheme.COLORS.PRIMARY : 'white'}
           />
         );
-      case 'Parametres':
+        case 'Parametres':
         return (
           <Icon
-            name="spaceship2x"
-            family="NowExtra"
+            name="cog"
+            family="Font-Awesome"
             size={18}
-            style={{ borderColor: 'rgba(0,0,0,0.5)', opacity: 0.5 }}
             color={focused ? nowTheme.COLORS.PRIMARY : 'white'}
+            style={{ opacity: 0.5 }}
           />
         );
-      case 'LOGOUT':
+        case 'Deconnexion':
         return (
           <Icon
-            name="share"
-            family="NowExtra"
+            name="sign-out"
+            family="Font-Awesome"
             size={18}
-            style={{ borderColor: 'rgba(0,0,0,0.5)', opacity: 0.5 }}
             color={focused ? nowTheme.COLORS.PRIMARY : 'white'}
+            style={{ opacity: 0.5 }}
           />
         );
+        case 'Langue':
+        return (
+          <Icon
+            name="language"
+            family="Font-Awesome"
+            size={18}
+            color={focused ? nowTheme.COLORS.PRIMARY : 'white'}
+            style={{ opacity: 0.5 }}
+          />
+        );
+        case 'Apropos':
+        return (
+          <Icon
+            name="info-circle"
+            family="Font-Awesome"
+            size={18}
+            color={focused ? nowTheme.COLORS.PRIMARY : 'white'}
+            style={{ opacity: 0.5 }}
+          />
+        );
+      
       default:
         return null;
     }
