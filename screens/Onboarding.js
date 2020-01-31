@@ -27,7 +27,6 @@ export default class Onboarding extends React.Component {
 
   // Fetch the token from storage then navigate to our appropriate place
   _bootstrapAsync = async () => {
-
     const currentAccountObj = await AsyncStorage.getItem('currentAccount',function(error, result) {
       if (error) {
         ToastAndroid.show(" ERROR "+error, ToastAndroid.SHORT)
@@ -69,8 +68,6 @@ export default class Onboarding extends React.Component {
         sid = currentSession["sid"];
       }
   
-  
-  
       if(etat_account == 0){
         ToastAndroid.show("En attente de validation:"+etat_account, ToastAndroid.SHORT)
         this.props.navigation.navigate('WaitValidAccount');
@@ -88,13 +85,8 @@ export default class Onboarding extends React.Component {
         this.props.navigation.navigate('Home');
       }
     }
-
-   
-      
-
   };
-
-
+  
   render() {
     const { navigation } = this.props;
 

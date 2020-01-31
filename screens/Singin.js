@@ -180,13 +180,36 @@ class Signin extends React.Component {
     //If response is in json then in success
     .then((responseJson) => {
         //Success 
-        //ToastAndroid.show(JSON.stringify(responseJson), ToastAndroid.SHORT)
+        ToastAndroid.show(JSON.stringify(responseJson["code_conf_sms"]), ToastAndroid.SHORT)
         // TODO Save local variables
         AsyncStorage.setItem('currentAccount', JSON.stringify(responseJson))
         .then(json => ToastAndroid.show('currentAcount save locally', ToastAndroid.SHORT))
         .catch(error => ToastAndroid.show('currentAcount error local memory', ToastAndroid.SHORT));
-        // TODO send code sms  
         
+        // TODO send code sms  send_sms_from_rmlconnect
+        fetch('http://192.168.56.1:3000/send_sms_from_rmlconnect', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body:JSON.stringify({
+            msg_detail:"Bonjour Mr "+nom_+", valider votre compte. Votre code est:",
+	          msg_code:JSON.stringify(responseJson["code_conf_sms"]),
+	          phone:phone_
+              
+          })
+        }).then((response1) => response1.json())
+        //If response is in json then in success
+        .then((responseJson1) => {
+          ToastAndroid.show('codeeeeeeeeeeee '+ JSON.stringify(responseJson1), ToastAndroid.LONG)
+            
+        }) //If response is not in json then in error
+        .catch((error1) => {
+            //Error 
+            console.error(error1);
+            ToastAndroid.show('Une erreur est surnenue '+ error1, ToastAndroid.LONG)
+        });
         // TODO open waitValidAccout screen
           this.props.navigation.navigate("Onboarding");
 

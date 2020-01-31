@@ -127,18 +127,21 @@ class Login extends React.Component {
 
                   //Success 
                   ToastAndroid.show('Ce message '+JSON.stringify(responseJson["etat"]), ToastAndroid.LONG)
-
+                  AsyncStorage.setItem('currentAccount', JSON.stringify(responseJson))
+                    .then(json => ToastAndroid.show('currentAcount save locally', ToastAndroid.SHORT))
+                    .catch(error => ToastAndroid.show('currentAcount error local memory', ToastAndroid.SHORT));
+                   
                   var prop = 'message'; 
                   if (responseJson.hasOwnProperty(prop)) { 
                     //this.createClient();
                     //ToastAndroid.show('Ce message '+responseJson, ToastAndroid.LONG)
 
                   }else if(responseJson["etat"] == 0){
-                    AsyncStorage.setItem('currentAccount', JSON.stringify(responseJson))
-                    .then(json => ToastAndroid.show('currentAcount save locally', ToastAndroid.SHORT))
-                    .catch(error => ToastAndroid.show('currentAcount error local memory', ToastAndroid.SHORT));
+                    // AsyncStorage.setItem('currentAccount', JSON.stringify(responseJson))
+                    // .then(json => ToastAndroid.show('currentAcount save locally', ToastAndroid.SHORT))
+                    // .catch(error => ToastAndroid.show('currentAcount error local memory', ToastAndroid.SHORT));
                     // TODO send code sms  
-                    
+                    // 
                     // TODO open waitValidAccout screen
                       this.props.navigation.navigate("Onboarding");
                   }
