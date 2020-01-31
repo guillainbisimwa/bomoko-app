@@ -17,6 +17,8 @@ import Login from '../screens/Login';
 import Singin from '../screens/Singin';
 import Groupes from '../screens/Groupes';
 import WaitValidAccount from '../screens/WaitValidAccount';
+import MesCredits from '../screens/MesCredits';
+
 
 // settings
 import SettingsScreen from '../screens/Settings';
@@ -88,6 +90,21 @@ const SettingsStack = createStackNavigator(
       screen: SettingsScreen,
       navigationOptions: ({ navigation }) => ({
         header: <Header title="Settings" navigation={navigation} />
+      })
+    }
+  },
+  {
+    cardStyle: { backgroundColor: '#FFFFFF' },
+    transitionConfig
+  }
+);
+
+const MesCreditsStack = createStackNavigator(
+  {
+    MesCredits: {
+      screen: MesCredits,
+      navigationOptions: ({ navigation }) => ({
+        header: <Header title="MesCredits" navigation={navigation} />
       })
     }
   },
@@ -379,19 +396,19 @@ const AppStack = createDrawerNavigator(
         drawerLabel: ({ focused }) => <DrawerItem focused={focused} title="Home" />
       })
     },
-    Groupes: {
-      screen: GroupesSatck,
-      navigationOptions: navOpt => ({
-        drawerLabel: ({ focused }) => (
-          <DrawerItem focused={focused} screen="Groupes" title="Groupes" />
-        )
-      })
-    },
     Profile: {
       screen: ProfileStack,
       navigationOptions: navOpt => ({
         drawerLabel: ({ focused }) => (
           <DrawerItem focused={focused} screen="Profile" title="Profile" />
+        )
+      })
+    },
+    MesCredits: {
+      screen: MesCreditsStack,
+      navigationOptions: navOpt => ({
+        drawerLabel: ({ focused }) => (
+          <DrawerItem focused={focused} screen="MesCredits" title="Mes Credits" />
         )
       })
     },
@@ -403,30 +420,30 @@ const AppStack = createDrawerNavigator(
         )
       })
     },
-    Account: {
-      screen: SettingsStack,
-      navigationOptions: navOpt => ({
-        drawerLabel: ({ focused }) => (
-          <DrawerItem focused={focused} screen="SettingsScreen" title="Settings" />
-        )
-      })
-    },
-    Articles: {
-      screen: ArticlesStack,
-      navigationOptions: navOpt => ({
-        drawerLabel: ({ focused }) => (
-          <DrawerItem focused={focused} screen="Articles" title="Articles" />
-        )
-      })
-    },
-    Components: {
-      screen: ComponentsStack,
-      navigationOptions: navOpt => ({
-        drawerLabel: ({ focused }) => (
-          <DrawerItem focused={focused} screen="Components" title="Components" />
-        )
-      })
-    },
+    // Account: {
+    //   screen: SettingsStack,
+    //   navigationOptions: navOpt => ({
+    //     drawerLabel: ({ focused }) => (
+    //       <DrawerItem focused={focused} screen="SettingsScreen" title="Settings" />
+    //     )
+    //   })
+    // },
+    // Articles: {
+    //   screen: ArticlesStack,
+    //   navigationOptions: navOpt => ({
+    //     drawerLabel: ({ focused }) => (
+    //       <DrawerItem focused={focused} screen="Articles" title="Articles" />
+    //     )
+    //   })
+    // },
+    // Components: {
+    //   screen: ComponentsStack,
+    //   navigationOptions: navOpt => ({
+    //     drawerLabel: ({ focused }) => (
+    //       <DrawerItem focused={focused} screen="Components" title="Components" />
+    //     )
+    //   })
+    // },
   },
   Menu
 );
