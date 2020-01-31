@@ -27,12 +27,38 @@ const BellButton = ({ isWhite, style, navigation }) => (
   </TouchableOpacity>
 );
 
+const NotificationButton = ({ isWhite, style, navigation }) => (
+  <TouchableOpacity
+    style={[styles.button, style]}
+    onPress={() => navigation.navigate('Notifications')}
+  >
+    <Icon
+      family="Font-Awesome"
+      size={16}
+      name="envelope-o"
+      color={nowTheme.COLORS[isWhite ? 'WHITE' : 'ICON']}
+    />
+    <Block middle style={[styles.notify, { backgroundColor: nowTheme.COLORS[isWhite ? 'WHITE' : 'PRIMARY'] }]} />
+  </TouchableOpacity>
+);
+
 const BasketButton = ({ isWhite, style, navigation }) => (
   <TouchableOpacity style={[styles.button, style]} onPress={() => navigation.navigate('Cart')}>
     <Icon
       family="NowExtra"
       size={16}
       name="basket2x"
+      color={nowTheme.COLORS[isWhite ? 'WHITE' : 'ICON']}
+    />
+  </TouchableOpacity>
+);
+
+const GroupButton = ({ isWhite, style, navigation }) => (
+  <TouchableOpacity style={[styles.button, style]} >
+    <Icon
+      family="Font-Awesome"
+      size={16}
+      name="users"
       color={nowTheme.COLORS[isWhite ? 'WHITE' : 'ICON']}
     />
   </TouchableOpacity>
@@ -52,7 +78,7 @@ class Header extends React.Component {
     if (title === 'Title') {
       return [
         <BellButton key="chat-title" navigation={navigation} isWhite={white} />,
-        <BasketButton key="basket-title" navigation={navigation} isWhite={white} />
+        <BasketButton key="basket-home" navigation={navigation} isWhite={white} />
       ];
     }
     if (title === '') {
@@ -64,13 +90,13 @@ class Header extends React.Component {
     switch (routeName) {
       case 'Home':
         return [
-          <BellButton key="chat-home" navigation={navigation} isWhite={white} />,
-          <BasketButton key="basket-home" navigation={navigation} isWhite={white} />
+          <NotificationButton key="message-home" navigation={navigation} isWhite={white} />,
+          <GroupButton key="groupe-home" navigation={navigation} isWhite={white} />
         ];
         case 'MesCredits':
           return [
-            <BellButton key="chat-home" navigation={navigation} isWhite={white} />,
-            <BasketButton key="basket-home" navigation={navigation} isWhite={white} />
+            <NotificationButton key="message-home" navigation={navigation} isWhite={white} />,
+            <GroupButton key="groupe-home" navigation={navigation} isWhite={white} />
           ];
           
       case 'Deals':
@@ -124,11 +150,11 @@ class Header extends React.Component {
         right
         color="black"
         style={styles.search}
-        placeholder="What are you looking for?"
+        placeholder="Recherchez-vous un groupe?"
         placeholderTextColor={'#8898AA'}
         onFocus={() => navigation.navigate('Search')}
         iconContent={
-          <Icon size={16} color={theme.COLORS.MUTED} name="zoom-bold2x" family="NowExtra" />
+          <Icon size={16} color={theme.COLORS.MUTED} name="search" family="Font-Awesome" />
         }
       />
     );

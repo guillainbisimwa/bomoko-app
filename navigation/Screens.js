@@ -30,6 +30,13 @@ import DrawerItem from '../components/DrawerItem';
 // header for screens
 import Header from '../components/Header';
 
+const home_menu = [
+  { id: 'Mongroupe', title: 'Mon groupe'},
+  { id: 'TousLesGroupes', title: 'Tous les groupes'},
+  { id: 'MesCredits', title: 'Mes credits'}
+];
+
+
 const transitionConfig = (transitionProps, prevTransitionProps) => ({
   transitionSpec: {
     duration: 400,
@@ -206,7 +213,7 @@ const HomeStack = createStackNavigator(
     Home: {
       screen: Home,
       navigationOptions: ({ navigation }) => ({
-        header: <Header search options title="Accueuil" navigation={navigation} />
+        header: <Header search tabs={home_menu} title="Accueuil" navigation={navigation} />
       })
     },
     Pro: {
@@ -265,8 +272,6 @@ const SigninStack = createStackNavigator(
       })
     },
   },
-  //Login
-  //WaitValidAccount
   {
     cardStyle: {
       backgroundColor: '#FFFFFF'
@@ -312,8 +317,7 @@ const LoginStack = createStackNavigator(
       })
     },
   },
-  //Login
-  //WaitValidAccount
+
   {
     cardStyle: {
       backgroundColor: '#FFFFFF'
@@ -359,8 +363,7 @@ const WaitValidAccountStack = createStackNavigator(
       })
     },
   },
-  //Login
-  //WaitValidAccount
+ 
   {
     cardStyle: {
       backgroundColor: '#FFFFFF'
