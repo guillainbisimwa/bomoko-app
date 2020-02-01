@@ -1,34 +1,53 @@
 export default [
   {
-    title: 'Nous sommes les femmes vendeuses des sambazas',
-    image: require("../assets/imgs/project13.jpg"),
-    cta: 'GROUPE DES MAMANS',
-    horizontal: true  
-  },
-  {
-    title: 'Many limitations on what’s right',
+    details: 'Nous sommes les femmes vendeuses des sambazas',
     image: require("../assets/imgs/bg40.jpg"),
-    cta: 'GROUPE 1'
+    nom_group: 'GROUPE DES MAMANS',
   },
   {
-    title: 'Why would anyone pick blue over?',
+    details: 'Nous sommes les femmes vendeuses des sambazas des sambazas des sambazas',
+    image: require("../assets/img/agri.jpg"),
+    nom_group: 'JIRANI NI NDUGU',
+  },
+  {
+    details: 'Nous sommes les femmes vendeuses des sambazas',
+    image: require("../assets/img/pic2.jpg"),
+    nom_group: 'KAZI MBELE',
+  },
+  {
+    details: 'Nous sommes les femmes vendeuses des sambazas',
+    image: require("../assets/img/pic3.jpg"),
+    nom_group: 'GROUPE DES MAMANS',
+  },
+  {
+    details: 'Nous sommes les femmes vendeuses des sambazas',
+    image: require("../assets/img/pic4.jpg"),
+    nom_group: 'GROUPE DES MAMANS',
+  },
+  {
+    details: 'Many limitations on what’s right',
+    image: require("../assets/img/pic5.jpg"),
+    nom_group: 'GROUPE 1'
+  },
+  {
+    details: 'Why would anyone pick blue over?',
     image: require("../assets/imgs/bg28.jpg"),
-    cta: 'GROUPE 2'
+    nom_group: 'GROUPE 2'
   },
   {
-    title: 'Pink is obviously a better color',
+    details: 'Pink is obviously a better color',
     image: require("../assets/imgs/project21.jpg"),
-    cta: 'GROUPE 3'
+    nom_group: 'GROUPE 3'
   },
 
   {
-    title: 'The time is now for it to be okay to be',
+    details: 'The time is now for it to be okay to be',
     image: require("../assets/imgs/project15.jpg"),
-    cta: 'GROUPE 4',
+    nom_group: 'GROUPE 4',
     horizontal: true
   },
   {
-    title: '$377',
+    details: '$377',
     image: require("../assets/imgs/saint-laurent.jpg"),
     subtitle: 'Black Jacket',
     description:
@@ -36,7 +55,7 @@ export default [
     horizontal: true
   },
   {
-    title: '$299',
+    details: '$299',
     image: require("../assets/imgs/saint-laurent1.jpg"),
     subtitle: 'Saint Laurent',
     description:
