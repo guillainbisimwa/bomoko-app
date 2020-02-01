@@ -34,7 +34,7 @@ export default class Onboarding extends React.Component {
         ToastAndroid.show(" OK ", ToastAndroid.SHORT)
       }
     });
-    ToastAndroid.show(currentAccountObj, ToastAndroid.SHORT)
+    //ToastAndroid.show(currentAccountObj, ToastAndroid.SHORT)
     if(currentAccountObj == null){
       this.props.navigation.navigate('Login');
     }
@@ -81,7 +81,7 @@ export default class Onboarding extends React.Component {
         this.props.navigation.navigate('Login');
       }
       else{
-        ToastAndroid.show("Bienvenue ", ToastAndroid.SHORT)
+        //ToastAndroid.show("Bienvenue ", ToastAndroid.SHORT)
         this.props.navigation.navigate('Home');
       }
     }
@@ -160,7 +160,8 @@ const styles = StyleSheet.create({
     width: width - theme.SIZES.BASE * 4,
     height: theme.SIZES.BASE * 3,
     shadowRadius: 0,
-    shadowOpacity: 0
+    shadowOpacity: 0,
+    elevation: 5
   },
 
   gradient: {

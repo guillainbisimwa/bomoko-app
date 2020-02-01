@@ -115,7 +115,8 @@ const styles = StyleSheet.create({
     width: theme.SIZES.BASE * 3.5,
     height: theme.SIZES.BASE * 3.5,
     borderRadius: theme.SIZES.BASE * 1.75,
-    justifyContent: 'center'
+    justifyContent: 'center',
+    elevation: 5
   },
 });
 

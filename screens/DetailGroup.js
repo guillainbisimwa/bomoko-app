@@ -33,15 +33,22 @@ class DetailGroup extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      st : ""
+      st : "",
+      group:JSON.parse(this.props.navigation.getParam("product"))
     };
+    //ToastAndroid.show( JSON.stringify(this.props.navigation.getParam("product")), ToastAndroid.SHORT)
+    //this.setState({group: JSON.parse(this.props.navigation.getParam("product"))})
+
   }
 
   render() {
     const { navigation } = this.props;
     const {
       st,
+      group
     } = this.state;
+    //ToastAndroid.show( JSON.parse(navigation.getParam("product")), ToastAndroid.SHORT)
+    //ToastAndroid.show( JSON.stringify(navigation.getParam("product")), ToastAndroid.SHORT)
 
     return (
       <DismissKeyboard>
@@ -63,7 +70,7 @@ class DetailGroup extends React.Component {
 
 
 
-              <ScrollView showsVerticalScrollIndicator={false}>
+            <ScrollView showsVerticalScrollIndicator={false}>
               <Block style={{
               flex: 1,
               flexDirection: 'column',
@@ -91,7 +98,7 @@ class DetailGroup extends React.Component {
                             }}
                             color='#ffffff'
                             >
-                            GOMA UNITY
+                            {group.nom_group}
                           </Text>
 
                           <Text
@@ -106,7 +113,7 @@ class DetailGroup extends React.Component {
                               opacity: .8
                             }}
                           >
-                            Contibution individuelle: 100 $
+                            Contibution individuelle: {group.somme} $
                           </Text>
                         </Block>
                         <Block style={styles.info}>
@@ -163,8 +170,8 @@ class DetailGroup extends React.Component {
                       row
                       style={{ position: 'absolute', width: width, top: height * 0.3 - 22, zIndex: 99 }}
                     >
-                      <Button style={{ width: 114, height: 44, marginHorizontal: 5, elevation: 0 }} textStyle={{ fontSize: 16 }} round>
-                        Quitter
+                      <Button style={{ width: 114, height: 44, marginHorizontal: 5, elevation: 5 }} textStyle={{ fontSize: 16 }} round>
+                        Adherer
                       </Button>
                       <GaButton
                         round
@@ -200,17 +207,11 @@ class DetailGroup extends React.Component {
                   <Block flex style={{ marginTop: 20 }}>
                     <Block middle>
                       <Text
-                        style={{
-                          color: '#2c2c2c',
-                          fontWeight: 'bold',
-                          fontSize: 19,
-                          fontFamily: 'montserrat-bold',
-                          marginTop: 15,
-                          marginBottom: 30,
-                          zIndex: 2
-                        }}
+                       style={group.etat ==1 ? styles.etatE: styles.etatS}
+                        
                       >
-                        En cours ...
+                        {group.etat == 0? "EN COURS" : "VALIDE"}
+
                           </Text>
                       <Text
                         size={16}
@@ -224,8 +225,7 @@ class DetailGroup extends React.Component {
                           paddingHorizontal: 15
                         }}
                       >
-                        An artist of considerable range, named Ryan — the name has taken by Melbourne has raised,
-                        Brooklyn-based Nick Murphy — writes, performs and records all of his own music.
+                        {group.details}
                           </Text>
                     </Block>
                     <Block row style={{ paddingVertical: 14, paddingHorizontal: 15 }} space="between">
@@ -258,7 +258,7 @@ class DetailGroup extends React.Component {
                 </Block>
               </Block>
             </Block>
-            </ScrollView>
+          </ScrollView>
 
 
 
@@ -407,12 +407,32 @@ const styles = StyleSheet.create({
     borderRadius: nowTheme.SIZES.BASE * 1.5,
     justifyContent: 'center',
     zIndex: 99,
-    marginHorizontal: 5
+    marginHorizontal: 5,
+    elevation: 5
   },
 
 
   profileCard: {
     backgroundColor: 'rgba(0, 0, 0, 0.4)',
+  },
+
+  etatS:{
+    color: '#a11',
+    fontWeight: 'bold',
+    fontSize: 19,
+    fontFamily: 'montserrat-bold',
+    marginTop: 15,
+    marginBottom: 30,
+    zIndex: 2
+  },
+  etatE:{
+    color: '#080',
+    fontWeight: 'bold',
+    fontSize: 19,
+    fontFamily: 'montserrat-bold',
+    marginTop: 15,
+    marginBottom: 30,
+    zIndex: 2
   }
 });
 

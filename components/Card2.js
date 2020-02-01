@@ -1,7 +1,7 @@
 import React from 'react';
 import { withNavigation } from 'react-navigation';
 import PropTypes from 'prop-types';
-import { StyleSheet, Image, TouchableWithoutFeedback, ImageBackground } from 'react-native';
+import { StyleSheet, Image, TouchableWithoutFeedback, ImageBackground, ToastAndroid } from 'react-native';
 import { Block, Text, theme } from 'galio-framework';
 
 import { nowTheme } from '../constants';
@@ -31,7 +31,17 @@ class Card2 extends React.Component {
 
     return (
       <Block row={horizontal} card flex style={cardContainer}>
-        <TouchableWithoutFeedback onPress={() => navigation.navigate('DetailGroup', { product: item })}>
+        <TouchableWithoutFeedback onPress={() => 
+        { 
+          navigation.navigate('DetailGroup', {
+
+          product: `${JSON.stringify(item)}`,
+
+         })
+         //ToastAndroid.show( JSON.stringify(item), ToastAndroid.SHORT)
+
+         }
+         }>
           <Block flex style={imgContainer}  shadow >
 
           <ImageBackground

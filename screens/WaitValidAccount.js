@@ -345,14 +345,16 @@ const styles = StyleSheet.create({
   createButton: {
     width: width * 0.5,
     marginTop: 25,
-    marginBottom: 40
+    marginBottom: 40,
+    elevation: 5
   },
   social: {
     width: theme.SIZES.BASE * 3.5,
     height: theme.SIZES.BASE * 3.5,
     borderRadius: theme.SIZES.BASE * 1.75,
     justifyContent: 'center',
-    marginHorizontal: 10
+    marginHorizontal: 10,
+    elevation: 5
   }
 });
 
