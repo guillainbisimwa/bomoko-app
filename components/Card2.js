@@ -31,7 +31,7 @@ class Card2 extends React.Component {
 
     return (
       <Block row={horizontal} card flex style={cardContainer}>
-        <TouchableWithoutFeedback onPress={() => navigation.navigate('Product', { product: item })}>
+        <TouchableWithoutFeedback onPress={() => navigation.navigate('DetailGroup', { product: item })}>
           <Block flex style={imgContainer}  shadow >
 
           <ImageBackground
@@ -60,7 +60,7 @@ class Card2 extends React.Component {
 
           </Block>
         </TouchableWithoutFeedback>
-        <TouchableWithoutFeedback onPress={() => navigation.navigate('Product', { product: item })}>
+        <TouchableWithoutFeedback onPress={() => navigation.navigate('DetailGroup', { product: item })}>
           <Block flex space="between" style={styles.cardDescription}>
             <Block flex>
               <Text

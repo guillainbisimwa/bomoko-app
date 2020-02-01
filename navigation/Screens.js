@@ -18,6 +18,9 @@ import Singin from '../screens/Singin';
 import Groupes from '../screens/Groupes';
 import WaitValidAccount from '../screens/WaitValidAccount';
 import MesCredits from '../screens/MesCredits';
+import Vide from '../screens/Vide';
+import DetailGroup from '../screens/DetailGroup';
+
 
 
 // settings
@@ -225,6 +228,23 @@ const HomeStack = createStackNavigator(
         headerTransparent: true
       })
     },
+    DetailGroup: {
+      screen: DetailGroup,
+      navigationOptions: ({ navigation }) => ({
+        header: (
+          <Header
+              back
+              title="Details du groupe"
+              navigation={navigation}
+              titleColor="black"
+              iconColor="black"
+              white={false}
+              transparent
+            />
+        ),
+        headerTransparent: true
+      })
+    },
   },
   {
     cardStyle: {
@@ -423,30 +443,6 @@ const AppStack = createDrawerNavigator(
         )
       })
     },
-    // Account: {
-    //   screen: SettingsStack,
-    //   navigationOptions: navOpt => ({
-    //     drawerLabel: ({ focused }) => (
-    //       <DrawerItem focused={focused} screen="SettingsScreen" title="Settings" />
-    //     )
-    //   })
-    // },
-    // Articles: {
-    //   screen: ArticlesStack,
-    //   navigationOptions: navOpt => ({
-    //     drawerLabel: ({ focused }) => (
-    //       <DrawerItem focused={focused} screen="Articles" title="Articles" />
-    //     )
-    //   })
-    // },
-    // Components: {
-    //   screen: ComponentsStack,
-    //   navigationOptions: navOpt => ({
-    //     drawerLabel: ({ focused }) => (
-    //       <DrawerItem focused={focused} screen="Components" title="Components" />
-    //     )
-    //   })
-    // },
   },
   Menu
 );

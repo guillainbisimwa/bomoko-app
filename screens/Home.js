@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Dimensions, ScrollView } from "react-native";
+import { StyleSheet, Dimensions, ScrollView, ToastAndroid } from "react-native";
 import { Block, Text, Button as GaButton, theme } from 'galio-framework';
 
 import { Card2 as Card, Button } from "../components";

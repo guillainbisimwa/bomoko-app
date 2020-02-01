@@ -14,6 +14,9 @@ const bomokoLogo = require('../assets/app-icon2.png');
 const bomokoBg = require('../assets/login1_bg.png');
 const iconMan = require('../assets/icons/man.png');
 const iconWoman = require('../assets/icons/woman.png');
+const pic33 = require('../assets/img/pic33.jpg');
+const pic5 = require('../assets/img/pic5.jpg');
+const acheteur = require('../assets/img/acheteur.jpg');
 
 const Viewed = [
   require('../assets/imgs/project5.jpg'),
@@ -46,5 +49,8 @@ export default {
   CreativeTimLogo,
   InvisionLogo,
   iconMan,
-  iconWoman
+  iconWoman,
+  pic33,
+  pic5,
+  acheteur
 };
