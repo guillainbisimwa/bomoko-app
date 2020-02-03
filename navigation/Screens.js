@@ -19,6 +19,7 @@ import Groupes from '../screens/Groupes';
 import WaitValidAccount from '../screens/WaitValidAccount';
 import MesCredits from '../screens/MesCredits';
 import Vide from '../screens/Vide';
+import AddGroup from '../screens/AddGroup';
 import DetailGroup from '../screens/DetailGroup';
 
 
@@ -235,6 +236,23 @@ const HomeStack = createStackNavigator(
           <Header
               back
               title="Details du groupe"
+              navigation={navigation}
+              titleColor="black"
+              iconColor="black"
+              white={false}
+              transparent
+            />
+        ),
+        headerTransparent: true
+      })
+    },
+    AddGroup: {
+      screen: AddGroup,
+      navigationOptions: ({ navigation }) => ({
+        header: (
+          <Header
+              back
+              title="Creer un groupe"
               navigation={navigation}
               titleColor="black"
               iconColor="black"

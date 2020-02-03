@@ -6,8 +6,7 @@ import { ImageBackground,
   Dimensions, 
   Platform, 
   AsyncStorage,
-  ToastAndroid,
-  Alert
+  ToastAndroid
 } from 'react-native';
 
 import { Block, Button, Text, theme } from 'galio-framework';
@@ -21,7 +20,7 @@ export default class Onboarding extends React.Component {
     super(props);
     //this._bootstrapAsync();  
     this.state = {
-      active_session: false
+      active_session: false,
     };
   }
 
@@ -83,6 +82,11 @@ export default class Onboarding extends React.Component {
       else{
         //ToastAndroid.show("Bienvenue ", ToastAndroid.SHORT)
         this.props.navigation.navigate('Home');
+        // this.props.navigation.navigate('Home', {
+
+        //   groups_: `${JSON.stringify(this.state.groups)}`,
+
+        //  })
       }
     }
   };

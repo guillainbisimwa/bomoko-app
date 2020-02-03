@@ -19,7 +19,7 @@ class Card2 extends React.Component {
       ctaRight,
       titleStyle
     } = this.props;
-
+    const image = require("../assets/img/cooperartive.jpg")
     const imageStyles = [full ? styles.fullImage : styles.horizontalImage, imageStyle];
     const titleStyles = [styles.cardTitle, titleStyle];
     const cardContainer = [styles.card, styles.shadow, style];
@@ -45,7 +45,7 @@ class Card2 extends React.Component {
           <Block flex style={imgContainer}  shadow >
 
           <ImageBackground
-            source={item.image}
+            source={image}
             style={imageStyles}
           >
             <Block style={ item.etat ==1 ? styles.categoryTitleS: styles.categoryTitleE}>
@@ -103,7 +103,7 @@ class Card2 extends React.Component {
                     size={13}
                     color={"#9A9A9A"}
                   >
-                   Date fin: {item.date_fin}
+                   Date fin: {new Date(parseFloat(item.date_fin)).toDateString()}
                   </Text>
                 </Block>
               ) : (

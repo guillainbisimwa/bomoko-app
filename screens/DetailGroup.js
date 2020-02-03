@@ -11,7 +11,8 @@ import {
   NetInfo,
   AsyncStorage,
   Alert,
-  Image
+  Image,
+  ActivityIndicator
 } from 'react-native';
 import { Block, Text, Button as GaButton, theme, Checkbox } from 'galio-framework';
 
@@ -32,14 +33,30 @@ const DismissKeyboard = ({ children }) => (
 class DetailGroup extends React.Component {
   constructor(props) {
     super(props);
+    //this._bootstrapAsync();
     this.state = {
       st : "",
-      group:JSON.parse(this.props.navigation.getParam("product"))
+      group:[],
+      isLoading: true,
+
+      isRefreshing: false,
     };
     //ToastAndroid.show( JSON.stringify(this.props.navigation.getParam("product")), ToastAndroid.SHORT)
     //this.setState({group: JSON.parse(this.props.navigation.getParam("product"))})
 
   }
+  componentDidMount(){
+    this._bootstrapAsync();
+  }
+  _bootstrapAsync = async () => {
+ 
+    prod = await JSON.parse(this.props.navigation.getParam("product"))
+    this.setState({
+      group: await prod,
+      isLoading:  false,
+    });
+
+  };
 
   render() {
     const { navigation } = this.props;
@@ -49,6 +66,14 @@ class DetailGroup extends React.Component {
     } = this.state;
     //ToastAndroid.show( JSON.parse(navigation.getParam("product")), ToastAndroid.SHORT)
     //ToastAndroid.show( JSON.stringify(navigation.getParam("product")), ToastAndroid.SHORT)
+    if(this.state.isLoading){
+      return( 
+        <Block style={styles.activity}>
+          <ActivityIndicator size="large" color="#0000ff" /> 
+        </Block>
+      )
+    }
+    
 
     return (
       <DismissKeyboard>
