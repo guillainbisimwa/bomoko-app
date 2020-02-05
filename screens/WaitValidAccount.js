@@ -92,7 +92,7 @@ class WaitValidAccount extends React.Component {
           //ToastAndroid.show(' phone: '+this.state.phone, ToastAndroid.LONG)
           //ToastAndroid.show(' code: '+this.state.code_sms, ToastAndroid.LONG)
           
-          await fetch('http://192.168.56.1:3000/valider_creation_cmpt', {
+          await fetch('http://35.223.175.69:3000/valider_creation_cmpt', {
             method: 'POST',
             headers: {
               Accept: 'application/json',

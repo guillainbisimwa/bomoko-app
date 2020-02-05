@@ -48,7 +48,7 @@ class Home extends React.Component {
     await NetInfo.isConnected.fetch().then(async isConnected => {
       if(isConnected){
     
-        await fetch('http://192.168.56.1:3000/groups/', {
+        await fetch('http://35.223.175.69:3000/groups/', {
           method: 'GET',
           headers: {
             Accept: 'application/json',

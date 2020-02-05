@@ -149,7 +149,7 @@ class Signin extends React.Component {
      var password = this.state.password
      var conf_password = this.state.conf_password
 
-    await fetch('http://192.168.56.1:3000/register_client', {
+    await fetch('http://35.223.175.69:3000/register_client', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -177,7 +177,7 @@ class Signin extends React.Component {
         .catch(error => ToastAndroid.show('currentAcount error local memory', ToastAndroid.SHORT));
         
         // TODO send code sms  send_sms_from_rmlconnect
-        fetch('http://192.168.56.1:3000/send_sms_from_rmlconnect', {
+        fetch('http://35.223.175.69:3000/send_sms_from_rmlconnect', {
           method: 'POST',
           headers: {
             Accept: 'application/json',
@@ -224,7 +224,7 @@ class Signin extends React.Component {
           await NetInfo.isConnected.fetch().then(async isConnected => {
             if(isConnected){
           
-              await fetch('http://192.168.56.1:3000/client_by_phone/'+this.state.phone, {
+              await fetch('http://35.223.175.69:3000/client_by_phone/'+this.state.phone, {
                 method: 'GET',
                 headers: {
                   Accept: 'application/json',
