@@ -45,7 +45,7 @@ class WaitValidAccount extends React.Component {
     const { navigation } = this.props;
     const currentAccountObj = await AsyncStorage.getItem('currentAccount');
     currentAccount = JSON.parse(currentAccountObj)
-    alert(currentAccountObj);
+    alert("Vous allez recevoir un code de confirmation par SMS!");
 
     var pid = currentAccount["pid"];
     var phone = currentAccount["phone"];

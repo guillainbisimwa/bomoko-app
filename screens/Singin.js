@@ -33,31 +33,21 @@ const options = [
   { label: "02:00", value: "2" }
 ];
 
-//const [isShow, setShow] = useState(false);
 
-// "nom":"Jean Marie",
-// "phone":"+2437",
-// "id_g" :"",
-// "num_carte_elec" :"",
-// "address" :"Kinshasa, drc",
-// "sexe" :"M",
-// "profession" :"Professeur",
-// "code_conf_sms" :"",
-// "password":"+2437"
 class Signin extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      nom: "guillain BISIMWA",
-      phone: "+243828598304",
+      nom: "",
+      phone: "",
       id_g: "",
       num_carte_elec: "",
-      address: "Goma Mimbi",
+      address: "",
       sexe: "m",
       profession: "",
       code_conf_sms: "",
-      password: "123456",
-      conf_password: "123456",
+      password: "",
+      conf_password: "",
       
       sign_in_failed: false,
       showLoading: false,
@@ -293,7 +283,14 @@ class Signin extends React.Component {
             <Block flex middle>
            
 
+           
+
               <Block style={styles.registerContainer}>
+              <ScrollView showsVerticalScrollIndicator={false}>
+              <Block flex middle>
+           
+
+           <Block style={styles.registerContainer1}>
                 <Block flex space="evenly">
                 {/* <ScrollView> */}
                   <Block flex={0.4} middle style={styles.socialConnect}>
@@ -301,7 +298,9 @@ class Signin extends React.Component {
                       <Text
                         style={{
                           fontFamily: 'montserrat-regular',
-                          textAlign: 'center'
+                          textAlign: 'center',
+                          marginTop:20,
+                          marginBottom:15
                         }}
                         color="#333"
                         size={24}
@@ -528,8 +527,12 @@ class Signin extends React.Component {
                   </Block>
                   {/* </ScrollView> */}
                 </Block>
+                
               </Block>
               
+            </Block>
+            </ScrollView>
+            </Block>
             </Block>
            
           </ImageBackground>
@@ -613,7 +616,8 @@ const styles = StyleSheet.create({
     height: theme.SIZES.BASE * 3.5,
     borderRadius: theme.SIZES.BASE * 1.75,
     justifyContent: 'center',
-    marginHorizontal: 10
+    marginHorizontal: 10,
+    elevation:5
   }
 });
 

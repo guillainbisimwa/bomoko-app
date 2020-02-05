@@ -19,6 +19,9 @@ class Home extends React.Component {
     };
   }
 
+  // componentDidMount = async() =>{
+  //   await this._fetchGroup()
+  // }
 
     // Fetch the token from storage then navigate to our appropriate place
  _bootstrapAsync = async () => {
