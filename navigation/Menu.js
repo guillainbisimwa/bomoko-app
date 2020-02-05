@@ -34,12 +34,12 @@ const Drawer = props => (
             INFORNATION
           </Text>
         </Block>
-        <TouchableOpacity onPress={() => props.navigation.navigate('Components')}
+        <TouchableOpacity onPress={() => props.navigation.navigate('Vide')}
           style={{ marginLeft: 10, fontFamily: 'montserrat-regular' }}
         >
           <DrawerItem {...props} title="Langue" />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => props.navigation.navigate('Components')}
+        <TouchableOpacity onPress={() => props.navigation.navigate('Vide')}
           style={{ marginLeft: 10, fontFamily: 'montserrat-regular' }}
         >
           <DrawerItem {...props} title="Apropos" />

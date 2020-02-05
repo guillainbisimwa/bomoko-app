@@ -159,6 +159,24 @@ const ProfileStack = createStackNavigator(
     transitionConfig
   }
 );
+
+const VideStack = createStackNavigator(
+  {
+    Profile: {
+      screen: Vide,
+      navigationOptions: ({ navigation }) => ({
+        header: (
+          <Header  transparent title="EN COURS DE DEVELOPEMENT" iconColor={'#000'} navigation={navigation} />
+        ),
+        headerTransparent: true
+      })
+    }
+  },
+  {
+    cardStyle: { backgroundColor: '#FFFFFF' },
+    transitionConfig
+  }
+);
 const GroupesSatck = createStackNavigator(
   {
     Account: {
@@ -438,7 +456,7 @@ const AppStack = createDrawerNavigator(
       })
     },
     Profile: {
-      screen: ProfileStack,
+      screen: VideStack,
       navigationOptions: navOpt => ({
         drawerLabel: ({ focused }) => (
           <DrawerItem focused={focused} screen="Profile" title="Profile" />
@@ -446,7 +464,7 @@ const AppStack = createDrawerNavigator(
       })
     },
     MesCredits: {
-      screen: MesCreditsStack,
+      screen: VideStack,
       navigationOptions: navOpt => ({
         drawerLabel: ({ focused }) => (
           <DrawerItem focused={focused} screen="MesCredits" title="Mes Credits" />
@@ -454,7 +472,7 @@ const AppStack = createDrawerNavigator(
       })
     },
     Parametres: {
-      screen: ParametresSTack,
+      screen: VideStack,
       navigationOptions: navOpt => ({
         drawerLabel: ({ focused }) => (
           <DrawerItem focused={focused} screen="Parametres" title="Parametres" />

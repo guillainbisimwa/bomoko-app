@@ -64,7 +64,18 @@ class Vide extends React.Component {
 
 
               <ScrollView showsVerticalScrollIndicator={false}>
-              
+                <Block  middle>
+                      <Text
+                        style={{
+                          fontFamily: 'montserrat-regular',
+                          textAlign: 'center'
+                        }}
+                        color="#333"
+                        size={24}
+                      >
+                        Comming soon ...
+                      </Text>
+                    </Block>
             </ScrollView>
 
 
