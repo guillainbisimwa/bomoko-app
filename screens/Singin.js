@@ -107,7 +107,7 @@ class Signin extends React.Component {
     var nom = this.state.nom;
     var name_valid = this.validateName(nom);
     
-    this.setState({address: this.state.nom})
+    this.setState({nom: this.state.nom})
     this.setState({name_valid: name_valid})
   }
 

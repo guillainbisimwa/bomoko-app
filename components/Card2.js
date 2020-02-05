@@ -131,7 +131,7 @@ class Card2 extends React.Component {
                 color={ctaColor || nowTheme.COLORS.ACTIVE}
                 bold
               >
-                Contribution max: {item.somme} $
+                Contribution: {item.somme} $ {item.cat == "7"? "/sem":"/mois"}
               </Text>
             </Block>
           </Block>
