@@ -526,31 +526,31 @@ class Components extends React.Component {
 
     );
   };
-  renderAlbums = () => {
-    const { navigation } = this.props;
+  // renderAlbums = () => {
+  //   const { navigation } = this.props;
 
-    return (
-      <Block flex style={[styles.group, { paddingBottom: theme.SIZES.BASE * 5 }]}>
-        <Block style={{ marginHorizontal: theme.SIZES.BASE * 2 }}>
-          <Block row space="between">
-            <Text bold size={16} color="#333" style={{ marginTop: 3 }}>
-              Album
-            </Text>
-            <Button small color="transparent" textStyle={{ color: nowTheme.COLORS.PRIMARY, fontSize: 14 }}>
-              View All
-            </Button>
-          </Block>
-          <Block row space="between" style={{ marginTop: theme.SIZES.BASE, flexWrap: 'wrap' }}>
-            {Images.Viewed.map((img, index) => (
-              <Block key={`viewed-${img}`} style={styles.shadow}>
-                <Image resizeMode="cover" source={img} style={styles.albumThumb} />
-              </Block>
-            ))}
-          </Block>
-        </Block>
-      </Block>
-    );
-  };
+  //   return (
+  //     <Block flex style={[styles.group, { paddingBottom: theme.SIZES.BASE * 5 }]}>
+  //       <Block style={{ marginHorizontal: theme.SIZES.BASE * 2 }}>
+  //         <Block row space="between">
+  //           <Text bold size={16} color="#333" style={{ marginTop: 3 }}>
+  //             Album
+  //           </Text>
+  //           <Button small color="transparent" textStyle={{ color: nowTheme.COLORS.PRIMARY, fontSize: 14 }}>
+  //             View All
+  //           </Button>
+  //         </Block>
+  //         <Block row space="between" style={{ marginTop: theme.SIZES.BASE, flexWrap: 'wrap' }}>
+  //           {Images.Viewed.map((img, index) => (
+  //             <Block key={`viewed-${img}`} style={styles.shadow}>
+  //               <Image resizeMode="cover" source={img} style={styles.albumThumb} />
+  //             </Block>
+  //           ))}
+  //         </Block>
+  //       </Block>
+  //     </Block>
+  //   );
+  // };
 
   render() {
     return (
@@ -567,7 +567,7 @@ class Components extends React.Component {
           {this.renderNavigation()}
           {this.renderSocial()}
           {this.renderCards()}
-          {this.renderAlbums()}
+          {/* {this.renderAlbums()} */}
         </ScrollView>
       </Block>
     );
