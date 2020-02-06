@@ -38,18 +38,18 @@ class AddGroup extends React.Component {
     this._bootstrapAsync();
     this.state = {
       nom_groupe: "",
-      somme: "0",
+      somme: "",
       id_demandeur: "",
       taux: 2,
       cat: "30",
       date_debut: "",
       date_fin: "",
-      nbr_jour: "5",
-      details: "detaisl ici",
+      nbr_jour: "",
+      details: "",
       type: "group",
 
       creation_failed: false,
-      showLoading: false,
+      isloading: false,
 
       nom_groupe_valid: true,
       details_valid: true,
@@ -59,7 +59,7 @@ class AddGroup extends React.Component {
       cat_valid: true,
       date_debut_valide: false,
       date_fin_valide: false,
-      nbr_jr_valide: false,
+      nbr_jr_valide: true,
     };
     
   }
@@ -166,7 +166,9 @@ class AddGroup extends React.Component {
         //If response is not in json then in error
         .catch((error) => {
             //Error 
-            alert(JSON.stringify(error));
+            alert('Une erreur est survenue '+ error);
+
+            //alert(JSON.stringify(error));
             console.error(error);
         });  
         
@@ -178,6 +180,7 @@ class AddGroup extends React.Component {
   }
 
   async createGroupe(){
+    this.setState({isloading: true})
     //var nom_ = this.state.nom
     var nom_groupe_ = this.state.nom_groupe
     var somme_ = this.state.somme
@@ -195,24 +198,6 @@ class AddGroup extends React.Component {
 
     var date_fin__ =  date_fin.setDate(date_debut__.getDate() + ( parseInt(cat_) * parseInt(nbr_jour_)));
     var date_fin_ =  date_fin__
-
-
-
-
-    bo = JSON.stringify({
-      nom_groupe: nom_groupe_,
-      somme: somme_,
-      cat: cat_,
-      date_debut: date_debut_,
-      date_fin: date_fin_,
-      //nbr_jour: nbr_jour_,
-      id_demandeur: id_demandeur_,
-      taux: taux_,
-      details: details_,
-      type: type_
-    });
-    //alert(bo);
-
 
    await fetch('http://35.223.175.69:3000/group', {
      method: 'POST',
@@ -239,22 +224,24 @@ class AddGroup extends React.Component {
        
        // TODO open waitValidAccout screen
          //this._fetchGroup();
+         this.setState({isloading: false})
         this.props.navigation.navigate("Home");
-
-
 
    }) //If response is not in json then in error
    .catch((error) => {
        //Error 
-       alert(JSON.stringify(error));
+       this.setState({isloading: false})
+       //alert(JSON.stringify(error));
+       alert('Une erreur est survenue '+ error);
+
        console.error(error);
-       ToastAndroid.show('Une erreur est surnenue '+ error, ToastAndroid.LONG)
+       //ToastAndroid.show('Une erreur est surnenue '+ error, ToastAndroid.LONG)
    });
  }
 
 
   async CheckGroupBeforeSave() {
-
+    this.setState({isloading: true})
     //TODO Valider tout les champs
     if(this.state.nom_groupe_valid && this.state.somme_valid && this.state.details_valid
       && this.state.nbr_jr_valide && this.state.date_debut !=""){
@@ -277,7 +264,8 @@ class AddGroup extends React.Component {
                   var prop = 'message'; 
                   if (responseJson.hasOwnProperty(prop)) { 
                      this.createGroupe();
-                  } else { 
+                  } else {
+                    this.setState({isloading: false}) 
                     ToastAndroid.show('Ce groupe existe deja', ToastAndroid.LONG)
                     this.setState({nom_groupe_valid: false})
                   } 
@@ -285,17 +273,21 @@ class AddGroup extends React.Component {
               //If response is not in json then in error
               .catch((error) => {
                   //Error 
-                  alert(JSON.stringify(error));
+                  this.setState({isloading: false})
+                  alert('Une erreur est survenue '+ error);
+              //alert(JSON.stringify(error));
                   console.error(error);
               });  
               
             }
             else{
+              this.setState({isloading: false})
               ToastAndroid.show('Aucune connexion internet!', ToastAndroid.LONG)
             }
           })
 
     }else {
+      this.setState({isloading: false})
       ToastAndroid.show("Veillez valider tous les champs SVP!", ToastAndroid.LONG);
     }
   }
@@ -311,7 +303,7 @@ class AddGroup extends React.Component {
       taux,
       cat,
       date_debut,
-      date_fin,
+      isloading,
       nbr_jour,
       details
     } = this.state;
@@ -363,6 +355,7 @@ class AddGroup extends React.Component {
                    
                    <GaButton
                      round
+                     loading={isloading}
                      onlyIcon
                      shadowless
                      icon="users"
