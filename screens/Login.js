@@ -31,6 +31,7 @@ class Login extends React.Component {
       phone : "",
       phone_valid: true,
       password_valid: true,
+      isloading: false
     };
   }
   validatePassword(string) {
@@ -61,6 +62,7 @@ class Login extends React.Component {
   handleChangePassword = password => this.setState({ password }, this.validatePassword_);
 
   async submitLogin() {
+    this.setState({isloading: true})
 
     //TODO Valider tout les champs
     if(this.state.phone_valid && this.state.password_valid ){
@@ -126,6 +128,7 @@ class Login extends React.Component {
                     AsyncStorage.setItem('currentSession', JSON.stringify(responseJson))
                       .then(json => ToastAndroid.show('currentSession save locally', ToastAndroid.SHORT))
                       .catch(error => ToastAndroid.show('currentSession error local memory', ToastAndroid.SHORT));
+                      this.setState({isloading: false})
 
                       this.props.navigation.navigate("Onboarding");
                   }
@@ -136,17 +139,16 @@ class Login extends React.Component {
               //If response is not in json then in error
               .catch((error) => {
                   //Error 
-                  alert(JSON.stringify(error));
+                  //alert(JSON.stringify(error));
+                  this.setState({isloading: false})
+
+                  alert('Une erreur est survenue '+ error);
                   console.error(error);
               });
-              // AsyncStorage.setItem('currentSession', JSON.stringify(responseJson))
-              // .then(json => ToastAndroid.show('currentSession save locally', ToastAndroid.SHORT))
-              // .catch(error => ToastAndroid.show('currentSession error local memory', ToastAndroid.SHORT));
-              // TODO fetch groups
-              // TODO fetch users
-              //this.props.navigation.navigate("Home");
+              
             }
             else{
+              this.setState({isloading: false})
               ToastAndroid.show("Erreure de la connexion! Reesayer", ToastAndroid.LONG)
 
             }
@@ -154,28 +156,31 @@ class Login extends React.Component {
           }) //If response is not in json then in error
           .catch((error) => {
               //Error 
-              alert(JSON.stringify(error));
+              this.setState({isloading: false})
+              alert('Une erreur est survenue '+ error);
               console.error(error);
               ToastAndroid.show('Une erreur est survenue '+ error, ToastAndroid.LONG)
           });
           
         }
         else{
+          this.setState({isloading: false})
           ToastAndroid.show('Aucune connexion internet!', ToastAndroid.LONG)
         }
       })
 
     } else{
+      this.setState({isloading: false})
       ToastAndroid.show('Veillez entrer les identifiants valides svp!', ToastAndroid.LONG)
     }
   }
-
 
   render() {
     const { navigation } = this.props;
     const {
       phone,
-      password
+      password,
+      isloading
     } = this.state;
 
     return (
@@ -217,6 +222,7 @@ class Login extends React.Component {
                     <Block flex={0.5} row middle space="between" style={{ marginBottom: 18 }}>
                       <GaButton
                         round
+                        loading={isloading}
                         onlyIcon
                         shadowless
                         icon="lock"
