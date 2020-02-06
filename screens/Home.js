@@ -32,8 +32,9 @@ class Home extends React.Component {
     //console.log("************************Get Value >> ", JSON.parse(value));
     dataGroups = await JSON.parse(value);
     //dataGroups002 = await dataGroups.filter((item) => (item.type == 102));
+    //ToastAndroid.show(JSON.stringify(dataGroups)+"vo", ToastAndroid.LONG)
+
     this.setState({
-      dataGroupsLocalStorage: await dataGroups,
       isLoading:  false,
       groupss: await dataGroups,
     });
@@ -63,10 +64,18 @@ class Home extends React.Component {
 
             //ToastAndroid.show('Ce message '+JSON.stringify(responseJson), ToastAndroid.LONG)
             AsyncStorage.setItem('GroupsLocalStorage', JSON.stringify(responseJson))
-              .then(json => ToastAndroid.show('GroupsLocalStorage save locally', ToastAndroid.SHORT))
+              .then(json => {
+                ToastAndroid.show('GroupsLocalStorage1 save locally', ToastAndroid.SHORT)
+                //ToastAndroid.show(JSON.stringify(responseJson), ToastAndroid.LONG)
+                this._bootstrapAsync();
+                if(responseJson == null){
+                  this.setState({groupss: null});
+                }
+
+            })
               .catch(error => ToastAndroid.show('GroupsLocalStorage error local memory', ToastAndroid.SHORT));
             
-            this._bootstrapAsync();
+            
             
         })
         //If response is not in json then in error
@@ -107,7 +116,30 @@ class Home extends React.Component {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.articles}
         >
-          <Block flex>
+
+        {this.state.groupss == null ? 
+        <Block flex center>
+          <Block>
+          <GaButton
+            round
+            onlyIcon
+            shadowless
+            icon="refresh"
+            iconFamily="Font-Awesome"
+            iconColor={theme.COLORS.WHITE}
+            iconSize={theme.SIZES.BASE * 1.625}
+            color="info"
+            style={[styles.social]}
+            onPress = {() => this._fetchGroup()}
+          />
+        </Block>
+
+       <Text>Aucun groupe disponible, veiller raffraichir cette page</Text>
+         
+        
+      </Block>
+      :
+      <Block flex>
 
             {this.state.groupss.map((item, index) => {
                return <Block key={index} flex row>
@@ -116,6 +148,10 @@ class Home extends React.Component {
             })}   
             
           </Block>
+      }
+
+
+          
           
         </ScrollView>
         <Block style={styles.fab}>
