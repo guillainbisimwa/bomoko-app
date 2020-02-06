@@ -237,7 +237,7 @@ class WaitValidAccount extends React.Component {
                            {this.state.phone}
                           
                           </Text>
-                          <Text
+                          {/* <Text
                                style={{
                                 fontFamily: 'montserrat-bold',
                                 textAlign: 'center'
@@ -246,7 +246,7 @@ class WaitValidAccount extends React.Component {
                               size={16}
                           >
                            CODE: ({this.state.code_conf_sms_account})
-                          </Text>
+                          </Text> */}
                           
                             
                           </Block>

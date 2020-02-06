@@ -170,7 +170,7 @@ class Signin extends React.Component {
     //If response is in json then in success
     .then((responseJson) => {
         //Success 
-        ToastAndroid.show(JSON.stringify(responseJson["code_conf_sms"]), ToastAndroid.SHORT)
+        //ToastAndroid.show(JSON.stringify(responseJson["code_conf_sms"]), ToastAndroid.SHORT)
         // TODO Save local variables
         AsyncStorage.setItem('currentAccount', JSON.stringify(responseJson))
         .then(json => ToastAndroid.show('currentAcount save locally', ToastAndroid.SHORT))
@@ -184,7 +184,7 @@ class Signin extends React.Component {
             'Content-Type': 'application/json',
           },
           body:JSON.stringify({
-            msg_detail:"Bonjour Mr "+nom_+", valider votre compte. Votre code est:",
+            msg_detail:"Bonjour "+nom_+", validez votre compte. Votre code est:",
 	          msg_code:JSON.stringify(responseJson["code_conf_sms"]),
 	          phone:phone_
               
@@ -192,7 +192,7 @@ class Signin extends React.Component {
         }).then((response1) => response1.json())
         //If response is in json then in success
         .then((responseJson1) => {
-          ToastAndroid.show('codeeeeeeeeeeee '+ JSON.stringify(responseJson1), ToastAndroid.LONG)
+          //ToastAndroid.show('codeeeeeeeeeeee '+ JSON.stringify(responseJson1), ToastAndroid.LONG)
             
         }) //If response is not in json then in error
         .catch((error1) => {
