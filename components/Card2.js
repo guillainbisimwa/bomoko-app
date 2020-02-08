@@ -91,7 +91,7 @@ class Card2 extends React.Component {
                     color={nowTheme.COLORS.BLACK}
                     numberOfLines={1}
                   >
-                   Debut: {new Date(parseFloat(item.date_debut)).toLocaleDateString()}
+                   Debut: {new Date(parseFloat(item.date_debut)).toDateString()}
                    {/* Date debut: {item.date_debut} */}
                   </Text>
                 </Block>
@@ -107,7 +107,7 @@ class Card2 extends React.Component {
                     //style={titleStyles2}
                     numberOfLines={1}
                   >
-                   Fin: {new Date(parseFloat(item.date_fin)).toLocaleDateString()}
+                   Fin: {new Date(parseFloat(item.date_fin)).toDateString()}
                   </Text>
                 </Block>
               ) : (
@@ -134,8 +134,9 @@ class Card2 extends React.Component {
                 muted={!ctaColor}
                 color={ctaColor || nowTheme.COLORS.ACTIVE}
                 bold
+                numberOfLines={1}
               >
-                Contribution: {item.somme} $ {item.cat == "7"? "/sem":"/mois"}
+                Credit: {item.somme} $ {item.cat == "7"? "/sem ("+item.nbr_jour+" sem)":"/mois ("+item.nbr_jour+" mois)"}
               </Text>
             </Block>
           </Block>

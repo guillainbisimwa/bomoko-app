@@ -1,18 +1,18 @@
 {
   "expo": {
-    "name": "Bomoko app7",
-    "slug": "bomoko-app7",
+    "name": "Bomoko app",
+    "slug": "bomoko-app",
     "privacy": "public",
     "android": {
       "package": "com.wezalab.bomoko",
       "permissions": [],
-      "versionCode": 7
+      "versionCode": 8
     },
     "sdkVersion": "35.0.0",
     "platforms": [
       "android"
     ],
-    "version": "7.0.1",
+    "version": "1.8.0",
     "orientation": "portrait",
     "icon": "./assets/app-icon.png",
     "splash": {
@@ -31,6 +31,6 @@
         "ttf"
       ]
     },
-    "description": "Bomoko app7"
+    "description": "Bomoko app"
   }
 }

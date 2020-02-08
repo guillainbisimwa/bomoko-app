@@ -139,7 +139,7 @@ class AddGroup extends React.Component {
     await NetInfo.isConnected.fetch().then(async isConnected => {
       if(isConnected){
     
-        await fetch('http://35.223.175.69:3000/groups/', {
+        await fetch('http://35.223.156.137:3000/groups/', {
           method: 'GET',
           headers: {
             Accept: 'application/json',
@@ -199,7 +199,7 @@ class AddGroup extends React.Component {
     var date_fin__ =  date_fin.setDate(date_debut__.getDate() + ( parseInt(cat_) * parseInt(nbr_jour_)));
     var date_fin_ =  date_fin__
 
-   await fetch('http://35.223.175.69:3000/group', {
+   await fetch('http://35.223.156.137:3000/group', {
      method: 'POST',
      headers: {
        Accept: 'application/json',
@@ -214,6 +214,7 @@ class AddGroup extends React.Component {
       id_responsable: id_demandeur_,
       taux: taux_,
       details: details_,
+      nbr_jour:nbr_jour_
      })
    }).then((response) => response.json())
    //If response is in json then in success
@@ -250,7 +251,7 @@ class AddGroup extends React.Component {
           await NetInfo.isConnected.fetch().then(async isConnected => {
             if(isConnected){
           
-              await fetch('http://35.223.175.69:3000/group_by_name/'+this.state.nom_groupe, {
+              await fetch('http://35.223.156.137:3000/group_by_name/'+this.state.nom_groupe, {
                 method: 'GET',
                 headers: {
                   Accept: 'application/json',
@@ -430,7 +431,7 @@ class AddGroup extends React.Component {
                        <Block width={width * 0.8} style={{ marginBottom: 5 }}>
                          <Input
                           type="numeric"
-                          placeholder="Contribution individuelle en $"
+                          placeholder="Montat  $"
                           style={[styles.inputs, {
                              borderColor: this.state.somme_valid
                                    ? '#E3E3E3'

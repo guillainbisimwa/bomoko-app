@@ -60,7 +60,8 @@ class WaitValidAccount extends React.Component {
   };
 
   validateCodeSms(string) {
-    return string.trim().length == 4;
+    return string.trim().length >= 4 && string.trim().length <= 5;
+
   }
 
   validateCodeSms_ = () =>{
@@ -89,7 +90,7 @@ class WaitValidAccount extends React.Component {
       await NetInfo.isConnected.fetch().then(async isConnected => {
         if(isConnected){
           
-          await fetch('http://35.223.175.69:3000/valider_creation_cmpt', {
+          await fetch('http://35.223.156.137:3000/valider_creation_cmpt', {
             method: 'POST',
             headers: {
               Accept: 'application/json',
