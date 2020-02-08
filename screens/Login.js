@@ -89,6 +89,7 @@ class Login extends React.Component {
             if(responseJson.hasOwnProperty(prop)) { 
               //this.createClient();
               //ToastAndroid.show('Ce message '+responseJson, ToastAndroid.LONG)
+              this.setState({isloading: false})
               ToastAndroid.show(responseJson["message"], ToastAndroid.LONG)
 
 
@@ -104,6 +105,7 @@ class Login extends React.Component {
               .then((response_2) => response_2.json())
               //If response is in json then in success
               .then((responseJson_2) => {
+                this.setState({isloading: false})
   
                   var prop_2 = 'message'; 
                   if(responseJson_2.hasOwnProperty(prop_2)) { 
@@ -305,6 +307,7 @@ class Login extends React.Component {
                         </Block>
                         <Block center>
                           <Button color="primary" round style={styles.createButton}
+                          loading={isloading}
                            onPress={this.submitLogin.bind(this)}
                           >
                             <Text

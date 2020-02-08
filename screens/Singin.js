@@ -3,36 +3,25 @@ import {
   StyleSheet,
   ImageBackground,
   Dimensions,
-  StatusBar,
   TouchableWithoutFeedback,
   Keyboard,
   ScrollView,
-  Alert,
   ToastAndroid,
   NetInfo,
   AsyncStorage,
-  ActivityIndicator
 } from 'react-native';
 import { Block, Checkbox, Text, Button as GaButton, theme } from 'galio-framework';
 
-import { Button, Icon, Input , Select} from '../components';
+import { Button, Icon, Input} from '../components';
 import { Images, nowTheme } from '../constants';
 
 import SwitchSelector from "react-native-switch-selector";
-import { Image } from 'react-native-svg';
 
 const { width, height } = Dimensions.get('screen');
 
 const DismissKeyboard = ({ children }) => (
   <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>{children}</TouchableWithoutFeedback>
 );
-
-const options = [
-  { label: "01:00", value: "1" },
-  { label: "01:30", value: "1.5" },
-  { label: "02:00", value: "2" }
-];
-
 
 class Signin extends React.Component {
   constructor(props) {
@@ -57,7 +46,7 @@ class Signin extends React.Component {
       password_confirm_valid: true,
       password_valid: true,
       adresse_valid: true,
-      isShow: false      
+      isloading: false      
     };
     
   }
@@ -141,6 +130,7 @@ class Signin extends React.Component {
   handleChangeConfPassword= conf_password => this.setState({ conf_password }, this.confirmPassword_);
 
   async createClient(){
+    this.setState({isloading: true})
      //var nom_ = this.state.nom
      var phone_ = this.state.phone
      var nom_ = this.state.nom
@@ -175,7 +165,7 @@ class Signin extends React.Component {
         AsyncStorage.setItem('currentAccount', JSON.stringify(responseJson))
         .then(json => ToastAndroid.show('currentAcount save locally', ToastAndroid.SHORT))
         .catch(error => ToastAndroid.show('currentAcount error local memory', ToastAndroid.SHORT));
-        
+        this.setState({isloading: false})
         // TODO send code sms  send_sms_from_rmlconnect
         fetch('http://35.223.175.69:3000/send_sms_from_rmlconnect', {
           method: 'POST',
@@ -196,24 +186,26 @@ class Signin extends React.Component {
             
         }) //If response is not in json then in error
         .catch((error1) => {
+          this.setState({isloading: false})
             //Error 
-            console.error(error1);
-            ToastAndroid.show('Une erreur est surnenue '+ error1, ToastAndroid.LONG)
+          console.error(error1);
+          ToastAndroid.show('Une erreur est surnenue '+ error1, ToastAndroid.LONG)
         });
         // TODO open waitValidAccout screen
           this.props.navigation.navigate("Onboarding");
 
-
     }) //If response is not in json then in error
     .catch((error) => {
         //Error 
-        alert(JSON.stringify(error));
+        //alert(JSON.stringify(error));
         console.error(error);
+        this.setState({isloading: false})
         ToastAndroid.show('Une erreur est surnenue '+ error, ToastAndroid.LONG)
     });
   }
 
   async CheckClientBeforeSave() {
+    this.setState({isloading: true})
 
     //TODO Valider tout les champs
     if(this.state.name_valid && this.state.adresse_valid && this.state.phone_valid 
@@ -235,6 +227,7 @@ class Signin extends React.Component {
               //If response is in json then in success
               .then((responseJson) => {
                   //Success 
+                  this.setState({isloading: false})
                   var prop = 'message'; 
                   if (responseJson.hasOwnProperty(prop)) { 
                     this.createClient();
@@ -246,17 +239,21 @@ class Signin extends React.Component {
               //If response is not in json then in error
               .catch((error) => {
                   //Error 
-                  alert(JSON.stringify(error));
+                  //alert(JSON.stringify(error));
+                  ToastAndroid.show('Une erreur est survenue: '+error, ToastAndroid.LONG)
+                  this.setState({isloading: false})
                   console.error(error);
               });  
               
             }
             else{
+              this.setState({isloading: false})
               ToastAndroid.show('Aucune connexion internet!', ToastAndroid.LONG)
             }
           })
 
     }else {
+      this.setState({isloading: false})
       ToastAndroid.show("Veillez valider tous les champs SVP!", ToastAndroid.LONG);
     }
   }
@@ -269,7 +266,7 @@ class Signin extends React.Component {
       address,
       password,
       conf_password,
-      isShow
+      isloading
     } = this.state;
 
     return (
@@ -313,6 +310,7 @@ class Signin extends React.Component {
                       <GaButton
                         round
                         onlyIcon
+                        loading={isloading}
                         shadowless
                         icon="twitter"
                         iconFamily="Font-Awesome"
@@ -324,6 +322,7 @@ class Signin extends React.Component {
                       <GaButton
                         round
                         onlyIcon
+                        loading={isloading}
                         shadowless
                         icon="facebook"
                         iconFamily="Font-Awesome"
@@ -373,14 +372,6 @@ class Signin extends React.Component {
                               }
                             />
                           </Block>
-
-                          {/* <Block width={width * 0.8} style={{ marginBottom: 5 }}>
-                          <SwitchSelector
-                            options={options}
-                              initial={0}
-                              onPress={value => console.log(`Call onPress with value: ${value}`)}
-                            />
-                          </Block> */}
 
                           <Block width={width * 0.8} style={{ marginBottom: 5 }}>
                             <Input
@@ -510,6 +501,7 @@ class Signin extends React.Component {
                         <Block center>
 
                           <Button color="primary" round style={styles.createButton}
+                          loading={isloading}
                             onPress={this.CheckClientBeforeSave.bind(this)}>
                             <Text
                               style={{ fontFamily: 'montserrat-bold' }}
@@ -519,7 +511,6 @@ class Signin extends React.Component {
                               Creer un compte
                             </Text>
                           </Button>
-                          {/* <Toast isShow={isShow} positionIndicator="bottom" color="warning">This is a bottom positioned toast</Toast> */}
                         </Block>
                       </Block>
 
