@@ -34,6 +34,54 @@ class Login extends React.Component {
       isloading: false
     };
   }
+  _fetchGroup = async () =>{
+    await NetInfo.isConnected.fetch().then(async isConnected => {
+      if(isConnected){
+    
+        await fetch('http://35.223.156.137:3000/groups/', {
+          method: 'GET',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+        })
+        .then((response) => response.json())
+        //If response is in json then in success
+        .then((responseJson) => {
+
+            //Success 
+
+            //ToastAndroid.show('Ce message '+JSON.stringify(responseJson), ToastAndroid.LONG)
+            AsyncStorage.setItem('GroupsLocalStorage', JSON.stringify(responseJson))
+              .then(json => {
+                ToastAndroid.show('GroupsLocalStorage1 save locally', ToastAndroid.SHORT)
+                //ToastAndroid.show(JSON.stringify(responseJson), ToastAndroid.LONG)
+                this._bootstrapAsync();
+                if(responseJson == null){
+                  this.setState({groupss: null});
+                }
+
+            })
+              .catch(error => ToastAndroid.show('GroupsLocalStorage error local memory', ToastAndroid.SHORT));
+            
+            
+            
+        })
+        //If response is not in json then in error
+        .catch((error) => {
+            //Error 
+            //alert(JSON.stringify(error));
+            ToastAndroid.show('Une erreur est survenue '+ error, ToastAndroid.LONG)
+            console.error(error);
+        });  
+        
+      }
+      else{
+        ToastAndroid.show('Aucune connexion internet!', ToastAndroid.LONG)
+      }
+    })
+  }
+  
   validatePassword(string) {
     return string.trim().length > 5;
   }
@@ -145,6 +193,8 @@ class Login extends React.Component {
                   this.setState({isloading: false})
 
                   alert('Une erreur est survenue '+ error);
+                  ToastAndroid.show("Erreure de la connexion! "+error, ToastAndroid.LONG)
+
                   console.error(error);
               });
               
@@ -159,7 +209,9 @@ class Login extends React.Component {
           .catch((error) => {
               //Error 
               this.setState({isloading: false})
-              alert('Une erreur est survenue '+ error);
+              //alert('Une erreur est survenue '+ error);
+              //ToastAndroid.show("Erreure de la connexion! "+error, ToastAndroid.LONG)
+
               console.error(error);
               ToastAndroid.show('Une erreur est survenue '+ error, ToastAndroid.LONG)
           });

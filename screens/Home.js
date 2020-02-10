@@ -81,7 +81,8 @@ class Home extends React.Component {
         //If response is not in json then in error
         .catch((error) => {
             //Error 
-            alert(JSON.stringify(error));
+            //alert(JSON.stringify(error));
+            ToastAndroid.show('Une erreur est survenue '+ error, ToastAndroid.LONG)
             console.error(error);
         });  
         
