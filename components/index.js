@@ -7,5 +7,7 @@ import Header from './Header';
 import Input from './Input';
 import Switch from './Switch';
 import Select from './Select';
+import ListCLient from './ListClient'
+import Card3 from './Card3'
 
-export { Button, Card, DrawerItem, Icon, Input, Header, Switch, Select, Card2 };
+export {Card3, Button, Card, DrawerItem, Icon, Input, Header, Switch, Select, Card2, ListCLient };

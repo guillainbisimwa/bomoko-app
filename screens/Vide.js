@@ -3,15 +3,9 @@ import {
   StyleSheet,
   ImageBackground,
   Dimensions,
-  StatusBar,
   TouchableWithoutFeedback,
   Keyboard,
-  ToastAndroid,
   ScrollView,
-  NetInfo,
-  AsyncStorage,
-  Alert,
-  Image
 } from 'react-native';
 import { Block, Text, Button as GaButton, theme, Checkbox } from 'galio-framework';
 

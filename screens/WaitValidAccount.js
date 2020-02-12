@@ -90,7 +90,7 @@ class WaitValidAccount extends React.Component {
       await NetInfo.isConnected.fetch().then(async isConnected => {
         if(isConnected){
           
-          await fetch('http://35.223.156.137:3000/valider_creation_cmpt', {
+          await fetch('http://localhost:3000/valider_creation_cmpt', {
             method: 'POST',
             headers: {
               Accept: 'application/json',

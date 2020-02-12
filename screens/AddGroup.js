@@ -139,7 +139,7 @@ class AddGroup extends React.Component {
     await NetInfo.isConnected.fetch().then(async isConnected => {
       if(isConnected){
     
-        await fetch('http://35.223.156.137:3000/groups/', {
+        await fetch('http://192.168.56.1:3000/groups/', {
           method: 'GET',
           headers: {
             Accept: 'application/json',
@@ -199,7 +199,7 @@ class AddGroup extends React.Component {
     var date_fin__ =  date_fin.setDate(date_debut__.getDate() + ( parseInt(cat_) * parseInt(nbr_jour_)));
     var date_fin_ =  date_fin__
 
-   await fetch('http://35.223.156.137:3000/group', {
+   await fetch('http://192.168.56.1:3000/group', {
      method: 'POST',
      headers: {
        Accept: 'application/json',
@@ -251,7 +251,7 @@ class AddGroup extends React.Component {
           await NetInfo.isConnected.fetch().then(async isConnected => {
             if(isConnected){
           
-              await fetch('http://35.223.156.137:3000/group_by_name/'+this.state.nom_groupe, {
+              await fetch('http://192.168.56.1:3000/group_by_name/'+this.state.nom_groupe, {
                 method: 'GET',
                 headers: {
                   Accept: 'application/json',

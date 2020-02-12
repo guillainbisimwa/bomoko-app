@@ -16,7 +16,8 @@ import {
 } from 'react-native';
 import { Block, Text, Button as GaButton, theme, Checkbox } from 'galio-framework';
 
-import { Button, Icon, Input } from '../components';
+import { Button, Icon, Input, ListCLient } from '../components';
+
 import { Images, nowTheme } from '../constants';
 
 import { HeaderHeight } from '../constants/utils';
@@ -24,6 +25,8 @@ import { HeaderHeight } from '../constants/utils';
 const { width, height } = Dimensions.get('screen');
 
 const thumbMeasure = (width - 48 - 32) / 4;
+
+
 
 
 const DismissKeyboard = ({ children }) => (
@@ -38,6 +41,7 @@ class DetailGroup extends React.Component {
       st : "",
       group:[],
       isLoading: true,
+      clients:[],
 
       isRefreshing: false,
     };
@@ -47,7 +51,31 @@ class DetailGroup extends React.Component {
   }
   componentDidMount(){
     this._bootstrapAsync();
+    this._bootstrapAsyncClient()
   }
+
+  _bootstrapAsyncClient = async () => {
+  
+    dataClients = [];
+    dataClients002 = [];
+    const GroupsLocalStorage = await AsyncStorage.getItem('ClientsLocalStorage')
+    .then(async (value) => {
+      //console.log("************************Get Value >> ", JSON.parse(value));
+      dataClients = await JSON.parse(value);
+      //dataClients002 = await dataClients.filter((item) => (item.type == 102));
+      //ToastAndroid.show(JSON.stringify(dataClients)+"vo", ToastAndroid.LONG)
+  
+      this.setState({
+        isLoading:  false,
+        clients: await dataClients,
+      });
+   
+      console.log(dataClients)
+  
+     //console.log("*********************Put Value >> ", dataClients);
+   }).done();
+  };
+
   _bootstrapAsync = async () => {
  
     prod = await JSON.parse(this.props.navigation.getParam("product"))
@@ -278,6 +306,16 @@ class DetailGroup extends React.Component {
                           />
                         ))}
                       </Block>
+                    </Block>
+
+                    <Block flex>
+
+                    {this.state.clients.map((item, index) => {
+                      return <Block key={index} flex row>
+                      <ListCLient item={item} horizontal/>
+                    </Block>
+                    })}   
+
                     </Block>
                   </Block>
                 </Block>
