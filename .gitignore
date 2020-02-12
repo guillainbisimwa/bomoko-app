@@ -10,4 +10,5 @@ yarn.lock
 .DS_Store
 *.pem
 SecondEss*
+web-build/
 
