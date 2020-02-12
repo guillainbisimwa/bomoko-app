@@ -10,6 +10,8 @@ import { DrawerItem } from '../components/index';
 import nowTheme from '../constants/Theme';
 
 const { width } = Dimensions.get('screen');
+      
+J = AsyncStorage.getItem('currentAccount');
 
 const Drawer = props => (
   <Block style={styles.container} forceInset={{ top: 'always', horizontal: 'never' }}>
@@ -17,6 +19,12 @@ const Drawer = props => (
       <Image style={styles.logo} source={Images.bomokoLogo} />
       <Block right style={styles.headerIcon}>
         <Icon name="heart" family="Font-Awesome" size={15} color={'white'} />
+        {/* <Text
+            color={nowTheme.COLORS.WHITE}
+            style={{ marginTop: 3, marginLeft: 2, marginBottom: 1, fontFamily: 'montserrat-regular', fontWeight: '300', fontSize: 12}}
+          >
+            USER INFORNATION
+          </Text> */}
       </Block>
     </Block>
 
