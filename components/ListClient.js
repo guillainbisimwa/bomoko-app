@@ -47,7 +47,7 @@ class ListClient extends React.Component {
         //   product: `${JSON.stringify(item)}`,
 
         //  })
-         //ToastAndroid.show( JSON.stringify(item), ToastAndroid.LONG)
+         ToastAndroid.show( JSON.stringify(item), ToastAndroid.LONG)
 
          }
          }>
@@ -128,7 +128,8 @@ const styles = StyleSheet.create({
     borderWidth: 0,
     //width: width - theme.SIZES.BASE * 2,
     height: theme.SIZES.BASE * 4,
-    marginVertical: theme.SIZES.BASE * 0.875,
+    //marginVertical: theme.SIZES.BASE * 0.875,
+    marginVertical: 5,
     //elevation:5
   },
   title: {

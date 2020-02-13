@@ -16,6 +16,7 @@ import {
 } from 'react-native';
 import { Block, Text, Button as GaButton, theme, Checkbox } from 'galio-framework';
 import SwitchSelector from "react-native-switch-selector";
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 import DatePicker from "react-native-datepicker"; 
 
 import { Button, Icon, Input } from '../components';
@@ -431,7 +432,7 @@ class AddGroup extends React.Component {
                        <Block width={width * 0.8} style={{ marginBottom: 5 }}>
                          <Input
                           type="numeric"
-                          placeholder="Montat  $"
+                          placeholder="Credit demande en $"
                           style={[styles.inputs, {
                              borderColor: this.state.somme_valid
                                    ? '#E3E3E3'
@@ -596,6 +597,7 @@ class AddGroup extends React.Component {
               </Block>
             </Block>
           </ImageBackground>
+          <KeyboardSpacer/>
         </Block>
       </DismissKeyboard>
     );

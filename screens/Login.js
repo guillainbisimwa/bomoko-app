@@ -13,6 +13,7 @@ import {
   ScrollView
 } from 'react-native';
 import { Block, Text, Button as GaButton, theme, Checkbox } from 'galio-framework';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 import { Button, Icon, Input } from '../components';
 import { Images, nowTheme } from '../constants';
@@ -381,6 +382,7 @@ class Login extends React.Component {
             </Block>
             </Block>
           </ImageBackground>
+          <KeyboardSpacer/>
         </Block>
       </DismissKeyboard>
     );

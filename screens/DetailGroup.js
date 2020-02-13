@@ -166,7 +166,7 @@ class DetailGroup extends React.Component {
                               opacity: .8
                             }}
                           >
-                            Contibution individuelle: {group.somme} $
+                            Credit individuel: {group.somme} $
                           </Text>
                         </Block>
                         <Block style={styles.info}>
@@ -226,18 +226,14 @@ class DetailGroup extends React.Component {
                       <Button style={{ width: 114, height: 44, marginHorizontal: 5, elevation: 5 }} textStyle={{ fontSize: 16 }} round>
                         Adherer
                       </Button>
-                      <GaButton
-                        round
-                        onlyIcon
-                        shadowless
-                        icon="users"
-                        iconFamily="Font-Awesome"
-                        iconColor={nowTheme.COLORS.WHITE}
-                        iconSize={nowTheme.SIZES.BASE * 1.375}
-                        color={'#888888'}
-                        style={[styles.social, styles.shadow]}
-                      />
-                      <GaButton
+                      
+                      <Button 
+                      color="default"
+                      style={{ width: 150, height: 44, marginHorizontal: 5, elevation: 5 }} 
+                      textStyle={{ fontSize: 16 }} round>
+                        Demander credit
+                      </Button>
+                       <GaButton
                         round
                         onlyIcon
                         shadowless
@@ -248,6 +244,17 @@ class DetailGroup extends React.Component {
                         color={'#888888'}
                         style={[styles.social, styles.shadow]}
                       />
+                      {/*<GaButton
+                        round
+                        onlyIcon
+                        shadowless
+                        icon="info"
+                        iconFamily="Font-Awesome"
+                        iconColor={nowTheme.COLORS.WHITE}
+                        iconSize={nowTheme.SIZES.BASE * 1.375}
+                        color={'#888888'}
+                        style={[styles.social, styles.shadow]}
+                      /> */}
                     </Block>
                   </Block>
                 </ImageBackground>
@@ -281,20 +288,29 @@ class DetailGroup extends React.Component {
                         {group.details}
                           </Text>
                     </Block>
-                    <Block row style={{ paddingVertical: 14, paddingHorizontal: 15 }} space="between">
+                    
+                    <Block row style={{ paddingVertical: 8, paddingHorizontal: 7 }} space="between">
                       <Text bold size={16} color="#2c2c2c" style={{ marginTop: 3 }}>
-                        Album
-                          </Text>
-                      <Button
-                        small
-                        color="transparent"
-                        textStyle={{ color: nowTheme.COLORS.PRIMARY, fontSize: 14 }}
-                      >
-                        View all
-                          </Button>
+                        DATE DE DEBUT:
+                      </Text>
+                      <Text bold muted size={16}  style={{ marginTop: 1 }}>
+                        {new Date(parseFloat(group.date_debut)).toDateString()}
+                      </Text>
+                      
                     </Block>
 
+                    <Block row style={{ paddingVertical: 8, paddingHorizontal: 15 }} space="between">
+                      <Text bold size={16} color="#2c2c2c" style={{ marginTop: 3 }}>
+                        DATE DE FIN:
+                      </Text>
+                      <Text bold muted size={16}  style={{ marginTop: 1 }}>
+                        {new Date(parseFloat(group.date_fin)).toDateString()}
 
+                      </Text>
+                      
+                    </Block>
+
+{/* 
                     <Block style={{ paddingBottom: -HeaderHeight * 2, paddingHorizontal: 15}}>
                       <Block row space="between" style={{ flexWrap: 'wrap' }}>
                         {Images.Viewed.map((img, imgIndex) => (
@@ -306,7 +322,7 @@ class DetailGroup extends React.Component {
                           />
                         ))}
                       </Block>
-                    </Block>
+                    </Block> */}
 
                     <Block flex>
 
