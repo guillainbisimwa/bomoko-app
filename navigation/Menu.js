@@ -11,7 +11,7 @@ import nowTheme from '../constants/Theme';
 
 const { width } = Dimensions.get('screen');
       
-J = AsyncStorage.getItem('currentAccount');
+J = AsyncStorage.getItem('phone');
 //jj = JSON.parse(J)
 
 const currentUser = [];
