@@ -38,15 +38,15 @@ class AddGroup extends React.Component {
     super(props);
     this._bootstrapAsync();
     this.state = {
-      nom_groupe: "",
-      somme: "",
+      nom_groupe: "FFFFEE",
+      somme: "10",
       id_demandeur: "",
       taux: 2,
       cat: "30",
       date_debut: "",
       date_fin: "",
-      nbr_jour: "",
-      details: "",
+      nbr_jour: "3",
+      details: "DETAIL ICI",
       type: "group",
 
       creation_failed: false,
@@ -189,21 +189,25 @@ class AddGroup extends React.Component {
     var date_debut = this.state.date_debut;
     var date_fin = new Date();
     var date_debut_Split = date_debut.split("-");
-    var date_debut_ = new Date(date_debut_Split[2], date_debut_Split[0],date_debut_Split[1]).getTime();
-    var date_debut__ = new Date(date_debut_Split[2], date_debut_Split[0],date_debut_Split[1]);
+    var date_debut_ = new Date(date_debut_Split[2], date_debut_Split[1]-1,date_debut_Split[0]).getTime();
+    var date_debut__ = new Date(date_debut_Split[2], date_debut_Split[1]-1,date_debut_Split[0]);
     var nbr_jour_ = this.state.nbr_jour
     var id_demandeur_ = this.state.id_demandeur
     var taux_ = this.state.taux
     var details_ = this.state.details
     var type_ = this.state.type
+    var diff =   ( parseInt(cat_) * parseInt(nbr_jour_))+1 + parseInt(cat_);
+    var date_fin__ =  date_fin.setDate(date_debut__.getDate() + parseInt(diff));
+    var date_fin_ =  date_fin__;
 
-    var date_fin__ =  date_fin.setDate(date_debut__.getDate() + ( parseInt(cat_) * parseInt(nbr_jour_)));
-    var date_fin_ =  date_fin__
+    //var otd_date = new Date(parseFloat(date_fin_))
 
+    //alert(date_debut+" * "+date_debut__+" * "+otd_date +" --> "+date_fin_+" <-- "+cat_ +" *** "+( parseInt(cat_) * parseInt(nbr_jour_)));
+    //TODO : remove wrong date when user chooses cat = week 
    await fetch('http://192.168.56.1:3000/group', {
      method: 'POST',
      headers: {
-       Accept: 'application/json',
+       Accept: 'appl.toDateString()ication/json',
        'Content-Type': 'application/json',
      },
      body:JSON.stringify({
