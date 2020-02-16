@@ -21,14 +21,9 @@ import { Button, Icon, Input, ListCLient } from '../components';
 
 import { Images, nowTheme } from '../constants';
 
-import { HeaderHeight } from '../constants/utils';
-
 const { width, height } = Dimensions.get('screen');
 
 const thumbMeasure = (width - 48 - 32) / 4;
-
-
-
 
 const DismissKeyboard = ({ children }) => (
   <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>{children}</TouchableWithoutFeedback>
@@ -43,6 +38,7 @@ class DetailGroup extends React.Component {
       group:[],
       isLoading: true,
       clients:[],
+      currentUser:[],
 
       isRefreshing: false,
     };
@@ -58,12 +54,11 @@ class DetailGroup extends React.Component {
   _bootstrapAsyncClient = async () => {
   
     dataClients = [];
-    dataClients002 = [];
+    currentUser = [];
     const GroupsLocalStorage = await AsyncStorage.getItem('ClientsLocalStorage')
     .then(async (value) => {
       //console.log("************************Get Value >> ", JSON.parse(value));
       dataClients = await JSON.parse(value);
-      //dataClients002 = await dataClients.filter((item) => (item.type == 102));
       //ToastAndroid.show(JSON.stringify(dataClients)+"vo", ToastAndroid.LONG)
   
       this.setState({
@@ -72,6 +67,22 @@ class DetailGroup extends React.Component {
       });
    
       console.log(dataClients)
+  
+     //console.log("*********************Put Value >> ", dataClients);
+   }).done();
+
+   const currentAccount = await AsyncStorage.getItem('currentAccount')
+    .then(async (value) => {
+      //console.log("************************Get Value >> ", JSON.parse(value));
+      currentUser = await JSON.parse(value);
+      //ToastAndroid.show(JSON.stringify(currentUser)+" <--", ToastAndroid.LONG)
+  
+      this.setState({
+        isLoading:  false,
+        currentUser: await currentUser,
+      });
+   
+      console.log(currentUser)
   
      //console.log("*********************Put Value >> ", dataClients);
    }).done();
@@ -87,82 +98,62 @@ class DetailGroup extends React.Component {
 
   };
 
-  async _devenir_mbr_group(){
+  async _devenir_mbr_group(id_g, group_nom){
     this.setState({isloading: true})
-     //var nom_ = this.state.nom
-     var phone_ = this.state.phone
-     var nom_ = this.state.nom
-     var address_ = this.state.address
-     var sexe_ = this.state.sexe
-     var password = this.state.password
-     var conf_password = this.state.conf_password
+    var pid = this.state.currentUser["pid"];
+    var phone = this.state.currentUser["phone"];
+    //ToastAndroid.show(JSON.stringify(this.state.currentUser), ToastAndroid.LONG)
+    //TODO: Check if current user has a group yet
+    //TODO: Get profile id_g state with filter and/or find functions sort inside clients using pid
+    const singleClient = this.state.clients.find((item) => item.phone == phone);
+    //ToastAndroid.show(JSON.stringify(singleClient), ToastAndroid.LONG)
 
-    await fetch('http://192.168.56.1:3000/register_client', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body:JSON.stringify({
-        nom: nom_,
-        phone: phone_,
-        id_g: "",
-        num_carte_elec: "",
-        address: address_,
-        sexe: sexe_,
-        profession: "",
-        code_conf_sms: "",
-        password:conf_password           
-      })
-    }).then((response) => response.json())
-    //If response is in json then in success
-    .then((responseJson) => {
-        //Success 
-        //ToastAndroid.show(JSON.stringify(responseJson["code_conf_sms"]), ToastAndroid.SHORT)
-        // TODO Save local variables
-        AsyncStorage.setItem('currentAccount', JSON.stringify(responseJson))
-        .then(json => ToastAndroid.show('currentAcount save locally', ToastAndroid.SHORT))
-        .catch(error => ToastAndroid.show('currentAcount error local memory', ToastAndroid.SHORT));
-        this.setState({isloading: false})
-        // TODO send code sms  send_sms_from_rmlconnect
-        fetch('http://192.168.56.1:3000/send_sms_from_rmlconnect', {
-          method: 'POST',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-          body:JSON.stringify({
-            msg_detail:"Bonjour "+nom_+", validez votre compte. Votre code est:",
-	          msg_code:JSON.stringify(responseJson["code_conf_sms"]),
-	          phone:phone_
-              
-          })
-        }).then((response1) => response1.json())
-        //If response is in json then in success
-        .then((responseJson1) => {
-          //ToastAndroid.show('codeeeeeeeeeeee '+ JSON.stringify(responseJson1), ToastAndroid.LONG)
-            
-        }) //If response is not in json then in error
-        .catch((error1) => {
+
+    
+
+    if(singleClient["id_g"] == ""){
+      await fetch('http://192.168.56.1:3000/devenir_mbr_group', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body:JSON.stringify({
+          pid: pid,
+          id_g: id_g
+        })
+      }).then((response) => response.json())
+      //If response is in json then in success
+      .then((responseJson) => {
+          //Success 
+        var prop = 'message'; 
+        if (responseJson.hasOwnProperty(prop)) { 
+          ToastAndroid.show(responseJson['message'], ToastAndroid.LONG)           
+        } else {
+          //this.setState({isloading: false}) 
+          ToastAndroid.show('Bienvenue dans '+group_nom, ToastAndroid.LONG)
+          //this.setState({nom_groupe_valid: false})
+        } 
+          
+
+      }) //If response is not in json then in error
+      .catch((error) => {
+          //Error 
+          //alert(JSON.stringify(error));
+          console.error(error);
           this.setState({isloading: false})
-            //Error 
-          console.error(error1);
-          ToastAndroid.show('Une erreur est surnenue '+ error1, ToastAndroid.LONG)
-        });
-        // TODO open waitValidAccout screen
-          this.props.navigation.navigate("WaitValidAccount");
+          ToastAndroid.show('Une erreur est surnenue '+ error, ToastAndroid.LONG)
+      });
+    }
+    else{
+      ToastAndroid.show("Impossible! Vous appartenez a un autre groupe", ToastAndroid.SHORT)
 
-    }) //If response is not in json then in error
-    .catch((error) => {
-        //Error 
-        //alert(JSON.stringify(error));
-        console.error(error);
-        this.setState({isloading: false})
-        ToastAndroid.show('Une erreur est surnenue '+ error, ToastAndroid.LONG)
-    });
+    }
+
+    
   }
 
-  _adhesion(id,group,somme, nbr_jour, cat){
+  _adhesion(id_g,group,somme, nbr_jour, cat){
     Alert.alert("Attention!",'Voulez vous vraiment adherer dans le groupe :'+group+"? Vous aurez droit a un credit maximum de "+somme+" $ a remetre progressivement dans "+nbr_jour+" "+cat+".",
       [
        
@@ -174,8 +165,8 @@ class DetailGroup extends React.Component {
               {
                 console.log('OK Pressed')
                 //this.checkCreditExistFromAPI(id, name)
-                ToastAndroid.show(id, ToastAndroid.SHORT)
-
+                //ToastAndroid.show(id, ToastAndroid.SHORT)
+                this._devenir_mbr_group(id_g, group);
 
               }
               else{
@@ -420,7 +411,7 @@ class DetailGroup extends React.Component {
                       </View> */}
                       
                     </Block>
-
+                      {/* TODO: Enderstand why this date is in the enegative form */}
                     <Block row style={{ paddingVertical: 8, paddingHorizontal: 15 }} space="between">
                       <Text bold size={16} color="#2c2c2c" style={{ marginTop: 3 }}>
                         Les adhesions se cloturent dans :
