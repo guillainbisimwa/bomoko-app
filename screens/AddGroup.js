@@ -38,15 +38,15 @@ class AddGroup extends React.Component {
     super(props);
     this._bootstrapAsync();
     this.state = {
-      nom_groupe: "FFFFEE",
-      somme: "10",
+      nom_groupe: "",
+      somme: "",
       id_demandeur: "",
       taux: 2,
       cat: "30",
       date_debut: "",
       date_fin: "",
-      nbr_jour: "3",
-      details: "DETAIL ICI",
+      nbr_jour: "",
+      details: "",
       type: "group",
 
       creation_failed: false,
