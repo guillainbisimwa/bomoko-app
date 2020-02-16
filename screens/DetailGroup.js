@@ -41,6 +41,8 @@ class DetailGroup extends React.Component {
       clients:[],
       currentUser:[],
       currentProfile:[],
+      clientByGroup:[],
+      countGroupMember:0,
 
       isRefreshing: false,
     };
@@ -64,10 +66,17 @@ class DetailGroup extends React.Component {
       //console.log("************************Get Value >> ", JSON.parse(value));
       dataClients = await JSON.parse(value);
       //ToastAndroid.show(JSON.stringify(dataClients)+"vo", ToastAndroid.LONG)
+      const clientByGroup = this.state.clients.filter((item) => item.id_g == this.state.group["id"]);
+      const countGroupMember = clientByGroup.reduce((key, val) => key + 1, 0);
+
+
+
   
       this.setState({
         isLoading:  false,
         clients: await dataClients,
+        clientByGroup: await clientByGroup,
+        countGroupMember: await countGroupMember
       });
    
       console.log(dataClients)
@@ -296,7 +305,8 @@ class DetailGroup extends React.Component {
     const { navigation } = this.props;
     const {
       st,
-      group
+      group,
+      countGroupMember
     } = this.state;
     //ToastAndroid.show( JSON.parse(navigation.getParam("product")), ToastAndroid.SHORT)
     //ToastAndroid.show( JSON.stringify(navigation.getParam("product")), ToastAndroid.SHORT)
@@ -384,7 +394,7 @@ class DetailGroup extends React.Component {
                                 color="white"
                                 style={{ marginBottom: 4, fontFamily: 'montserrat-bold' }}
                               >
-                                10
+                                {countGroupMember}
                               </Text>
                               <Text style={{ fontFamily: 'montserrat-regular' }} size={14} color="white">
                                 Membres
@@ -573,8 +583,8 @@ class DetailGroup extends React.Component {
                     </Block> */}
 
                     <Block flex>
-
-                    {this.state.clients.map((item, index) => {
+                    
+                    {this.state.clientByGroup.map((item, index) => {
                       return <Block key={index} flex row>
                       <ListCLient item={item} horizontal/>
                     </Block>
