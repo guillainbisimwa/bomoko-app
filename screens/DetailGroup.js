@@ -33,12 +33,14 @@ class DetailGroup extends React.Component {
   constructor(props) {
     super(props);
     //this._bootstrapAsync();
+    this._bootstrapAsyncClient();
     this.state = {
       st : "",
       group:[],
       isLoading: true,
       clients:[],
       currentUser:[],
+      currentProfile:[],
 
       isRefreshing: false,
     };
@@ -49,13 +51,15 @@ class DetailGroup extends React.Component {
   componentDidMount(){
     this._bootstrapAsync();
     this._bootstrapAsyncClient()
+    this._fetchClients()
   }
 
   _bootstrapAsyncClient = async () => {
   
     dataClients = [];
     currentUser = [];
-    const GroupsLocalStorage = await AsyncStorage.getItem('ClientsLocalStorage')
+    currentProfile=[]
+    const ClientsLocalStorage = await AsyncStorage.getItem('ClientsLocalStorage')
     .then(async (value) => {
       //console.log("************************Get Value >> ", JSON.parse(value));
       dataClients = await JSON.parse(value);
@@ -76,10 +80,13 @@ class DetailGroup extends React.Component {
       //console.log("************************Get Value >> ", JSON.parse(value));
       currentUser = await JSON.parse(value);
       //ToastAndroid.show(JSON.stringify(currentUser)+" <--", ToastAndroid.LONG)
+
+      const singleClient = this.state.clients.find((item) => item.phone == currentUser['phone']);
   
       this.setState({
         isLoading:  false,
         currentUser: await currentUser,
+        currentProfile: await singleClient
       });
    
       console.log(currentUser)
@@ -102,15 +109,9 @@ class DetailGroup extends React.Component {
     this.setState({isloading: true})
     var pid = this.state.currentUser["pid"];
     var phone = this.state.currentUser["phone"];
-    //ToastAndroid.show(JSON.stringify(this.state.currentUser), ToastAndroid.LONG)
-    //TODO: Check if current user has a group yet
-    //TODO: Get profile id_g state with filter and/or find functions sort inside clients using pid
+   
     const singleClient = this.state.clients.find((item) => item.phone == phone);
     //ToastAndroid.show(JSON.stringify(singleClient), ToastAndroid.LONG)
-
-
-    
-
     if(singleClient["id_g"] == ""){
       await fetch('http://192.168.56.1:3000/devenir_mbr_group', {
         method: 'POST',
@@ -130,16 +131,11 @@ class DetailGroup extends React.Component {
         if (responseJson.hasOwnProperty(prop)) { 
           ToastAndroid.show(responseJson['message'], ToastAndroid.LONG)           
         } else {
-          //this.setState({isloading: false}) 
           ToastAndroid.show('Bienvenue dans '+group_nom, ToastAndroid.LONG)
-          //this.setState({nom_groupe_valid: false})
+          this._fetchClients();
         } 
-          
-
       }) //If response is not in json then in error
       .catch((error) => {
-          //Error 
-          //alert(JSON.stringify(error));
           console.error(error);
           this.setState({isloading: false})
           ToastAndroid.show('Une erreur est surnenue '+ error, ToastAndroid.LONG)
@@ -147,10 +143,48 @@ class DetailGroup extends React.Component {
     }
     else{
       ToastAndroid.show("Impossible! Vous appartenez a un autre groupe", ToastAndroid.SHORT)
-
     }
+  }
 
-    
+  async _quitter_un_group(id_g, group_nom){
+    this.setState({isloading: true})
+    var pid = this.state.currentUser["pid"];
+    var phone = this.state.currentUser["phone"];
+   
+    const singleClient = this.state.clients.find((item) => item.phone == phone);
+    //ToastAndroid.show(JSON.stringify(singleClient), ToastAndroid.LONG)
+    if(singleClient["id_g"] != ""){
+      await fetch('http://192.168.56.1:3000/quitter_un_group', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body:JSON.stringify({
+          pid: pid
+        })
+      }).then((response) => response.json())
+      //If response is in json then in success
+      .then((responseJson) => {
+          //Success 
+        var prop = 'message'; 
+        if (responseJson.hasOwnProperty(prop)) { 
+          ToastAndroid.show(responseJson['message'], ToastAndroid.LONG)           
+        } else {
+          ToastAndroid.show("Bye Bye! Vous n'etes plus membre du "+group_nom, ToastAndroid.LONG)
+          this._fetchClients();
+          this.props.navigation.navigate('Home');
+        } 
+      }) //If response is not in json then in error
+      .catch((error) => {
+          console.error(error);
+          this.setState({isloading: false})
+          ToastAndroid.show('Une erreur est surnenue '+ error, ToastAndroid.LONG)
+      });
+    }
+    else{
+      ToastAndroid.show("Impossible! Vous appartenez a aucun groupe", ToastAndroid.SHORT)
+    }
   }
 
   _adhesion(id_g,group,somme, nbr_jour, cat){
@@ -167,6 +201,35 @@ class DetailGroup extends React.Component {
                 //this.checkCreditExistFromAPI(id, name)
                 //ToastAndroid.show(id, ToastAndroid.SHORT)
                 this._devenir_mbr_group(id_g, group);
+                // TODO: Find how to refresh al states
+                this.props.navigation.navigate('Home');
+              }
+              else{
+                ToastAndroid.show("Aucune connexion internet disponible", ToastAndroid.SHORT)
+              }
+            });
+
+          }
+        },
+      ]);
+  }
+
+  _quitter(id_g,group,somme, nbr_jour, cat){
+    Alert.alert("Attention!",'Voulez vous vraiment quitter le groupe :'+group+"?",
+      [
+       
+        {text: 'Annuler', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+        {text: 'Valider', onPress: () => 
+          {
+            NetInfo.isConnected.fetch().then(isConnected => {
+              if(isConnected)
+              {
+                console.log('OK Pressed')
+                //this.checkCreditExistFromAPI(id, name)
+                //ToastAndroid.show(id, ToastAndroid.SHORT)
+                this._quitter_un_group(id_g, group);
+                this._fetchClients()
+
 
               }
               else{
@@ -179,6 +242,54 @@ class DetailGroup extends React.Component {
           }
         },
       ]);
+  }
+
+  _fetchClients = async () =>{
+    await NetInfo.isConnected.fetch().then(async isConnected => {
+      if(isConnected){
+    
+        await fetch('http://192.168.56.1:3000/clients/', {
+          method: 'GET',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+        })
+        .then((response) => response.json())
+        //If response is in json then in success
+        .then((responseJson) => {
+  
+            //Success 
+  
+            //ToastAndroid.show('Ce message '+JSON.stringify(responseJson), ToastAndroid.LONG)
+            AsyncStorage.setItem('ClientsLocalStorage', JSON.stringify(responseJson))
+              .then(json => {
+                ToastAndroid.show('ClientsLocalStorage1 save locally', ToastAndroid.SHORT)
+                //ToastAndroid.show(JSON.stringify(responseJson), ToastAndroid.LONG)
+                // this._bootstrapAsyncGroup();
+                // if(responseJson == null){
+                //   this.setState({groupss: null});
+                // }
+  
+            })
+              .catch(error => ToastAndroid.show('ClientsLocalStorage error local memory', ToastAndroid.SHORT));
+            
+            
+            
+        })
+        //If response is not in json then in error
+        .catch((error) => {
+            //Error 
+            //alert(JSON.stringify(error));
+            ToastAndroid.show('Une erreur est survenue '+ error, ToastAndroid.LONG)
+            console.error(error);
+        });  
+        
+      }
+      else{
+        ToastAndroid.show('Aucune connexion internet!', ToastAndroid.LONG)
+      }
+    })
   }
 
   render() {
@@ -318,21 +429,54 @@ class DetailGroup extends React.Component {
                       row
                       style={{ position: 'absolute', width: width, top: height * 0.3 - 22, zIndex: 99}}
                     >
-                      <Button
-                      onPress={_ => this._adhesion(group.id, group.nom_group, group.somme, group.nbr_jour, group.cat == 30? "mois": "semaines")}         
+                      {
+                        this.state.currentProfile["id_g"] == ""?
+                        <Button
+                          onPress={_ => this._adhesion(group.id, group.nom_group, group.somme, group.nbr_jour, group.cat == 30? "mois": "semaines")}         
 
-                      style={{ width: 114, height: 44, marginHorizontal: 5, elevation: 5}} 
-                      textStyle={{ fontSize: 16 }} round>
-                        Adherer
-                      </Button>
+                          style={{ width: 114, height: 44, marginHorizontal: 5, elevation: 5}} 
+                          textStyle={{ fontSize: 16 }} round>
+                            Adherer
+                          </Button>
+                        :
+                        this.state.currentProfile["id_g"] == group.id?
+                      <Button
+                        onPress={_ => this._quitter(group.id, group.nom_group, group.somme, group.nbr_jour, group.cat == 30? "mois": "semaines")}         
+                        
+                        style={{ width: 114, height: 44, marginHorizontal: 5, elevation: 5,backgroundColor: nowTheme.COLORS.ERROR,}} 
+                        textStyle={{ fontSize: 16 }} round>
+                          Quitter
+                        </Button>
+                        :
+                        <Button
+                        onPress={_ => this._quitter(group.id, group.nom_group, group.somme, group.nbr_jour, group.cat == 30? "mois": "semaines")}         
+                        
+                        style={{ display:"none", width: 114, height: 44, marginHorizontal: 5, elevation: 5,backgroundColor: nowTheme.COLORS.ERROR,}} 
+                        textStyle={{ fontSize: 16 }} round>
+                          Quitter
+                        </Button>
+                      }
                       
-                      <Button 
-                      color="default"
-                      style={{ width: 150, height: 44, marginHorizontal: 5, elevation: 5 }} 
-                      textStyle={{ fontSize: 16 }} round>
-                        Demander credit
-                      </Button>
-                       <GaButton
+                      {
+                         this.state.currentProfile["id_g"] == group.id?
+                         <Button 
+                          color="default"
+                          style={{ width: 150, height: 44, marginHorizontal: 5, elevation: 5 }} 
+                          textStyle={{ fontSize: 16 }} round>
+                            Demander credit
+                          </Button>
+                         :
+                         <Button 
+                          color="default"
+                          style={{ width: 150, height: 44, marginHorizontal: 5, elevation: 5, display:"none" }} 
+                          textStyle={{ fontSize: 16 }} round>
+                            Demander credit
+                         </Button>
+
+                      }
+                     
+
+                      <GaButton
                         round
                         onlyIcon
                         shadowless
@@ -340,20 +484,9 @@ class DetailGroup extends React.Component {
                         iconFamily="Font-Awesome"
                         iconColor={nowTheme.COLORS.WHITE}
                         iconSize={nowTheme.SIZES.BASE * 1.375}
-                        color={'#888888'}
+                        color={nowTheme.COLORS.INFO}
                         style={[styles.social, styles.shadow]}
                       />
-                      {/*<GaButton
-                        round
-                        onlyIcon
-                        shadowless
-                        icon="info"
-                        iconFamily="Font-Awesome"
-                        iconColor={nowTheme.COLORS.WHITE}
-                        iconSize={nowTheme.SIZES.BASE * 1.375}
-                        color={'#888888'}
-                        style={[styles.social, styles.shadow]}
-                      /> */}
                     </Block>
                   </Block>
                 </ImageBackground>
