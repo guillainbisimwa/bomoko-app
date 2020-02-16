@@ -62,11 +62,7 @@ class Login extends React.Component {
                   this.setState({groupss: null});
                 }
 
-            })
-              .catch(error => ToastAndroid.show('GroupsLocalStorage error local memory', ToastAndroid.SHORT));
-            
-            
-            
+            }).catch(error => ToastAndroid.show('GroupsLocalStorage error local memory', ToastAndroid.SHORT));
         })
         //If response is not in json then in error
         .catch((error) => {
@@ -168,6 +164,11 @@ class Login extends React.Component {
                       .then(json => ToastAndroid.show('currentAcount save locally', ToastAndroid.SHORT))
                       .catch(error => ToastAndroid.show('currentAcount error local memory', ToastAndroid.SHORT));
 
+                      AsyncStorage.setItem('phone', JSON.stringify(responseJson_2["phone"]))
+                      .then(json => ToastAndroid.show('phone save locally', ToastAndroid.SHORT))
+                      .catch(error => ToastAndroid.show('phone error local memory', ToastAndroid.SHORT));
+                      
+
                       this.props.navigation.navigate("Onboarding");
                   }
                   else if(responseJson_2["etat"] == 1){
@@ -180,6 +181,11 @@ class Login extends React.Component {
                       .then(json => ToastAndroid.show('currentSession save locally', ToastAndroid.SHORT))
                       .catch(error => ToastAndroid.show('currentSession error local memory', ToastAndroid.SHORT));
                       this.setState({isloading: false})
+
+                      AsyncStorage.setItem('phone', JSON.stringify(responseJson_2["phone"]))
+                      .then(json => ToastAndroid.show('phone save locally', ToastAndroid.SHORT))
+                      .catch(error => ToastAndroid.show('phone error local memory', ToastAndroid.SHORT));
+                      
 
                       this.props.navigation.navigate("Home");
                   }
