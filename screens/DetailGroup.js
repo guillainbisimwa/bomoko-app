@@ -12,7 +12,8 @@ import {
   AsyncStorage,
   Alert,
   Image,
-  ActivityIndicator
+  ActivityIndicator,
+  View
 } from 'react-native';
 import { Block, Text, Button as GaButton, theme, Checkbox } from 'galio-framework';
 
@@ -85,6 +86,109 @@ class DetailGroup extends React.Component {
     });
 
   };
+
+  async _devenir_mbr_group(){
+    this.setState({isloading: true})
+     //var nom_ = this.state.nom
+     var phone_ = this.state.phone
+     var nom_ = this.state.nom
+     var address_ = this.state.address
+     var sexe_ = this.state.sexe
+     var password = this.state.password
+     var conf_password = this.state.conf_password
+
+    await fetch('http://192.168.56.1:3000/register_client', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body:JSON.stringify({
+        nom: nom_,
+        phone: phone_,
+        id_g: "",
+        num_carte_elec: "",
+        address: address_,
+        sexe: sexe_,
+        profession: "",
+        code_conf_sms: "",
+        password:conf_password           
+      })
+    }).then((response) => response.json())
+    //If response is in json then in success
+    .then((responseJson) => {
+        //Success 
+        //ToastAndroid.show(JSON.stringify(responseJson["code_conf_sms"]), ToastAndroid.SHORT)
+        // TODO Save local variables
+        AsyncStorage.setItem('currentAccount', JSON.stringify(responseJson))
+        .then(json => ToastAndroid.show('currentAcount save locally', ToastAndroid.SHORT))
+        .catch(error => ToastAndroid.show('currentAcount error local memory', ToastAndroid.SHORT));
+        this.setState({isloading: false})
+        // TODO send code sms  send_sms_from_rmlconnect
+        fetch('http://192.168.56.1:3000/send_sms_from_rmlconnect', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body:JSON.stringify({
+            msg_detail:"Bonjour "+nom_+", validez votre compte. Votre code est:",
+	          msg_code:JSON.stringify(responseJson["code_conf_sms"]),
+	          phone:phone_
+              
+          })
+        }).then((response1) => response1.json())
+        //If response is in json then in success
+        .then((responseJson1) => {
+          //ToastAndroid.show('codeeeeeeeeeeee '+ JSON.stringify(responseJson1), ToastAndroid.LONG)
+            
+        }) //If response is not in json then in error
+        .catch((error1) => {
+          this.setState({isloading: false})
+            //Error 
+          console.error(error1);
+          ToastAndroid.show('Une erreur est surnenue '+ error1, ToastAndroid.LONG)
+        });
+        // TODO open waitValidAccout screen
+          this.props.navigation.navigate("WaitValidAccount");
+
+    }) //If response is not in json then in error
+    .catch((error) => {
+        //Error 
+        //alert(JSON.stringify(error));
+        console.error(error);
+        this.setState({isloading: false})
+        ToastAndroid.show('Une erreur est surnenue '+ error, ToastAndroid.LONG)
+    });
+  }
+
+  _adhesion(id,group,somme, nbr_jour, cat){
+    Alert.alert("Attention!",'Voulez vous vraiment adherer dans le groupe :'+group+"? Vous aurez droit a un credit maximum de "+somme+" $ a remetre progressivement dans "+nbr_jour+" "+cat+".",
+      [
+       
+        {text: 'Annuler', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+        {text: 'Valider', onPress: () => 
+          {
+            NetInfo.isConnected.fetch().then(isConnected => {
+              if(isConnected)
+              {
+                console.log('OK Pressed')
+                //this.checkCreditExistFromAPI(id, name)
+                ToastAndroid.show(id, ToastAndroid.SHORT)
+
+
+              }
+              else{
+                ToastAndroid.show("Aucune connexion internet disponible", ToastAndroid.SHORT)
+               
+                
+              }
+            });
+
+          }
+        },
+      ]);
+  }
 
   render() {
     const { navigation } = this.props;
@@ -221,9 +325,13 @@ class DetailGroup extends React.Component {
                     <Block
                       middle
                       row
-                      style={{ position: 'absolute', width: width, top: height * 0.3 - 22, zIndex: 99 }}
+                      style={{ position: 'absolute', width: width, top: height * 0.3 - 22, zIndex: 99}}
                     >
-                      <Button style={{ width: 114, height: 44, marginHorizontal: 5, elevation: 5 }} textStyle={{ fontSize: 16 }} round>
+                      <Button
+                      onPress={_ => this._adhesion(group.id, group.nom_group, group.somme, group.nbr_jour, group.cat == 30? "mois": "semaines")}         
+
+                      style={{ width: 114, height: 44, marginHorizontal: 5, elevation: 5}} 
+                      textStyle={{ fontSize: 16 }} round>
                         Adherer
                       </Button>
                       
@@ -262,7 +370,7 @@ class DetailGroup extends React.Component {
 
               </Block>
               <Block />
-              <Block flex={0.4} style={{ padding: theme.SIZES.BASE, marginTop: 10}}>
+              <Block flex={0.4} style={{zIndex:1, padding: theme.SIZES.BASE, marginTop: 10}}>
                 <Block>
                   <Block flex style={{ marginTop: 20 }}>
                     <Block middle>
@@ -289,23 +397,39 @@ class DetailGroup extends React.Component {
                           </Text>
                     </Block>
                     
-                    <Block row style={{ paddingVertical: 8, paddingHorizontal: 7 }} space="between">
-                      <Text bold size={16} color="#2c2c2c" style={{ marginTop: 3 }}>
+                    <Block style={styles.container} row>
+                      {/* <Text bold size={16} color="#2c2c2c" style={{ marginTop: 3 }}>
                         DATE DE DEBUT:
                       </Text>
                       <Text bold muted size={16}  style={{ marginTop: 1 }}>
                         {new Date(parseFloat(group.date_debut)).toDateString()}
-                      </Text>
+                      </Text> */}
+
+
+                      <View style={styles.cellContainer}>
+                        <Text style={styles.titleText}>Date debut</Text>
+                        <Text style={styles.amountText}> {new Date(parseFloat(group.date_debut)).toDateString()}</Text>
+                      </View>
+                      <View style={styles.cellContainer}>
+                        <Text style={styles.titleText}>Date fin</Text>
+                        <Text>{new Date(parseFloat(group.date_fin)).toDateString()}</Text>
+                      </View>
+                      {/* <View style={styles.cellContainer}>
+                        <Text style={styles.titleText}>Status</Text>
+                        <Text>Dans 1 jrs</Text>
+                      </View> */}
                       
                     </Block>
 
                     <Block row style={{ paddingVertical: 8, paddingHorizontal: 15 }} space="between">
                       <Text bold size={16} color="#2c2c2c" style={{ marginTop: 3 }}>
-                        DATE DE FIN:
+                        Les adhesions se cloturent dans :
+                       
+
                       </Text>
                       <Text bold muted size={16}  style={{ marginTop: 1 }}>
-                        {new Date(parseFloat(group.date_fin)).toDateString()}
-
+                        {(new Date(parseFloat(group.date_debut))).getDate()  - (new Date()).getDate() } jours
+                       
                       </Text>
                       
                     </Block>
@@ -448,7 +572,7 @@ const styles = StyleSheet.create({
     width,
     height: height * 0.3,
     padding: 0,
-    zIndex: 1
+    zIndex: 120
   },
   profileBackground: {
     width,
@@ -512,7 +636,38 @@ const styles = StyleSheet.create({
     marginTop: 15,
     marginBottom: 30,
     zIndex: 2
-  }
+  },
+
+
+  container: {
+    fontFamily: 'montserrat-bold',
+    paddingVertical: 8,
+    marginTop:7,
+    marginBottom:7,
+    paddingHorizontal: 15,
+    alignItems: 'center',
+    backgroundColor: nowTheme.COLORS.TABS,
+    borderRadius: 4,
+    shadowColor: nowTheme.COLORS.BLACK,
+    shadowOffset: {
+      width: 0,
+      height: 4
+    },
+    shadowRadius: 8,
+    shadowOpacity: 0.1,
+    elevation: 1,
+
+  },
+  cellContainer: {
+    flex: 1,
+  },
+  titleText: {
+    fontSize: 15,
+    color: 'gray',
+  },
+  amountText: {
+    fontSize: 15,
+  },
 });
 
 export default DetailGroup;
