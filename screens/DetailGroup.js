@@ -512,7 +512,7 @@ class DetailGroup extends React.Component {
                        style={group.etat ==1 ? styles.etatE: styles.etatS}
                         
                       >
-                        {group.etat == 0? "EN COURS" : "VALIDE"}
+                        {group.etat == 0? "EN ATTENTE" : "VALIDE"}
 
                           </Text>
                       <Text

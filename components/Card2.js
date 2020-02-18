@@ -61,7 +61,7 @@ class Card2 extends React.Component {
               numberOfLines={1}
               color={nowTheme.COLORS.WHITE}>
             
-              {item.etat == 0? "(En cours)" : "(Valide)"}
+              {item.etat == 0? "(En attente)" : "(Valide)"}
               </Text>
             </Block>
           </ImageBackground>
