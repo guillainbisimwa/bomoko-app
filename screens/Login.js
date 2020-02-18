@@ -39,7 +39,7 @@ class Login extends React.Component {
     await NetInfo.isConnected.fetch().then(async isConnected => {
       if(isConnected){
     
-        await fetch('http://192.168.56.1:3000/groups/', {
+        await fetch('http://35.223.156.137:3000/groups/', {
           method: 'GET',
           headers: {
             Accept: 'application/json',
@@ -114,7 +114,7 @@ class Login extends React.Component {
       await NetInfo.isConnected.fetch().then(async isConnected => {
         if(isConnected){
       
-          await fetch('http://192.168.56.1:3000/login', {
+          await fetch('http://35.223.156.137:3000/login', {
             method: 'POST',
             headers: {
               Accept: 'application/json',
@@ -140,7 +140,7 @@ class Login extends React.Component {
 
             } else if (responseJson["etat"] == 0) { //always 0
               //ToastAndroid.show(JSON.stringify(responseJson), ToastAndroid.SHORT)
-              await fetch('http://192.168.56.1:3000/client_by_phone/'+responseJson["phone"], {
+              await fetch('http://35.223.156.137:3000/client_by_phone/'+responseJson["phone"], {
                 method: 'GET',
                 headers: {
                   Accept: 'application/json',

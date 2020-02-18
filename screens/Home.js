@@ -74,7 +74,7 @@ _fetchClients = async () =>{
   await NetInfo.isConnected.fetch().then(async isConnected => {
     if(isConnected){
   
-      await fetch('http://192.168.56.1:3000/clients/', {
+      await fetch('http://35.223.156.137:3000/clients/', {
         method: 'GET',
         headers: {
           Accept: 'application/json',
@@ -122,7 +122,7 @@ _fetchClients = async () =>{
     await NetInfo.isConnected.fetch().then(async isConnected => {
       if(isConnected){
     
-        await fetch('http://192.168.56.1:3000/groups/', {
+        await fetch('http://35.223.156.137:3000/groups/', {
           method: 'GET',
           headers: {
             Accept: 'application/json',
