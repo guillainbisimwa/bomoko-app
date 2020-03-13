@@ -22,7 +22,8 @@ import Vide from '../screens/Vide';
 import AddGroup from '../screens/AddGroup';
 import DetailGroup from '../screens/DetailGroup';
 
-
+//Admin
+import ValidGroup from '../screens/ValidGroup';
 
 // settings
 import SettingsScreen from '../screens/Settings';
@@ -177,6 +178,25 @@ const VideStack = createStackNavigator(
     transitionConfig
   }
 );
+
+const ValidAdminStack = createStackNavigator(
+  {
+    ValidGroups: {
+      screen: ValidGroup,
+      navigationOptions: ({ navigation }) => ({
+        header: (
+          <Header  transparent title="Valider les groups" iconColor={'#000'} navigation={navigation} />
+        ),
+        headerTransparent: true
+      })
+    }
+  },
+  {
+    cardStyle: { backgroundColor: '#FFFFFF' },
+    transitionConfig
+  }
+);
+
 const GroupesSatck = createStackNavigator(
   {
     Account: {
@@ -460,6 +480,14 @@ const AppStack = createDrawerNavigator(
       navigationOptions: navOpt => ({
         drawerLabel: ({ focused }) => (
           <DrawerItem focused={focused} screen="Profile" title="Profile" />
+        )
+      })
+    },
+    ValidGroups: {
+      screen: ValidAdminStack,
+      navigationOptions: navOpt => ({
+        drawerLabel: ({ focused }) => (
+          <DrawerItem focused={focused} screen="ValidGroup" title="Valider les Groupes" />
         )
       })
     },
