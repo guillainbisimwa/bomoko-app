@@ -1,7 +1,7 @@
 import React from 'react';
 import { withNavigation } from 'react-navigation';
 import PropTypes from 'prop-types';
-import { StyleSheet, Image, TouchableWithoutFeedback, ImageBackground, ToastAndroid } from 'react-native';
+import { StyleSheet, Image, AsyncStorage, TouchableWithoutFeedback, ImageBackground, ToastAndroid } from 'react-native';
 import { Block, Text, theme } from 'galio-framework';
 
 import { nowTheme } from '../constants';
@@ -32,16 +32,46 @@ class Card2 extends React.Component {
     return (
       <Block row={horizontal} card flex style={cardContainer}>
         <TouchableWithoutFeedback onPress={() => 
-        { 
-          navigation.navigate('DetailGroup', {
+          { 
+            //TODO : 
+            clients=[];
+            clientByGroup = [];
+            countGroupMember = 0;
 
-          product: `${JSON.stringify(item)}`,
+            dataClients = [];
+            currentUser = [];
+            currentProfile=[]
+            const ClientsLocalStorage =  AsyncStorage.getItem('ClientsLocalStorage')
+            .then(async (value) => {
+              dataClients = await JSON.parse(value);
+              clients = await dataClients;
+              //ToastAndroid.show(JSON.stringify(dataClients)+"vo", ToastAndroid.LONG)
+              clientByGroup = dataClients.filter((item2) => item2.id_g == item["id"]);
+              countGroupMember = clientByGroup.reduce((key, val) => key + 1, 0);
 
-         })
-         //ToastAndroid.show( JSON.stringify(item), ToastAndroid.SHORT)
+              const currentAccount =  AsyncStorage.getItem('currentAccount')
+              .then(async (value) => {
+                currentUser = await JSON.parse(value);
+                currentProfile = dataClients.find((item2) => item2.phone == currentUser['phone']);
 
-         }
-         }>
+                navigation.navigate('DetailGroup', {
+
+                  product: `${JSON.stringify(item)}`,
+                  clients: `${JSON.stringify(clients)}`,
+                  clientByGroup: `${JSON.stringify(clientByGroup)}`,
+                  countGroupMember: `${JSON.stringify(countGroupMember)}`,
+                  currentUser: `${JSON.stringify(currentUser)}`,
+                  currentProfile: `${JSON.stringify(currentProfile)}`,
+                })
+                
+              }).done();
+          
+
+            
+            }).done();
+
+          }
+        }>
           <Block flex style={imgContainer}  shadow >
 
           <ImageBackground

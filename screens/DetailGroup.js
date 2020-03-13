@@ -32,77 +32,30 @@ const DismissKeyboard = ({ children }) => (
 class DetailGroup extends React.Component {
   constructor(props) {
     super(props);
-    //this._bootstrapAsync();
-    this._bootstrapAsyncClient();
+
+    prod =  JSON.parse(this.props.navigation.getParam("product"))
+    clients =  JSON.parse(this.props.navigation.getParam("clients"))
+    clientByGroup =  JSON.parse(this.props.navigation.getParam("clientByGroup"))
+    countGroupMember =  JSON.parse(this.props.navigation.getParam("countGroupMember"))
+    currentUser =  JSON.parse(this.props.navigation.getParam("currentUser"))
+    currentProfile =  JSON.parse(this.props.navigation.getParam("currentProfile"))
+    //his.state = { group:  prod };
     this.state = {
       st : "",
-      group:[],
-      isLoading: true,
-      clients:[],
-      currentUser:[],
-      currentProfile:[],
-      clientByGroup:[],
-      countGroupMember:0,
+      group:prod,
+      isLoading: false,
+      clients:clients,
+      currentUser:currentUser,
+      currentProfile:currentProfile,
+      clientByGroup:clientByGroup,
+      countGroupMember:countGroupMember,
 
       isRefreshing: false,
     };
+    
     //ToastAndroid.show( JSON.stringify(this.props.navigation.getParam("product")), ToastAndroid.SHORT)
     //this.setState({group: JSON.parse(this.props.navigation.getParam("product"))})
-
   }
-  componentDidMount(){
-    this._bootstrapAsync();
-    this._bootstrapAsyncClient()
-    this._fetchClients()
-  }
-
-  _bootstrapAsyncClient = async () => {
-  
-    dataClients = [];
-    currentUser = [];
-    currentProfile=[]
-    const ClientsLocalStorage = await AsyncStorage.getItem('ClientsLocalStorage')
-    .then(async (value) => {
-      //console.log("************************Get Value >> ", JSON.parse(value));
-      dataClients = await JSON.parse(value);
-      //ToastAndroid.show(JSON.stringify(dataClients)+"vo", ToastAndroid.LONG)
-      const clientByGroup = this.state.clients.filter((item) => item.id_g == this.state.group["id"]);
-      const countGroupMember = clientByGroup.reduce((key, val) => key + 1, 0);
-
-
-
-  
-      this.setState({
-        isLoading:  false,
-        clients: await dataClients,
-        clientByGroup: await clientByGroup,
-        countGroupMember: await countGroupMember
-      });
-   
-      console.log(dataClients)
-  
-     //console.log("*********************Put Value >> ", dataClients);
-   }).done();
-
-   const currentAccount = await AsyncStorage.getItem('currentAccount')
-    .then(async (value) => {
-      //console.log("************************Get Value >> ", JSON.parse(value));
-      currentUser = await JSON.parse(value);
-      //ToastAndroid.show(JSON.stringify(currentUser)+" <--", ToastAndroid.LONG)
-
-      const singleClient = this.state.clients.find((item) => item.phone == currentUser['phone']);
-  
-      this.setState({
-        isLoading:  false,
-        currentUser: await currentUser,
-        currentProfile: await singleClient
-      });
-   
-      console.log(currentUser)
-  
-     //console.log("*********************Put Value >> ", dataClients);
-   }).done();
-  };
 
   _bootstrapAsync = async () => {
  
@@ -197,7 +150,7 @@ class DetailGroup extends React.Component {
   }
 
   _adhesion(id_g,group,somme, nbr_jour, cat){
-    Alert.alert("Attention!",'Voulez vous vraiment adherer dans le groupe :'+group+"? Vous aurez droit a un credit maximum de "+somme+" $ a remetre progressivement dans "+nbr_jour+" "+cat+".",
+    Alert.alert("Attention!",'Voulez vous vraiment adherer dans le groupe : '+group+"? Vous aurez droit a un credit de "+somme+" $ a remetre progressivement dans "+nbr_jour+" "+cat+".",
       [
        
         {text: 'Annuler', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
@@ -558,11 +511,10 @@ class DetailGroup extends React.Component {
                     <Block row style={{ paddingVertical: 8, paddingHorizontal: 15 }} space="between">
                       <Text bold size={16} color="#2c2c2c" style={{ marginTop: 3 }}>
                         Les adhesions se cloturent dans :
-                       
-
                       </Text>
                       <Text bold muted size={16}  style={{ marginTop: 1 }}>
-                        {(new Date(parseFloat(group.date_debut))).getDate()  - (new Date()).getDate() } jours
+                      {parseInt((parseFloat(group.date_debut)-(new Date()).getTime())/(24*60*60*1000))} jours
+
                        
                       </Text>
                       
