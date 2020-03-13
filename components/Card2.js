@@ -30,7 +30,8 @@ class Card2 extends React.Component {
     ];
 
     return (
-      <Block row={horizontal} card flex style={cardContainer}>
+      
+      <Block row={horizontal} card flex  style={cardContainer,{backgroundColor: 'rgba(0, 255, 0, 0.0)'}}>
         <TouchableWithoutFeedback onPress={() => 
           { 
             //TODO : 
@@ -48,7 +49,7 @@ class Card2 extends React.Component {
               //ToastAndroid.show(JSON.stringify(dataClients)+"vo", ToastAndroid.LONG)
               clientByGroup = dataClients.filter((item2) => item2.id_g == item["id"]);
               countGroupMember = clientByGroup.reduce((key, val) => key + 1, 0);
-              ToastAndroid.show(JSON.stringify(clientByGroup)+"vo", ToastAndroid.LONG)
+              //ToastAndroid.show(clientByGroup.length+"", ToastAndroid.LONG)
 
               const currentAccount =  AsyncStorage.getItem('currentAccount')
               .then(async (value) => {
@@ -80,7 +81,7 @@ class Card2 extends React.Component {
             style={imageStyles}
           >
             <Block style={ item.etat ==1 ? styles.categoryTitleS: styles.categoryTitleE}>
-              <Text size={14} 
+              <Text size={14}
               bold 
               style={titleStyles}
               numberOfLines={1}
@@ -101,6 +102,7 @@ class Card2 extends React.Component {
 
           </Block>
         </TouchableWithoutFeedback>
+        {/* style={{backgroundColor: 'rgba(0, 255, 0, 0.3)'}}  */}
         <TouchableWithoutFeedback onPress={() => navigation.navigate('DetailGroup', { product: item })}>
           <Block flex space="between" style={styles.cardDescription}>
             <Block flex>

@@ -107,6 +107,51 @@ class DetailGroup extends React.Component {
       ToastAndroid.show("Impossible! Vous appartenez a un autre groupe", ToastAndroid.SHORT)
     }
   }
+  
+  async _credit(id_g, somme, nbr_jour, cat){
+    this.setState({isloading: true})
+    var pid = this.state.currentUser["pid"];
+    var phone = this.state.currentUser["phone"];
+   
+    const singleClient = this.state.clients.find((item) => item.phone == phone);
+    //ToastAndroid.show(JSON.stringify(singleClient), ToastAndroid.LONG)
+    if(singleClient["id_g"] == id_g){
+      await fetch('http://35.223.156.137:3000/credit', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body:JSON.stringify({
+          id_g:id_g,
+          id_demandeur:pid,
+          somme:somme,
+          cat: cat
+          // pid: pid,
+          // id_g: id_g
+        })
+      }).then((response) => response.json())
+      //If response is in json then in success
+      .then((responseJson) => {
+          //Success 
+        var prop = 'message'; 
+        if (responseJson.hasOwnProperty(prop)) { 
+          ToastAndroid.show(responseJson['message'], ToastAndroid.LONG)           
+        } else {
+          ToastAndroid.show("Votre demande est en cours d'etude", ToastAndroid.LONG)
+          //this._fetchClients();
+        } 
+      }) //If response is not in json then in error
+      .catch((error) => {
+          console.error(error);
+          this.setState({isloading: false})
+          ToastAndroid.show('Une erreur est survenue '+ error, ToastAndroid.LONG)
+      });
+    }
+    else{
+      ToastAndroid.show("Impossible! Vous n'appartenez a aucun groupe", ToastAndroid.SHORT)
+    }
+  }
 
   async _quitter_un_group(id_g, group_nom){
     this.setState({isloading: true})
@@ -177,7 +222,7 @@ class DetailGroup extends React.Component {
   }
 
   _quitter(id_g,group,somme, nbr_jour, cat){
-    Alert.alert("Attention!",'Voulez vous vraiment quitter le groupe :'+group+"?",
+    Alert.alert("Attention!",'Voulez vous vraiment quitter le groupe : '+group+"?",
       [
        
         {text: 'Annuler', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
@@ -193,6 +238,31 @@ class DetailGroup extends React.Component {
                 this._fetchClients()
 
 
+              }
+              else{
+                ToastAndroid.show("Aucune connexion internet disponible", ToastAndroid.SHORT)
+               
+                
+              }
+            });
+
+          }
+        },
+      ]);
+  }
+  _demandeCredit(id_g,somme, nbr_jour, cat, cat_chiffre){
+    Alert.alert("Attention!",'Voulez vous vraiment demander un credit de : '+somme+" $ a remetre progressivement dans "+nbr_jour+" "+cat+"?",
+      [
+       
+        {text: 'Annuler', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+        {text: 'Valider', onPress: () => 
+          {
+            NetInfo.isConnected.fetch().then(isConnected => {
+              if(isConnected)
+              {
+                console.log('OK Pressed')
+                this._credit(id_g,somme, nbr_jour, cat_chiffre);
+                this._fetchClients()
               }
               else{
                 ToastAndroid.show("Aucune connexion internet disponible", ToastAndroid.SHORT)
@@ -360,7 +430,7 @@ class DetailGroup extends React.Component {
                                 size={18}
                                 style={{ marginBottom: 4, fontFamily: 'montserrat-bold' }}
                               >
-                                200 $
+                                0 $
                               </Text>
                               <Text style={{ fontFamily: 'montserrat-regular' }} size={14} color="white">
                                 Valides
@@ -373,7 +443,7 @@ class DetailGroup extends React.Component {
                                 size={18}
                                 style={{ marginBottom: 4, fontFamily: 'montserrat-bold' }}
                               >
-                                100 $
+                                0 $
                               </Text>
                               <Text style={{ fontFamily: 'montserrat-regular' }} size={14} color="white">
                                 En attente
@@ -425,7 +495,10 @@ class DetailGroup extends React.Component {
                          <Button 
                           color="default"
                           style={{ width: 150, height: 44, marginHorizontal: 5, elevation: 5 }} 
-                          textStyle={{ fontSize: 16 }} round>
+                          textStyle={{ fontSize: 16 }} round
+                          onPress={_ => this._demandeCredit(group.id, group.somme, group.nbr_jour, group.cat == 30? "mois": "semaines", group.cat)}         
+                          
+                          >
                             Demander credit
                           </Button>
                          :
