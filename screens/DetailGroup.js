@@ -100,7 +100,7 @@ class DetailGroup extends React.Component {
       .catch((error) => {
           console.error(error);
           this.setState({isloading: false})
-          ToastAndroid.show('Une erreur est surnenue '+ error, ToastAndroid.LONG)
+          ToastAndroid.show('Une erreur est survenue '+ error, ToastAndroid.LONG)
       });
     }
     else{
@@ -127,8 +127,6 @@ class DetailGroup extends React.Component {
           id_demandeur:pid,
           somme:somme,
           cat: cat
-          // pid: pid,
-          // id_g: id_g
         })
       }).then((response) => response.json())
       //If response is in json then in success
@@ -152,6 +150,40 @@ class DetailGroup extends React.Component {
       ToastAndroid.show("Impossible! Vous n'appartenez a aucun groupe", ToastAndroid.SHORT)
     }
   }
+
+   
+  async _valider_request_credit(id_c,intrt = 2){
+    this.setState({isloading: true})
+
+      await fetch('http://35.223.156.137:3000/valider_request_credit', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body:JSON.stringify({
+          id_c:id_c,
+          intrt:intrt
+        })
+      }).then((response) => response.json())
+      //If response is in json then in success
+      .then((responseJson) => {
+          //Success 
+        var prop = 'message'; 
+        if (responseJson.hasOwnProperty(prop)) { 
+          ToastAndroid.show(responseJson['message'], ToastAndroid.LONG)           
+        } else {
+          ToastAndroid.show("Mise a jour de votre echeance de paiement", ToastAndroid.LONG)
+          //this._fetchClients();
+        } 
+      }) //If response is not in json then in error
+      .catch((error) => {
+          console.error(error);
+          this.setState({isloading: false})
+          ToastAndroid.show('Une erreur est survenue '+ error, ToastAndroid.LONG)
+      });
+  }
+
 
   async _quitter_un_group(id_g, group_nom){
     this.setState({isloading: true})
