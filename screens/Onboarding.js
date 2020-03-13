@@ -68,7 +68,7 @@ export default class Onboarding extends React.Component {
       }
   
       if(etat_account == 0){
-        ToastAndroid.show("En attente de validation:"+etat_account, ToastAndroid.SHORT)
+        ToastAndroid.show("En attente de validation: "+etat_account, ToastAndroid.SHORT)
         this.props.navigation.navigate('WaitValidAccount');
   
         // this.props.navigation.navigate("WaitValidAccount", {

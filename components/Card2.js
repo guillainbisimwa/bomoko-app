@@ -48,6 +48,7 @@ class Card2 extends React.Component {
               //ToastAndroid.show(JSON.stringify(dataClients)+"vo", ToastAndroid.LONG)
               clientByGroup = dataClients.filter((item2) => item2.id_g == item["id"]);
               countGroupMember = clientByGroup.reduce((key, val) => key + 1, 0);
+              ToastAndroid.show(JSON.stringify(clientByGroup)+"vo", ToastAndroid.LONG)
 
               const currentAccount =  AsyncStorage.getItem('currentAccount')
               .then(async (value) => {

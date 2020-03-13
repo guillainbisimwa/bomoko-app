@@ -10,8 +10,7 @@ const { width } = Dimensions.get("screen");
 class Home extends React.Component {
   constructor(props) {
     super(props);
-    this._bootstrapAsyncGroup();
-    this._bootstrapAsyncClient();
+   
     this.state = {
       groupss:[],
       clients:[],
@@ -21,9 +20,11 @@ class Home extends React.Component {
     };
   }
 
-  // componentDidMount = async() =>{
-  //   await this._fetchGroup()
-  // }
+  componentDidMount = async() =>{
+    //await this._fetchGroup()
+    await this._bootstrapAsyncGroup();
+    await this._bootstrapAsyncClient();
+  }
 
     // Fetch the token from storage then navigate to our appropriate place
  _bootstrapAsyncGroup = async () => {
