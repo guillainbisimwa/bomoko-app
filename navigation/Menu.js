@@ -10,6 +10,23 @@ import { DrawerItem } from '../components/index';
 import nowTheme from '../constants/Theme';
 
 const { width } = Dimensions.get('screen');
+      
+J = AsyncStorage.getItem('phone');
+//jj = JSON.parse(J)
+
+const currentUser = [];
+const currentAccount = AsyncStorage.getItem('currentAccount')
+.then(async (value) => {
+  //console.log("************************Get Value >> ", JSON.parse(value));
+  currentUser = await JSON.parse(value);
+  ToastAndroid.show(JSON.stringify(currentUser)+" <--", ToastAndroid.LONG)
+
+  
+  console.log(currentUser)
+
+ //console.log("*********************Put Value >> ", dataClients);
+}).done();
+
 
 const Drawer = props => (
   <Block style={styles.container} forceInset={{ top: 'always', horizontal: 'never' }}>
@@ -17,6 +34,13 @@ const Drawer = props => (
       <Image style={styles.logo} source={Images.bomokoLogo} />
       <Block right style={styles.headerIcon}>
         <Icon name="heart" family="Font-Awesome" size={15} color={'white'} />
+        <Text
+            color={nowTheme.COLORS.WHITE}
+            style={{ marginTop: 3, marginLeft: 2, marginBottom: 1, fontFamily: 'montserrat-regular', fontWeight: '300', fontSize: 12}}
+          >
+            {/* TODO: Remove the " when showing the current connected user */}
+            {J['_55']}
+          </Text>
       </Block>
     </Block>
 
@@ -31,7 +55,7 @@ const Drawer = props => (
             color={nowTheme.COLORS.WHITE}
             style={{ marginTop: 30, marginLeft: 20, marginBottom: 10, fontFamily: 'montserrat-regular', fontWeight: '300', fontSize: 12}}
           >
-            INFORNATION
+            INFORNATION 
           </Text>
         </Block>
         <TouchableOpacity onPress={() => props.navigation.navigate('Vide')}

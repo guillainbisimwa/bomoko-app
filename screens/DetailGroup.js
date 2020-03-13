@@ -12,19 +12,18 @@ import {
   AsyncStorage,
   Alert,
   Image,
-  ActivityIndicator
+  ActivityIndicator,
+  View
 } from 'react-native';
 import { Block, Text, Button as GaButton, theme, Checkbox } from 'galio-framework';
 
-import { Button, Icon, Input } from '../components';
-import { Images, nowTheme } from '../constants';
+import { Button, Icon, Input, ListCLient } from '../components';
 
-import { HeaderHeight } from '../constants/utils';
+import { Images, nowTheme } from '../constants';
 
 const { width, height } = Dimensions.get('screen');
 
 const thumbMeasure = (width - 48 - 32) / 4;
-
 
 const DismissKeyboard = ({ children }) => (
   <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>{children}</TouchableWithoutFeedback>
@@ -34,10 +33,16 @@ class DetailGroup extends React.Component {
   constructor(props) {
     super(props);
     //this._bootstrapAsync();
+    this._bootstrapAsyncClient();
     this.state = {
       st : "",
       group:[],
       isLoading: true,
+      clients:[],
+      currentUser:[],
+      currentProfile:[],
+      clientByGroup:[],
+      countGroupMember:0,
 
       isRefreshing: false,
     };
@@ -47,7 +52,58 @@ class DetailGroup extends React.Component {
   }
   componentDidMount(){
     this._bootstrapAsync();
+    this._bootstrapAsyncClient()
+    this._fetchClients()
   }
+
+  _bootstrapAsyncClient = async () => {
+  
+    dataClients = [];
+    currentUser = [];
+    currentProfile=[]
+    const ClientsLocalStorage = await AsyncStorage.getItem('ClientsLocalStorage')
+    .then(async (value) => {
+      //console.log("************************Get Value >> ", JSON.parse(value));
+      dataClients = await JSON.parse(value);
+      //ToastAndroid.show(JSON.stringify(dataClients)+"vo", ToastAndroid.LONG)
+      const clientByGroup = this.state.clients.filter((item) => item.id_g == this.state.group["id"]);
+      const countGroupMember = clientByGroup.reduce((key, val) => key + 1, 0);
+
+
+
+  
+      this.setState({
+        isLoading:  false,
+        clients: await dataClients,
+        clientByGroup: await clientByGroup,
+        countGroupMember: await countGroupMember
+      });
+   
+      console.log(dataClients)
+  
+     //console.log("*********************Put Value >> ", dataClients);
+   }).done();
+
+   const currentAccount = await AsyncStorage.getItem('currentAccount')
+    .then(async (value) => {
+      //console.log("************************Get Value >> ", JSON.parse(value));
+      currentUser = await JSON.parse(value);
+      //ToastAndroid.show(JSON.stringify(currentUser)+" <--", ToastAndroid.LONG)
+
+      const singleClient = this.state.clients.find((item) => item.phone == currentUser['phone']);
+  
+      this.setState({
+        isLoading:  false,
+        currentUser: await currentUser,
+        currentProfile: await singleClient
+      });
+   
+      console.log(currentUser)
+  
+     //console.log("*********************Put Value >> ", dataClients);
+   }).done();
+  };
+
   _bootstrapAsync = async () => {
  
     prod = await JSON.parse(this.props.navigation.getParam("product"))
@@ -58,11 +114,199 @@ class DetailGroup extends React.Component {
 
   };
 
+  async _devenir_mbr_group(id_g, group_nom){
+    this.setState({isloading: true})
+    var pid = this.state.currentUser["pid"];
+    var phone = this.state.currentUser["phone"];
+   
+    const singleClient = this.state.clients.find((item) => item.phone == phone);
+    //ToastAndroid.show(JSON.stringify(singleClient), ToastAndroid.LONG)
+    if(singleClient["id_g"] == ""){
+      await fetch('http://35.223.156.137:3000/devenir_mbr_group', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body:JSON.stringify({
+          pid: pid,
+          id_g: id_g
+        })
+      }).then((response) => response.json())
+      //If response is in json then in success
+      .then((responseJson) => {
+          //Success 
+        var prop = 'message'; 
+        if (responseJson.hasOwnProperty(prop)) { 
+          ToastAndroid.show(responseJson['message'], ToastAndroid.LONG)           
+        } else {
+          ToastAndroid.show('Bienvenue dans '+group_nom, ToastAndroid.LONG)
+          this._fetchClients();
+        } 
+      }) //If response is not in json then in error
+      .catch((error) => {
+          console.error(error);
+          this.setState({isloading: false})
+          ToastAndroid.show('Une erreur est surnenue '+ error, ToastAndroid.LONG)
+      });
+    }
+    else{
+      ToastAndroid.show("Impossible! Vous appartenez a un autre groupe", ToastAndroid.SHORT)
+    }
+  }
+
+  async _quitter_un_group(id_g, group_nom){
+    this.setState({isloading: true})
+    var pid = this.state.currentUser["pid"];
+    var phone = this.state.currentUser["phone"];
+   
+    const singleClient = this.state.clients.find((item) => item.phone == phone);
+    //ToastAndroid.show(JSON.stringify(singleClient), ToastAndroid.LONG)
+    if(singleClient["id_g"] != ""){
+      await fetch('http://35.223.156.137:3000/quitter_un_group', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body:JSON.stringify({
+          pid: pid
+        })
+      }).then((response) => response.json())
+      //If response is in json then in success
+      .then((responseJson) => {
+          //Success 
+        var prop = 'message'; 
+        if (responseJson.hasOwnProperty(prop)) { 
+          ToastAndroid.show(responseJson['message'], ToastAndroid.LONG)           
+        } else {
+          ToastAndroid.show("Bye Bye! Vous n'etes plus membre du "+group_nom, ToastAndroid.LONG)
+          this._fetchClients();
+          this.props.navigation.navigate('Home');
+        } 
+      }) //If response is not in json then in error
+      .catch((error) => {
+          console.error(error);
+          this.setState({isloading: false})
+          ToastAndroid.show('Une erreur est surnenue '+ error, ToastAndroid.LONG)
+      });
+    }
+    else{
+      ToastAndroid.show("Impossible! Vous appartenez a aucun groupe", ToastAndroid.SHORT)
+    }
+  }
+
+  _adhesion(id_g,group,somme, nbr_jour, cat){
+    Alert.alert("Attention!",'Voulez vous vraiment adherer dans le groupe :'+group+"? Vous aurez droit a un credit maximum de "+somme+" $ a remetre progressivement dans "+nbr_jour+" "+cat+".",
+      [
+       
+        {text: 'Annuler', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+        {text: 'Valider', onPress: () => 
+          {
+            NetInfo.isConnected.fetch().then(isConnected => {
+              if(isConnected)
+              {
+                console.log('OK Pressed')
+                //this.checkCreditExistFromAPI(id, name)
+                //ToastAndroid.show(id, ToastAndroid.SHORT)
+                this._devenir_mbr_group(id_g, group);
+                // TODO: Find how to refresh al states
+                this.props.navigation.navigate('Home');
+              }
+              else{
+                ToastAndroid.show("Aucune connexion internet disponible", ToastAndroid.SHORT)
+              }
+            });
+
+          }
+        },
+      ]);
+  }
+
+  _quitter(id_g,group,somme, nbr_jour, cat){
+    Alert.alert("Attention!",'Voulez vous vraiment quitter le groupe :'+group+"?",
+      [
+       
+        {text: 'Annuler', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+        {text: 'Valider', onPress: () => 
+          {
+            NetInfo.isConnected.fetch().then(isConnected => {
+              if(isConnected)
+              {
+                console.log('OK Pressed')
+                //this.checkCreditExistFromAPI(id, name)
+                //ToastAndroid.show(id, ToastAndroid.SHORT)
+                this._quitter_un_group(id_g, group);
+                this._fetchClients()
+
+
+              }
+              else{
+                ToastAndroid.show("Aucune connexion internet disponible", ToastAndroid.SHORT)
+               
+                
+              }
+            });
+
+          }
+        },
+      ]);
+  }
+
+  _fetchClients = async () =>{
+    await NetInfo.isConnected.fetch().then(async isConnected => {
+      if(isConnected){
+    
+        await fetch('http://35.223.156.137:3000/clients/', {
+          method: 'GET',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+        })
+        .then((response) => response.json())
+        //If response is in json then in success
+        .then((responseJson) => {
+  
+            //Success 
+  
+            //ToastAndroid.show('Ce message '+JSON.stringify(responseJson), ToastAndroid.LONG)
+            AsyncStorage.setItem('ClientsLocalStorage', JSON.stringify(responseJson))
+              .then(json => {
+                ToastAndroid.show('ClientsLocalStorage1 save locally', ToastAndroid.SHORT)
+                //ToastAndroid.show(JSON.stringify(responseJson), ToastAndroid.LONG)
+                // this._bootstrapAsyncGroup();
+                // if(responseJson == null){
+                //   this.setState({groupss: null});
+                // }
+  
+            })
+              .catch(error => ToastAndroid.show('ClientsLocalStorage error local memory', ToastAndroid.SHORT));
+            
+            
+            
+        })
+        //If response is not in json then in error
+        .catch((error) => {
+            //Error 
+            //alert(JSON.stringify(error));
+            ToastAndroid.show('Une erreur est survenue '+ error, ToastAndroid.LONG)
+            console.error(error);
+        });  
+        
+      }
+      else{
+        ToastAndroid.show('Aucune connexion internet!', ToastAndroid.LONG)
+      }
+    })
+  }
+
   render() {
     const { navigation } = this.props;
     const {
       st,
-      group
+      group,
+      countGroupMember
     } = this.state;
     //ToastAndroid.show( JSON.parse(navigation.getParam("product")), ToastAndroid.SHORT)
     //ToastAndroid.show( JSON.stringify(navigation.getParam("product")), ToastAndroid.SHORT)
@@ -138,7 +382,7 @@ class DetailGroup extends React.Component {
                               opacity: .8
                             }}
                           >
-                            Contibution individuelle: {group.somme} $
+                            Credit individuel: {group.somme} $
                           </Text>
                         </Block>
                         <Block style={styles.info}>
@@ -150,7 +394,7 @@ class DetailGroup extends React.Component {
                                 color="white"
                                 style={{ marginBottom: 4, fontFamily: 'montserrat-bold' }}
                               >
-                                10
+                                {countGroupMember}
                               </Text>
                               <Text style={{ fontFamily: 'montserrat-regular' }} size={14} color="white">
                                 Membres
@@ -193,22 +437,55 @@ class DetailGroup extends React.Component {
                     <Block
                       middle
                       row
-                      style={{ position: 'absolute', width: width, top: height * 0.3 - 22, zIndex: 99 }}
+                      style={{ position: 'absolute', width: width, top: height * 0.3 - 22, zIndex: 99}}
                     >
-                      <Button style={{ width: 114, height: 44, marginHorizontal: 5, elevation: 5 }} textStyle={{ fontSize: 16 }} round>
-                        Adherer
-                      </Button>
-                      <GaButton
-                        round
-                        onlyIcon
-                        shadowless
-                        icon="users"
-                        iconFamily="Font-Awesome"
-                        iconColor={nowTheme.COLORS.WHITE}
-                        iconSize={nowTheme.SIZES.BASE * 1.375}
-                        color={'#888888'}
-                        style={[styles.social, styles.shadow]}
-                      />
+                      {
+                        this.state.currentProfile["id_g"] == ""?
+                        <Button
+                          onPress={_ => this._adhesion(group.id, group.nom_group, group.somme, group.nbr_jour, group.cat == 30? "mois": "semaines")}         
+
+                          style={{ width: 114, height: 44, marginHorizontal: 5, elevation: 5}} 
+                          textStyle={{ fontSize: 16 }} round>
+                            Adherer
+                          </Button>
+                        :
+                        this.state.currentProfile["id_g"] == group.id?
+                      <Button
+                        onPress={_ => this._quitter(group.id, group.nom_group, group.somme, group.nbr_jour, group.cat == 30? "mois": "semaines")}         
+                        
+                        style={{ width: 114, height: 44, marginHorizontal: 5, elevation: 5,backgroundColor: nowTheme.COLORS.ERROR,}} 
+                        textStyle={{ fontSize: 16 }} round>
+                          Quitter
+                        </Button>
+                        :
+                        <Button
+                        onPress={_ => this._quitter(group.id, group.nom_group, group.somme, group.nbr_jour, group.cat == 30? "mois": "semaines")}         
+                        
+                        style={{ display:"none", width: 114, height: 44, marginHorizontal: 5, elevation: 5,backgroundColor: nowTheme.COLORS.ERROR,}} 
+                        textStyle={{ fontSize: 16 }} round>
+                          Quitter
+                        </Button>
+                      }
+                      
+                      {
+                         this.state.currentProfile["id_g"] == group.id?
+                         <Button 
+                          color="default"
+                          style={{ width: 150, height: 44, marginHorizontal: 5, elevation: 5 }} 
+                          textStyle={{ fontSize: 16 }} round>
+                            Demander credit
+                          </Button>
+                         :
+                         <Button 
+                          color="default"
+                          style={{ width: 150, height: 44, marginHorizontal: 5, elevation: 5, display:"none" }} 
+                          textStyle={{ fontSize: 16 }} round>
+                            Demander credit
+                         </Button>
+
+                      }
+                     
+
                       <GaButton
                         round
                         onlyIcon
@@ -217,7 +494,7 @@ class DetailGroup extends React.Component {
                         iconFamily="Font-Awesome"
                         iconColor={nowTheme.COLORS.WHITE}
                         iconSize={nowTheme.SIZES.BASE * 1.375}
-                        color={'#888888'}
+                        color={nowTheme.COLORS.INFO}
                         style={[styles.social, styles.shadow]}
                       />
                     </Block>
@@ -227,7 +504,7 @@ class DetailGroup extends React.Component {
 
               </Block>
               <Block />
-              <Block flex={0.4} style={{ padding: theme.SIZES.BASE, marginTop: 10}}>
+              <Block flex={0.4} style={{zIndex:1, padding: theme.SIZES.BASE, marginTop: 10}}>
                 <Block>
                   <Block flex style={{ marginTop: 20 }}>
                     <Block middle>
@@ -235,7 +512,7 @@ class DetailGroup extends React.Component {
                        style={group.etat ==1 ? styles.etatE: styles.etatS}
                         
                       >
-                        {group.etat == 0? "EN COURS" : "VALIDE"}
+                        {group.etat == 0? "EN ATTENTE" : "VALIDE"}
 
                           </Text>
                       <Text
@@ -253,20 +530,45 @@ class DetailGroup extends React.Component {
                         {group.details}
                           </Text>
                     </Block>
-                    <Block row style={{ paddingVertical: 14, paddingHorizontal: 15 }} space="between">
+                    
+                    <Block style={styles.container} row>
+                      {/* <Text bold size={16} color="#2c2c2c" style={{ marginTop: 3 }}>
+                        DATE DE DEBUT:
+                      </Text>
+                      <Text bold muted size={16}  style={{ marginTop: 1 }}>
+                        {new Date(parseFloat(group.date_debut)).toDateString()}
+                      </Text> */}
+
+
+                      <View style={styles.cellContainer}>
+                        <Text style={styles.titleText}>Date debut</Text>
+                        <Text style={styles.amountText}> {new Date(parseFloat(group.date_debut)).toDateString()}</Text>
+                      </View>
+                      <View style={styles.cellContainer}>
+                        <Text style={styles.titleText}>Date fin</Text>
+                        <Text>{new Date(parseFloat(group.date_fin)).toDateString()}</Text>
+                      </View>
+                      {/* <View style={styles.cellContainer}>
+                        <Text style={styles.titleText}>Status</Text>
+                        <Text>Dans 1 jrs</Text>
+                      </View> */}
+                      
+                    </Block>
+                      {/* TODO: Enderstand why this date is in the enegative form */}
+                    <Block row style={{ paddingVertical: 8, paddingHorizontal: 15 }} space="between">
                       <Text bold size={16} color="#2c2c2c" style={{ marginTop: 3 }}>
-                        Album
-                          </Text>
-                      <Button
-                        small
-                        color="transparent"
-                        textStyle={{ color: nowTheme.COLORS.PRIMARY, fontSize: 14 }}
-                      >
-                        View all
-                          </Button>
+                        Les adhesions se cloturent dans :
+                       
+
+                      </Text>
+                      <Text bold muted size={16}  style={{ marginTop: 1 }}>
+                        {(new Date(parseFloat(group.date_debut))).getDate()  - (new Date()).getDate() } jours
+                       
+                      </Text>
+                      
                     </Block>
 
-
+{/* 
                     <Block style={{ paddingBottom: -HeaderHeight * 2, paddingHorizontal: 15}}>
                       <Block row space="between" style={{ flexWrap: 'wrap' }}>
                         {Images.Viewed.map((img, imgIndex) => (
@@ -278,6 +580,16 @@ class DetailGroup extends React.Component {
                           />
                         ))}
                       </Block>
+                    </Block> */}
+
+                    <Block flex>
+                    
+                    {this.state.clientByGroup.map((item, index) => {
+                      return <Block key={index} flex row>
+                      <ListCLient item={item} horizontal/>
+                    </Block>
+                    })}   
+
                     </Block>
                   </Block>
                 </Block>
@@ -394,7 +706,7 @@ const styles = StyleSheet.create({
     width,
     height: height * 0.3,
     padding: 0,
-    zIndex: 1
+    zIndex: 120
   },
   profileBackground: {
     width,
@@ -458,7 +770,38 @@ const styles = StyleSheet.create({
     marginTop: 15,
     marginBottom: 30,
     zIndex: 2
-  }
+  },
+
+
+  container: {
+    fontFamily: 'montserrat-bold',
+    paddingVertical: 8,
+    marginTop:7,
+    marginBottom:7,
+    paddingHorizontal: 15,
+    alignItems: 'center',
+    backgroundColor: nowTheme.COLORS.TABS,
+    borderRadius: 4,
+    shadowColor: nowTheme.COLORS.BLACK,
+    shadowOffset: {
+      width: 0,
+      height: 4
+    },
+    shadowRadius: 8,
+    shadowOpacity: 0.1,
+    elevation: 1,
+
+  },
+  cellContainer: {
+    flex: 1,
+  },
+  titleText: {
+    fontSize: 15,
+    color: 'gray',
+  },
+  amountText: {
+    fontSize: 15,
+  },
 });
 
 export default DetailGroup;

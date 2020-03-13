@@ -8,4 +8,7 @@ yarn.lock
 *.key
 *.mobileprovision
 .DS_Store
+*.pem
+SecondEss*
+web-build/
 

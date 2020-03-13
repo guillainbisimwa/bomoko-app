@@ -61,9 +61,9 @@ export default class Onboarding extends React.Component {
   
       var sid = "";
   
-      if(currentSession == null){      
+      if(currentSession == null || currentSession == "" ){      
         sid = "";
-      }else if(currentSession != null){      
+      }else if(currentSession != null ){      
         sid = currentSession["sid"];
       }
   
@@ -113,8 +113,9 @@ export default class Onboarding extends React.Component {
                     style={{
                       fontFamily: 'montserrat-regular', bottom: 50, position: 'absolute', letterSpacing: 2, paddingHorizontal: 20, textAlign: 'center'
                     }}
+                    bold={true}
                     color="white"
-                    size={44}
+                    size={33}
                   >
                     BOMOKO APP
                   </Text>

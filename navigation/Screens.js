@@ -35,8 +35,8 @@ import DrawerItem from '../components/DrawerItem';
 import Header from '../components/Header';
 
 const home_menu = [
-  { id: 'Mongroupe', title: 'Mon groupe'},
   { id: 'TousLesGroupes', title: 'Tous les groupes'},
+  { id: 'Mongroupe', title: 'Mon groupe'},
   { id: 'MesCredits', title: 'Mes credits'}
 ];
 

@@ -3,15 +3,14 @@ import {
   StyleSheet,
   ImageBackground,
   Dimensions,
-  StatusBar,
   TouchableWithoutFeedback,
   Keyboard,
   ToastAndroid,
   NetInfo,
-  Alert,
   AsyncStorage
 } from 'react-native';
 import { Block, Text, Button as GaButton, theme } from 'galio-framework';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 import { Button, Icon, Input } from '../components';
 import { Images, nowTheme } from '../constants';
@@ -32,7 +31,8 @@ class WaitValidAccount extends React.Component {
       phone : "",
       sms_code_valid: true,
       code_sms :"",
-      currentAccountObj:""
+      currentAccountObj:"",
+      isloading: false      
     };
     
   }
@@ -61,7 +61,8 @@ class WaitValidAccount extends React.Component {
   };
 
   validateCodeSms(string) {
-    return string.trim().length == 4;
+    return string.trim().length >= 4 && string.trim().length <= 5;
+
   }
 
   validateCodeSms_ = () =>{
@@ -84,15 +85,13 @@ class WaitValidAccount extends React.Component {
 
 
   async submitCheckCode() {
-
     //TODO Valider tout les champs
     if(this.state.sms_code_valid && (this.state.code_sms == this.state.code_conf_sms_account)){
+      this.setState({isloading: true})
       await NetInfo.isConnected.fetch().then(async isConnected => {
         if(isConnected){
-          //ToastAndroid.show(' phone: '+this.state.phone, ToastAndroid.LONG)
-          //ToastAndroid.show(' code: '+this.state.code_sms, ToastAndroid.LONG)
           
-          await fetch('http://192.168.56.1:3000/valider_creation_cmpt', {
+          await fetch('http://localhost:3000/valider_creation_cmpt', {
             method: 'POST',
             headers: {
               Accept: 'application/json',
@@ -107,6 +106,7 @@ class WaitValidAccount extends React.Component {
           //If response is in json then in success
           .then((responseJson) => {
               //Success 
+              this.setState({isloading: false})
               //ToastAndroid.show(JSON.stringify(responseJson), ToastAndroid.SHORT)
               currentAccount = JSON.parse(this.state.currentAccountObj)
               currentAccount.etat = 1;
@@ -119,18 +119,21 @@ class WaitValidAccount extends React.Component {
           }) //If response is not in json then in error
           .catch((error) => {
               //Error 
-              alert(JSON.stringify(error));
+              //alert(JSON.stringify(error));
               console.error(error);
+              this.setState({isloading: false})
               ToastAndroid.show('Une erreur est surnenue '+ error, ToastAndroid.LONG)
           });
           
         }
         else{
+          this.setState({isloading: false})
           ToastAndroid.show('Aucune connexion internet!', ToastAndroid.LONG)
         }
       })
 
     } else{
+      this.setState({isloading: false})
       ToastAndroid.show('Veillez entrer un code valide svp!', ToastAndroid.LONG)
     }
   }
@@ -140,7 +143,8 @@ class WaitValidAccount extends React.Component {
   render() {
     const { navigation } = this.props;
     const {
-      code_sms
+      code_sms,
+      isloading
     } = this.state;
 
     return (
@@ -171,6 +175,7 @@ class WaitValidAccount extends React.Component {
                     <Block flex={0.5} row middle space="between" style={{ marginBottom: 18 }}>
                       <GaButton
                         round
+                        loading={isloading}
                         onlyIcon
                         shadowless
                         icon="envelope"
@@ -237,7 +242,7 @@ class WaitValidAccount extends React.Component {
                            {this.state.phone}
                           
                           </Text>
-                          <Text
+                          {/* <Text
                                style={{
                                 fontFamily: 'montserrat-bold',
                                 textAlign: 'center'
@@ -246,8 +251,7 @@ class WaitValidAccount extends React.Component {
                               size={16}
                           >
                            CODE: ({this.state.code_conf_sms_account})
-                          </Text>
-                          
+                          </Text> */}
                             
                           </Block>
                           
@@ -272,6 +276,7 @@ class WaitValidAccount extends React.Component {
               </Block>
             </Block>
           </ImageBackground>
+          <KeyboardSpacer/>
         </Block>
       </DismissKeyboard>
     );

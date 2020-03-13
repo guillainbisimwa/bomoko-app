@@ -13,6 +13,7 @@ import {
   ScrollView
 } from 'react-native';
 import { Block, Text, Button as GaButton, theme, Checkbox } from 'galio-framework';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 import { Button, Icon, Input } from '../components';
 import { Images, nowTheme } from '../constants';
@@ -31,8 +32,53 @@ class Login extends React.Component {
       phone : "",
       phone_valid: true,
       password_valid: true,
+      isloading: false
     };
   }
+  _fetchGroup = async () =>{
+    await NetInfo.isConnected.fetch().then(async isConnected => {
+      if(isConnected){
+    
+        await fetch('http://35.223.156.137:3000/groups/', {
+          method: 'GET',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+        })
+        .then((response) => response.json())
+        //If response is in json then in success
+        .then((responseJson) => {
+
+            //Success 
+
+            //ToastAndroid.show('Ce message '+JSON.stringify(responseJson), ToastAndroid.LONG)
+            AsyncStorage.setItem('GroupsLocalStorage', JSON.stringify(responseJson))
+              .then(json => {
+                ToastAndroid.show('GroupsLocalStorage1 save locally', ToastAndroid.SHORT)
+                //ToastAndroid.show(JSON.stringify(responseJson), ToastAndroid.LONG)
+                this._bootstrapAsync();
+                if(responseJson == null){
+                  this.setState({groupss: null});
+                }
+
+            }).catch(error => ToastAndroid.show('GroupsLocalStorage error local memory', ToastAndroid.SHORT));
+        })
+        //If response is not in json then in error
+        .catch((error) => {
+            //Error 
+            //alert(JSON.stringify(error));
+            ToastAndroid.show('Une erreur est survenue '+ error, ToastAndroid.LONG)
+            console.error(error);
+        });  
+        
+      }
+      else{
+        ToastAndroid.show('Aucune connexion internet!', ToastAndroid.LONG)
+      }
+    })
+  }
+  
   validatePassword(string) {
     return string.trim().length > 5;
   }
@@ -61,13 +107,14 @@ class Login extends React.Component {
   handleChangePassword = password => this.setState({ password }, this.validatePassword_);
 
   async submitLogin() {
+    this.setState({isloading: true})
 
     //TODO Valider tout les champs
     if(this.state.phone_valid && this.state.password_valid ){
       await NetInfo.isConnected.fetch().then(async isConnected => {
         if(isConnected){
       
-          await fetch('http://192.168.56.1:3000/login', {
+          await fetch('http://35.223.156.137:3000/login', {
             method: 'POST',
             headers: {
               Accept: 'application/json',
@@ -87,12 +134,13 @@ class Login extends React.Component {
             if(responseJson.hasOwnProperty(prop)) { 
               //this.createClient();
               //ToastAndroid.show('Ce message '+responseJson, ToastAndroid.LONG)
+              this.setState({isloading: false})
               ToastAndroid.show(responseJson["message"], ToastAndroid.LONG)
 
 
             } else if (responseJson["etat"] == 0) { //always 0
               //ToastAndroid.show(JSON.stringify(responseJson), ToastAndroid.SHORT)
-              await fetch('http://192.168.56.1:3000/client_by_phone/'+responseJson["phone"], {
+              await fetch('http://35.223.156.137:3000/client_by_phone/'+responseJson["phone"], {
                 method: 'GET',
                 headers: {
                   Accept: 'application/json',
@@ -102,6 +150,7 @@ class Login extends React.Component {
               .then((response_2) => response_2.json())
               //If response is in json then in success
               .then((responseJson_2) => {
+                this.setState({isloading: false})
   
                   var prop_2 = 'message'; 
                   if(responseJson_2.hasOwnProperty(prop_2)) { 
@@ -115,6 +164,11 @@ class Login extends React.Component {
                       .then(json => ToastAndroid.show('currentAcount save locally', ToastAndroid.SHORT))
                       .catch(error => ToastAndroid.show('currentAcount error local memory', ToastAndroid.SHORT));
 
+                      AsyncStorage.setItem('phone', JSON.stringify(responseJson_2["phone"]))
+                      .then(json => ToastAndroid.show('phone save locally', ToastAndroid.SHORT))
+                      .catch(error => ToastAndroid.show('phone error local memory', ToastAndroid.SHORT));
+                      
+
                       this.props.navigation.navigate("Onboarding");
                   }
                   else if(responseJson_2["etat"] == 1){
@@ -126,8 +180,14 @@ class Login extends React.Component {
                     AsyncStorage.setItem('currentSession', JSON.stringify(responseJson))
                       .then(json => ToastAndroid.show('currentSession save locally', ToastAndroid.SHORT))
                       .catch(error => ToastAndroid.show('currentSession error local memory', ToastAndroid.SHORT));
+                      this.setState({isloading: false})
 
-                      this.props.navigation.navigate("Onboarding");
+                      AsyncStorage.setItem('phone', JSON.stringify(responseJson_2["phone"]))
+                      .then(json => ToastAndroid.show('phone save locally', ToastAndroid.SHORT))
+                      .catch(error => ToastAndroid.show('phone error local memory', ToastAndroid.SHORT));
+                      
+
+                      this.props.navigation.navigate("Home");
                   }
                   else{
                     ToastAndroid.show("Numero ou mots de passe incorrect!", ToastAndroid.LONG)
@@ -136,17 +196,18 @@ class Login extends React.Component {
               //If response is not in json then in error
               .catch((error) => {
                   //Error 
-                  alert(JSON.stringify(error));
+                  //alert(JSON.stringify(error));
+                  this.setState({isloading: false})
+
+                  alert('Une erreur est survenue '+ error);
+                  ToastAndroid.show("Erreure de la connexion! "+error, ToastAndroid.LONG)
+
                   console.error(error);
               });
-              // AsyncStorage.setItem('currentSession', JSON.stringify(responseJson))
-              // .then(json => ToastAndroid.show('currentSession save locally', ToastAndroid.SHORT))
-              // .catch(error => ToastAndroid.show('currentSession error local memory', ToastAndroid.SHORT));
-              // TODO fetch groups
-              // TODO fetch users
-              //this.props.navigation.navigate("Home");
+              
             }
             else{
+              this.setState({isloading: false})
               ToastAndroid.show("Erreure de la connexion! Reesayer", ToastAndroid.LONG)
 
             }
@@ -154,28 +215,33 @@ class Login extends React.Component {
           }) //If response is not in json then in error
           .catch((error) => {
               //Error 
-              alert(JSON.stringify(error));
+              this.setState({isloading: false})
+              //alert('Une erreur est survenue '+ error);
+              //ToastAndroid.show("Erreure de la connexion! "+error, ToastAndroid.LONG)
+
               console.error(error);
               ToastAndroid.show('Une erreur est survenue '+ error, ToastAndroid.LONG)
           });
           
         }
         else{
+          this.setState({isloading: false})
           ToastAndroid.show('Aucune connexion internet!', ToastAndroid.LONG)
         }
       })
 
     } else{
+      this.setState({isloading: false})
       ToastAndroid.show('Veillez entrer les identifiants valides svp!', ToastAndroid.LONG)
     }
   }
-
 
   render() {
     const { navigation } = this.props;
     const {
       phone,
-      password
+      password,
+      isloading
     } = this.state;
 
     return (
@@ -217,6 +283,7 @@ class Login extends React.Component {
                     <Block flex={0.5} row middle space="between" style={{ marginBottom: 18 }}>
                       <GaButton
                         round
+                        loading={isloading}
                         onlyIcon
                         shadowless
                         icon="lock"
@@ -299,6 +366,7 @@ class Login extends React.Component {
                         </Block>
                         <Block center>
                           <Button color="primary" round style={styles.createButton}
+                          loading={isloading}
                            onPress={this.submitLogin.bind(this)}
                           >
                             <Text
@@ -320,6 +388,7 @@ class Login extends React.Component {
             </Block>
             </Block>
           </ImageBackground>
+          <KeyboardSpacer/>
         </Block>
       </DismissKeyboard>
     );

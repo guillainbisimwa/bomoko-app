@@ -16,6 +16,7 @@ import {
 } from 'react-native';
 import { Block, Text, Button as GaButton, theme, Checkbox } from 'galio-framework';
 import SwitchSelector from "react-native-switch-selector";
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 import DatePicker from "react-native-datepicker"; 
 
 import { Button, Icon, Input } from '../components';
@@ -38,18 +39,18 @@ class AddGroup extends React.Component {
     this._bootstrapAsync();
     this.state = {
       nom_groupe: "",
-      somme: "0",
+      somme: "",
       id_demandeur: "",
       taux: 2,
       cat: "30",
       date_debut: "",
       date_fin: "",
-      nbr_jour: "5",
-      details: "detaisl ici",
+      nbr_jour: "",
+      details: "",
       type: "group",
 
       creation_failed: false,
-      showLoading: false,
+      isloading: false,
 
       nom_groupe_valid: true,
       details_valid: true,
@@ -59,7 +60,7 @@ class AddGroup extends React.Component {
       cat_valid: true,
       date_debut_valide: false,
       date_fin_valide: false,
-      nbr_jr_valide: false,
+      nbr_jr_valide: true,
     };
     
   }
@@ -139,7 +140,7 @@ class AddGroup extends React.Component {
     await NetInfo.isConnected.fetch().then(async isConnected => {
       if(isConnected){
     
-        await fetch('http://192.168.56.1:3000/groups/', {
+        await fetch('http://35.223.156.137:3000/groups/', {
           method: 'GET',
           headers: {
             Accept: 'application/json',
@@ -166,7 +167,9 @@ class AddGroup extends React.Component {
         //If response is not in json then in error
         .catch((error) => {
             //Error 
-            alert(JSON.stringify(error));
+            alert('Une erreur est survenue '+ error);
+
+            //alert(JSON.stringify(error));
             console.error(error);
         });  
         
@@ -178,6 +181,7 @@ class AddGroup extends React.Component {
   }
 
   async createGroupe(){
+    this.setState({isloading: true})
     //var nom_ = this.state.nom
     var nom_groupe_ = this.state.nom_groupe
     var somme_ = this.state.somme
@@ -185,39 +189,25 @@ class AddGroup extends React.Component {
     var date_debut = this.state.date_debut;
     var date_fin = new Date();
     var date_debut_Split = date_debut.split("-");
-    var date_debut_ = new Date(date_debut_Split[2], date_debut_Split[0],date_debut_Split[1]).getTime();
-    var date_debut__ = new Date(date_debut_Split[2], date_debut_Split[0],date_debut_Split[1]);
+    var date_debut_ = new Date(date_debut_Split[2], date_debut_Split[1]-1,date_debut_Split[0]).getTime();
+    var date_debut__ = new Date(date_debut_Split[2], date_debut_Split[1]-1,date_debut_Split[0]);
     var nbr_jour_ = this.state.nbr_jour
     var id_demandeur_ = this.state.id_demandeur
     var taux_ = this.state.taux
     var details_ = this.state.details
     var type_ = this.state.type
+    var diff =   ( parseInt(cat_) * parseInt(nbr_jour_))+1 + parseInt(cat_);
+    var date_fin__ =  date_fin.setDate(date_debut__.getDate() + parseInt(diff));
+    var date_fin_ =  date_fin__;
 
-    var date_fin__ =  date_fin.setDate(date_debut__.getDate() + ( parseInt(cat_) * parseInt(nbr_jour_)));
-    var date_fin_ =  date_fin__
+    //var otd_date = new Date(parseFloat(date_fin_))
 
-
-
-
-    bo = JSON.stringify({
-      nom_groupe: nom_groupe_,
-      somme: somme_,
-      cat: cat_,
-      date_debut: date_debut_,
-      date_fin: date_fin_,
-      //nbr_jour: nbr_jour_,
-      id_demandeur: id_demandeur_,
-      taux: taux_,
-      details: details_,
-      type: type_
-    });
-    //alert(bo);
-
-
-   await fetch('http://192.168.56.1:3000/group', {
+    //alert(date_debut+" * "+date_debut__+" * "+otd_date +" --> "+date_fin_+" <-- "+cat_ +" *** "+( parseInt(cat_) * parseInt(nbr_jour_)));
+    //TODO : remove wrong date when user chooses cat = week 
+   await fetch('http://35.223.156.137:3000/group', {
      method: 'POST',
      headers: {
-       Accept: 'application/json',
+       Accept: 'appl.toDateString()ication/json',
        'Content-Type': 'application/json',
      },
      body:JSON.stringify({
@@ -229,6 +219,7 @@ class AddGroup extends React.Component {
       id_responsable: id_demandeur_,
       taux: taux_,
       details: details_,
+      nbr_jour:nbr_jour_
      })
    }).then((response) => response.json())
    //If response is in json then in success
@@ -239,22 +230,24 @@ class AddGroup extends React.Component {
        
        // TODO open waitValidAccout screen
          //this._fetchGroup();
+         this.setState({isloading: false})
         this.props.navigation.navigate("Home");
-
-
 
    }) //If response is not in json then in error
    .catch((error) => {
        //Error 
-       alert(JSON.stringify(error));
+       this.setState({isloading: false})
+       //alert(JSON.stringify(error));
+       alert('Une erreur est survenue '+ error);
+
        console.error(error);
-       ToastAndroid.show('Une erreur est surnenue '+ error, ToastAndroid.LONG)
+       //ToastAndroid.show('Une erreur est surnenue '+ error, ToastAndroid.LONG)
    });
  }
 
 
   async CheckGroupBeforeSave() {
-
+    this.setState({isloading: true})
     //TODO Valider tout les champs
     if(this.state.nom_groupe_valid && this.state.somme_valid && this.state.details_valid
       && this.state.nbr_jr_valide && this.state.date_debut !=""){
@@ -263,7 +256,7 @@ class AddGroup extends React.Component {
           await NetInfo.isConnected.fetch().then(async isConnected => {
             if(isConnected){
           
-              await fetch('http://192.168.56.1:3000/group_by_name/'+this.state.nom_groupe, {
+              await fetch('http://35.223.156.137:3000/group_by_name/'+this.state.nom_groupe, {
                 method: 'GET',
                 headers: {
                   Accept: 'application/json',
@@ -277,7 +270,8 @@ class AddGroup extends React.Component {
                   var prop = 'message'; 
                   if (responseJson.hasOwnProperty(prop)) { 
                      this.createGroupe();
-                  } else { 
+                  } else {
+                    this.setState({isloading: false}) 
                     ToastAndroid.show('Ce groupe existe deja', ToastAndroid.LONG)
                     this.setState({nom_groupe_valid: false})
                   } 
@@ -285,17 +279,21 @@ class AddGroup extends React.Component {
               //If response is not in json then in error
               .catch((error) => {
                   //Error 
-                  alert(JSON.stringify(error));
+                  this.setState({isloading: false})
+                  alert('Une erreur est survenue '+ error);
+              //alert(JSON.stringify(error));
                   console.error(error);
               });  
               
             }
             else{
+              this.setState({isloading: false})
               ToastAndroid.show('Aucune connexion internet!', ToastAndroid.LONG)
             }
           })
 
     }else {
+      this.setState({isloading: false})
       ToastAndroid.show("Veillez valider tous les champs SVP!", ToastAndroid.LONG);
     }
   }
@@ -311,7 +309,7 @@ class AddGroup extends React.Component {
       taux,
       cat,
       date_debut,
-      date_fin,
+      isloading,
       nbr_jour,
       details
     } = this.state;
@@ -363,6 +361,7 @@ class AddGroup extends React.Component {
                    
                    <GaButton
                      round
+                     loading={isloading}
                      onlyIcon
                      shadowless
                      icon="users"
@@ -437,7 +436,7 @@ class AddGroup extends React.Component {
                        <Block width={width * 0.8} style={{ marginBottom: 5 }}>
                          <Input
                           type="numeric"
-                          placeholder="Contribution individuelle en $"
+                          placeholder="Credit demande en $"
                           style={[styles.inputs, {
                              borderColor: this.state.somme_valid
                                    ? '#E3E3E3'
@@ -602,6 +601,7 @@ class AddGroup extends React.Component {
               </Block>
             </Block>
           </ImageBackground>
+          <KeyboardSpacer/>
         </Block>
       </DismissKeyboard>
     );

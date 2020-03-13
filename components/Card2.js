@@ -61,7 +61,7 @@ class Card2 extends React.Component {
               numberOfLines={1}
               color={nowTheme.COLORS.WHITE}>
             
-              {item.etat == 0? "(En cours)" : "(Valide)"}
+              {item.etat == 0? "(En attente)" : "(Valide)"}
               </Text>
             </Block>
           </ImageBackground>
@@ -87,9 +87,11 @@ class Card2 extends React.Component {
                   <Text
                     style={{ fontFamily: 'montserrat-regular', marginLeft:8 }}
                     size={13}
+                    //style={titleStyles2}
                     color={nowTheme.COLORS.BLACK}
+                    numberOfLines={1}
                   >
-                   Date debut: {new Date(parseFloat(item.date_debut)).toDateString()}
+                   Debut: {new Date(parseFloat(item.date_debut)).toDateString()}
                    {/* Date debut: {item.date_debut} */}
                   </Text>
                 </Block>
@@ -102,8 +104,10 @@ class Card2 extends React.Component {
                     style={{ fontFamily: 'montserrat-regular', textAlign: 'left', marginLeft:8}}
                     size={13}
                     color={"#9A9A9A"}
+                    //style={titleStyles2}
+                    numberOfLines={1}
                   >
-                   Date fin: {new Date(parseFloat(item.date_fin)).toDateString()}
+                   Fin: {new Date(parseFloat(item.date_fin)).toDateString()}
                   </Text>
                 </Block>
               ) : (
@@ -130,8 +134,9 @@ class Card2 extends React.Component {
                 muted={!ctaColor}
                 color={ctaColor || nowTheme.COLORS.ACTIVE}
                 bold
+                numberOfLines={1}
               >
-                Contribution: {item.somme} $ {item.cat == "7"? "/sem":"/mois"}
+                Credit: {item.somme} $ {item.cat == "7"? "/sem ("+item.nbr_jour+" sem)":"/mois ("+item.nbr_jour+" mois)"}
               </Text>
             </Block>
           </Block>
