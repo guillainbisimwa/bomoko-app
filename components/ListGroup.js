@@ -1,7 +1,15 @@
 import React from 'react';
 import { withNavigation } from 'react-navigation';
 import PropTypes from 'prop-types';
-import { StyleSheet, Image, TouchableWithoutFeedback, ImageBackground, ToastAndroid, Dimensions } from 'react-native';
+import { StyleSheet, 
+  Image, 
+  TouchableWithoutFeedback, 
+  ImageBackground, 
+  ToastAndroid, 
+  Dimensions,
+  NetInfo,
+  Alert,
+} from 'react-native';
 import { Block, Text, theme, Icon, Card} from 'galio-framework';
 const { width, height } = Dimensions.get('screen');
 
@@ -21,8 +29,8 @@ class ListGroup extends React.Component {
       ctaRight,
       titleStyle
     } = this.props;
-    const man = require("../assets/icons/man.png")
-    const woman = require("../assets/icons/woman.png")
+    const ok = require("../assets/img/ok.png")
+    const error = require("../assets/img/error.png")
 
     return (
       <Block style={styles.header}  flex >
@@ -33,7 +41,33 @@ class ListGroup extends React.Component {
         //   product: `${JSON.stringify(item)}`,
 
         //  })
-         ToastAndroid.show( JSON.stringify(item), ToastAndroid.LONG)
+        Alert.alert("Attention!","Voulez vous vraiment valider le groupe : "+item.nom_group+"? Details : "+item.details ,
+      [
+       
+        {text: 'Annuler', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+        {text: 'Valider', onPress: () => 
+          {
+            NetInfo.isConnected.fetch().then(isConnected => {
+              if(isConnected)
+              {
+                console.log('OK Pressed')
+                //this.checkCreditExistFromAPI(id, name)
+                //ToastAndroid.show(id, ToastAndroid.SHORT)
+                ToastAndroid.show( JSON.stringify(item), ToastAndroid.LONG)
+         
+
+
+              }
+              else{
+                ToastAndroid.show("Aucune connexion internet disponible", ToastAndroid.SHORT)
+               
+                
+              }
+            });
+
+          }
+        },
+      ]);
 
          }
          }>
@@ -42,7 +76,7 @@ class ListGroup extends React.Component {
 
 
         <Card
-            avatar={item.cat == '30'? man: woman}
+            avatar={item.etat == 1 ? ok: error}
             borderless
             style={styles.stats}
             title={item.nom_group}
@@ -80,8 +114,6 @@ const styles = StyleSheet.create({
     borderTopRightRadius: theme.SIZES.BASE * 2,
     width : width - theme.SIZES.BASE * 2
   },
-  
-
   stats: {
     borderWidth: 0,
     height: theme.SIZES.BASE * 4,
