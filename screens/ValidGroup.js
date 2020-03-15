@@ -6,6 +6,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   ScrollView, 
+  RefreshControl,
   NetInfo,
   AsyncStorage,
   Alert,
@@ -34,34 +35,61 @@ class ValidGroup extends React.Component {
     
 
     this.state = {
-      groups : []
+      groups : [],
+      isRefreshing: false,
     };
   }
+  _fetchGroup = async () =>{
+    await NetInfo.isConnected.fetch().then(async isConnected => {
+      if(isConnected){
+        await fetch('http://35.223.156.137:3000/groups/', {
+          method: 'GET',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+        })
+        .then((response) => response.json())
+        //If response is in json then in success
+        .then((responseJson) => {
+            //Success 
+            AsyncStorage.setItem('GroupsLocalStorage', JSON.stringify(responseJson))
+              .then(json => {
+                ToastAndroid.show('GroupsLocalStorage1 save locally', ToastAndroid.SHORT)
+                this._bootstrapAsyncGroup();
+                if(responseJson == null){
+                  this.setState({groupss: null});
+                }
+            })
+              .catch(error => ToastAndroid.show('GroupsLocalStorage error local memory', ToastAndroid.SHORT));
+        })
+        //If response is not in json then in error
+        .catch((error) => {
+            //Error 
+            ToastAndroid.show('Une erreur est survenue '+ error, ToastAndroid.LONG)
+        });  
+      }
+      else{
+        ToastAndroid.show('Aucune connexion internet!', ToastAndroid.LONG)
+      }
+    })
+  }
+
       // Fetch the token from storage then navigate to our appropriate place
- _bootstrapAsyncGroup = async () => {
+  _bootstrapAsyncGroup = async () => {
   dataGroups = [];
   dataGroups002 = [];
   const GroupsLocalStorage = await AsyncStorage.getItem('GroupsLocalStorage')
   .then(async (value) => {
-    //console.log("************************Get Value >> ", JSON.parse(value));
     dataGroups = await JSON.parse(value);
-    //dataGroups002 = await dataGroups.filter((item) => (item.type == 102));
-    //ToastAndroid.show(JSON.stringify(dataGroups)+"vo", ToastAndroid.LONG)
-
     this.setState({
       groups: await dataGroups,
     });
- 
-    console.log(dataGroups)
-
-   //console.log("*********************Put Value >> ", dataGroups);
- }).done();
-};
+  }).done();
+  };
 
   componentDidMount = async() =>{
-    //await this._fetchGroup()
     await this._bootstrapAsyncGroup();
-    ///await this._bootstrapAsyncClient();
   }
 
   render() {
@@ -81,8 +109,15 @@ class ValidGroup extends React.Component {
             <Block flex middle>
               <Block style={styles.registerContainer}>
                 
-
-              <ScrollView showsVerticalScrollIndicator={false}>
+              <ScrollView refreshControl={
+                <RefreshControl
+                refreshing={this.state.isRefreshing}
+                onRefresh={this._fetchGroup}
+              />
+              }
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={styles.articles}
+              >
                 <Block>
                      
                       <Block flex>
@@ -112,6 +147,12 @@ const styles = StyleSheet.create({
     height: height,
     padding: 0,
     zIndex: 1
+  },
+  articles: {
+    width: width - theme.SIZES.BASE * 2,
+    paddingVertical: theme.SIZES.BASE,
+    paddingHorizontal: 2,
+    fontFamily: 'montserrat-regular'
   },
   imageBackground: {
     width: width,

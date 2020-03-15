@@ -13,10 +13,8 @@ import { StyleSheet,
 import { Block, Text, theme, Icon, Card} from 'galio-framework';
 const { width, height } = Dimensions.get('screen');
 
-
 class ListGroup extends React.Component {
  
-
   render() {
     const {
       navigation,
@@ -36,13 +34,8 @@ class ListGroup extends React.Component {
       <Block style={styles.header}  flex >
         <TouchableWithoutFeedback  onPress={() => 
         { 
-        //   navigation.navigate('DetailGroup', {
-
-        //   product: `${JSON.stringify(item)}`,
-
-        //  })
         Alert.alert("Attention!","Voulez vous vraiment valider le groupe : "+item.nom_group+"? Details : "+item.details ,
-      [
+        [
        
         {text: 'Annuler', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
         {text: 'Valider', onPress: () => 
@@ -50,18 +43,46 @@ class ListGroup extends React.Component {
             NetInfo.isConnected.fetch().then(isConnected => {
               if(isConnected)
               {
-                console.log('OK Pressed')
-                //this.checkCreditExistFromAPI(id, name)
-                //ToastAndroid.show(id, ToastAndroid.SHORT)
+                //TODO Valid group
+                fetch('http://35.223.156.137:3000/group/'+item.id_g, {
+                method: 'POST',
+                headers: {
+                  Accept: 'application/json',
+                  'Content-Type': 'application/json',
+                },
+                body:JSON.stringify({
+                  nom_group:  item.nom_group,
+                  somme:  item.somme,
+                  cat:  item.cat,
+                  date_debut:  item.date_debut,
+                  date_fin:  item.date_fin,
+                  id_responsable:  item.id_responsable,
+                  taux:  item.taux,
+                  details:  item.details,
+                  nbr_jour: item.nbr_jour
+                })
+              }).then((response) => response.json())
+              //If response is in json then in success
+              .then((responseJson) => {
+                  //Success 
+                var prop = 'message'; 
+                if (responseJson.hasOwnProperty(prop)) { 
+                  ToastAndroid.show(responseJson['message'], ToastAndroid.LONG)           
+                } else {
+                  ToastAndroid.show("Group valide avec success", ToastAndroid.LONG)
+                  //this._fetchClients();
+                } 
+              }) //If response is not in json then in error
+              .catch((error) => {
+                  console.error(error);
+                  this.setState({isloading: false})
+                  ToastAndroid.show('Une erreur est survenue '+ error, ToastAndroid.LONG)
+              });
+
                 ToastAndroid.show( JSON.stringify(item), ToastAndroid.LONG)
-         
-
-
               }
               else{
                 ToastAndroid.show("Aucune connexion internet disponible", ToastAndroid.SHORT)
-               
-                
               }
             });
 
@@ -72,9 +93,6 @@ class ListGroup extends React.Component {
          }
          }>
            
-
-
-
         <Card
             avatar={item.etat == 1 ? ok: error}
             borderless
@@ -82,6 +100,32 @@ class ListGroup extends React.Component {
             title={item.nom_group}
             caption={item.etat == 1 ? "Groupe valide" : "Non valide"}
             captionColor= {item.etat == 1 ? "#080" : "#a11"}
+            location={(
+              <Block row right>
+                <Block row middle style={{ marginHorizontal: theme.SIZES.BASE }}>
+                  <Icon name="usd" family="font-awesome" color={theme.COLORS.ERROR} size={theme.SIZES.FONT * 0.875} />
+                  <Text
+                    p
+                    color={theme.COLORS.ERROR}
+                    size={theme.SIZES.FONT * 0.875}
+                    style={{ marginLeft: theme.SIZES.BASE * 0.25 }}
+                  >
+                    {item.somme}/{item.cat == 30 ? "mois" : "sem"}
+                  </Text>
+                </Block>
+                <Block row middle>
+                  <Icon name="rate" family="font-awesome" color={theme.COLORS.MUTED} size={theme.SIZES.FONT * 0.875} />
+                  <Text
+                    p
+                    color={theme.COLORS.MUTED}
+                    size={theme.SIZES.FONT * 0.875}
+                    style={{ marginLeft: theme.SIZES.BASE * 0.25 }}
+                  >
+                    +2%
+                  </Text>
+                </Block>
+              </Block>
+            )}
           />
         </TouchableWithoutFeedback>
       </Block>
