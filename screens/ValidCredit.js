@@ -40,6 +40,7 @@ class ValidCredit extends React.Component {
       isRefreshing: false,
     };
   }
+
   _fetchCredit = async () =>{
     await NetInfo.isConnected.fetch().then(async isConnected => {
       if(isConnected){
@@ -85,18 +86,9 @@ class ValidCredit extends React.Component {
     .then(async (value) => {
       dataCredits = await JSON.parse(value);
 
-    //   const GroupsLocalStorage = await AsyncStorage.getItem('GroupsLocalStorage')
-    //   .then(async (value) => {
-    //     dataGroups = await JSON.parse(value);
-
-    //  }).done();
-
     const ClientsLocalStorage = await AsyncStorage.getItem('ClientsLocalStorage')
       .then(async (value) => {
         dataClients = await JSON.parse(value);
-       //ToastAndroid.show(JSON.stringify(dataCredits)+"vo", ToastAndroid.LONG)
-
-
 
         const GroupsLocalStorage = await AsyncStorage.getItem('GroupsLocalStorage')
           .then(async (value) => {
@@ -107,7 +99,6 @@ class ValidCredit extends React.Component {
               singleGroup = dataGroups.find((item) => item.id ==  docCredit.id_g );
               singleUser = dataClients.find((item) => item.id ==  docCredit.id_demandeur );
 
-      
               allDataCredit.push({
 
                 cat: docCredit.cat,
@@ -134,9 +125,6 @@ class ValidCredit extends React.Component {
 
     }).done();
 
-    // this.setState({
-    //   credits: await dataCredits,
-    // });
   }).done();
   };
 

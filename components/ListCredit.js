@@ -34,9 +34,6 @@ class ListCredit extends React.Component {
       <Block style={styles.header}  flex >
         <TouchableWithoutFeedback  onPress={() => 
         { 
-          ToastAndroid.show(item.id, ToastAndroid.LONG)    
-          item.g = "Garcon ibre"       
-
         cat = item.cat == 30?"mois":"semaines"
         Alert.alert("Attention!","Voulez vous vraiment valider le credit de :"+item.nom_user +" ("+item.phone_user+") du groupe "+item.nom_group+"? "+ "Son credit est de "+item.somme+"$ a rembourser pandant "+item.nbr_jour +" "+ cat+".",
         [
@@ -48,22 +45,15 @@ class ListCredit extends React.Component {
               if(isConnected)
               {
                 //TODO Valid group
-                fetch('http://35.223.156.137:3000/group/'+item.id, {
+                fetch('http://35.223.156.137:3000/valider_request_credit', {
                 method: 'POST',
                 headers: {
                   Accept: 'application/json',
                   'Content-Type': 'application/json',
                 },
                 body:JSON.stringify({
-                  nom_group:  item.nom_group,
-                  somme:  item.somme,
-                  cat:  item.cat,
-                  date_debut:  item.date_debut,
-                  date_fin:  item.date_fin,
-                  id_responsable:  item.id_responsable,
-                  taux:  item.taux,
-                  details:  item.details,
-                  nbr_jour: item.nbr_jour
+                  id_c:item.id,
+                  intrt:"2"
                 })
               }).then((response) => response.json())
               //If response is in json then in success
@@ -73,7 +63,7 @@ class ListCredit extends React.Component {
                 if (responseJson.hasOwnProperty(prop)) { 
                   ToastAndroid.show(responseJson['message'], ToastAndroid.LONG)           
                 } else {
-                  ToastAndroid.show("Group valide avec success", ToastAndroid.LONG)
+                  ToastAndroid.show("Mise a jour de votre echeance de paiement", ToastAndroid.LONG)
                   //this._fetchClients();
                 } 
               }) //If response is not in json then in error
@@ -101,9 +91,9 @@ class ListCredit extends React.Component {
             avatar={item.etat == 1 ? ok: error}
             borderless
             style={styles.stats}
-            title={item.nom_group}
+            title={item.nom_user}
             //caption={item.etat == 1 ? "Credit valide" : "Non valide"}
-            caption={item.nom_user}
+            caption={item.nom_group}
             captionColor= {item.etat == 1 ? "#080" : "#a11"}
             location={(
               <Block row right>

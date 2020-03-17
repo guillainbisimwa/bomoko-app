@@ -35,7 +35,7 @@ class ListGroup extends React.Component {
         <TouchableWithoutFeedback  onPress={() => 
         { 
         cat = item.cat == 30?"mois":"semaines"
-        Alert.alert("Attention!","Voulez vous vraiment valider le groupe : "+item.nom_group+"? Details : "+item.details + ". Contribution de "+item.somme+"$ pandant "+item.nbr_jour +" "+ cat+".",
+        Alert.alert("Attention!","Voulez vous vraiment valider le groupe : "+item.nom_group+"? Details : "+item.details + ". Credit de "+item.somme+"$ pandant "+item.nbr_jour +" "+ cat+".",
         [
        
         {text: 'Annuler', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
