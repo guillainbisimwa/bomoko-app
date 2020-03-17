@@ -13,7 +13,7 @@ import { StyleSheet,
 import { Block, Text, theme, Icon, Card} from 'galio-framework';
 const { width, height } = Dimensions.get('screen');
 
-class ListGroup extends React.Component {
+class ListCredit extends React.Component {
  
   render() {
     const {
@@ -34,8 +34,11 @@ class ListGroup extends React.Component {
       <Block style={styles.header}  flex >
         <TouchableWithoutFeedback  onPress={() => 
         { 
+          ToastAndroid.show(item.id, ToastAndroid.LONG)    
+          item.g = "Garcon ibre"       
+
         cat = item.cat == 30?"mois":"semaines"
-        Alert.alert("Attention!","Voulez vous vraiment valider le groupe : "+item.nom_group+"? Details : "+item.details + ". Contribution de "+item.somme+"$ pandant "+item.nbr_jour +" "+ cat+".",
+        Alert.alert("Attention!","Voulez vous vraiment valider le credit de :"+item.nom_user +" ("+item.phone_user+") du groupe "+item.nom_group+"? "+ "Son credit est de "+item.somme+"$ a rembourser pandant "+item.nbr_jour +" "+ cat+".",
         [
        
         {text: 'Annuler', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
@@ -99,7 +102,8 @@ class ListGroup extends React.Component {
             borderless
             style={styles.stats}
             title={item.nom_group}
-            caption={item.etat == 1 ? "Groupe valide" : "Non valide"}
+            //caption={item.etat == 1 ? "Credit valide" : "Non valide"}
+            caption={item.nom_user}
             captionColor= {item.etat == 1 ? "#080" : "#a11"}
             location={(
               <Block row right>
@@ -114,16 +118,7 @@ class ListGroup extends React.Component {
                     {item.somme}/{item.cat == 30 ? "mois" : "sem"}
                   </Text>
                 </Block>
-                <Block row middle>
-                  <Text
-                    p
-                    color={theme.COLORS.MUTED}
-                    size={theme.SIZES.FONT * 0.875}
-                    style={{ marginLeft: theme.SIZES.BASE * 0.25 }}
-                  >
-                    +2%
-                  </Text>
-                </Block>
+               
               </Block>
             )}
           />
@@ -133,7 +128,7 @@ class ListGroup extends React.Component {
   }
 }
 
-ListGroup.propTypes = {
+ListCredit.propTypes = {
   item: PropTypes.object,
   horizontal: PropTypes.bool,
   full: PropTypes.bool,
@@ -180,4 +175,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default withNavigation(ListGroup);
+export default withNavigation(ListCredit);

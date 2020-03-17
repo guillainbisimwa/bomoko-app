@@ -8,12 +8,13 @@ import {
   ScrollView, 
   RefreshControl,
   NetInfo,
+  ToastAndroid,
   AsyncStorage,
   Alert,
 } from 'react-native';
 import { Block, Text, Button as GaButton, theme, Checkbox } from 'galio-framework';
 
-import { Button, Icon, Input, ListGroup} from '../components';
+import { Button, Icon, Input, ListCredit} from '../components';
 import { Images, nowTheme } from '../constants';
 
 import { HeaderHeight } from '../constants/utils';
@@ -30,19 +31,19 @@ const DismissKeyboard = ({ children }) => (
 class ValidCredit extends React.Component {
   constructor(props) {
     super(props);
-    dataGroups = [];
-    dataGroups002 = [];
-    
+    dataCredits = [];
+    dataCredits002 = [];
 
     this.state = {
-      groups : [],
+      credits : [],
+      allDataCredits : [],
       isRefreshing: false,
     };
   }
-  _fetchGroup = async () =>{
+  _fetchCredit = async () =>{
     await NetInfo.isConnected.fetch().then(async isConnected => {
       if(isConnected){
-        await fetch('http://35.223.156.137:3000/groups/', {
+        await fetch('http://35.223.156.137:3000/credits/', {
           method: 'GET',
           headers: {
             Accept: 'application/json',
@@ -53,15 +54,15 @@ class ValidCredit extends React.Component {
         //If response is in json then in success
         .then((responseJson) => {
             //Success 
-            AsyncStorage.setItem('GroupsLocalStorage', JSON.stringify(responseJson))
+            AsyncStorage.setItem('CreditsLocalStorage', JSON.stringify(responseJson))
               .then(json => {
-                ToastAndroid.show('GroupsLocalStorage1 save locally', ToastAndroid.SHORT)
-                this._bootstrapAsyncGroup();
+                ToastAndroid.show('CreditsLocalStorage1 save locally', ToastAndroid.SHORT)
+                this._bootstrapAsyncCredits();
                 if(responseJson == null){
                   this.setState({groupss: null});
                 }
             })
-              .catch(error => ToastAndroid.show('GroupsLocalStorage error local memory', ToastAndroid.SHORT));
+              .catch(error => ToastAndroid.show('CreditsLocalStorage error local memory', ToastAndroid.SHORT));
         })
         //If response is not in json then in error
         .catch((error) => {
@@ -76,26 +77,78 @@ class ValidCredit extends React.Component {
   }
 
       // Fetch the token from storage then navigate to our appropriate place
-  _bootstrapAsyncGroup = async () => {
-  dataGroups = [];
-  dataGroups002 = [];
-  const GroupsLocalStorage = await AsyncStorage.getItem('GroupsLocalStorage')
-  .then(async (value) => {
-    dataGroups = await JSON.parse(value);
-    this.setState({
-      groups: await dataGroups,
-    });
+  _bootstrapAsyncCredits = async () => {
+   
+    dataCredits = [];
+    dataCredits002 = [];
+    const CreditsLocalStorage = await AsyncStorage.getItem('CreditsLocalStorage')
+    .then(async (value) => {
+      dataCredits = await JSON.parse(value);
+
+    //   const GroupsLocalStorage = await AsyncStorage.getItem('GroupsLocalStorage')
+    //   .then(async (value) => {
+    //     dataGroups = await JSON.parse(value);
+
+    //  }).done();
+
+    const ClientsLocalStorage = await AsyncStorage.getItem('ClientsLocalStorage')
+      .then(async (value) => {
+        dataClients = await JSON.parse(value);
+       //ToastAndroid.show(JSON.stringify(dataCredits)+"vo", ToastAndroid.LONG)
+
+
+
+        const GroupsLocalStorage = await AsyncStorage.getItem('GroupsLocalStorage')
+          .then(async (value) => {
+            dataGroups = await JSON.parse(value);
+            allDataCredit = [];
+
+            await dataCredits.forEach(docCredit => {
+              singleGroup = dataGroups.find((item) => item.id ==  docCredit.id_g );
+              singleUser = dataClients.find((item) => item.id ==  docCredit.id_demandeur );
+
+      
+              allDataCredit.push({
+
+                cat: docCredit.cat,
+                date_creation: docCredit.date_creation,
+                etat: docCredit.etat,
+                id: docCredit.id,
+                id_demandeur: docCredit.id_demandeur,
+                id_echeance: docCredit.id_echeance,
+                saison: docCredit.saison,
+                somme: docCredit.somme,
+                type: docCredit.type,
+                nom_group: singleGroup.nom_group,
+                nom_user:singleUser.nom,
+                phone_user:singleUser.phone,
+                nbr_jour: singleGroup.nbr_jour
+              });
+            })
+            
+            this.setState({
+              credits: await allDataCredit,
+            });
+
+        }).done();
+
+    }).done();
+
+    // this.setState({
+    //   credits: await dataCredits,
+    // });
   }).done();
   };
 
   componentDidMount = async() =>{
-    await this._bootstrapAsyncGroup();
+    await this._fetchCredit();
+    await this._bootstrapAsyncCredits();
   }
 
   render() {
     const { navigation } = this.props;
     const {
-      groups,
+      credits,
     } = this.state;
 
     return (
@@ -112,19 +165,19 @@ class ValidCredit extends React.Component {
               <ScrollView refreshControl={
                 <RefreshControl
                 refreshing={this.state.isRefreshing}
-                onRefresh={this._fetchGroup}
+                onRefresh={this._fetchCredit}
               />
               }
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={styles.articles}
               >
-                <Block>
+                <Block style={styles.header}>
                      
                       <Block flex>
                     
-                    {groups.map((item, index) => {
+                    {credits.map((item, index) => {
                       return <Block key={index} flex row>
-                      <ListGroup item={item} horizontal/>
+                      <ListCredit  item={item} />
                     </Block>
                     })}   
 
@@ -224,6 +277,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginHorizontal: 10
   },
+  header1: {
+    //backgroundColor: theme.COLORS.WHITE,
+    //borderTopLeftRadius: theme.SIZES.BASE * 2,
+    //borderTopRightRadius: theme.SIZES.BASE * 2,
+    width : width - theme.SIZES.BASE * 3
+  },
+
+
+
 });
 
 export default ValidCredit;

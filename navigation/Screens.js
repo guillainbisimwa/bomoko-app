@@ -24,6 +24,7 @@ import DetailGroup from '../screens/DetailGroup';
 
 //Admin
 import ValidGroup from '../screens/ValidGroup';
+import ValidCredit from '../screens/ValidCredit';
 
 // settings
 import SettingsScreen from '../screens/Settings';
@@ -179,13 +180,31 @@ const VideStack = createStackNavigator(
   }
 );
 
-const ValidAdminStack = createStackNavigator(
+const ValidGroupStack = createStackNavigator(
   {
     ValidGroups: {
       screen: ValidGroup,
       navigationOptions: ({ navigation }) => ({
         header: (
           <Header  transparent title="Valider les groups" iconColor={'#000'} navigation={navigation} />
+        ),
+        headerTransparent: true
+      })
+    }
+  },
+  {
+    cardStyle: { backgroundColor: '#FFFFFF' },
+    transitionConfig
+  }
+);
+
+const ValidCreditStack = createStackNavigator(
+  {
+    ValidCredits: {
+      screen: ValidCredit,
+      navigationOptions: ({ navigation }) => ({
+        header: (
+          <Header  transparent title="Valider les credits" iconColor={'#000'} navigation={navigation} />
         ),
         headerTransparent: true
       })
@@ -484,10 +503,18 @@ const AppStack = createDrawerNavigator(
       })
     },
     ValidGroups: {
-      screen: ValidAdminStack,
+      screen: ValidGroupStack,
       navigationOptions: navOpt => ({
         drawerLabel: ({ focused }) => (
           <DrawerItem focused={focused} screen="ValidGroup" title="Valider les Groupes" />
+        )
+      })
+    },
+    ValidCredits: {
+      screen: ValidCreditStack,
+      navigationOptions: navOpt => ({
+        drawerLabel: ({ focused }) => (
+          <DrawerItem focused={focused} screen="ValidCredit" title="Valider les credits" />
         )
       })
     },
