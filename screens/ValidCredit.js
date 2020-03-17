@@ -6,13 +6,14 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   ScrollView, 
+  RefreshControl,
   NetInfo,
   AsyncStorage,
   Alert,
 } from 'react-native';
 import { Block, Text, Button as GaButton, theme, Checkbox } from 'galio-framework';
 
-import { Button, Icon, Input, ListCLient} from '../components';
+import { Button, Icon, Input, ListGroup} from '../components';
 import { Images, nowTheme } from '../constants';
 
 import { HeaderHeight } from '../constants/utils';
@@ -31,19 +32,64 @@ class ValidCredit extends React.Component {
     super(props);
     dataGroups = [];
     dataGroups002 = [];
-    const GroupsLocalStorage = AsyncStorage.getItem('GroupsLocalStorage')
-    .then(async (value) => {
-      //console.log("************************Get Value >> ", JSON.parse(value));
-      dataGroups = await JSON.parse(value);
-     
-      this.state = {
-        groups: await dataGroups,
-      };
-   }).done();
+    
 
-    // this.state = {
-    //   st : ""
-    // };
+    this.state = {
+      groups : [],
+      isRefreshing: false,
+    };
+  }
+  _fetchGroup = async () =>{
+    await NetInfo.isConnected.fetch().then(async isConnected => {
+      if(isConnected){
+        await fetch('http://35.223.156.137:3000/groups/', {
+          method: 'GET',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+        })
+        .then((response) => response.json())
+        //If response is in json then in success
+        .then((responseJson) => {
+            //Success 
+            AsyncStorage.setItem('GroupsLocalStorage', JSON.stringify(responseJson))
+              .then(json => {
+                ToastAndroid.show('GroupsLocalStorage1 save locally', ToastAndroid.SHORT)
+                this._bootstrapAsyncGroup();
+                if(responseJson == null){
+                  this.setState({groupss: null});
+                }
+            })
+              .catch(error => ToastAndroid.show('GroupsLocalStorage error local memory', ToastAndroid.SHORT));
+        })
+        //If response is not in json then in error
+        .catch((error) => {
+            //Error 
+            ToastAndroid.show('Une erreur est survenue '+ error, ToastAndroid.LONG)
+        });  
+      }
+      else{
+        ToastAndroid.show('Aucune connexion internet!', ToastAndroid.LONG)
+      }
+    })
+  }
+
+      // Fetch the token from storage then navigate to our appropriate place
+  _bootstrapAsyncGroup = async () => {
+  dataGroups = [];
+  dataGroups002 = [];
+  const GroupsLocalStorage = await AsyncStorage.getItem('GroupsLocalStorage')
+  .then(async (value) => {
+    dataGroups = await JSON.parse(value);
+    this.setState({
+      groups: await dataGroups,
+    });
+  }).done();
+  };
+
+  componentDidMount = async() =>{
+    await this._bootstrapAsyncGroup();
   }
 
   render() {
@@ -63,24 +109,22 @@ class ValidCredit extends React.Component {
             <Block flex middle>
               <Block style={styles.registerContainer}>
                 
-
-              <ScrollView showsVerticalScrollIndicator={false}>
-                <Block  middle>
-                      <Text
-                        style={{
-                          fontFamily: 'montserrat-regular',
-                          textAlign: 'center'
-                        }}
-                        color="#333"
-                        size={24}
-                      >
-                        Comming soon ...
-                      </Text>
+              <ScrollView refreshControl={
+                <RefreshControl
+                refreshing={this.state.isRefreshing}
+                onRefresh={this._fetchGroup}
+              />
+              }
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={styles.articles}
+              >
+                <Block>
+                     
                       <Block flex>
                     
                     {groups.map((item, index) => {
                       return <Block key={index} flex row>
-                      <ListCLient item={item} horizontal/>
+                      <ListGroup item={item} horizontal/>
                     </Block>
                     })}   
 
@@ -104,6 +148,12 @@ const styles = StyleSheet.create({
     padding: 0,
     zIndex: 1
   },
+  articles: {
+    width: width - theme.SIZES.BASE * 2,
+    paddingVertical: theme.SIZES.BASE,
+    paddingHorizontal: 2,
+    fontFamily: 'montserrat-regular'
+  },
   imageBackground: {
     width: width,
     height: height
@@ -122,7 +172,8 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     shadowOpacity: 0.1,
     elevation: 1,
-    overflow: 'hidden'
+    overflow: 'hidden',
+    padding:5
   },
   socialConnect: {
     backgroundColor: nowTheme.COLORS.WHITE
@@ -173,11 +224,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginHorizontal: 10
   },
-  
-
-
-
-
 });
 
 export default ValidCredit;

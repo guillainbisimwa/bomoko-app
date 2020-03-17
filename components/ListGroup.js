@@ -34,7 +34,10 @@ class ListGroup extends React.Component {
       <Block style={styles.header}  flex >
         <TouchableWithoutFeedback  onPress={() => 
         { 
-        Alert.alert("Attention!","Voulez vous vraiment valider le groupe : "+item.nom_group+"? Details : "+item.details ,
+          ToastAndroid.show(item.id, ToastAndroid.LONG)           
+
+        cat = item.cat == 30?"mois":"semaines"
+        Alert.alert("Attention!","Voulez vous vraiment valider le groupe : "+item.nom_group+"? Details : "+item.details + ". Contribution de "+item.somme+"$ pandant "+item.nbr_jour +" "+ cat+".",
         [
        
         {text: 'Annuler', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
@@ -44,7 +47,7 @@ class ListGroup extends React.Component {
               if(isConnected)
               {
                 //TODO Valid group
-                fetch('http://35.223.156.137:3000/group/'+item.id_g, {
+                fetch('http://35.223.156.137:3000/group/'+item.id, {
                 method: 'POST',
                 headers: {
                   Accept: 'application/json',
@@ -114,7 +117,6 @@ class ListGroup extends React.Component {
                   </Text>
                 </Block>
                 <Block row middle>
-                  <Icon name="rate" family="font-awesome" color={theme.COLORS.MUTED} size={theme.SIZES.FONT * 0.875} />
                   <Text
                     p
                     color={theme.COLORS.MUTED}
@@ -152,16 +154,13 @@ const styles = StyleSheet.create({
     //minHeight: 114,
     marginBottom: 4
   },
-  header1: {
-    backgroundColor: theme.COLORS.WHITE,
-    borderTopLeftRadius: theme.SIZES.BASE * 2,
-    borderTopRightRadius: theme.SIZES.BASE * 2,
-    width : width - theme.SIZES.BASE * 2
+  header: {
+    marginRight: 32    
   },
   stats: {
     borderWidth: 0,
     height: theme.SIZES.BASE * 4,
-    marginVertical: 5,
+    marginVertical: 5
   },
   title: {
     justifyContent: 'center',

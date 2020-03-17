@@ -8,6 +8,7 @@ import {
   ScrollView, 
   RefreshControl,
   NetInfo,
+  ToastAndroid,
   AsyncStorage,
   Alert,
 } from 'react-native';
@@ -118,13 +119,13 @@ class ValidGroup extends React.Component {
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={styles.articles}
               >
-                <Block>
+                <Block style={styles.header}>
                      
                       <Block flex>
                     
                     {groups.map((item, index) => {
                       return <Block key={index} flex row>
-                      <ListGroup item={item} horizontal/>
+                      <ListGroup  item={item} />
                     </Block>
                     })}   
 
@@ -224,8 +225,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginHorizontal: 10
   },
-  
-
+  header1: {
+    //backgroundColor: theme.COLORS.WHITE,
+    //borderTopLeftRadius: theme.SIZES.BASE * 2,
+    //borderTopRightRadius: theme.SIZES.BASE * 2,
+    width : width - theme.SIZES.BASE * 3
+  },
 
 
 
