@@ -56,16 +56,53 @@ class Card2 extends React.Component {
                 currentUser = await JSON.parse(value);
                 currentProfile = dataClients.find((item2) => item2.phone == currentUser['phone']);
 
-                navigation.navigate('DetailGroup', {
+                const CreditsLocalStorage =  AsyncStorage.getItem('CreditsLocalStorage')
+                .then(async (valueC) => {
+                  allCredit = await JSON.parse(valueC);
+                  allDataCredit = []
 
-                  product: `${JSON.stringify(item)}`,
-                  clients: `${JSON.stringify(clients)}`,
-                  clientByGroup: `${JSON.stringify(clientByGroup)}`,
-                  countGroupMember: `${JSON.stringify(countGroupMember)}`,
-                  currentUser: `${JSON.stringify(currentUser)}`,
-                  currentProfile: `${JSON.stringify(currentProfile)}`,
-                })
+                  clientByGroup.forEach(docCLient => {
+                    somme = 0
+                    singleUserCredit = allCredit.find((item) => item.id_demandeur ==  docCLient.id );
+                    if(singleUserCredit == 'undefined'){
+                      somme = 0
+                    }
+                    else somme = 1
+                    
+                    //somme = singleUserCredit == "" ? 0 : 1
+                    ToastAndroid.show("->"+JSON.stringify(somme)+"<-", ToastAndroid.LONG)
+
+
+
+                    allDataCredit.push({
+                      address: docCLient.address,
+                      code_conf_sms: docCLient.code_conf_sms,
+                      etat: docCLient.etat,
+                      id: docCLient.id,
+                      id_g: docCLient.id_g,
+                      nom: docCLient.nom,
+                      num_carte_elec: docCLient.num_carte_elec,
+                      phone: docCLient.phone,
+                      profession: docCLient.profession,
+                      sexe: docCLient.sexe,
+                      type: docCLient.type,
+                      somme : somme
+                      //somme: singleUserCredit.somme =="undefined" ?  0 : singleUserCredit.somme
+                    })
+                  })
+
+
+                  navigation.navigate('DetailGroup', {
+                    product: `${JSON.stringify(item)}`,
+                    clients: `${JSON.stringify(clients)}`,
+                    clientByGroup: `${JSON.stringify(clientByGroup)}`,
+                    countGroupMember: `${JSON.stringify(countGroupMember)}`,
+                    currentUser: `${JSON.stringify(currentUser)}`,
+                    currentProfile: `${JSON.stringify(currentProfile)}`,
+                    allDataCredit: `${JSON.stringify(allDataCredit)}`,
+                  })
                 
+                }).done();
               }).done();
           
 

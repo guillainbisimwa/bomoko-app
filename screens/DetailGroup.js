@@ -35,11 +35,19 @@ class DetailGroup extends React.Component {
 
     prod =  JSON.parse(this.props.navigation.getParam("product"))
     clients =  JSON.parse(this.props.navigation.getParam("clients"))
-    clientByGroup =  JSON.parse(this.props.navigation.getParam("clientByGroup"))
     countGroupMember =  JSON.parse(this.props.navigation.getParam("countGroupMember"))
     currentUser =  JSON.parse(this.props.navigation.getParam("currentUser"))
     currentProfile =  JSON.parse(this.props.navigation.getParam("currentProfile"))
-    //his.state = { group:  prod };
+    //allCredit =  JSON.parse(this.props.navigation.getParam("allCredit"))
+    //singleGroup = dataGroups.find((item) => item.id ==  docCredit.id_g );
+          
+    //singleUser = dataClients.find((item) => item.id ==  docCredit.id_demandeur );
+              
+    clientByGroup =  JSON.parse(this.props.navigation.getParam("clientByGroup"))
+    allDataCredit =  JSON.parse(this.props.navigation.getParam("allDataCredit"))
+    //ToastAndroid.show(JSON.stringify(allDataCredit), ToastAndroid.LONG)
+    
+    
     this.state = {
       st : "",
       group:prod,
