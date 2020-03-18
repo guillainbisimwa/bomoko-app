@@ -151,40 +151,6 @@ class DetailGroup extends React.Component {
     }
   }
 
-   
-  async _valider_request_credit(id_c,intrt = 2){
-    this.setState({isloading: true})
-
-      await fetch('http://35.223.156.137:3000/valider_request_credit', {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body:JSON.stringify({
-          id_c:id_c,
-          intrt:intrt
-        })
-      }).then((response) => response.json())
-      //If response is in json then in success
-      .then((responseJson) => {
-          //Success 
-        var prop = 'message'; 
-        if (responseJson.hasOwnProperty(prop)) { 
-          ToastAndroid.show(responseJson['message'], ToastAndroid.LONG)           
-        } else {
-          ToastAndroid.show("Mise a jour de votre echeance de paiement", ToastAndroid.LONG)
-          //this._fetchClients();
-        } 
-      }) //If response is not in json then in error
-      .catch((error) => {
-          console.error(error);
-          this.setState({isloading: false})
-          ToastAndroid.show('Une erreur est survenue '+ error, ToastAndroid.LONG)
-      });
-  }
-
-
   async _quitter_un_group(id_g, group_nom){
     this.setState({isloading: true})
     var pid = this.state.currentUser["pid"];
@@ -329,12 +295,7 @@ class DetailGroup extends React.Component {
             AsyncStorage.setItem('ClientsLocalStorage', JSON.stringify(responseJson))
               .then(json => {
                 ToastAndroid.show('ClientsLocalStorage1 save locally', ToastAndroid.SHORT)
-                //ToastAndroid.show(JSON.stringify(responseJson), ToastAndroid.LONG)
-                // this._bootstrapAsyncGroup();
-                // if(responseJson == null){
-                //   this.setState({groupss: null});
-                // }
-  
+              
             })
               .catch(error => ToastAndroid.show('ClientsLocalStorage error local memory', ToastAndroid.SHORT));
             
@@ -363,8 +324,7 @@ class DetailGroup extends React.Component {
       group,
       countGroupMember
     } = this.state;
-    //ToastAndroid.show( JSON.parse(navigation.getParam("product")), ToastAndroid.SHORT)
-    //ToastAndroid.show( JSON.stringify(navigation.getParam("product")), ToastAndroid.SHORT)
+  
     if(this.state.isLoading){
       return( 
         <Block style={styles.activity}>
@@ -384,15 +344,6 @@ class DetailGroup extends React.Component {
           >
             <Block flex middle>
               <Block style={styles.registerContainer}>
-                
-
-
-
-
-
-
-
-
 
             <ScrollView showsVerticalScrollIndicator={false}>
               <Block style={{
@@ -590,14 +541,7 @@ class DetailGroup extends React.Component {
                     </Block>
                     
                     <Block style={styles.container} row>
-                      {/* <Text bold size={16} color="#2c2c2c" style={{ marginTop: 3 }}>
-                        DATE DE DEBUT:
-                      </Text>
-                      <Text bold muted size={16}  style={{ marginTop: 1 }}>
-                        {new Date(parseFloat(group.date_debut)).toDateString()}
-                      </Text> */}
-
-
+                     
                       <View style={styles.cellContainer}>
                         <Text style={styles.titleText}>Date debut</Text>
                         <Text style={styles.amountText}> {new Date(parseFloat(group.date_debut)).toDateString()}</Text>
@@ -606,10 +550,7 @@ class DetailGroup extends React.Component {
                         <Text style={styles.titleText}>Date fin</Text>
                         <Text>{new Date(parseFloat(group.date_fin)).toDateString()}</Text>
                       </View>
-                      {/* <View style={styles.cellContainer}>
-                        <Text style={styles.titleText}>Status</Text>
-                        <Text>Dans 1 jrs</Text>
-                      </View> */}
+                     
                       
                     </Block>
                       {/* TODO: Enderstand why this date is in the enegative form */}
@@ -625,20 +566,6 @@ class DetailGroup extends React.Component {
                       
                     </Block>
 
-{/* 
-                    <Block style={{ paddingBottom: -HeaderHeight * 2, paddingHorizontal: 15}}>
-                      <Block row space="between" style={{ flexWrap: 'wrap' }}>
-                        {Images.Viewed.map((img, imgIndex) => (
-                          <Image
-                            source={img}
-                            key={`viewed-${img}`}
-                            resizeMode="cover"
-                            style={styles.thumb}
-                          />
-                        ))}
-                      </Block>
-                    </Block> */}
-
                     <Block flex>
                     
                     {this.state.clientByGroup.map((item, index) => {
@@ -653,19 +580,6 @@ class DetailGroup extends React.Component {
               </Block>
             </Block>
           </ScrollView>
-
-
-
-
-
-
-
-
-
-
-
-
-
 
               </Block>
             </Block>
@@ -753,10 +667,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 10
   },
   
-
-
-
-
   profileContainer: {
     justifyContent: 'center',// unitile
     alignSelf: 'center',

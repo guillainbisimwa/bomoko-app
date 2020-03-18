@@ -7,21 +7,6 @@ const { width, height } = Dimensions.get('screen');
 
 
 class ListClient extends React.Component {
-  // constructor(props) {
-  //   super(props);
-   
-  // }
-  // renderAvatar() {
-  //   if (!avatar) return null;
-  //   return <Image source={{ uri: avatar }} style={styles.avatar} />;
-  // }
-
-  // renderLocation() {
-  //   if (!location) return null;
-  //   if (typeof location !== 'string') {
-  //     return location;
-  //   }
-  // }
 
   render() {
     const {
@@ -42,19 +27,12 @@ class ListClient extends React.Component {
       <Block style={styles.header}  flex >
         <TouchableWithoutFeedback  onPress={() => 
         { 
-        //   navigation.navigate('DetailGroup', {
-
-        //   product: `${JSON.stringify(item)}`,
-
-        //  })
+        
          ToastAndroid.show( JSON.stringify(item), ToastAndroid.LONG)
 
          }
          }>
-           
-
-
-
+        
         <Card
             avatar={item.sexe == 'm'? man: woman}
             borderless

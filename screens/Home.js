@@ -92,17 +92,10 @@ _fetchClients = async () =>{
           AsyncStorage.setItem('ClientsLocalStorage', JSON.stringify(responseJson))
             .then(json => {
               ToastAndroid.show('ClientsLocalStorage1 save locally', ToastAndroid.SHORT)
-              //ToastAndroid.show(JSON.stringify(responseJson), ToastAndroid.LONG)
-              // this._bootstrapAsyncGroup();
-              // if(responseJson == null){
-              //   this.setState({groupss: null});
-              // }
-
+             
           })
             .catch(error => ToastAndroid.show('ClientsLocalStorage error local memory', ToastAndroid.SHORT));
-          
-          
-          
+
       })
       //If response is not in json then in error
       .catch((error) => {
@@ -147,10 +140,7 @@ _fetchClients = async () =>{
                 }
 
             })
-              .catch(error => ToastAndroid.show('GroupsLocalStorage error local memory', ToastAndroid.SHORT));
-            
-            
-            
+              .catch(error => ToastAndroid.show('GroupsLocalStorage error local memory', ToastAndroid.SHORT));   
         })
         //If response is not in json then in error
         .catch((error) => {
@@ -166,8 +156,6 @@ _fetchClients = async () =>{
       }
     })
   }
-
-
 
   render() {
 
@@ -223,11 +211,7 @@ _fetchClients = async () =>{
             })}   
             
           </Block>
-      }
-
-
-          
-          
+      } 
         </ScrollView>
         <Block style={styles.fab}>
           <GaButton
