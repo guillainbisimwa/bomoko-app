@@ -24,6 +24,7 @@ class Home extends React.Component {
     //await this._fetchGroup()
     await this._bootstrapAsyncGroup();
     await this._bootstrapAsyncClient();
+    await this.__fetchCredit();
   }
 
     // Fetch the token from storage then navigate to our appropriate place
@@ -70,6 +71,38 @@ _bootstrapAsyncClient = async () => {
    //console.log("*********************Put Value >> ", dataClients);
  }).done();
 };
+
+_fetchCredit = async () =>{
+  await NetInfo.isConnected.fetch().then(async isConnected => {
+    if(isConnected){
+      await fetch('http://35.223.156.137:3000/credits/', {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+      })
+      .then((response) => response.json())
+      //If response is in json then in success
+      .then((responseJson) => {
+          //Success 
+          AsyncStorage.setItem('CreditsLocalStorage', JSON.stringify(responseJson))
+            .then(json => {
+              ToastAndroid.show('CreditsLocalStorage1 save locally', ToastAndroid.SHORT)
+          })
+            .catch(error => ToastAndroid.show('CreditsLocalStorage error local memory', ToastAndroid.SHORT));
+      })
+      //If response is not in json then in error
+      .catch((error) => {
+          //Error 
+          ToastAndroid.show('Une erreur est survenue '+ error, ToastAndroid.LONG)
+      });  
+    }
+    else{
+      ToastAndroid.show('Aucune connexion internet!', ToastAndroid.LONG)
+    }
+  })
+}
 
 _fetchClients = async () =>{
   await NetInfo.isConnected.fetch().then(async isConnected => {
