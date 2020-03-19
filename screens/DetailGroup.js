@@ -561,7 +561,7 @@ class DetailGroup extends React.Component {
                      
                       
                     </Block>
-                      {/* TODO: Enderstand why this date is in the enegative form */}
+                      {/* TODO: Enderstand why this date is in the egative form */}
                     <Block row style={{ paddingVertical: 8, paddingHorizontal: 15 }} space="between">
                       <Text bold size={16} color="#2c2c2c" style={{ marginTop: 3 }}>
                         Les adhesions se cloturent dans :

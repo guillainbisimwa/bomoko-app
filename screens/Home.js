@@ -24,7 +24,8 @@ class Home extends React.Component {
     //await this._fetchGroup()
     await this._bootstrapAsyncGroup();
     await this._bootstrapAsyncClient();
-    await this.__fetchCredit();
+    await this._fetchCredit();
+    await this._fetchEcheances();
   }
 
     // Fetch the token from storage then navigate to our appropriate place
@@ -91,6 +92,38 @@ _fetchCredit = async () =>{
               ToastAndroid.show('CreditsLocalStorage1 save locally', ToastAndroid.SHORT)
           })
             .catch(error => ToastAndroid.show('CreditsLocalStorage error local memory', ToastAndroid.SHORT));
+      })
+      //If response is not in json then in error
+      .catch((error) => {
+          //Error 
+          ToastAndroid.show('Une erreur est survenue '+ error, ToastAndroid.LONG)
+      });  
+    }
+    else{
+      ToastAndroid.show('Aucune connexion internet!', ToastAndroid.LONG)
+    }
+  })
+}
+
+_fetchEcheances = async () =>{
+  await NetInfo.isConnected.fetch().then(async isConnected => {
+    if(isConnected){
+      await fetch('http://35.223.156.137:3000/echeances', {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+      })
+      .then((response) => response.json())
+      //If response is in json then in success
+      .then((responseJson) => {
+          //Success 
+          AsyncStorage.setItem('ECheancesLocalStorage', JSON.stringify(responseJson))
+            .then(json => {
+              ToastAndroid.show('ECheancesLocalStorage1 save locally', ToastAndroid.SHORT)
+          })
+            .catch(error => ToastAndroid.show('ECheancesLocalStorage error local memory', ToastAndroid.SHORT));
       })
       //If response is not in json then in error
       .catch((error) => {
