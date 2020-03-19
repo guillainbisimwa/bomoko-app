@@ -45,7 +45,7 @@ class DetailGroup extends React.Component {
               
     clientByGroup =  JSON.parse(this.props.navigation.getParam("clientByGroup"))
     allDataCredit =  JSON.parse(this.props.navigation.getParam("allDataCredit"))
-    //ToastAndroid.show(JSON.stringify(allDataCredit), ToastAndroid.LONG)
+    //ToastAndroid.show(JSON.stringify(clientByGroup), ToastAndroid.LONG)
     
     
     this.state = {
@@ -55,7 +55,7 @@ class DetailGroup extends React.Component {
       clients:clients,
       currentUser:currentUser,
       currentProfile:currentProfile,
-      clientByGroup:clientByGroup,
+      clientByGroup:allDataCredit,
       countGroupMember:countGroupMember,
 
       isRefreshing: false,

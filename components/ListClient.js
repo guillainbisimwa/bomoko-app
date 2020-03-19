@@ -49,20 +49,37 @@ class ListClient extends React.Component {
                     size={theme.SIZES.FONT * 0.875}
                     style={{ marginLeft: theme.SIZES.BASE * 0.25 }}
                   >
-                    100
+                    {item.somme}
                   </Text>
                 </Block>
+                {item.etatCredit == 1 ?
                 <Block row middle>
-                  <Icon name="heart" family="font-awesome" color={theme.COLORS.MUTED} size={theme.SIZES.FONT * 0.875} />
-                  <Text
-                    p
-                    color={theme.COLORS.MUTED}
-                    size={theme.SIZES.FONT * 0.875}
-                    style={{ marginLeft: theme.SIZES.BASE * 0.25 }}
-                  >
-                    936
-                  </Text>
-                </Block>
+                <Icon name="check" family="font-awesome" color={theme.COLORS.SUCCESS} size={theme.SIZES.FONT * 0.875} />
+                <Text
+                //"#080" : "#a11"
+                  p
+                  color={theme.COLORS.SUCCESS}
+                  size={theme.SIZES.FONT * 0.875}
+                  style={{ marginLeft: theme.SIZES.BASE * 0.25 }}
+                >
+                  Valide
+                </Text>
+              </Block>
+              :
+              <Block row middle>
+                <Icon name="check" family="font-awesome" color={theme.COLORS.ERROR} size={theme.SIZES.FONT * 0.875} />
+                <Text
+                //"#080" : "#a11"
+                  p
+                  color={theme.COLORS.ERROR}
+                  size={theme.SIZES.FONT * 0.875}
+                  style={{ marginLeft: theme.SIZES.BASE * 0.25 }}
+                >
+                  Non valide
+                </Text>
+              </Block>
+              }
+                
               </Block>
             )}
           />

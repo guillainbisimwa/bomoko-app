@@ -61,20 +61,27 @@ class Card2 extends React.Component {
                   allCredit = await JSON.parse(valueC);
                   allDataCredit = []
 
-                  clientByGroup.forEach(docCLient => {
+                  clientByGroup.forEach(async docCLient => {
                     somme = 0
+                    etatCredit = 0
                     singleUserCredit = allCredit.find((item) => item.id_demandeur ==  docCLient.id );
-                    if(singleUserCredit == 'undefined'){
+                    if(singleUserCredit == undefined){
                       somme = 0
                     }
-                    else somme = 1
+                    else {
+                      somme = singleUserCredit.somme;
+                      etatCredit = singleUserCredit.etat;
+
+                    }
+
                     
                     //somme = singleUserCredit == "" ? 0 : 1
-                    ToastAndroid.show("->"+JSON.stringify(somme)+"<-", ToastAndroid.LONG)
+                    //ToastAndroid.show("->"+JSON.stringify(singleUserCredit)+"<-", ToastAndroid.LONG)
+                    //ToastAndroid.show("->"+JSON.stringify(somme)+"<-", ToastAndroid.LONG)
 
 
 
-                    allDataCredit.push({
+                    await allDataCredit.push({
                       address: docCLient.address,
                       code_conf_sms: docCLient.code_conf_sms,
                       etat: docCLient.etat,
@@ -86,8 +93,8 @@ class Card2 extends React.Component {
                       profession: docCLient.profession,
                       sexe: docCLient.sexe,
                       type: docCLient.type,
-                      somme : somme
-                      //somme: singleUserCredit.somme =="undefined" ?  0 : singleUserCredit.somme
+                      somme : somme,
+                      etatCredit: etatCredit
                     })
                   })
 
