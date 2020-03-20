@@ -6,6 +6,7 @@ import { Block, Text, theme, Icon, Card} from 'galio-framework';
 import RBSheet from "react-native-raw-bottom-sheet";
 const { width, height } = Dimensions.get('screen');
 import { ListEcheance} from './ListEcheance';
+import { Images, nowTheme } from '../constants';
 
 
 
@@ -189,6 +190,7 @@ const styles = StyleSheet.create({
   
   stats: {
     borderWidth: 0,
+    backgroundColor:nowTheme.COLORS.TABS,
     //width: width - theme.SIZES.BASE * 2,
     height: theme.SIZES.BASE * 4,
     //marginVertical: theme.SIZES.BASE * 0.875,
