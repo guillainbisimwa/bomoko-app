@@ -3,16 +3,17 @@ import { withNavigation } from 'react-navigation';
 import PropTypes from 'prop-types';
 import { StyleSheet, ScrollView, TouchableWithoutFeedback, ToastAndroid, Dimensions } from 'react-native';
 import { Block, Text, theme, Icon, Card} from 'galio-framework';
+import RBSheet from "react-native-raw-bottom-sheet";
 const { width, height } = Dimensions.get('screen');
-
+import { Images, nowTheme } from '../constants';
 
 class ListEcheance extends React.Component {
- 
-
+  
   render() {
     const {
       navigation,
       item,
+      echeance,
       horizontal,
       full,
       style,
@@ -21,27 +22,28 @@ class ListEcheance extends React.Component {
       ctaRight,
       titleStyle
     } = this.props;
-  
-    const man = require("../assets/icons/man.png")
-    const woman = require("../assets/icons/woman.png")
+   
+    const pricing = require("../assets/icons/pricing.png")
 
     return (
       <Block style={styles.header}  flex >
         <TouchableWithoutFeedback  onPress={() => 
-        {
-
-        }
+        { 
+          //ToastAndroid.show( JSON.stringify(echeance.echeance), ToastAndroid.LONG)
+         }
          }>
-           
-        
-        <Card
-            avatar={woman}
-            borderless
-            style={styles.stats}
-            title={"iiiii"}
-            caption={'kabaaaa'}
+           <Block>
             
-          />
+            <Card
+              avatar={pricing}
+              borderless
+              style={styles.stats}
+              title={item.somme_sans_inter}
+              caption={item.somme_intert}
+              
+            />
+
+          </Block>
         </TouchableWithoutFeedback>
       </Block>
     );
@@ -50,6 +52,7 @@ class ListEcheance extends React.Component {
 
 ListEcheance.propTypes = {
   item: PropTypes.object,
+  echeance: PropTypes.object,
   horizontal: PropTypes.bool,
   full: PropTypes.bool,
   ctaColor: PropTypes.string,
@@ -64,27 +67,19 @@ const styles = StyleSheet.create({
     backgroundColor: theme.COLORS.WHITE,
     marginVertical: theme.SIZES.BASE,
     borderWidth: 0,
-    //minHeight: 114,
     marginBottom: 4
   },
   header1: {
     backgroundColor: theme.COLORS.WHITE,
     borderTopLeftRadius: theme.SIZES.BASE * 2,
     borderTopRightRadius: theme.SIZES.BASE * 2,
-    //paddingVertical: theme.SIZES.BASE * 2,
-    //paddingHorizontal: theme.SIZES.BASE * 1.5,
     width : width - theme.SIZES.BASE * 2,
-   
-    
   },
-  
   stats: {
     borderWidth: 0,
-    //width: width - theme.SIZES.BASE * 2,
+    backgroundColor:nowTheme.COLORS.TABS,
     height: theme.SIZES.BASE * 4,
-    //marginVertical: theme.SIZES.BASE * 0.875,
     marginVertical: 5,
-    //elevation:5
   },
   title: {
     justifyContent: 'center',

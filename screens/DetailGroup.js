@@ -17,7 +17,7 @@ import {
 } from 'react-native';
 import { Block, Text, Button as GaButton, theme, Checkbox } from 'galio-framework';
 
-import { Button, Icon, Input, ListCLient } from '../components';
+import { Button, Icon, Input, ListCLient, ListEcheance } from '../components';
 import RBSheet from "react-native-raw-bottom-sheet";
 
 import { Images, nowTheme } from '../constants';
@@ -47,7 +47,8 @@ class DetailGroup extends React.Component {
     clientByGroup =  JSON.parse(this.props.navigation.getParam("clientByGroup"))
     allDataCredit =  JSON.parse(this.props.navigation.getParam("allDataCredit"))
     //ToastAndroid.show(JSON.stringify(allDataCredit), ToastAndroid.LONG)
-    
+    currentEcheance = allEcheance.find((item) => item.id_c == currentProfile.id_c );
+    //ToastAndroid.show(JSON.stringify(currentEcheance.echeance), ToastAndroid.LONG)
     
     this.state = {
       st : "",
@@ -60,10 +61,47 @@ class DetailGroup extends React.Component {
       countGroupMember:countGroupMember,
       allEcheance:allEcheance,
       isRefreshing: false,
+      currentEcheance: currentEcheance.echeance
+      //allDataCredit:allDataCredit
+      //currentEcheance : currentEcheance.echeance == undefined ? {} :currentEcheance.echeance
     };
     
     //ToastAndroid.show( JSON.stringify(this.props.navigation.getParam("product")), ToastAndroid.SHORT)
     //this.setState({group: JSON.parse(this.props.navigation.getParam("product"))})
+  }
+  
+  componentDidMount = async() =>{
+    prod =  await JSON.parse(this.props.navigation.getParam("product"))
+    clients = await JSON.parse(this.props.navigation.getParam("clients"))
+    countGroupMember = await JSON.parse(this.props.navigation.getParam("countGroupMember"))
+    currentUser = await JSON.parse(this.props.navigation.getParam("currentUser"))
+    currentProfile = await JSON.parse(this.props.navigation.getParam("currentProfile"))
+    allEcheance =  await JSON.parse(this.props.navigation.getParam("allEcheance"))
+    //singleGroup = dataGroups.find((item) => item.id ==  docCredit.id_g );
+          
+    //singleUser = dataClients.find((item) => item.id ==  docCredit.id_demandeur );
+              
+    clientByGroup = await JSON.parse(this.props.navigation.getParam("clientByGroup"))
+    allDataCredit = await JSON.parse(this.props.navigation.getParam("allDataCredit"))
+    //ToastAndroid.show(JSON.stringify(allDataCredit), ToastAndroid.LONG)
+    currentEcheance = await allEcheance.find((item) => item.id_c == currentProfile.id_c );
+    //ToastAndroid.show(JSON.stringify(currentEcheance), ToastAndroid.LONG)
+
+    
+    this.setState = {
+      st : await  "",
+      group: await prod,
+      isLoading: await  false,
+      clients: await clients,
+      currentUser: await currentUser,
+      currentProfile: await currentProfile,
+      clientByGroup: await allDataCredit,
+      countGroupMember: await countGroupMember,
+      allEcheance: await allEcheance,
+      isRefreshing: await  false,
+      currentEcheance: currentEcheance.echeance
+      //currentEcheance : await currentEcheance.echeance == undefined ? {} :currentEcheance.echeance
+    };
   }
 
   _bootstrapAsync = async () => {
@@ -380,16 +418,19 @@ class DetailGroup extends React.Component {
             }
           }}
         >
-          <ScrollView style={{zIndex:10}}>
+          <ScrollView style={{zIndex:10, margin:10}}>
             <Text style={{alignSelf:"center", paddingTop: 10, margin:10}}>ECHEANCES</Text>
             <Block flex>
-              
-              {this.state.clientByGroup.map((item, index) => {
+
+            {this.state.currentEcheance.map((item, index) => {
                 return <Block key={index} flex row>
-                <ListCLient item={item} echeance={item} horizontal/>
+                <ListEcheance item={item} echeance={item} horizontal/>
               </Block>
               })}
+               
+              
             </Block>
+            <Text style={{alignSelf:"center", paddingTop: 10, margin:10}}>ECHEANCES2</Text>
             
           </ScrollView>
         </RBSheet>
@@ -523,7 +564,7 @@ class DetailGroup extends React.Component {
                       }
                       
                       {
-                         this.state.currentProfile["id_g"] == group.id?
+                         this.state.currentProfile["id_g"] == group.id && this.state.currentProfile["id_c"] == ""?
                          <Button 
                           color="default"
                           style={{ width: 150, height: 44, marginHorizontal: 5, elevation: 5 }} 
@@ -533,7 +574,19 @@ class DetailGroup extends React.Component {
                           >
                             Demander credit
                           </Button>
+                         : 
+                         
+                          this.state.currentProfile["id_g"] == group.id && this.state.currentProfile["id_c"] != ""?
+                        <Button 
+                          color="default"
+                          style={{ width: 150, height: 44, marginHorizontal: 5, elevation: 5}} 
+                          textStyle={{ fontSize: 16 }} round
+                          onPress={_ =>  this.RBSheet.open()}         
+                          >
+                            Echeances
+                         </Button>
                          :
+                         
                          <Button 
                           color="default"
                           style={{ width: 150, height: 44, marginHorizontal: 5, elevation: 5, display:"none" }} 

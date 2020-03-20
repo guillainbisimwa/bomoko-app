@@ -55,6 +55,7 @@ class Card2 extends React.Component {
               .then(async (value) => {
                 currentUser = await JSON.parse(value);
                 currentProfile = dataClients.find((item2) => item2.phone == currentUser['phone']);
+                currentProfile.id_c = ""
 
                 const CreditsLocalStorage =  AsyncStorage.getItem('CreditsLocalStorage')
                 .then(async (valueC) => {
@@ -76,8 +77,11 @@ class Card2 extends React.Component {
                       else {
                         somme = singleUserCredit.somme;
                         etatCredit = singleUserCredit.etat;
-                        id_c = singleUserCredit.id
+                        id_c = singleUserCredit.id;
+                        currentProfile.id_c = id_c
+
                       }
+
                       
                       //somme = singleUserCredit == "" ? 0 : 1
                       //ToastAndroid.show("->"+JSON.stringify(singleUserCredit)+"<-", ToastAndroid.LONG)
