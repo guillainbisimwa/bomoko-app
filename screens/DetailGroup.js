@@ -18,6 +18,7 @@ import {
 import { Block, Text, Button as GaButton, theme, Checkbox } from 'galio-framework';
 
 import { Button, Icon, Input, ListCLient } from '../components';
+import RBSheet from "react-native-raw-bottom-sheet";
 
 import { Images, nowTheme } from '../constants';
 
@@ -38,14 +39,14 @@ class DetailGroup extends React.Component {
     countGroupMember =  JSON.parse(this.props.navigation.getParam("countGroupMember"))
     currentUser =  JSON.parse(this.props.navigation.getParam("currentUser"))
     currentProfile =  JSON.parse(this.props.navigation.getParam("currentProfile"))
-    //allCredit =  JSON.parse(this.props.navigation.getParam("allCredit"))
+    allEcheance =  JSON.parse(this.props.navigation.getParam("allEcheance"))
     //singleGroup = dataGroups.find((item) => item.id ==  docCredit.id_g );
           
     //singleUser = dataClients.find((item) => item.id ==  docCredit.id_demandeur );
               
     clientByGroup =  JSON.parse(this.props.navigation.getParam("clientByGroup"))
     allDataCredit =  JSON.parse(this.props.navigation.getParam("allDataCredit"))
-    //ToastAndroid.show(JSON.stringify(clientByGroup), ToastAndroid.LONG)
+    //ToastAndroid.show(JSON.stringify(allDataCredit), ToastAndroid.LONG)
     
     
     this.state = {
@@ -57,7 +58,7 @@ class DetailGroup extends React.Component {
       currentProfile:currentProfile,
       clientByGroup:allDataCredit,
       countGroupMember:countGroupMember,
-
+      allEcheance:allEcheance,
       isRefreshing: false,
     };
     
@@ -353,6 +354,46 @@ class DetailGroup extends React.Component {
             <Block flex middle>
               <Block style={styles.registerContainer}>
 
+          <RBSheet
+          ref={ref => {
+            this.RBSheet = ref;
+          }}
+          
+          duration={300}
+          animationType="slide"
+          closeOnDragDown={true}
+          //minClosingHeight={10}
+          customStyles={{
+            wrapper: {
+              flex: 1,
+              backgroundColor: "#00000077"
+            },
+            mask: {
+              flex: 1,
+              backgroundColor: "transparent"
+            },
+            container: {
+              backgroundColor: "#fff",
+              width: "100%",
+              height: "60%",
+              overflow: "hidden"
+            }
+          }}
+        >
+          <ScrollView style={{zIndex:10}}>
+            <Text style={{alignSelf:"center", paddingTop: 10, margin:10}}>ECHEANCES</Text>
+            <Block flex>
+              
+              {this.state.clientByGroup.map((item, index) => {
+                return <Block key={index} flex row>
+                <ListCLient item={item} echeance={item} horizontal/>
+              </Block>
+              })}
+            </Block>
+            
+          </ScrollView>
+        </RBSheet>
+
             <ScrollView showsVerticalScrollIndicator={false}>
               <Block style={{
               flex: 1,
@@ -513,6 +554,9 @@ class DetailGroup extends React.Component {
                         iconSize={nowTheme.SIZES.BASE * 1.375}
                         color={nowTheme.COLORS.INFO}
                         style={[styles.social, styles.shadow]}
+                        onPress={() => {
+                          this.RBSheet.open();
+                          }}
                       />
                     </Block>
                   </Block>
@@ -577,8 +621,12 @@ class DetailGroup extends React.Component {
                     <Block flex>
                     
                     {this.state.clientByGroup.map((item, index) => {
+                      //TODO RETURN ECHEANCE BY CLIENT
+                      echeaceFind = {}
+                      echeaceFind = this.state.allEcheance.find((ech) => ech.id_c ==  item.id_c);
+
                       return <Block key={index} flex row>
-                      <ListCLient item={item} horizontal/>
+                      <ListCLient item={item} echeance={echeaceFind} horizontal/>
                     </Block>
                     })}   
 

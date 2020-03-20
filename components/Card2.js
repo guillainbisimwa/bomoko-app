@@ -61,54 +61,59 @@ class Card2 extends React.Component {
                   allCredit = await JSON.parse(valueC);
                   allDataCredit = []
 
-                  clientByGroup.forEach(async docCLient => {
-                    somme = 0
-                    etatCredit = 0
-                    singleUserCredit = allCredit.find((item) => item.id_demandeur ==  docCLient.id );
-                    if(singleUserCredit == undefined){
+                  const EcheancesLocalStorage =  AsyncStorage.getItem('EcheancesLocalStorage')
+                  .then(async (valueE) => {
+                    allEcheance = await JSON.parse(valueE);
+
+                    clientByGroup.forEach(async docCLient => {
                       somme = 0
-                    }
-                    else {
-                      somme = singleUserCredit.somme;
-                      etatCredit = singleUserCredit.etat;
+                      etatCredit = 0
+                      id_c = ""
+                      singleUserCredit = allCredit.find((item) => item.id_demandeur ==  docCLient.id );
+                      if(singleUserCredit == undefined){
+                        somme = 0
+                      }
+                      else {
+                        somme = singleUserCredit.somme;
+                        etatCredit = singleUserCredit.etat;
+                        id_c = singleUserCredit.id
+                      }
+                      
+                      //somme = singleUserCredit == "" ? 0 : 1
+                      //ToastAndroid.show("->"+JSON.stringify(singleUserCredit)+"<-", ToastAndroid.LONG)
+                      //ToastAndroid.show("->"+JSON.stringify(somme)+"<-", ToastAndroid.LONG)
 
-                    }
-
-                    
-                    //somme = singleUserCredit == "" ? 0 : 1
-                    //ToastAndroid.show("->"+JSON.stringify(singleUserCredit)+"<-", ToastAndroid.LONG)
-                    //ToastAndroid.show("->"+JSON.stringify(somme)+"<-", ToastAndroid.LONG)
-
-
-
-                    await allDataCredit.push({
-                      address: docCLient.address,
-                      code_conf_sms: docCLient.code_conf_sms,
-                      etat: docCLient.etat,
-                      id: docCLient.id,
-                      id_g: docCLient.id_g,
-                      nom: docCLient.nom,
-                      num_carte_elec: docCLient.num_carte_elec,
-                      phone: docCLient.phone,
-                      profession: docCLient.profession,
-                      sexe: docCLient.sexe,
-                      type: docCLient.type,
-                      somme : somme,
-                      etatCredit: etatCredit
+                      await allDataCredit.push({
+                        address: docCLient.address,
+                        code_conf_sms: docCLient.code_conf_sms,
+                        etat: docCLient.etat,
+                        id: docCLient.id,
+                        id_g: docCLient.id_g,
+                        nom: docCLient.nom,
+                        num_carte_elec: docCLient.num_carte_elec,
+                        phone: docCLient.phone,
+                        profession: docCLient.profession,
+                        sexe: docCLient.sexe,
+                        type: docCLient.type,
+                        somme : somme,
+                        etatCredit: etatCredit,
+                        id_c:id_c
+                      })
                     })
-                  })
 
 
-                  navigation.navigate('DetailGroup', {
-                    product: `${JSON.stringify(item)}`,
-                    clients: `${JSON.stringify(clients)}`,
-                    clientByGroup: `${JSON.stringify(clientByGroup)}`,
-                    countGroupMember: `${JSON.stringify(countGroupMember)}`,
-                    currentUser: `${JSON.stringify(currentUser)}`,
-                    currentProfile: `${JSON.stringify(currentProfile)}`,
-                    allDataCredit: `${JSON.stringify(allDataCredit)}`,
-                  })
+                    navigation.navigate('DetailGroup', {
+                      product: `${JSON.stringify(item)}`,
+                      clients: `${JSON.stringify(clients)}`,
+                      clientByGroup: `${JSON.stringify(clientByGroup)}`,
+                      countGroupMember: `${JSON.stringify(countGroupMember)}`,
+                      currentUser: `${JSON.stringify(currentUser)}`,
+                      currentProfile: `${JSON.stringify(currentProfile)}`,
+                      allDataCredit: `${JSON.stringify(allDataCredit)}`,
+                      allEcheance: `${JSON.stringify(allEcheance)}`
+                    })
                 
+                  }).done();
                 }).done();
               }).done();
           

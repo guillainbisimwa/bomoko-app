@@ -1,17 +1,21 @@
 import React from 'react';
 import { withNavigation } from 'react-navigation';
 import PropTypes from 'prop-types';
-import { StyleSheet, Image, TouchableWithoutFeedback, ImageBackground, ToastAndroid, Dimensions } from 'react-native';
+import { StyleSheet, ScrollView, TouchableWithoutFeedback, ToastAndroid, Dimensions } from 'react-native';
 import { Block, Text, theme, Icon, Card} from 'galio-framework';
+import RBSheet from "react-native-raw-bottom-sheet";
 const { width, height } = Dimensions.get('screen');
+import { ListEcheance} from './ListEcheance';
+
 
 
 class ListClient extends React.Component {
-
+  
   render() {
     const {
       navigation,
       item,
+      echeance,
       horizontal,
       full,
       style,
@@ -20,6 +24,7 @@ class ListClient extends React.Component {
       ctaRight,
       titleStyle
     } = this.props;
+   
     const man = require("../assets/icons/man.png")
     const woman = require("../assets/icons/woman.png")
 
@@ -27,11 +32,67 @@ class ListClient extends React.Component {
       <Block style={styles.header}  flex >
         <TouchableWithoutFeedback  onPress={() => 
         { 
-        
-         ToastAndroid.show( JSON.stringify(item), ToastAndroid.LONG)
+          if(echeance == undefined){
+            ToastAndroid.show( "Aucune echeance disponible", ToastAndroid.LONG)
+          }
+          else {
+            
+            //this.RBSheet.open();
+
+            //ToastAndroid.show( JSON.stringify(echeance.echeance), ToastAndroid.LONG)
+          }
+          
 
          }
          }>
+           <Block>
+            <RBSheet
+            ref={ref => {
+              this.RBSheet = ref;
+            }}
+            
+            duration={300}
+            animationType="slide"
+            closeOnDragDown={true}
+            //minClosingHeight={10}
+            customStyles={{
+              wrapper: {
+                flex: 1,
+                backgroundColor: "#00000077"
+              },
+              mask: {
+                flex: 1,
+                backgroundColor: "transparent"
+              },
+              container: {
+                backgroundColor: "#fff",
+                width: "100%",
+                height: "60%",
+                overflow: "hidden"
+              }
+            }}
+          >
+
+             {/* {this.renderEcheance()} */}
+         
+
+            <ScrollView style={{zIndex:10}}>
+              <Text style={{alignSelf:"center", paddingTop: 10, marginTop:10}}>ECHEANCES </Text>
+              <Text style={{alignSelf:"center", paddingTop: 3, marginTop:3}}>{item.nom} </Text>
+              <Block>
+
+              <Block>
+                
+
+       
+
+        </Block>
+              
+                
+              </Block>
+              
+            </ScrollView>
+          </RBSheet>
         
         <Card
             avatar={item.sexe == 'm'? man: woman}
@@ -66,23 +127,29 @@ class ListClient extends React.Component {
                 </Text>
               </Block>
               :
-              <Block row middle>
-                <Icon name="check" family="font-awesome" color={theme.COLORS.ERROR} size={theme.SIZES.FONT * 0.875} />
+              {...item.somme == 0 ? 
+                <Block row middle>
+                
+              </Block>:
+                <Block row middle>
+                <Icon name="hourglass-half" family="font-awesome" color={theme.COLORS.ERROR} size={theme.SIZES.FONT * 0.875} />
                 <Text
-                //"#080" : "#a11"
                   p
                   color={theme.COLORS.ERROR}
                   size={theme.SIZES.FONT * 0.875}
                   style={{ marginLeft: theme.SIZES.BASE * 0.25 }}
                 >
-                  Non valide
+                  En attente
                 </Text>
               </Block>
+              }
+            
               }
                 
               </Block>
             )}
           />
+          </Block>
         </TouchableWithoutFeedback>
       </Block>
     );
@@ -91,6 +158,7 @@ class ListClient extends React.Component {
 
 ListClient.propTypes = {
   item: PropTypes.object,
+  echeance: PropTypes.object,
   horizontal: PropTypes.bool,
   full: PropTypes.bool,
   ctaColor: PropTypes.string,

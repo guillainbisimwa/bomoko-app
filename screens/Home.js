@@ -21,7 +21,7 @@ class Home extends React.Component {
   }
 
   componentDidMount = async() =>{
-    //await this._fetchGroup()
+    await this._fetchGroup()
     await this._bootstrapAsyncGroup();
     await this._bootstrapAsyncClient();
     await this._fetchCredit();
@@ -119,11 +119,11 @@ _fetchEcheances = async () =>{
       //If response is in json then in success
       .then((responseJson) => {
           //Success 
-          AsyncStorage.setItem('ECheancesLocalStorage', JSON.stringify(responseJson))
+          AsyncStorage.setItem('EcheancesLocalStorage', JSON.stringify(responseJson))
             .then(json => {
-              ToastAndroid.show('ECheancesLocalStorage1 save locally', ToastAndroid.SHORT)
+              ToastAndroid.show('EcheancesLocalStorage1 save locally', ToastAndroid.SHORT)
           })
-            .catch(error => ToastAndroid.show('ECheancesLocalStorage error local memory', ToastAndroid.SHORT));
+            .catch(error => ToastAndroid.show('EcheancesLocalStorage error local memory', ToastAndroid.SHORT));
       })
       //If response is not in json then in error
       .catch((error) => {
@@ -239,7 +239,7 @@ _fetchClients = async () =>{
         <ScrollView refreshControl={
            <RefreshControl
            refreshing={this.state.isRefreshing}
-           onRefresh={this._fetchGroup}
+           onRefresh={this.componentDidMount}
          />
         }
           showsVerticalScrollIndicator={false}
