@@ -65,8 +65,12 @@ class Card2 extends React.Component {
                   const EcheancesLocalStorage =  AsyncStorage.getItem('EcheancesLocalStorage')
                   .then(async (valueE) => {
                     allEcheance = await JSON.parse(valueE);
+                    
+                    somme_group_valid = 0
+                    somme_group_invalid = 0
 
                     clientByGroup.forEach(async docCLient => {
+                      
                       somme = 0
                       etatCredit = 0
                       id_c = ""
@@ -79,7 +83,11 @@ class Card2 extends React.Component {
                         etatCredit = singleUserCredit.etat;
                         id_c = singleUserCredit.id;
                         currentProfile.id_c = id_c
-
+                        if(etatCredit == 1)
+                        {
+                          somme_group_valid += somme;
+                        }
+                        else somme_group_invalid += somme;
                       }
 
                       
@@ -101,7 +109,8 @@ class Card2 extends React.Component {
                         type: docCLient.type,
                         somme : somme,
                         etatCredit: etatCredit,
-                        id_c:id_c
+                        id_c:id_c,
+                       
                       })
                     })
 
@@ -114,7 +123,9 @@ class Card2 extends React.Component {
                       currentUser: `${JSON.stringify(currentUser)}`,
                       currentProfile: `${JSON.stringify(currentProfile)}`,
                       allDataCredit: `${JSON.stringify(allDataCredit)}`,
-                      allEcheance: `${JSON.stringify(allEcheance)}`
+                      allEcheance: `${JSON.stringify(allEcheance)}`,
+                      somme_group_valid: `${JSON.stringify(somme_group_valid)}`,
+                      somme_group_invalid: `${JSON.stringify(somme_group_invalid)}`
                     })
                 
                   }).done();

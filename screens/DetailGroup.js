@@ -46,6 +46,10 @@ class DetailGroup extends React.Component {
               
     clientByGroup =  JSON.parse(this.props.navigation.getParam("clientByGroup"))
     allDataCredit =  JSON.parse(this.props.navigation.getParam("allDataCredit"))
+    //TODO SOMME VALID AND SOMME INVALID
+    somme_group_valid = JSON.parse(this.props.navigation.getParam("somme_group_valid"))
+    somme_group_invalid = JSON.parse(this.props.navigation.getParam("somme_group_invalid"))
+
     //ToastAndroid.show(JSON.stringify(allDataCredit), ToastAndroid.LONG)
     currentEcheance = allEcheance.find((item) => item.id_c == currentProfile.id_c);
     if(!currentEcheance){
@@ -68,9 +72,9 @@ class DetailGroup extends React.Component {
         countGroupMember:countGroupMember,
         allEcheance:allEcheance,
         isRefreshing: false,
+        somme_group_valid:somme_group_valid,
+        somme_group_invalid:somme_group_invalid,
         currentEcheance: c
-        //allDataCredit:allDataCredit
-        //currentEcheance : currentEcheance == undefined ? {} :currentEcheance.echeance
       };
     }
     else {
@@ -99,9 +103,9 @@ class DetailGroup extends React.Component {
         countGroupMember:countGroupMember,
         allEcheance:allEcheance,
         isRefreshing: false,
+        somme_group_valid:somme_group_valid,
+        somme_group_invalid:somme_group_invalid,
         currentEcheance: currentEcheance.echeance
-        //allDataCredit:allDataCredit
-        //currentEcheance : currentEcheance == undefined ? {} :currentEcheance.echeance
       };
     }
 
@@ -117,6 +121,8 @@ class DetailGroup extends React.Component {
     //singleGroup = dataGroups.find((item) => item.id ==  docCredit.id_g );
           
     //singleUser = dataClients.find((item) => item.id ==  docCredit.id_demandeur );
+    somme_group_valid = await JSON.parse(this.props.navigation.getParam("somme_group_valid"))
+    somme_group_invalid = await JSON.parse(this.props.navigation.getParam("somme_group_invalid"))
               
     clientByGroup = await JSON.parse(this.props.navigation.getParam("clientByGroup"))
     allDataCredit = await JSON.parse(this.props.navigation.getParam("allDataCredit"))
@@ -142,6 +148,8 @@ class DetailGroup extends React.Component {
         countGroupMember: await countGroupMember,
         allEcheance: await allEcheance,
         isRefreshing: await  false,
+        somme_group_valid:await somme_group_valid,
+        somme_group_invalid: await somme_group_invalid,
         currentEcheance: await c
       };
     }
@@ -170,6 +178,8 @@ class DetailGroup extends React.Component {
         countGroupMember: await countGroupMember,
         allEcheance: await allEcheance,
         isRefreshing: await  false,
+        somme_group_valid: await somme_group_valid,
+        somme_group_invalid:await somme_group_invalid,
         currentEcheance: await currentEcheance.echeance
       };
     }
@@ -438,7 +448,9 @@ class DetailGroup extends React.Component {
       st,
       group,
       countGroupMember,
-      currentEcheance
+      currentEcheance,
+      somme_group_valid,
+      somme_group_invalid
     } = this.state;
   
     if(this.state.isLoading){
@@ -574,7 +586,7 @@ class DetailGroup extends React.Component {
                                 size={18}
                                 style={{ marginBottom: 4, fontFamily: 'montserrat-bold' }}
                               >
-                                0 $
+                                {somme_group_valid} $
                               </Text>
                               <Text style={{ fontFamily: 'montserrat-regular' }} size={14} color="white">
                                 Valides
@@ -587,7 +599,7 @@ class DetailGroup extends React.Component {
                                 size={18}
                                 style={{ marginBottom: 4, fontFamily: 'montserrat-bold' }}
                               >
-                                0 $
+                                {somme_group_invalid} $
                               </Text>
                               <Text style={{ fontFamily: 'montserrat-regular' }} size={14} color="white">
                                 En attente
@@ -653,7 +665,7 @@ class DetailGroup extends React.Component {
                           style={{ width: 150, height: 44, marginHorizontal: 5, elevation: 5}} 
                           textStyle={{ fontSize: 16 }} round
                           onPress={_ =>  {
-                          ToastAndroid.show(JSON.stringify(this.state.currentEcheance), ToastAndroid.LONG)
+                          //ToastAndroid.show(JSON.stringify(this.state.currentEcheance), ToastAndroid.LONG)
 
                               if(this.state.currentEcheance != undefined)
                               {
