@@ -45,8 +45,10 @@ class Home extends React.Component {
         dataGroups = await JSON.parse(value);
 
         await dataGroups.forEach( async docG => {
-        //ToastAndroid.show(JSON.stringify(currentProfile), ToastAndroid.LONG)
-        //console.log(currentProfile)
+       
+          countGroupMember = 0
+          clientByGroup = dataClients.filter((item2) => item2.id_g == docG.id);
+          countGroupMember = clientByGroup.reduce((key, val) => key + 1, 0);
           
           etatCurrentUser = 0;
           if(docG.id == currentProfile.id_g) etatCurrentUser =  1 
@@ -65,7 +67,8 @@ class Home extends React.Component {
             somme : docG.somme,
             taux : docG.taux,
             type : docG.type,
-            etatCurrentUser: etatCurrentUser
+            etatCurrentUser: etatCurrentUser,
+            countGroupMember : countGroupMember
           })
         });
         

@@ -2,7 +2,7 @@ import React from 'react';
 import { withNavigation } from 'react-navigation';
 import PropTypes from 'prop-types';
 import { StyleSheet, Image, AsyncStorage, TouchableWithoutFeedback, ImageBackground, ToastAndroid } from 'react-native';
-import { Block, Text, theme } from 'galio-framework';
+import { Block, Text, theme, Icon } from 'galio-framework';
 
 import { nowTheme } from '../constants';
 
@@ -152,8 +152,9 @@ class Card2 extends React.Component {
               style={titleStyles}
               numberOfLines={1}
               color={nowTheme.COLORS.WHITE}>
-            
-              {item.etat == 0? "(En attente)" : "(Valide)"}
+                {item.countGroupMember+" "}
+                <Icon name="user" family="font-awesome" color={theme.COLORS.WHITE} size={theme.SIZES.FONT * 0.875} />
+              {item.etat == 0? " (En attente)" : " (Valide)"}
               </Text>
             </Block>
           </ImageBackground>
