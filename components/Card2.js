@@ -90,7 +90,7 @@ class Card2 extends React.Component {
                         {
                           somme_group_valid += parseInt(somme);
                         }
-                        else somme_group_invalid += parseIn(somme);
+                        else somme_group_invalid += parseInt(somme);
                       }
 
                       await allDataCredit.push({
@@ -222,9 +222,9 @@ class Card2 extends React.Component {
                         if(singleUserCredit.id == docCLient.id_c) etatCurrentCreditUser =  1;
                         if(etatCredit == 1)
                         {
-                          somme_group_valid += parseIn(somme);
+                          somme_group_valid += parseInt(somme);
                         }
-                        else somme_group_invalid += parseIn(somme);
+                        else somme_group_invalid += parseInt(somme);
                       }
 
                       await allDataCredit.push({
