@@ -376,6 +376,16 @@ class DetailGroup extends React.Component {
         },
       ]);
   }
+
+  _quitter_impossible(id_g,group,somme, nbr_jour, cat){
+    Alert.alert("Attention!",'Impossible de quitter le group : '+group+"? Vous avez un credit de "+somme+" $ a rembourser. Veiller contacter l'administarateur pour annuler.",
+      [
+       
+        {text: 'Annuler', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+        
+      ]);
+  }
+
   _demandeCredit(id_g,somme, nbr_jour, cat, cat_chiffre){
     Alert.alert("Attention!",'Voulez vous vraiment demander un credit de : '+somme+" $ a remetre progressivement dans "+nbr_jour+" "+cat+"?",
       [
@@ -630,7 +640,14 @@ class DetailGroup extends React.Component {
                         :
                         this.state.currentProfile["id_g"] == group.id?
                       <Button
-                        onPress={_ => this._quitter(group.id, group.nom_group, group.somme, group.nbr_jour, group.cat == 30? "mois": "semaines")}         
+                        onPress={_ => {
+                          if(this.state.currentProfile.etatCredit == 1){
+                             this._quitter_impossible(group.id, group.nom_group, group.somme, group.nbr_jour, group.cat == 30? "mois": "semaines")
+                          }
+                          else this._quitter(group.id, group.nom_group, group.somme, group.nbr_jour, group.cat == 30? "mois": "semaines")
+                        
+                        }         
+                      }         
                         
                         style={{ width: 114, height: 44, marginHorizontal: 5, elevation: 5,backgroundColor: nowTheme.COLORS.ERROR,}} 
                         textStyle={{ fontSize: 16 }} round>

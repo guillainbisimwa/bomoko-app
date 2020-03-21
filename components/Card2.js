@@ -82,7 +82,9 @@ class Card2 extends React.Component {
                         somme = singleUserCredit.somme;
                         etatCredit = singleUserCredit.etat;
                         id_c = singleUserCredit.id;
-                        currentProfile.id_c = id_c
+                        currentProfile.id_c = id_c;
+                        currentProfile.etatCredit = etatCredit;
+
                         if(etatCredit == 1)
                         {
                           somme_group_valid += somme;
