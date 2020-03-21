@@ -31,7 +31,7 @@ class Card2 extends React.Component {
 
     return (
       
-      <Block row={horizontal} card flex  style={cardContainer,{backgroundColor: 'rgba(0, 255, 0, 0.0)'}}>
+      <Block row={horizontal} card flex style={cardContainer,{backgroundColor: item.etatCurrentUser == 0? nowTheme.COLORS.TABS : 'rgba(250,0,0,0.2)', marginBottom:10}}>
         <TouchableWithoutFeedback onPress={() => 
           { 
             //TODO : 
@@ -91,12 +91,6 @@ class Card2 extends React.Component {
                         }
                         else somme_group_invalid += somme;
                       }
-
-                      
-                      //somme = singleUserCredit == "" ? 0 : 1
-                      //ToastAndroid.show("->"+JSON.stringify(singleUserCredit)+"<-", ToastAndroid.LONG)
-                      //ToastAndroid.show("->"+JSON.stringify(somme)+"<-", ToastAndroid.LONG)
-
                       await allDataCredit.push({
                         address: docCLient.address,
                         code_conf_sms: docCLient.code_conf_sms,
@@ -262,7 +256,6 @@ const styles = StyleSheet.create({
     marginVertical: theme.SIZES.BASE,
     borderWidth: 0,
     minHeight: 114,
-    marginBottom: 4
   },
   cardTitle: {
     paddingHorizontal: 9,
@@ -275,18 +268,16 @@ const styles = StyleSheet.create({
   imageContainer: {
     borderRadius: 3,
     elevation: 1,
-    overflow: 'hidden'
-  },
-  image: {
-    // borderRadius: 3,
+    overflow: 'hidden',
+    margin : 10
   },
   horizontalImage: {
     height: 122,
     width: 'auto'
   },
   horizontalStyles: {
-    borderTopRightRadius: 0,
-    borderBottomRightRadius: 0
+    borderRadius:5,
+    elevation:5,
   },
   verticalStyles: {
     borderBottomRightRadius: 0,

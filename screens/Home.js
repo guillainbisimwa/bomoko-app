@@ -31,23 +31,51 @@ class Home extends React.Component {
     // Fetch the token from storage then navigate to our appropriate place
  _bootstrapAsyncGroup = async () => {
   dataGroups = [];
-  dataGroups002 = [];
-  const GroupsLocalStorage = await AsyncStorage.getItem('GroupsLocalStorage')
-  .then(async (value) => {
-    //console.log("************************Get Value >> ", JSON.parse(value));
-    dataGroups = await JSON.parse(value);
-    //dataGroups002 = await dataGroups.filter((item) => (item.type == 102));
-    //ToastAndroid.show(JSON.stringify(dataGroups)+"vo", ToastAndroid.LONG)
+  const ClientsLocalStorage =  AsyncStorage.getItem('ClientsLocalStorage')
+  .then(async (valueC) => {
+    dataClients = await JSON.parse(valueC);
+    const currentAccount =  AsyncStorage.getItem('currentAccount')
+    .then(async (valueU) => {
+      currentUser = await JSON.parse(valueU);
+      currentProfile = await dataClients.find((item2) => item2.phone == currentUser['phone']);
+      const GroupsLocalStorage = await AsyncStorage.getItem('GroupsLocalStorage')
+      .then(async (value) => {
+        dataGroups002 = [];
 
-    this.setState({
-      isLoading:  false,
-      groupss: await dataGroups,
-    });
- 
-    console.log(dataGroups)
+        dataGroups = await JSON.parse(value);
 
-   //console.log("*********************Put Value >> ", dataGroups);
- }).done();
+        await dataGroups.forEach( async docG => {
+        //ToastAndroid.show(JSON.stringify(currentProfile), ToastAndroid.LONG)
+        //console.log(currentProfile)
+          
+          etatCurrentUser = 0;
+          if(docG.id == currentProfile.id_g) etatCurrentUser =  1 
+          
+          await dataGroups002.push({
+            cat : docG.cat,
+            date_creation : docG.date_creation,
+            date_debut : docG.date_debut,
+            date_fin : docG.date_fin,
+            details : docG.details,
+            etat : docG.etat,
+            id : docG.id,
+            id_responsable : docG.id_responsable,
+            nbr_jour : docG.nbr_jour,
+            nom_group : docG.nom_group,
+            somme : docG.somme,
+            taux : docG.taux,
+            type : docG.type,
+            etatCurrentUser: etatCurrentUser
+          })
+        });
+        
+        this.setState({
+          isLoading:  false,
+          groupss: await dataGroups002,
+        });
+      }).done();
+    }).done();
+  }).done();
 };
 
 _bootstrapAsyncClient = async () => {
@@ -57,19 +85,11 @@ _bootstrapAsyncClient = async () => {
   dataClients002 = [];
   const GroupsLocalStorage = await AsyncStorage.getItem('ClientsLocalStorage')
   .then(async (value) => {
-    //console.log("************************Get Value >> ", JSON.parse(value));
     dataClients = await JSON.parse(value);
-    //dataClients002 = await dataClients.filter((item) => (item.type == 102));
-    //ToastAndroid.show(JSON.stringify(dataClients)+"vo", ToastAndroid.LONG)
-
     this.setState({
       isLoading:  false,
       clients: await dataClients,
     });
- 
-    console.log(dataClients)
-
-   //console.log("*********************Put Value >> ", dataClients);
  }).done();
 };
 
@@ -151,7 +171,6 @@ _fetchClients = async () =>{
       .then((response) => response.json())
       //If response is in json then in success
       .then((responseJson) => {
-
           //Success 
 
           //ToastAndroid.show('Ce message '+JSON.stringify(responseJson), ToastAndroid.LONG)
@@ -161,7 +180,6 @@ _fetchClients = async () =>{
              
           })
             .catch(error => ToastAndroid.show('ClientsLocalStorage error local memory', ToastAndroid.SHORT));
-
       })
       //If response is not in json then in error
       .catch((error) => {
@@ -170,7 +188,6 @@ _fetchClients = async () =>{
           ToastAndroid.show('Une erreur est survenue '+ error, ToastAndroid.LONG)
           console.error(error);
       });  
-      
     }
     else{
       ToastAndroid.show('Aucune connexion internet!', ToastAndroid.LONG)
@@ -194,8 +211,6 @@ _fetchClients = async () =>{
         .then((responseJson) => {
 
             //Success 
-
-            //ToastAndroid.show('Ce message '+JSON.stringify(responseJson), ToastAndroid.LONG)
             AsyncStorage.setItem('GroupsLocalStorage', JSON.stringify(responseJson))
               .then(json => {
                 ToastAndroid.show('GroupsLocalStorage1 save locally', ToastAndroid.SHORT)
@@ -215,7 +230,6 @@ _fetchClients = async () =>{
             ToastAndroid.show('Une erreur est survenue '+ error, ToastAndroid.LONG)
             console.error(error);
         });  
-        
       }
       else{
         ToastAndroid.show('Aucune connexion internet!', ToastAndroid.LONG)
@@ -224,7 +238,6 @@ _fetchClients = async () =>{
   }
 
   render() {
-
     if(this.state.isLoading){
       return( 
         <Block style={styles.activity}>

@@ -362,13 +362,9 @@ class DetailGroup extends React.Component {
                 //ToastAndroid.show(id, ToastAndroid.SHORT)
                 this._quitter_un_group(id_g, group);
                 this._fetchClients()
-
-
               }
               else{
                 ToastAndroid.show("Aucune connexion internet disponible", ToastAndroid.SHORT)
-               
-                
               }
             });
 
