@@ -478,6 +478,8 @@ class DetailGroup extends React.Component {
           >
             <Block flex middle>
               <Block style={styles.registerContainer}>
+              <ScrollView style={{zIndex:1}} showsVerticalScrollIndicator={false}>
+
 
           <RBSheet
           ref={ref => {
@@ -524,7 +526,7 @@ class DetailGroup extends React.Component {
           </ScrollView>
         </RBSheet>
 
-            <ScrollView showsVerticalScrollIndicator={false}>
+            <Block >
               <Block style={{
               flex: 1,
               flexDirection: 'column',
@@ -537,7 +539,8 @@ class DetailGroup extends React.Component {
                   imageStyle={styles.profileBackground}
                 >
                   <Block flex style={styles.profileCard}>
-                    <Block style={{ position: 'absolute', width: width, zIndex: 5, paddingHorizontal: 20 }}>
+                  {/* position: 'absolute', */}
+                    <Block style={{  width: width, zIndex: 125, paddingHorizontal: 20 }}>
                       <Block middle style={{ top: 10}}>
                         <Image source={Images.bomokoLogo} style={styles.avatar} />
                       </Block>
@@ -622,7 +625,8 @@ class DetailGroup extends React.Component {
                     <Block
                       middle
                       row
-                      style={{ position: 'absolute', width: width, top: height * 0.3 - 22, zIndex: 99}}
+                      //position: 'absolute', 
+                      style={{position: 'absolute', width: width, top: height * 0.3 - 22, zIndex: 125, elevation:6}}
                     >
                       {
                         this.state.currentProfile["id_g"] == ""?
@@ -793,6 +797,7 @@ class DetailGroup extends React.Component {
                 </Block>
               </Block>
             </Block>
+          </Block>
           </ScrollView>
 
               </Block>
@@ -971,6 +976,7 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     shadowOpacity: 0.1,
     elevation: 1,
+    zIndex:0
   },
   cellContainer: {
     flex: 1,

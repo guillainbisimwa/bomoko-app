@@ -119,7 +119,7 @@ _fetchCredit = async () =>{
       //If response is not in json then in error
       .catch((error) => {
           //Error 
-          ToastAndroid.show('Une erreur est survenue '+ error, ToastAndroid.LONG)
+          ToastAndroid.show('Une erreur est survenue. Verifier votre connexion internet ', ToastAndroid.LONG)
       });  
     }
     else{
