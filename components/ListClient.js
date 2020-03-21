@@ -98,10 +98,10 @@ class ListClient extends React.Component {
             location={(
               <Block row right>
                 <Block row middle style={{ marginHorizontal: theme.SIZES.BASE }}>
-                  <Icon name="usd" family="font-awesome" color={"a11"} size={theme.SIZES.FONT * 0.875} />
+                  <Icon name="usd" family="font-awesome" color={"#a11"} size={theme.SIZES.FONT * 0.875} />
                   <Text
                     p
-                    color={"a11"}
+                    color={"#a11"}
                     size={theme.SIZES.FONT * 0.875}
                     style={{ marginLeft: theme.SIZES.BASE * 0.25 }}
                   >
@@ -127,10 +127,10 @@ class ListClient extends React.Component {
                 
               </Block>:
                 <Block row middle>
-                <Icon name="hourglass-half" family="font-awesome" color={theme.COLORS.ERROR} size={theme.SIZES.FONT * 0.875} />
+                <Icon name="hourglass-half" family="font-awesome" color={"#a11"} size={theme.SIZES.FONT * 0.875} />
                 <Text
                   p
-                  color={theme.COLORS.ERROR}
+                  color={"#a11"}
                   size={theme.SIZES.FONT * 0.875}
                   style={{ marginLeft: theme.SIZES.BASE * 0.25 }}
                 >
