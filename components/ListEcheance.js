@@ -38,9 +38,36 @@ class ListEcheance extends React.Component {
               avatar={pricing}
               borderless
               style={styles.stats}
-              title={item.somme_sans_inter}
-              caption={item.somme_intert}
-              
+              title={"Payer avant: "+ new Date(parseFloat(item.date_ech)).toDateString()}
+              caption={item.somme_intert +" $"}
+              location={(
+                <Block row right>
+                  <Block row middle style={{ marginHorizontal: theme.SIZES.BASE }}>
+                    <Icon name="hourglass-half" family="font-awesome" color={theme.COLORS.ERROR} size={theme.SIZES.FONT * 0.875} />
+                    <Text
+                      p
+                      color={theme.COLORS.ERROR}
+                      size={theme.SIZES.FONT * 0.875}
+                      style={{ marginLeft: theme.SIZES.BASE * 0.25 }}
+                    >
+                      En attente
+                    </Text>
+                  </Block>
+                  
+                  <Block row middle>
+                  <Icon name="calendar" family="font-awesome" color={theme.COLORS.MUTED} size={theme.SIZES.FONT * 0.875} />
+                  <Text
+                  //"#080" : "#a11"
+                    p
+                    color={theme.COLORS.MUTED}
+                    size={theme.SIZES.FONT * 0.875}
+                    style={{ marginLeft: theme.SIZES.BASE * 0.25 }}
+                  >
+                    - {parseInt((parseFloat(item.date_ech)-(new Date()).getTime())/(24*60*60*1000))} jours
+                  </Text>
+                </Block>  
+                </Block>
+              )}
             />
 
           </Block>

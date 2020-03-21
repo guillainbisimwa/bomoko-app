@@ -47,27 +47,64 @@ class DetailGroup extends React.Component {
     clientByGroup =  JSON.parse(this.props.navigation.getParam("clientByGroup"))
     allDataCredit =  JSON.parse(this.props.navigation.getParam("allDataCredit"))
     //ToastAndroid.show(JSON.stringify(allDataCredit), ToastAndroid.LONG)
-    currentEcheance = allEcheance.find((item) => item.id_c == currentProfile.id_c );
-    //ToastAndroid.show(JSON.stringify(currentEcheance.echeance), ToastAndroid.LONG)
-    
-    this.state = {
-      st : "",
-      group:prod,
-      isLoading: false,
-      clients:clients,
-      currentUser:currentUser,
-      currentProfile:currentProfile,
-      clientByGroup:allDataCredit,
-      countGroupMember:countGroupMember,
-      allEcheance:allEcheance,
-      isRefreshing: false,
-      currentEcheance: currentEcheance.echeance
-      //allDataCredit:allDataCredit
-      //currentEcheance : currentEcheance.echeance == undefined ? {} :currentEcheance.echeance
-    };
-    
-    //ToastAndroid.show( JSON.stringify(this.props.navigation.getParam("product")), ToastAndroid.SHORT)
-    //this.setState({group: JSON.parse(this.props.navigation.getParam("product"))})
+    currentEcheance = allEcheance.find((item) => item.id_c == currentProfile.id_c);
+    if(!currentEcheance){
+      c=[]
+      c.push({
+        id: "0",
+        date_ech: 0,
+        somme_intert: 0,
+        somme_sans_inter: 0
+      });
+      //ToastAndroid.show("VIdeeeee", ToastAndroid.LONG)
+      this.state = {
+        st : "",
+        group:prod,
+        isLoading: false,
+        clients:clients,
+        currentUser:currentUser,
+        currentProfile:currentProfile,
+        clientByGroup:allDataCredit,
+        countGroupMember:countGroupMember,
+        allEcheance:allEcheance,
+        isRefreshing: false,
+        currentEcheance: c
+        //allDataCredit:allDataCredit
+        //currentEcheance : currentEcheance == undefined ? {} :currentEcheance.echeance
+      };
+    }
+    else {
+
+      //ToastAndroid.show(JSON.stringify(currentEcheance.lenght), ToastAndroid.LONG)
+      c = []
+      if(currentEcheance.echeance != undefined){
+        currentEcheance.echeance.forEach(element => {
+          c.push({
+            id: element.id,
+            date_ech: element.date_ech,
+            somme_intert: element.somme_intert,
+            somme_sans_inter: element.somme_echeance_sing
+          });
+        });
+      }
+
+      this.state = {
+        st : "",
+        group:prod,
+        isLoading: false,
+        clients:clients,
+        currentUser:currentUser,
+        currentProfile:currentProfile,
+        clientByGroup:allDataCredit,
+        countGroupMember:countGroupMember,
+        allEcheance:allEcheance,
+        isRefreshing: false,
+        currentEcheance: currentEcheance.echeance
+        //allDataCredit:allDataCredit
+        //currentEcheance : currentEcheance == undefined ? {} :currentEcheance.echeance
+      };
+    }
+
   }
   
   componentDidMount = async() =>{
@@ -85,23 +122,57 @@ class DetailGroup extends React.Component {
     allDataCredit = await JSON.parse(this.props.navigation.getParam("allDataCredit"))
     //ToastAndroid.show(JSON.stringify(allDataCredit), ToastAndroid.LONG)
     currentEcheance = await allEcheance.find((item) => item.id_c == currentProfile.id_c );
-    //ToastAndroid.show(JSON.stringify(currentEcheance), ToastAndroid.LONG)
+    if(!currentEcheance){
+      //ToastAndroid.show("VIdeeeee", ToastAndroid.LONG)
+      c=[]
+      c.push({
+        id: "0",
+        date_ech: 0,
+        somme_intert: 0,
+        somme_sans_inter: 0
+      });
+      this.setState = {
+        st : await  "",
+        group: await prod,
+        isLoading: await  false,
+        clients: await clients,
+        currentUser: await currentUser,
+        currentProfile: await currentProfile,
+        clientByGroup: await allDataCredit,
+        countGroupMember: await countGroupMember,
+        allEcheance: await allEcheance,
+        isRefreshing: await  false,
+        currentEcheance: await c
+      };
+    }
+    else {
+      //ToastAndroid.show(JSON.stringify(currentEcheance.lenght), ToastAndroid.LONG)
+      c = []
+      if(currentEcheance.echeance != undefined){
+        currentEcheance.echeance.forEach(element => {
+          c.push({
+            id: element.id,
+            date_ech: element.date_ech,
+            somme_intert: element.somme_intert,
+            somme_sans_inter: element.somme_echeance_sing
+          });
+        });
+      }
 
-    
-    this.setState = {
-      st : await  "",
-      group: await prod,
-      isLoading: await  false,
-      clients: await clients,
-      currentUser: await currentUser,
-      currentProfile: await currentProfile,
-      clientByGroup: await allDataCredit,
-      countGroupMember: await countGroupMember,
-      allEcheance: await allEcheance,
-      isRefreshing: await  false,
-      currentEcheance: currentEcheance.echeance
-      //currentEcheance : await currentEcheance.echeance == undefined ? {} :currentEcheance.echeance
-    };
+      this.setState = {
+        st : await  "",
+        group: await prod,
+        isLoading: await  false,
+        clients: await clients,
+        currentUser: await currentUser,
+        currentProfile: await currentProfile,
+        clientByGroup: await allDataCredit,
+        countGroupMember: await countGroupMember,
+        allEcheance: await allEcheance,
+        isRefreshing: await  false,
+        currentEcheance: await currentEcheance.echeance
+      };
+    }
   }
 
   _bootstrapAsync = async () => {
@@ -345,9 +416,6 @@ class DetailGroup extends React.Component {
               
             })
               .catch(error => ToastAndroid.show('ClientsLocalStorage error local memory', ToastAndroid.SHORT));
-            
-            
-            
         })
         //If response is not in json then in error
         .catch((error) => {
@@ -369,7 +437,8 @@ class DetailGroup extends React.Component {
     const {
       st,
       group,
-      countGroupMember
+      countGroupMember,
+      currentEcheance
     } = this.state;
   
     if(this.state.isLoading){
@@ -418,19 +487,21 @@ class DetailGroup extends React.Component {
             }
           }}
         >
-          <ScrollView style={{zIndex:10, margin:10}}>
-            <Text style={{alignSelf:"center", paddingTop: 10, margin:10}}>ECHEANCES</Text>
-            <Block flex>
-
-            {this.state.currentEcheance.map((item, index) => {
+          <ScrollView style={{zIndex:10, marginLeft:10, marginRight:10}}>
+            <Text style={{alignSelf:"center", paddingTop: 10, margin:10}}>MES ECHEANCES</Text>
+            <Block flex>              
+            {
+              
+            this.state.currentEcheance ? this.state.currentEcheance.map((item, index) => {
                 return <Block key={index} flex row>
                 <ListEcheance item={item} echeance={item} horizontal/>
               </Block>
-              })}
-               
+              }):
               
+              <Text style={{alignSelf:"center", paddingTop: 10, margin:10}}>AUCUNE ECHEANCE</Text>
+            }
+               
             </Block>
-            <Text style={{alignSelf:"center", paddingTop: 10, margin:10}}>ECHEANCES2</Text>
             
           </ScrollView>
         </RBSheet>
@@ -581,7 +652,16 @@ class DetailGroup extends React.Component {
                           color="default"
                           style={{ width: 150, height: 44, marginHorizontal: 5, elevation: 5}} 
                           textStyle={{ fontSize: 16 }} round
-                          onPress={_ =>  this.RBSheet.open()}         
+                          onPress={_ =>  {
+                          ToastAndroid.show(JSON.stringify(this.state.currentEcheance), ToastAndroid.LONG)
+
+                              if(this.state.currentEcheance != undefined)
+                              {
+                                this.RBSheet.open()
+                              }
+
+                            }
+                          }      
                           >
                             Echeances
                          </Button>
@@ -608,7 +688,7 @@ class DetailGroup extends React.Component {
                         color={nowTheme.COLORS.INFO}
                         style={[styles.social, styles.shadow]}
                         onPress={() => {
-                          this.RBSheet.open();
+                          //this.RBSheet.open();
                           }}
                       />
                     </Block>
@@ -866,7 +946,6 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     shadowOpacity: 0.1,
     elevation: 1,
-
   },
   cellContainer: {
     flex: 1,
