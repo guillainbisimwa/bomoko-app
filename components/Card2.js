@@ -74,6 +74,7 @@ class Card2 extends React.Component {
                       somme = 0
                       etatCredit = 0
                       id_c = ""
+                      etatCurrentCreditUser = 0;
                       singleUserCredit = allCredit.find((item) => item.id_demandeur ==  docCLient.id );
                       if(singleUserCredit == undefined){
                         somme = 0
@@ -84,13 +85,14 @@ class Card2 extends React.Component {
                         id_c = singleUserCredit.id;
                         currentProfile.id_c = id_c;
                         currentProfile.etatCredit = etatCredit;
-
+                        if(singleUserCredit.id == docCLient.id_c) etatCurrentCreditUser =  1;
                         if(etatCredit == 1)
                         {
                           somme_group_valid += somme;
                         }
                         else somme_group_invalid += somme;
                       }
+
                       await allDataCredit.push({
                         address: docCLient.address,
                         code_conf_sms: docCLient.code_conf_sms,
@@ -106,7 +108,7 @@ class Card2 extends React.Component {
                         somme : somme,
                         etatCredit: etatCredit,
                         id_c:id_c,
-                       
+                        etatCurrentCreditUser:etatCurrentCreditUser
                       })
                     })
 

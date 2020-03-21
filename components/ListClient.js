@@ -83,13 +83,7 @@ class ListClient extends React.Component {
               <Block>
 
               <Block>
-                
-
-       
-
-        </Block>
-              
-                
+        </Block>      
               </Block>
               
             </ScrollView>
@@ -98,29 +92,29 @@ class ListClient extends React.Component {
         <Card
             avatar={item.sexe == 'm'? man: woman}
             borderless
-            style={styles.stats}
+            style={ item.etatCurrentCreditUser == 1 ? styles.ownStats:styles.stats }
             title={item.nom}
             caption={item.phone}
             location={(
               <Block row right>
                 <Block row middle style={{ marginHorizontal: theme.SIZES.BASE }}>
-                  <Icon name="usd" family="font-awesome" color={theme.COLORS.ERROR} size={theme.SIZES.FONT * 0.875} />
+                  <Icon name="usd" family="font-awesome" color={"a11"} size={theme.SIZES.FONT * 0.875} />
                   <Text
                     p
-                    color={theme.COLORS.ERROR}
+                    color={"a11"}
                     size={theme.SIZES.FONT * 0.875}
                     style={{ marginLeft: theme.SIZES.BASE * 0.25 }}
                   >
-                    {item.somme}
+                    {item.somme} 
                   </Text>
                 </Block>
                 {item.etatCredit == 1 ?
                 <Block row middle>
-                <Icon name="check" family="font-awesome" color={theme.COLORS.SUCCESS} size={theme.SIZES.FONT * 0.875} />
+                <Icon name="check" family="font-awesome" color={"#080"} size={theme.SIZES.FONT * 0.875} />
                 <Text
                 //"#080" : "#a11"
                   p
-                  color={theme.COLORS.SUCCESS}
+                  color={"#080"}
                   size={theme.SIZES.FONT * 0.875}
                   style={{ marginLeft: theme.SIZES.BASE * 0.25 }}
                 >
@@ -184,18 +178,19 @@ const styles = StyleSheet.create({
     //paddingVertical: theme.SIZES.BASE * 2,
     //paddingHorizontal: theme.SIZES.BASE * 1.5,
     width : width - theme.SIZES.BASE * 2,
-   
-    
   },
   
   stats: {
     borderWidth: 0,
     backgroundColor:nowTheme.COLORS.TABS,
-    //width: width - theme.SIZES.BASE * 2,
     height: theme.SIZES.BASE * 4,
-    //marginVertical: theme.SIZES.BASE * 0.875,
     marginVertical: 5,
-    //elevation:5
+  },
+  ownStats: {
+    borderWidth: 0,
+    backgroundColor:'rgba(250,0,0,0.2)',
+    height: theme.SIZES.BASE * 4,
+    marginVertical: 5,
   },
   title: {
     justifyContent: 'center',
