@@ -166,7 +166,110 @@ class Card2 extends React.Component {
           </Block>
         </TouchableWithoutFeedback>
         {/* style={{backgroundColor: 'rgba(0, 255, 0, 0.3)'}}  */}
-        <TouchableWithoutFeedback onPress={() => navigation.navigate('DetailGroup', { product: item })}>
+        <TouchableWithoutFeedback onPress={() => 
+          { 
+            //TODO : 
+            clients=[];
+            clientByGroup = [];
+            countGroupMember = 0;
+
+            dataClients = [];
+            currentUser = [];
+            currentProfile=[]
+            const ClientsLocalStorage =  AsyncStorage.getItem('ClientsLocalStorage')
+            .then(async (value) => {
+              dataClients = await JSON.parse(value);
+              clients = await dataClients;
+              //ToastAndroid.show(JSON.stringify(dataClients)+"vo", ToastAndroid.LONG)
+              clientByGroup = dataClients.filter((item2) => item2.id_g == item["id"]);
+              countGroupMember = clientByGroup.reduce((key, val) => key + 1, 0);
+              //ToastAndroid.show(clientByGroup.length+"", ToastAndroid.LONG)
+
+              const currentAccount =  AsyncStorage.getItem('currentAccount')
+              .then(async (value) => {
+                currentUser = await JSON.parse(value);
+                currentProfile = dataClients.find((item2) => item2.phone == currentUser['phone']);
+                currentProfile.id_c = ""
+
+                const CreditsLocalStorage =  AsyncStorage.getItem('CreditsLocalStorage')
+                .then(async (valueC) => {
+                  allCredit = await JSON.parse(valueC);
+                  allDataCredit = []
+
+                  const EcheancesLocalStorage =  AsyncStorage.getItem('EcheancesLocalStorage')
+                  .then(async (valueE) => {
+                    allEcheance = await JSON.parse(valueE);
+                    
+                    somme_group_valid = 0
+                    somme_group_invalid = 0
+
+                    clientByGroup.forEach(async docCLient => {
+                      
+                      somme = 0
+                      etatCredit = 0
+                      id_c = ""
+                      etatCurrentCreditUser = 0;
+                      singleUserCredit = allCredit.find((item) => item.id_demandeur ==  docCLient.id );
+                      if(singleUserCredit == undefined){
+                        somme = 0
+                      }
+                      else {
+                        somme = singleUserCredit.somme;
+                        etatCredit = singleUserCredit.etat;
+                        id_c = singleUserCredit.id;
+                        currentProfile.id_c = id_c;
+                        currentProfile.etatCredit = etatCredit;
+                        if(singleUserCredit.id == docCLient.id_c) etatCurrentCreditUser =  1;
+                        if(etatCredit == 1)
+                        {
+                          somme_group_valid += somme;
+                        }
+                        else somme_group_invalid += somme;
+                      }
+
+                      await allDataCredit.push({
+                        address: docCLient.address,
+                        code_conf_sms: docCLient.code_conf_sms,
+                        etat: docCLient.etat,
+                        id: docCLient.id,
+                        id_g: docCLient.id_g,
+                        nom: docCLient.nom,
+                        num_carte_elec: docCLient.num_carte_elec,
+                        phone: docCLient.phone,
+                        profession: docCLient.profession,
+                        sexe: docCLient.sexe,
+                        type: docCLient.type,
+                        somme : somme,
+                        etatCredit: etatCredit,
+                        id_c:id_c,
+                        etatCurrentCreditUser:etatCurrentCreditUser
+                      })
+                    })
+
+
+                    navigation.navigate('DetailGroup', {
+                      product: `${JSON.stringify(item)}`,
+                      clients: `${JSON.stringify(clients)}`,
+                      clientByGroup: `${JSON.stringify(clientByGroup)}`,
+                      countGroupMember: `${JSON.stringify(countGroupMember)}`,
+                      currentUser: `${JSON.stringify(currentUser)}`,
+                      currentProfile: `${JSON.stringify(currentProfile)}`,
+                      allDataCredit: `${JSON.stringify(allDataCredit)}`,
+                      allEcheance: `${JSON.stringify(allEcheance)}`,
+                      somme_group_valid: `${JSON.stringify(somme_group_valid)}`,
+                      somme_group_invalid: `${JSON.stringify(somme_group_invalid)}`
+                    })
+                
+                  }).done();
+                }).done();
+              }).done();
+          
+
+            
+            }).done();
+
+          }
+        }>
           <Block flex space="between" style={styles.cardDescription}>
             <Block flex>
               <Text
