@@ -320,6 +320,40 @@ const HomeStack = createStackNavigator(
         headerTransparent: true
       })
     },
+    ValidGroups: {
+      screen: ValidGroup,
+      navigationOptions: ({ navigation }) => ({
+        header: (
+          <Header
+              back
+              title="Valider les Groupes"
+              navigation={navigation}
+              titleColor="black"
+              iconColor="black"
+              white={false}
+              transparent
+            />
+        ),
+        headerTransparent: true
+      })
+    },
+    ValidCredits: {
+      screen: ValidCredit,
+      navigationOptions: ({ navigation }) => ({
+        header: (
+          <Header
+              back
+              title="Valider les credits"
+              navigation={navigation}
+              titleColor="black"
+              iconColor="black"
+              white={false}
+              transparent
+            />
+        ),
+        headerTransparent: true
+      })
+    },
   },
   {
     cardStyle: {
@@ -502,22 +536,22 @@ const AppStack = createDrawerNavigator(
         )
       })
     },
-    ValidGroups: {
-      screen: ValidGroupStack,
-      navigationOptions: navOpt => ({
-        drawerLabel: ({ focused }) => (
-          <DrawerItem focused={focused} screen="ValidGroup" title="Valider les Groupes" />
-        )
-      })
-    },
-    ValidCredits: {
-      screen: ValidCreditStack,
-      navigationOptions: navOpt => ({
-        drawerLabel: ({ focused }) => (
-          <DrawerItem focused={focused} screen="ValidCredit" title="Valider les credits" />
-        )
-      })
-    },
+    // ValidGroups: {
+    //   screen: ValidGroupStack,
+    //   navigationOptions: navOpt => ({
+    //     drawerLabel: ({ focused }) => (
+    //       <DrawerItem focused={focused} screen="ValidGroup" title="Valider les Groupes" />
+    //     )
+    //   })
+    // },
+    // ValidCredits: {
+    //   screen: ValidCreditStack,
+    //   navigationOptions: navOpt => ({
+    //     drawerLabel: ({ focused }) => (
+    //       <DrawerItem focused={focused} screen="ValidCredit" title="Valider les credits" />
+    //     )
+    //   })
+    // },
     MesCredits: {
       screen: VideStack,
       navigationOptions: navOpt => ({

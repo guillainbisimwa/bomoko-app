@@ -1,7 +1,8 @@
 import React from 'react';
 import { DrawerNavigatorItems } from 'react-navigation-drawer';
 import { ScrollView, StyleSheet, Dimensions, Image, TouchableOpacity, Linking,AsyncStorage,
-  ToastAndroid } from 'react-native';
+  ToastAndroid, 
+  TouchableOpacityBase} from 'react-native';
 import { Block, Text, theme } from 'galio-framework';
 import Icon from '../components/Icon';
 import Images from '../constants/Images';
@@ -12,7 +13,6 @@ import nowTheme from '../constants/Theme';
 const { width } = Dimensions.get('screen');
       
 J = AsyncStorage.getItem('phone');
-//jj = JSON.parse(J)
 
 const currentUser = [];
 const currentAccount = AsyncStorage.getItem('currentAccount')
@@ -63,11 +63,38 @@ const Drawer = props => (
         >
           <DrawerItem {...props} title="Langue" />
         </TouchableOpacity>
+        
+        
+        {
+        !J['_55'].includes("+243000000000")? 
         <TouchableOpacity onPress={() => props.navigation.navigate('Vide')}
           style={{ marginLeft: 10, fontFamily: 'montserrat-regular' }}
         >
           <DrawerItem {...props} title="Apropos" />
         </TouchableOpacity>
+        :
+        <TouchableOpacity>
+       <TouchableOpacity
+       onPress={() => {
+         //ToastAndroid.show(" Bye bye", ToastAndroid.SHORT)
+         props.navigation.navigate('ValidGroups')}
+       }
+       style={{ marginLeft: 10, fontFamily: 'montserrat-regular' }}
+     >
+       <DrawerItem {...props} title="Valider Groupes" />
+     </TouchableOpacity>
+       <TouchableOpacity
+       onPress={() => {
+         //ToastAndroid.show(" Bye bye", ToastAndroid.SHORT)
+         props.navigation.navigate('ValidCredits')}
+       }
+       style={{ marginLeft: 10, fontFamily: 'montserrat-regular' }}
+     >
+       <DrawerItem {...props} title="Valider Credits" />
+     </TouchableOpacity>
+     </TouchableOpacity>
+      }
+       
         <TouchableOpacity
           onPress={() => {
             AsyncStorage.clear();

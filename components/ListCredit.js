@@ -73,7 +73,7 @@ class ListCredit extends React.Component {
                   ToastAndroid.show('Une erreur est survenue '+ error, ToastAndroid.LONG)
               });
 
-                ToastAndroid.show( JSON.stringify(item), ToastAndroid.LONG)
+                //ToastAndroid.show( JSON.stringify(item), ToastAndroid.LONG)
               }
               else{
                 ToastAndroid.show("Aucune connexion internet disponible", ToastAndroid.SHORT)
