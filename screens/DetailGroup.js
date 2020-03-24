@@ -39,11 +39,7 @@ class DetailGroup extends React.Component {
     countGroupMember =  JSON.parse(this.props.navigation.getParam("countGroupMember"))
     currentUser =  JSON.parse(this.props.navigation.getParam("currentUser"))
     currentProfile =  JSON.parse(this.props.navigation.getParam("currentProfile"))
-    allEcheance =  JSON.parse(this.props.navigation.getParam("allEcheance"))
-    //singleGroup = dataGroups.find((item) => item.id ==  docCredit.id_g );
-          
-    //singleUser = dataClients.find((item) => item.id ==  docCredit.id_demandeur );
-              
+    allEcheance =  JSON.parse(this.props.navigation.getParam("allEcheance"))      
     clientByGroup =  JSON.parse(this.props.navigation.getParam("clientByGroup"))
     allDataCredit =  JSON.parse(this.props.navigation.getParam("allDataCredit"))
     //TODO SOMME VALID AND SOMME INVALID
@@ -51,17 +47,24 @@ class DetailGroup extends React.Component {
     somme_group_invalid = JSON.parse(this.props.navigation.getParam("somme_group_invalid"))
     currentEcheance = []
 
-    //ToastAndroid.show(JSON.stringify(allDataCredit), ToastAndroid.LONG)
-    if(!allEcheance){
-      //currentEcheance = allEcheance.find((item) => item.id_c == currentProfile.id_c);
-      currentEcheance.push({
-        id: 0,
-        date_ech: "0",
-        somme_intert: "0",
-        somme_sans_inter: "0",
-        inter: "0"
-      })
-      if(!currentEcheance){
+    //ToastAndroid.show(JSON.stringify(allEcheance), ToastAndroid.LONG)
+    //TODO IF no credit
+    //TODO IF no individual credit
+    //TODO IF no echances
+    //TODO if no individual echeance
+    currentDataCredit = allDataCredit.find((item) => item.id == currentUser.pid);
+
+    ToastAndroid.show(JSON.stringify(currentProfile), ToastAndroid.LONG)
+    ToastAndroid.show(JSON.stringify(currentProfile), ToastAndroid.LONG)
+    ToastAndroid.show(JSON.stringify(currentProfile), ToastAndroid.LONG)
+    
+    if(currentDataCredit)
+    {
+      if(currentDataCredit.somme == 0)
+      {
+        //NO INDIVIDUA CREDIT TOO
+        //Manualy insest a wrong chedit and an empty echenace
+        //Set the state
         c=[]
         c.push({
           id: "0",
@@ -69,7 +72,6 @@ class DetailGroup extends React.Component {
           somme_intert: 0,
           somme_sans_inter: 0
         });
-        //ToastAndroid.show("VIdeeeee", ToastAndroid.LONG)
         this.state = {
           st : "",
           group:prod,
@@ -86,240 +88,267 @@ class DetailGroup extends React.Component {
           currentEcheance: c
         };
       }
-      else {
-
-        //ToastAndroid.show(JSON.stringify(currentEcheance.lenght), ToastAndroid.LONG)
-        c = []
-        if(currentEcheance.echeance != undefined){
-          currentEcheance.echeance.forEach(element => {
+      else{
+        //if credit exists
+        //Test if all echeance exists
+        if(allEcheance){
+          currentEcheance = allEcheance.find((item) => item.id_c == currentProfile.id_c);
+          if(!currentEcheance){
+            c=[]
             c.push({
-              id: element.id,
-              date_ech: element.date_ech,
-              somme_intert: element.somme_intert,
-              somme_sans_inter: element.somme_echeance_sing
+              id: "0",
+              date_ech: 0,
+              somme_intert: 0,
+              somme_sans_inter: 0
             });
+            //ToastAndroid.show("VIdeeeee", ToastAndroid.LONG)
+            this.state = {
+              st : "",
+              group:prod,
+              isLoading: false,
+              clients:clients,
+              currentUser:currentUser,
+              currentProfile:currentProfile,
+              clientByGroup:allDataCredit,
+              countGroupMember:countGroupMember,
+              allEcheance:allEcheance,
+              isRefreshing: false,
+              somme_group_valid:somme_group_valid,
+              somme_group_invalid:somme_group_invalid,
+              currentEcheance: c
+            };
+          }else {
+
+            //ToastAndroid.show(JSON.stringify(currentEcheance.lenght), ToastAndroid.LONG)
+            c = []
+            if(currentEcheance.echeance != undefined){
+              currentEcheance.echeance.forEach(element => {
+                c.push({
+                  id: element.id,
+                  date_ech: element.date_ech,
+                  somme_intert: element.somme_intert,
+                  somme_sans_inter: element.somme_echeance_sing
+                });
+              });
+            }
+    
+            this.state = {
+              st : "",
+              group:prod,
+              isLoading: false,
+              clients:clients,
+              currentUser:currentUser,
+              currentProfile:currentProfile,
+              clientByGroup:allDataCredit,
+              countGroupMember:countGroupMember,
+              allEcheance:allEcheance,
+              isRefreshing: false,
+              somme_group_valid:somme_group_valid,
+              somme_group_invalid:somme_group_invalid,
+              currentEcheance: currentEcheance.echeance
+            };
+          }
+
+        }
+        else{
+          // if all echeance does not exixts
+          c=[]
+          c.push({
+            id: "0",
+            date_ech: 0,
+            somme_intert: 0,
+            somme_sans_inter: 0
           });
+          //ToastAndroid.show("VIdeeeee", ToastAndroid.LONG)
+          this.state = {
+            st : "",
+            group:prod,
+            isLoading: false,
+            clients:clients,
+            currentUser:currentUser,
+            currentProfile:currentProfile,
+            clientByGroup:allDataCredit,
+            countGroupMember:countGroupMember,
+            allEcheance:allEcheance,
+            isRefreshing: false,
+            somme_group_valid:somme_group_valid,
+            somme_group_invalid:somme_group_invalid,
+            currentEcheance: c
+          };
         }
 
-        this.state = {
-          st : "",
-          group:prod,
-          isLoading: false,
-          clients:clients,
-          currentUser:currentUser,
-          currentProfile:currentProfile,
-          clientByGroup:allDataCredit,
-          countGroupMember:countGroupMember,
-          allEcheance:allEcheance,
-          isRefreshing: false,
-          somme_group_valid:somme_group_valid,
-          somme_group_invalid:somme_group_invalid,
-          currentEcheance: currentEcheance.echeance
-        };
       }
     }
     else {
-      if(!currentEcheance){
-        c=[]
-        c.push({
-          id: "0",
-          date_ech: 0,
-          somme_intert: 0,
-          somme_sans_inter: 0
-        });
-        //ToastAndroid.show("VIdeeeee", ToastAndroid.LONG)
-        this.state = {
-          st : "",
-          group:prod,
-          isLoading: false,
-          clients:clients,
-          currentUser:currentUser,
-          currentProfile:currentProfile,
-          clientByGroup:allDataCredit,
-          countGroupMember:countGroupMember,
-          allEcheance:allEcheance,
-          isRefreshing: false,
-          somme_group_valid:somme_group_valid,
-          somme_group_invalid:somme_group_invalid,
-          currentEcheance: c
-        };
-      }
-      else {
-
-        //ToastAndroid.show(JSON.stringify(currentEcheance.lenght), ToastAndroid.LONG)
-        c = []
-        if(currentEcheance.echeance != undefined){
-          currentEcheance.echeance.forEach(element => {
-            c.push({
-              id: element.id,
-              date_ech: element.date_ech,
-              somme_intert: element.somme_intert,
-              somme_sans_inter: element.somme_echeance_sing
-            });
-          });
-        }
-
-        this.state = {
-          st : "",
-          group:prod,
-          isLoading: false,
-          clients:clients,
-          currentUser:currentUser,
-          currentProfile:currentProfile,
-          clientByGroup:allDataCredit,
-          countGroupMember:countGroupMember,
-          allEcheance:allEcheance,
-          isRefreshing: false,
-          somme_group_valid:somme_group_valid,
-          somme_group_invalid:somme_group_invalid,
-          currentEcheance: currentEcheance.echeance
-        };
-      }
+      c=[]
+      c.push({
+        id: "0",
+        date_ech: 0,
+        somme_intert: 0,
+        somme_sans_inter: 0
+      });
+      this.state = {
+        st : "",
+        group:prod,
+        isLoading: false,
+        clients:clients,
+        currentUser:currentUser,
+        currentProfile:currentProfile,
+        clientByGroup:allDataCredit,
+        countGroupMember:countGroupMember,
+        allEcheance:allEcheance,
+        isRefreshing: false,
+        somme_group_valid:somme_group_valid,
+        somme_group_invalid:somme_group_invalid,
+        currentEcheance: c
+      };
     }
+    
+    
   }
   
-  componentDidMount = async() =>{
-    prod =  await JSON.parse(this.props.navigation.getParam("product"))
-    clients = await JSON.parse(this.props.navigation.getParam("clients"))
-    countGroupMember = await JSON.parse(this.props.navigation.getParam("countGroupMember"))
-    currentUser = await JSON.parse(this.props.navigation.getParam("currentUser"))
-    currentProfile = await JSON.parse(this.props.navigation.getParam("currentProfile"))
-    allEcheance =  await JSON.parse(this.props.navigation.getParam("allEcheance"))
-    //singleGroup = dataGroups.find((item) => item.id ==  docCredit.id_g );
+  // componentDidMount = async() =>{
+  //   prod =  await JSON.parse(this.props.navigation.getParam("product"))
+  //   clients = await JSON.parse(this.props.navigation.getParam("clients"))
+  //   countGroupMember = await JSON.parse(this.props.navigation.getParam("countGroupMember"))
+  //   currentUser = await JSON.parse(this.props.navigation.getParam("currentUser"))
+  //   currentProfile = await JSON.parse(this.props.navigation.getParam("currentProfile"))
+  //   allEcheance =  await JSON.parse(this.props.navigation.getParam("allEcheance"))
+  //   //singleGroup = dataGroups.find((item) => item.id ==  docCredit.id_g );
           
-    //singleUser = dataClients.find((item) => item.id ==  docCredit.id_demandeur );
-    somme_group_valid = await JSON.parse(this.props.navigation.getParam("somme_group_valid"))
-    somme_group_invalid = await JSON.parse(this.props.navigation.getParam("somme_group_invalid"))
+  //   //singleUser = dataClients.find((item) => item.id ==  docCredit.id_demandeur );
+  //   somme_group_valid = await JSON.parse(this.props.navigation.getParam("somme_group_valid"))
+  //   somme_group_invalid = await JSON.parse(this.props.navigation.getParam("somme_group_invalid"))
               
-    clientByGroup = await JSON.parse(this.props.navigation.getParam("clientByGroup"))
-    allDataCredit = await JSON.parse(this.props.navigation.getParam("allDataCredit"))
-    currentEcheance = []
-    //ToastAndroid.show(JSON.stringify(allDataCredit), ToastAndroid.LONG)
-    if(!allEcheance){
-      //currentEcheance = allEcheance.find((item) => item.id_c == currentProfile.id_c);
-      currentEcheance.push({
-        id: 0,
-        date_ech: "0",
-        somme_intert: "0",
-        somme_sans_inter: "0",
-        inter: "0"
-      })
-      if(!currentEcheance){
-        c=[]
-        c.push({
-          id: "0",
-          date_ech: 0,
-          somme_intert: 0,
-          somme_sans_inter: 0
-        });
-        //ToastAndroid.show("VIdeeeee", ToastAndroid.LONG)
-        this.state = {
-          st : "",
-          group:prod,
-          isLoading: false,
-          clients:clients,
-          currentUser:currentUser,
-          currentProfile:currentProfile,
-          clientByGroup:allDataCredit,
-          countGroupMember:countGroupMember,
-          allEcheance:allEcheance,
-          isRefreshing: false,
-          somme_group_valid:somme_group_valid,
-          somme_group_invalid:somme_group_invalid,
-          currentEcheance: c
-        };
-      }
-      else {
+  //   clientByGroup = await JSON.parse(this.props.navigation.getParam("clientByGroup"))
+  //   allDataCredit = await JSON.parse(this.props.navigation.getParam("allDataCredit"))
+  //   currentEcheance = []
+  //   //ToastAndroid.show(JSON.stringify(allDataCredit), ToastAndroid.LONG)
+  //   if(!allEcheance){
+  //     //currentEcheance = allEcheance.find((item) => item.id_c == currentProfile.id_c);
+  //     currentEcheance.push({
+  //       id: 0,
+  //       date_ech: "0",
+  //       somme_intert: "0",
+  //       somme_sans_inter: "0",
+  //       inter: "0"
+  //     })
+  //     if(!currentEcheance){
+  //       c=[]
+  //       c.push({
+  //         id: "0",
+  //         date_ech: 0,
+  //         somme_intert: 0,
+  //         somme_sans_inter: 0
+  //       });
+  //       //ToastAndroid.show("VIdeeeee", ToastAndroid.LONG)
+  //       this.state = {
+  //         st : "",
+  //         group:prod,
+  //         isLoading: false,
+  //         clients:clients,
+  //         currentUser:currentUser,
+  //         currentProfile:currentProfile,
+  //         clientByGroup:allDataCredit,
+  //         countGroupMember:countGroupMember,
+  //         allEcheance:allEcheance,
+  //         isRefreshing: false,
+  //         somme_group_valid:somme_group_valid,
+  //         somme_group_invalid:somme_group_invalid,
+  //         currentEcheance: c
+  //       };
+  //     }
+  //     else {
 
-        //ToastAndroid.show(JSON.stringify(currentEcheance.lenght), ToastAndroid.LONG)
-        c = []
-        if(currentEcheance.echeance != undefined){
-          currentEcheance.echeance.forEach(element => {
-            c.push({
-              id: element.id,
-              date_ech: element.date_ech,
-              somme_intert: element.somme_intert,
-              somme_sans_inter: element.somme_echeance_sing
-            });
-          });
-        }
+  //       //ToastAndroid.show(JSON.stringify(currentEcheance.lenght), ToastAndroid.LONG)
+  //       c = []
+  //       if(currentEcheance.echeance != undefined){
+  //         currentEcheance.echeance.forEach(element => {
+  //           c.push({
+  //             id: element.id,
+  //             date_ech: element.date_ech,
+  //             somme_intert: element.somme_intert,
+  //             somme_sans_inter: element.somme_echeance_sing
+  //           });
+  //         });
+  //       }
 
-        this.state = {
-          st : "",
-          group:prod,
-          isLoading: false,
-          clients:clients,
-          currentUser:currentUser,
-          currentProfile:currentProfile,
-          clientByGroup:allDataCredit,
-          countGroupMember:countGroupMember,
-          allEcheance:allEcheance,
-          isRefreshing: false,
-          somme_group_valid:somme_group_valid,
-          somme_group_invalid:somme_group_invalid,
-          currentEcheance: currentEcheance.echeance
-        };
-      }
-    }
-    else {
-      if(!currentEcheance){
-        c=[]
-        c.push({
-          id: "0",
-          date_ech: 0,
-          somme_intert: 0,
-          somme_sans_inter: 0
-        });
-        //ToastAndroid.show("VIdeeeee", ToastAndroid.LONG)
-        this.state = {
-          st : "",
-          group:prod,
-          isLoading: false,
-          clients:clients,
-          currentUser:currentUser,
-          currentProfile:currentProfile,
-          clientByGroup:allDataCredit,
-          countGroupMember:countGroupMember,
-          allEcheance:allEcheance,
-          isRefreshing: false,
-          somme_group_valid:somme_group_valid,
-          somme_group_invalid:somme_group_invalid,
-          currentEcheance: c
-        };
-      }
-      else {
+  //       this.state = {
+  //         st : "",
+  //         group:prod,
+  //         isLoading: false,
+  //         clients:clients,
+  //         currentUser:currentUser,
+  //         currentProfile:currentProfile,
+  //         clientByGroup:allDataCredit,
+  //         countGroupMember:countGroupMember,
+  //         allEcheance:allEcheance,
+  //         isRefreshing: false,
+  //         somme_group_valid:somme_group_valid,
+  //         somme_group_invalid:somme_group_invalid,
+  //         currentEcheance: currentEcheance.echeance
+  //       };
+  //     }
+  //   }
+  //   else {
+  //     if(!currentEcheance){
+  //       c=[]
+  //       c.push({
+  //         id: "0",
+  //         date_ech: 0,
+  //         somme_intert: 0,
+  //         somme_sans_inter: 0
+  //       });
+  //       //ToastAndroid.show("VIdeeeee", ToastAndroid.LONG)
+  //       this.state = {
+  //         st : "",
+  //         group:prod,
+  //         isLoading: false,
+  //         clients:clients,
+  //         currentUser:currentUser,
+  //         currentProfile:currentProfile,
+  //         clientByGroup:allDataCredit,
+  //         countGroupMember:countGroupMember,
+  //         allEcheance:allEcheance,
+  //         isRefreshing: false,
+  //         somme_group_valid:somme_group_valid,
+  //         somme_group_invalid:somme_group_invalid,
+  //         currentEcheance: c
+  //       };
+  //     }
+  //     else {
 
-        //ToastAndroid.show(JSON.stringify(currentEcheance.lenght), ToastAndroid.LONG)
-        c = []
-        if(currentEcheance.echeance != undefined){
-          currentEcheance.echeance.forEach(element => {
-            c.push({
-              id: element.id,
-              date_ech: element.date_ech,
-              somme_intert: element.somme_intert,
-              somme_sans_inter: element.somme_echeance_sing
-            });
-          });
-        }
+  //       //ToastAndroid.show(JSON.stringify(currentEcheance.lenght), ToastAndroid.LONG)
+  //       c = []
+  //       if(currentEcheance.echeance != undefined){
+  //         currentEcheance.echeance.forEach(element => {
+  //           c.push({
+  //             id: element.id,
+  //             date_ech: element.date_ech,
+  //             somme_intert: element.somme_intert,
+  //             somme_sans_inter: element.somme_echeance_sing
+  //           });
+  //         });
+  //       }
 
-        this.state = {
-          st : "",
-          group:prod,
-          isLoading: false,
-          clients:clients,
-          currentUser:currentUser,
-          currentProfile:currentProfile,
-          clientByGroup:allDataCredit,
-          countGroupMember:countGroupMember,
-          allEcheance:allEcheance,
-          isRefreshing: false,
-          somme_group_valid:somme_group_valid,
-          somme_group_invalid:somme_group_invalid,
-          currentEcheance: currentEcheance.echeance
-        };
-      }
-    }
-  }
+  //       this.state = {
+  //         st : "",
+  //         group:prod,
+  //         isLoading: false,
+  //         clients:clients,
+  //         currentUser:currentUser,
+  //         currentProfile:currentProfile,
+  //         clientByGroup:allDataCredit,
+  //         countGroupMember:countGroupMember,
+  //         allEcheance:allEcheance,
+  //         isRefreshing: false,
+  //         somme_group_valid:somme_group_valid,
+  //         somme_group_invalid:somme_group_invalid,
+  //         currentEcheance: currentEcheance.echeance
+  //       };
+  //     }
+  //   }
+  // }
 
   _bootstrapAsync = async () => {
  
@@ -587,7 +616,7 @@ class DetailGroup extends React.Component {
   render() {
     const { navigation } = this.props;
     const {
-      st,
+     
       group,
       countGroupMember,
       currentEcheance,
@@ -649,9 +678,11 @@ class DetailGroup extends React.Component {
             {
               
             this.state.currentEcheance ? this.state.currentEcheance.map((item, index) => {
+              if(item.id != 0){
                 return <Block key={index} flex row>
                 <ListEcheance item={item} echeance={item} horizontal/>
               </Block>
+              }else <Text style={{alignSelf:"center", paddingTop: 10, margin:10}}>AUCUNE ECHEANCE</Text>
               }):
               
               <Text style={{alignSelf:"center", paddingTop: 10, margin:10}}>AUCUNE ECHEANCE</Text>
@@ -820,8 +851,10 @@ class DetailGroup extends React.Component {
                           onPress={_ =>  {
                           //ToastAndroid.show(JSON.stringify(this.state.currentEcheance), ToastAndroid.LONG)
 
-                              if(this.state.currentEcheance != undefined)
+                              if(this.state.currentEcheance != undefined )
                               {
+                                //ToastAndroid.show(JSON.stringify(this.state.currentEcheance), ToastAndroid.LONG)
+
                                 this.RBSheet.open()
                               }
 

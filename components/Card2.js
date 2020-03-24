@@ -54,9 +54,10 @@ class Card2 extends React.Component {
               const currentAccount =  AsyncStorage.getItem('currentAccount')
               .then(async (value) => {
                 currentUser = await JSON.parse(value);
-                currentProfile = dataClients.find((item2) => item2.phone == currentUser['phone']);
+                currentProfile = dataClients.find((item2) => item2.id == currentUser['pid']);
+                
                 currentProfile.id_c = ""
-
+               
                 const CreditsLocalStorage =  AsyncStorage.getItem('CreditsLocalStorage')
                 .then(async (valueC) => {
                   allCredit = await JSON.parse(valueC);
@@ -75,30 +76,50 @@ class Card2 extends React.Component {
                       etatCredit = 0
                       id_c = ""
                       etatCurrentCreditUser = 0;
-                      singleUserCredit = allCredit.find((item) => item.id_demandeur ==  docCLient.id );
-                      if(singleUserCredit == undefined){
-                        somme = 0
+                      if(allCredit == undefined){
+                        singleUserCredit = allCredit.find((item) => item.id_demandeur ==  docCLient.id );
+
+                          somme = 0
+                          etatCredit = 0;
+                          id_c = 0;
+                          currentProfile.id_c = id_c;
+                          currentProfile.etatCredit = etatCredit;
+                           etatCurrentCreditUser =  0;
+                          if(etatCredit == 1)
+                          {
+                            somme_group_valid += parseInt(somme);
+                          }
+                          else somme_group_invalid += parseInt(somme);
+                        
                       }
-                      else {
-                        somme = singleUserCredit.somme;
-                        etatCredit = singleUserCredit.etat;
-                        id_c = singleUserCredit.id;
-                        currentProfile.id_c = id_c;
-                        currentProfile.etatCredit = etatCredit;
-                        if(singleUserCredit.id == docCLient.id_c) etatCurrentCreditUser =  1;
-                        if(etatCredit == 1)
-                        {
-                          somme_group_valid += parseInt(somme);
+                      else{
+                        singleUserCredit = allCredit.find((item) => item.id_demandeur ==  docCLient.id );
+                        if(singleUserCredit == undefined){
+                          somme = 0
                         }
-                        else somme_group_invalid += parseInt(somme);
+                        else {
+                          somme = singleUserCredit.somme;
+                          etatCredit = singleUserCredit.etat;
+                          id_c = singleUserCredit.id;
+                          currentProfile.id_c = id_c;
+                          currentProfile.etatCredit = etatCredit;
+                          if(singleUserCredit.id == docCLient.id_c) etatCurrentCreditUser =  1;
+                          if(etatCredit == 1)
+                          {
+                            somme_group_valid += parseInt(somme);
+                          }
+                          else somme_group_invalid += parseInt(somme);
+                        }
                       }
+
 
                       await allDataCredit.push({
                         address: docCLient.address,
                         code_conf_sms: docCLient.code_conf_sms,
                         etat: docCLient.etat,
                         id: docCLient.id,
-                        id_g: docCLient.id_g,
+                        id_g: !docCLient.id_g? "":docCLient.id_g,
+                        //id_g: docCLient.id_g == ""? docCLient.id_g : "",
                         nom: docCLient.nom,
                         num_carte_elec: docCLient.num_carte_elec,
                         phone: docCLient.phone,
@@ -168,6 +189,7 @@ class Card2 extends React.Component {
         {/* style={{backgroundColor: 'rgba(0, 255, 0, 0.3)'}}  */}
         <TouchableWithoutFeedback onPress={() => 
           { 
+             
             //TODO : 
             clients=[];
             clientByGroup = [];
@@ -188,9 +210,10 @@ class Card2 extends React.Component {
               const currentAccount =  AsyncStorage.getItem('currentAccount')
               .then(async (value) => {
                 currentUser = await JSON.parse(value);
-                currentProfile = dataClients.find((item2) => item2.phone == currentUser['phone']);
+                currentProfile = dataClients.find((item2) => item2.id == currentUser['pid']);
+                
                 currentProfile.id_c = ""
-
+               
                 const CreditsLocalStorage =  AsyncStorage.getItem('CreditsLocalStorage')
                 .then(async (valueC) => {
                   allCredit = await JSON.parse(valueC);
@@ -209,30 +232,50 @@ class Card2 extends React.Component {
                       etatCredit = 0
                       id_c = ""
                       etatCurrentCreditUser = 0;
-                      singleUserCredit = allCredit.find((item) => item.id_demandeur ==  docCLient.id );
-                      if(singleUserCredit == undefined){
-                        somme = 0
+                      if(allCredit == undefined){
+                        singleUserCredit = allCredit.find((item) => item.id_demandeur ==  docCLient.id );
+
+                          somme = 0
+                          etatCredit = 0;
+                          id_c = 0;
+                          currentProfile.id_c = id_c;
+                          currentProfile.etatCredit = etatCredit;
+                           etatCurrentCreditUser =  0;
+                          if(etatCredit == 1)
+                          {
+                            somme_group_valid += parseInt(somme);
+                          }
+                          else somme_group_invalid += parseInt(somme);
+                        
                       }
-                      else {
-                        somme = singleUserCredit.somme;
-                        etatCredit = singleUserCredit.etat;
-                        id_c = singleUserCredit.id;
-                        currentProfile.id_c = id_c;
-                        currentProfile.etatCredit = etatCredit;
-                        if(singleUserCredit.id == docCLient.id_c) etatCurrentCreditUser =  1;
-                        if(etatCredit == 1)
-                        {
-                          somme_group_valid += parseInt(somme);
+                      else{
+                        singleUserCredit = allCredit.find((item) => item.id_demandeur ==  docCLient.id );
+                        if(singleUserCredit == undefined){
+                          somme = 0
                         }
-                        else somme_group_invalid += parseInt(somme);
+                        else {
+                          somme = singleUserCredit.somme;
+                          etatCredit = singleUserCredit.etat;
+                          id_c = singleUserCredit.id;
+                          currentProfile.id_c = id_c;
+                          currentProfile.etatCredit = etatCredit;
+                          if(singleUserCredit.id == docCLient.id_c) etatCurrentCreditUser =  1;
+                          if(etatCredit == 1)
+                          {
+                            somme_group_valid += parseInt(somme);
+                          }
+                          else somme_group_invalid += parseInt(somme);
+                        }
                       }
+
 
                       await allDataCredit.push({
                         address: docCLient.address,
                         code_conf_sms: docCLient.code_conf_sms,
                         etat: docCLient.etat,
                         id: docCLient.id,
-                        id_g: docCLient.id_g,
+                        //id_g: !docCLient.id_g? "":docCLient.id_g,
+                        id_g: docCLient.id_g == ""? docCLient.id_g : "",
                         nom: docCLient.nom,
                         num_carte_elec: docCLient.num_carte_elec,
                         phone: docCLient.phone,
@@ -268,6 +311,7 @@ class Card2 extends React.Component {
             
             }).done();
 
+          
           }
         }>
           <Block flex space="between" style={styles.cardDescription}>

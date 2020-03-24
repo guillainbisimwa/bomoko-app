@@ -21,7 +21,7 @@ class Home extends React.Component {
   }
 
   componentDidMount = async() =>{
-    await this._fetchGroup()
+    //await this._fetchGroup()
     await this._bootstrapAsyncGroup();
     await this._bootstrapAsyncClient();
     await this._fetchCredit();
@@ -51,7 +51,11 @@ class Home extends React.Component {
           countGroupMember = clientByGroup.reduce((key, val) => key + 1, 0);
           
           etatCurrentUser = 0;
-          if(docG.id == currentProfile.id_g) etatCurrentUser =  1 
+          if(currentProfile.id_g != "")
+          {
+            if(docG.id == currentProfile.id_g) etatCurrentUser =  1 
+          }
+          else etatCurrentUser
           
           await dataGroups002.push({
             cat : docG.cat,
