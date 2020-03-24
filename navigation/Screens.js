@@ -380,7 +380,8 @@ const SigninStack = createStackNavigator(
               transparent
             />
         ),
-        headerTransparent: true
+        headerTransparent: true,
+        //swipeEnabled:false
       })
     },
     Singin: {
@@ -397,7 +398,8 @@ const SigninStack = createStackNavigator(
               transparent
             />
         ),
-        headerTransparent: true
+        headerTransparent: true,
+        //swipeEnabled:false
       })
     },
   },
@@ -425,7 +427,8 @@ const LoginStack = createStackNavigator(
               transparent
             />
         ),
-        headerTransparent: true
+        headerTransparent: true,
+        //swipeEnabled:false
       })
     },
     Login: {
@@ -471,7 +474,8 @@ const WaitValidAccountStack = createStackNavigator(
               transparent
             />
         ),
-        headerTransparent: true
+        headerTransparent: true,
+        //swipeEnabled:false
       })
     },
     WaitValidAccount: {
