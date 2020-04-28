@@ -65,7 +65,7 @@ const Drawer = props => (
         </TouchableOpacity>
         
         
-        {
+        {/* {
         !J['_55'].includes("+243000000000")? 
         <TouchableOpacity onPress={() => props.navigation.navigate('Vide')}
           style={{ marginLeft: 10, fontFamily: 'montserrat-regular' }}
@@ -93,7 +93,7 @@ const Drawer = props => (
        <DrawerItem {...props} title="Valider Credits" />
      </TouchableOpacity>
      </TouchableOpacity>
-      }
+      } */}
        
         <TouchableOpacity
           onPress={() => {

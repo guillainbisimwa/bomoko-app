@@ -54,9 +54,9 @@ class DetailGroup extends React.Component {
     //TODO if no individual echeance
     currentDataCredit = allDataCredit.find((item) => item.id == currentUser.pid);
 
-    ToastAndroid.show(JSON.stringify(currentProfile), ToastAndroid.LONG)
-    ToastAndroid.show(JSON.stringify(currentProfile), ToastAndroid.LONG)
-    ToastAndroid.show(JSON.stringify(currentProfile), ToastAndroid.LONG)
+    // ToastAndroid.show(JSON.stringify(currentProfile), ToastAndroid.LONG)
+    // ToastAndroid.show(JSON.stringify(currentProfile), ToastAndroid.LONG)
+    // ToastAndroid.show(JSON.stringify(currentProfile), ToastAndroid.LONG)
     
     if(currentDataCredit)
     {

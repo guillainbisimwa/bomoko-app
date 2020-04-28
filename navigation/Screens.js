@@ -565,7 +565,7 @@ const AppStack = createDrawerNavigator(
       })
     },
     Parametres: {
-      screen: VideStack,
+      screen: ComponentsStack,
       navigationOptions: navOpt => ({
         drawerLabel: ({ focused }) => (
           <DrawerItem focused={focused} screen="Parametres" title="Parametres" />
