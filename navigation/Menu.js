@@ -14,20 +14,6 @@ const { width } = Dimensions.get('screen');
       
 J = AsyncStorage.getItem('phone');
 
-const currentUser = [];
-const currentAccount = AsyncStorage.getItem('currentAccount')
-.then(async (value) => {
-  //console.log("************************Get Value >> ", JSON.parse(value));
-  currentUser = await JSON.parse(value);
-  ToastAndroid.show(JSON.stringify(currentUser)+" <--", ToastAndroid.LONG)
-
-  
-  console.log(currentUser)
-
- //console.log("*********************Put Value >> ", dataClients);
-}).done();
-
-
 const Drawer = props => (
   <Block style={styles.container} forceInset={{ top: 'always', horizontal: 'never' }}>
     <Block style={styles.header}>
@@ -64,36 +50,6 @@ const Drawer = props => (
           <DrawerItem {...props} title="Langue" />
         </TouchableOpacity>
         
-        
-        {/* {
-        !J['_55'].includes("+243000000000")? 
-        <TouchableOpacity onPress={() => props.navigation.navigate('Vide')}
-          style={{ marginLeft: 10, fontFamily: 'montserrat-regular' }}
-        >
-          <DrawerItem {...props} title="Apropos" />
-        </TouchableOpacity>
-        :
-        <TouchableOpacity>
-       <TouchableOpacity
-       onPress={() => {
-         //ToastAndroid.show(" Bye bye", ToastAndroid.SHORT)
-         props.navigation.navigate('ValidGroups')}
-       }
-       style={{ marginLeft: 10, fontFamily: 'montserrat-regular' }}
-     >
-       <DrawerItem {...props} title="Valider Groupes" />
-     </TouchableOpacity>
-       <TouchableOpacity
-       onPress={() => {
-         //ToastAndroid.show(" Bye bye", ToastAndroid.SHORT)
-         props.navigation.navigate('ValidCredits')}
-       }
-       style={{ marginLeft: 10, fontFamily: 'montserrat-regular' }}
-     >
-       <DrawerItem {...props} title="Valider Credits" />
-     </TouchableOpacity>
-     </TouchableOpacity>
-      } */}
        
         <TouchableOpacity
           onPress={() => {
