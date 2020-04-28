@@ -377,7 +377,7 @@ class Signin extends React.Component {
                           <Block width={width * 0.8} style={{ marginBottom: 5 }}>
                             <Input
                               type = "phone-pad"
-                              placeholder="Numero de telephone"
+                              placeholder="Numéro de téléphone: +243111111111"
                               style={[styles.inputs, {
                                 borderColor: this.state.phone_valid
                                       ? '#E3E3E3'

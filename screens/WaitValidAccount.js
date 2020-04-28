@@ -24,7 +24,7 @@ const DismissKeyboard = ({ children }) => (
 class WaitValidAccount extends React.Component {
   constructor(props) {
     super(props);
-    this._bootstrapAsync();  
+    //this._bootstrapAsync();  
     this.state = {
       code_conf_sms_account: "",
       pid : "",

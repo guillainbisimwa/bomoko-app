@@ -352,7 +352,7 @@ class Login extends React.Component {
                           <Block width={width * 0.8} style={{ marginBottom: 5 }}>
                             <Input
                               type = "phone-pad"
-                              placeholder="Telephone"
+                              placeholder="Téléphone: +243111111111"
                               style={[styles.inputs, {
                                 borderColor: this.state.phone_valid
                                       ? '#E3E3E3'
@@ -395,20 +395,37 @@ class Login extends React.Component {
                             />
                           </Block>
                           <Block
-                            style={{ marginVertical: theme.SIZES.BASE, marginLeft: 15}}
+                            style={{ fontFamily: 'montserrat-regular',justifyContent: 'center',}}
                             row
-                            width={width * 0.75}
+                            
                           >
                           <Text
                                style={{
                                 fontFamily: 'montserrat-regular',
                                 textAlign: 'center'
+                                
+                              }}
+                              muted
+                              size={16}
+                          >
+                            Etes-vous nouveau?
+                          </Text>
+                            
+                          </Block>
+                          <Block
+                            style={{ justifyContent: 'center'}}
+                            row
+                          >
+                          <Text
+                               color="#506ddc"
+                               style={{
+                                fontFamily: 'montserrat-regular',
                               }}
                               muted
                               size={16}
                               onPress={() => navigation.navigate('Singin')}
                           >
-                            Etes-vous nouveau? Creer votre compte ici
+                            Creer votre compte ici
                           </Text>
                             
                           </Block>
@@ -430,6 +447,26 @@ class Login extends React.Component {
                       </Block>
                     </Block>
                   </Block>
+                </Block>
+                <Block  center
+                  style={{ justifyContent: 'center'}}
+                  row
+                >
+                <Text
+                    muted
+                    size={16}
+                    onPress={() => navigation.navigate('WaitValidAccount')}
+                >
+                  <Icon
+                      size={16}
+                      color="#ADB5BD"
+                      name="envelope"
+                      family="Font-Awesome"
+                      style={styles.inputIcons,{marginRight:10}}
+                    />
+                   Vérification par SMS
+                </Text>
+                  
                 </Block>
               </Block>
             </Block>
