@@ -189,7 +189,6 @@ class Card2 extends React.Component {
         {/* style={{backgroundColor: 'rgba(0, 255, 0, 0.3)'}}  */}
         <TouchableWithoutFeedback onPress={() => 
           { 
-             
             //TODO : 
             clients=[];
             clientByGroup = [];
@@ -333,9 +332,8 @@ class Card2 extends React.Component {
                     //style={titleStyles2}
                     color={nowTheme.COLORS.BLACK}
                     numberOfLines={1}
-                  >
-                   Debut: {new Date(parseFloat(item.date_debut)).toDateString()}
-                   {/* Date debut: {item.date_debut} */}
+                  >                   
+                   Date debut: {new Date(parseFloat(item.date_debut)).getDate() + "-" +new Date(parseFloat(item.date_debut)).getMonth()+"-"+new Date(parseFloat(item.date_debut)).getFullYear()}
                   </Text>
                 </Block>
               ) : (
@@ -350,7 +348,7 @@ class Card2 extends React.Component {
                     //style={titleStyles2}
                     numberOfLines={1}
                   >
-                   Fin: {new Date(parseFloat(item.date_fin)).toDateString()}
+                   FIN : {new Date(parseFloat(item.date_fin)).getDate() + "-" +new Date(parseFloat(item.date_fin)).getMonth()+"-"+new Date(parseFloat(item.date_fin)).getFullYear()}
                   </Text>
                 </Block>
               ) : (
