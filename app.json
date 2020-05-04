@@ -6,13 +6,13 @@
     "android": {
       "package": "com.wezalab.bomoko",
       "permissions": [],
-      "versionCode": 12
+      "versionCode": 13
     },
     "sdkVersion": "35.0.0",
     "platforms": [
       "android"
     ],
-    "version": "1.12.0",
+    "version": "1.13.0",
     "orientation": "portrait",
     "icon": "./assets/app-icon.png",
     "splash": {
