@@ -24,7 +24,7 @@ const DismissKeyboard = ({ children }) => (
 class WaitValidAccount extends React.Component {
   constructor(props) {
     super(props);
-    //this._bootstrapAsync();  
+    this._bootstrapAsync();  
     this.state = {
       code_conf_sms_account: "",
       pid : "",
@@ -45,14 +45,16 @@ class WaitValidAccount extends React.Component {
     const { navigation } = this.props;
     const currentAccountObj = await AsyncStorage.getItem('currentAccount');
     currentAccount = JSON.parse(currentAccountObj)
-    alert("Vous allez recevoir un code de confirmation par SMS!");
+    //alert("Vous allez recevoir un code de confirmation par SMS!");
 
     var pid = currentAccount["pid"];
     var phone = currentAccount["phone"];
     var code_conf_sms_account = currentAccount["code_conf_sms"];
+    alert(""+phone);
     
     this.setState({pid: pid})
     this.setState({phone: phone})
+
     this.setState({code_conf_sms_account: code_conf_sms_account})
     this.setState({currentAccountObj: currentAccountObj})
     

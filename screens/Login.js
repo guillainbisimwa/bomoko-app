@@ -258,7 +258,6 @@ class Login extends React.Component {
             else{
               this.setState({isloading: false})
               ToastAndroid.show("Erreure de la connexion! Reesayer", ToastAndroid.LONG)
-
             }
            
           }) //If response is not in json then in error
@@ -267,11 +266,9 @@ class Login extends React.Component {
               this.setState({isloading: false})
               //alert('Une erreur est survenue '+ error);
               //ToastAndroid.show("Erreure de la connexion! "+error, ToastAndroid.LONG)
-
               console.error(error);
               ToastAndroid.show('Une erreur est survenue '+ error, ToastAndroid.LONG)
           });
-          
         }
         else{
           this.setState({isloading: false})
@@ -452,10 +449,25 @@ class Login extends React.Component {
                   style={{ justifyContent: 'center'}}
                   row
                 >
-                <Text
+                {/* <Text
                     muted
                     size={16}
-                    onPress={() => navigation.navigate('WaitValidAccount')}
+                    onPress={() => {
+                      const currentAccountObj = AsyncStorage.getItem('currentAccount');
+                      alert(currentAccountObj)
+
+                      currentAccount = JSON.parse(currentAccountObj)
+                      //alert("Vous allez recevoir un code de confirmation par SMS!");
+
+                      var pid = currentAccount["pid"];
+                      var phone = currentAccount["phone"];
+                      var code_conf_sms_account = currentAccount["code_conf_sms"];
+                      if(phone){
+                        //navigation.navigate('WaitValidAccount')
+                      }  
+                    }
+                      
+                  }
                 >
                   <Icon
                       size={16}
@@ -465,7 +477,7 @@ class Login extends React.Component {
                       style={styles.inputIcons,{marginRight:10}}
                     />
                    Vérification par SMS
-                </Text>
+                </Text> */}
                   
                 </Block>
               </Block>
