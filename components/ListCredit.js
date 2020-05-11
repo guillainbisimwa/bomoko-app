@@ -45,7 +45,7 @@ class ListCredit extends React.Component {
               if(isConnected)
               {
                 //TODO Valid group
-                fetch('http://35.223.156.137:3000/valider_request_credit', {
+                fetch('http://188.166.46.8:3000/valider_request_credit', {
                 method: 'POST',
                 headers: {
                   Accept: 'application/json',

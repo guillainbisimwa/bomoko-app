@@ -368,7 +368,7 @@ class DetailGroup extends React.Component {
     const singleClient = this.state.clients.find((item) => item.phone == phone);
     //ToastAndroid.show(JSON.stringify(singleClient), ToastAndroid.LONG)
     if(singleClient["id_g"] == ""){
-      await fetch('http://35.223.156.137:3000/devenir_mbr_group', {
+      await fetch('http://188.166.46.8:3000/devenir_mbr_group', {
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -409,7 +409,7 @@ class DetailGroup extends React.Component {
     const singleClient = this.state.clients.find((item) => item.phone == phone);
     //ToastAndroid.show(JSON.stringify(singleClient), ToastAndroid.LONG)
     if(singleClient["id_g"] == id_g){
-      await fetch('http://35.223.156.137:3000/credit', {
+      await fetch('http://188.166.46.8:3000/credit', {
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -452,7 +452,7 @@ class DetailGroup extends React.Component {
     const singleClient = this.state.clients.find((item) => item.phone == phone);
     //ToastAndroid.show(JSON.stringify(singleClient), ToastAndroid.LONG)
     if(singleClient["id_g"] != ""){
-      await fetch('http://35.223.156.137:3000/quitter_un_group', {
+      await fetch('http://188.166.46.8:3000/quitter_un_group', {
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -577,7 +577,7 @@ class DetailGroup extends React.Component {
     await NetInfo.isConnected.fetch().then(async isConnected => {
       if(isConnected){
     
-        await fetch('http://35.223.156.137:3000/clients/', {
+        await fetch('http://188.166.46.8:3000/clients/', {
           method: 'GET',
           headers: {
             Accept: 'application/json',

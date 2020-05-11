@@ -123,7 +123,7 @@ _bootstrapAsyncClient = async () => {
 _fetchCredit = async () =>{
   await NetInfo.isConnected.fetch().then(async isConnected => {
     if(isConnected){
-      await fetch('http://35.223.156.137:3000/credits/', {
+      await fetch('http://188.166.46.8:3000/credits/', {
         method: 'GET',
         headers: {
           Accept: 'application/json',
@@ -155,7 +155,7 @@ _fetchCredit = async () =>{
 _fetchEcheances = async () =>{
   await NetInfo.isConnected.fetch().then(async isConnected => {
     if(isConnected){
-      await fetch('http://35.223.156.137:3000/echeances', {
+      await fetch('http://188.166.46.8:3000/echeances', {
         method: 'GET',
         headers: {
           Accept: 'application/json',
@@ -188,7 +188,7 @@ _fetchClients = async () =>{
   await NetInfo.isConnected.fetch().then(async isConnected => {
     if(isConnected){
   
-      await fetch('http://35.223.156.137:3000/clients/', {
+      await fetch('http://188.166.46.8:3000/clients/', {
         method: 'GET',
         headers: {
           Accept: 'application/json',
@@ -226,7 +226,7 @@ _fetchClients = async () =>{
     await NetInfo.isConnected.fetch().then(async isConnected => {
       if(isConnected){
     
-        await fetch('http://35.223.156.137:3000/groups/', {
+        await fetch('http://188.166.46.8:3000/groups/', {
           method: 'GET',
           headers: {
             Accept: 'application/json',

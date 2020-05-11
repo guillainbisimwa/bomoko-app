@@ -45,7 +45,7 @@ class ListGroup extends React.Component {
               if(isConnected)
               {
                 //TODO Valid group
-                fetch('http://35.223.156.137:3000/group/'+item.id, {
+                fetch('http://188.166.46.8:3000/group/'+item.id, {
                 method: 'POST',
                 headers: {
                   Accept: 'application/json',
