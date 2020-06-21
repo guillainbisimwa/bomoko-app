@@ -33,10 +33,10 @@ export const login = (user) => (
   }
 );
 
-export const logout = (session_id) => (
+export const logout = (session_key) => (
   {
     type: LOGOUT,
-    key: session_id
+    key: session_key
   }
 );
 
@@ -47,10 +47,10 @@ export const addUser = (user) => (
   }
 );
 
-export const deleteUser = (id) => (
+export const deleteUser = (key) => (
   {
     type: DELETE_USER,
-    key: id
+    key: key
   }
 );
 
@@ -61,10 +61,10 @@ export const addGroup = (group) => (
   }
 );
 
-export const deleteGroup = (id) => (
+export const deleteGroup = (key) => (
   {
     type: DELETE_GROUP,
-    key: id
+    key: key
   }
 );
 
@@ -75,9 +75,9 @@ export const addLoan = (loan) => (
   }
 );
 
-export const deleteLoan = (id) => (
+export const deleteLoan = (key) => (
   {
     type: DELETE_LOAN,
-    key: id
+    key: key
   }
 );
