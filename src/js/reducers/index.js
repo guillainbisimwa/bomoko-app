@@ -40,7 +40,16 @@ const myReducer = (state = initialState, action) => {
         ...state,
         userList: state.userList.concat({
           key: Math.random(),
-          name: action.data
+          nom : action.nom,  
+          phone : action.phone,  
+          id_g : action.id_g,  
+          num_carte_elec : action.num_carte_elec,  
+          address : action.address,  
+          sexe : action.sexe,
+          profession : action.profession,
+          code_conf_sms : action.code_conf_sms,  
+          password : action.password
+          
         })
       };
     case DELETE_USER:
@@ -49,7 +58,7 @@ const myReducer = (state = initialState, action) => {
         userList: state.userList.filter((item) =>
           item.key !== action.key)
       };
-      case LOGIN:
+    case LOGIN:
       return {
         ...state,
         loginList: state.loginList.concat({

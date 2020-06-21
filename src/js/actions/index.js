@@ -2,6 +2,7 @@ import { LOGIN,
   LOGOUT,
   CREATE_USER,
   DELETE_USER,
+  UPDATE_USER,
   CREATE_PROFILE,
   DELETE_PROFILE,
   CREATE_GROUP,
@@ -40,10 +41,36 @@ export const logout = (session_key) => (
   }
 );
 
-export const addUser = (user) => (
+export const addUser = (nom, phone, id_g, num_carte_elec, address, sexe,
+  profession, code_conf_sms, password) => (
   {
     type: CREATE_USER,
-    data: user
+    nom: nom,
+    phone: phone,
+    id_g: id_g,
+    num_carte_elec: num_carte_elec,
+    address: address,
+    sexe: sexe,
+    profession: profession,
+    code_conf_sms: code_conf_sms,
+    password: password
+  }
+);
+
+export const updateUser = (nom, phone, id_g, num_carte_elec, address, sexe,
+  profession, code_conf_sms, password) => (
+  {
+    type: UPDATE_USER,
+    key: key,
+    nom: nom,
+    phone: phone,
+    id_g: id_g,
+    num_carte_elec: num_carte_elec,
+    address: address,
+    sexe: sexe,
+    profession: profession,
+    code_conf_sms: code_conf_sms,
+    password: password
   }
 );
 

@@ -2,6 +2,7 @@ export const LOGIN = 'LOGIN';
 export const LOGOUT = 'LOGOUT';
 export const CREATE_USER = 'CREATE_USER';
 export const DELETE_USER = 'DELETE_USER';
+export const UPDATE_USER = 'UPDATE_USER';
 export const CREATE_PROFILE = 'CREATE_PROFILE';
 export const DELETE_PROFILE = 'DELETE_PROFILE';
 export const CREATE_GROUP = 'CREATE_GROUP';
