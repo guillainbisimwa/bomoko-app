@@ -1,1 +1,10 @@
-export const ADD_ARTICLE = "ADD_ARTICLE";
+export const LOGIN = 'LOGIN';
+export const LOGOUT = 'LOGOUT';
+export const CREATE_USER = 'CREATE_USER';
+export const DELETE_USER = 'DELETE_USER';
+export const CREATE_PROFILE = 'CREATE_PROFILE';
+export const DELETE_PROFILE = 'DELETE_PROFILE';
+export const CREATE_GROUP = 'CREATE_GROUP';
+export const DELETE_GROUP = 'DELETE_GROUP';
+export const CREATE_LOAN = 'CREATE_LOAN';
+export const DELETE_LOAN = 'DELETE_LOAN';
