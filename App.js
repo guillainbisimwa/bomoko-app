@@ -4,9 +4,14 @@ import { AppLoading } from 'expo';
 import * as Font from 'expo-font';
 import { Asset } from 'expo-asset';
 import { Block, GalioProvider } from 'galio-framework';
+import { Provider } from 'react-redux';
 
 import Screens from './navigation/Screens';
 import { Images, articles, nowTheme } from './constants';
+
+import configureStore from './src/js/store/index';
+
+const store = configureStore();
 
 // cache app images
 const assetImages = [
@@ -62,11 +67,14 @@ export default class App extends React.Component {
       );
     } else {
       return (
-        <GalioProvider theme={nowTheme}>
-          <Block flex>
-            <Screens />
-          </Block>
-        </GalioProvider>
+        <Provider store={store}>
+          <GalioProvider theme={nowTheme}>
+            <Block flex>
+              <Screens />
+            </Block>
+          </GalioProvider>
+        </Provider>
+        
       );
     }
   }
