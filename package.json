@@ -39,7 +39,8 @@
   },
   "devDependencies": {
     "babel-eslint": "^10.0.3",
-    "babel-preset-expo": "^7.1.0"
+    "babel-preset-expo": "^7.1.0",
+    "redux": "^4.0.5"
   },
   "keywords": [
     "BOMOKO react native"
