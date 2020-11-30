@@ -26,47 +26,8 @@ export default class Onboarding extends React.Component {
 
   // Fetch the token from storage then navigate to our appropriate place
   _bootstrapAsync = async () => {
-    const currentAccountObj = await AsyncStorage.getItem('currentAccount',function(error, result) {
-      if (error) {
-        ToastAndroid.show(" ERROR "+error, ToastAndroid.SHORT)
-      } else {
-        ToastAndroid.show(" OK ", ToastAndroid.SHORT)
-      }
-    });
-    //ToastAndroid.show(currentAccountObj, ToastAndroid.SHORT)
-    if(currentAccountObj == null){
-      this.props.navigation.navigate('Login');
-    }
-    else{
-      currentAccount = JSON.parse(currentAccountObj)
-      // var pid = currentAccount["pid"];
-      // var phone = currentAccount["phone"];
-      //var code_conf_sms_account = currentAccount["code_conf_sms"];
-      /**
-       * ETAT
-       *======
-       *  0: en attente
-       *  1: valide
-       *  2: bloque
-       */
-      var etat_account = parseInt(currentAccount["etat"]); 
-      var password = currentAccount["password"];
-  
-      //ToastAndroid.show("Etat: "+etat_account, ToastAndroid.SHORT)
-      //alert(etat_account)
-  
-  
-      const currentSessionObj = await AsyncStorage.getItem('currentSession');
-      currentSession = JSON.parse(currentSessionObj);
-  
-      var sid = "";
-  
-      if(currentSession == null || currentSession == "" ){      
-        sid = "";
-      }else if(currentSession != null ){      
-        sid = currentSession["sid"];
-      }
-  
+      etat_account = 1
+      sid = ""
       if(etat_account == 0){
         ToastAndroid.show("En attente de validation: "+etat_account, ToastAndroid.SHORT)
         this.props.navigation.navigate('WaitValidAccount');
@@ -82,13 +43,8 @@ export default class Onboarding extends React.Component {
       else{
         //ToastAndroid.show("Bienvenue ", ToastAndroid.SHORT)
         this.props.navigation.navigate('Home');
-        // this.props.navigation.navigate('Home', {
-
-        //   groups_: `${JSON.stringify(this.state.groups)}`,
-
-        //  })
       }
-    }
+    
   };
   
   render() {

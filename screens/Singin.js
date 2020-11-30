@@ -18,6 +18,9 @@ import { Images, nowTheme } from '../constants';
 
 import SwitchSelector from "react-native-switch-selector";
 
+import { connect } from 'react-redux';
+import { addUser, login } from '../src/js/actions/index';
+
 const { width, height } = Dimensions.get('screen');
 
 const DismissKeyboard = ({ children }) => (
@@ -33,7 +36,7 @@ class Signin extends React.Component {
       id_g: "",
       num_carte_elec: "",
       address: "",
-      sexe: "m",
+      sexe: "f",
       profession: "",
       code_conf_sms: "",
       password: "",
@@ -42,11 +45,11 @@ class Signin extends React.Component {
       sign_in_failed: false,
       showLoading: false,
 
-      phone_valid: true,
-      name_valid: true,
-      password_confirm_valid: true,
-      password_valid: true,
-      adresse_valid: true,
+      phone_valid: false,
+      name_valid: false,
+      password_confirm_valid: false,
+      password_valid: false,
+      adresse_valid: false,
       isloading: false      
     };
     
@@ -133,131 +136,49 @@ class Signin extends React.Component {
   async createClient(){
     this.setState({isloading: true})
      //var nom_ = this.state.nom
-     var phone_ = this.state.phone
-     var nom_ = this.state.nom
-     var address_ = this.state.address
-     var sexe_ = this.state.sexe
-     var password = this.state.password
-     var conf_password = this.state.conf_password
+    var phone_ = this.state.phone
+    var nom_ = this.state.nom
+    var address_ = this.state.address
+    var sexe_ = this.state.sexe
+    var password = this.state.password
+    var conf_password = this.state.conf_password
 
-    await fetch('http://188.166.46.8:3000/register_client', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body:JSON.stringify({
-        nom: nom_,
-        phone: phone_,
-        id_g: "",
-        num_carte_elec: "",
-        address: address_,
-        sexe: sexe_,
-        profession: "",
-        code_conf_sms: "",
-        password:conf_password           
-      })
-    }).then((response) => response.json())
-    //If response is in json then in success
-    .then((responseJson) => {
-        //Success 
-        //ToastAndroid.show(JSON.stringify(responseJson["code_conf_sms"]), ToastAndroid.SHORT)
-        // TODO Save local variables
-        AsyncStorage.setItem('currentAccount', JSON.stringify(responseJson))
-        .then(json => ToastAndroid.show('currentAcount save locally', ToastAndroid.SHORT))
-        .catch(error => ToastAndroid.show('currentAcount error local memory', ToastAndroid.SHORT));
-        this.setState({isloading: false})
-        // TODO send code sms  send_sms_from_rmlconnect
-        fetch('http://188.166.46.8:3000/send_sms_from_rmlconnect', {
-          method: 'POST',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-          body:JSON.stringify({
-            msg_detail:"Bonjour "+nom_+", validez votre compte. Votre code est:",
-	          msg_code:JSON.stringify(responseJson["code_conf_sms"]),
-	          phone:phone_
-              
-          })
-        }).then((response1) => response1.json())
-        //If response is in json then in success
-        .then((responseJson1) => {
-          //ToastAndroid.show('codeeeeeeeeeeee '+ JSON.stringify(responseJson1), ToastAndroid.LONG)
-            
-        }) //If response is not in json then in error
-        .catch((error1) => {
-          this.setState({isloading: false})
-            //Error 
-          console.error(error1);
-          ToastAndroid.show('Une erreur est surnenue '+ error1, ToastAndroid.LONG)
-        });
-        // TODO open waitValidAccout screen
-          this.props.navigation.navigate("WaitValidAccount");
 
-    }) //If response is not in json then in error
-    .catch((error) => {
-        //Error 
-        //alert(JSON.stringify(error));
-        console.error(error);
-        this.setState({isloading: false})
-        ToastAndroid.show('Une erreur est surnenue '+ error, ToastAndroid.LONG)
-    });
-  }
-
-  async CheckClientBeforeSave() {
-    this.setState({isloading: true})
-
-    //TODO Valider tout les champs
-    if(this.state.name_valid && this.state.adresse_valid && this.state.phone_valid 
+     //TODO Valider tout les champs
+     if(this.state.name_valid && this.state.adresse_valid && this.state.phone_valid 
       && this.state.password_valid && this.state.password_confirm_valid){
 
-          //AsyncStorage.clear();
 
-          await NetInfo.isConnected.fetch().then(async isConnected => {
-            if(isConnected){
-          
-              await fetch('http://188.166.46.8:3000/client_by_phone/'+this.state.phone, {
-                method: 'GET',
-                headers: {
-                  Accept: 'application/json',
-                  'Content-Type': 'application/json',
-                },
-              })
-              .then((response) => response.json())
-              //If response is in json then in success
-              .then((responseJson) => {
-                  //Success 
-                  this.setState({isloading: false})
-                  var prop = 'message'; 
-                  if (responseJson.hasOwnProperty(prop)) { 
-                    this.createClient();
-                  } else { 
-                    ToastAndroid.show('Ce numero est dja utilise', ToastAndroid.LONG)
-                    this.setState({phone_valid: false})
-                  } 
-              })
-              //If response is not in json then in error
-              .catch((error) => {
-                  //Error 
-                  //alert(JSON.stringify(error));
-                  ToastAndroid.show('Une erreur est survenue: '+error, ToastAndroid.LONG)
-                  this.setState({isloading: false})
-                  console.error(error);
-              });  
-              
-            }
-            else{
-              this.setState({isloading: false})
-              ToastAndroid.show('Aucune connexion internet!', ToastAndroid.LONG)
-            }
-          })
+      this.props.loginAdd(phone_, nom_)
+      this.props.add(
+        nom_, 
+        phone_, 
+        "", 
+        "", 
+        address_, 
+        sexe_,
+        "",
+        "", 
+        password)
 
+
+      this.setState({ phone: null })
+      this.setState({ nom: null })
+      this.setState({ address: null })
+      this.setState({ sexe: null })
+      this.setState({ password: null })
+      this.setState({ conf_password: null })
+
+      this.setState({isloading: false})
+
+      this.props.navigation.navigate("Home");
     }else {
       this.setState({isloading: false})
       ToastAndroid.show("Veillez valider tous les champs SVP!", ToastAndroid.LONG);
-    }
+    }    
   }
+
+  
 
   
   render() {
@@ -503,7 +424,7 @@ class Signin extends React.Component {
 
                           <Button color="primary" round style={styles.createButton}
                           loading={isloading}
-                            onPress={this.CheckClientBeforeSave.bind(this)}>
+                            onPress={this.createClient.bind(this)}>
                             <Text
                               style={{ fontFamily: 'montserrat-bold' }}
                               size={14}
@@ -614,4 +535,38 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Signin;
+const mapStateToProps = (state) => {
+  console.log(state);
+  return {
+    users: state.myReducer.userList,
+    login:state.myReducer.loginList
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    add: (
+      nom, 
+      phone, 
+      id_g, 
+      num_carte_elec, 
+      address, 
+      sexe,
+      profession,
+      code_conf_sms, 
+      password) => dispatch(addUser(nom, 
+        phone, 
+        id_g, 
+        num_carte_elec, 
+        address, 
+        sexe,
+        profession,
+        code_conf_sms, 
+        password)),
+        loginAdd:(data)=> dispatch(login(data))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Signin);
+
+//export default Signin;
