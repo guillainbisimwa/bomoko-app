@@ -177,7 +177,9 @@ class Header extends React.Component {
               style={{ paddingRight: 8 }}
               color={nowTheme.COLORS.HEADER}
             />
-            <Text style={{ fontFamily: 'montserrat-regular' }} size={16} style={styles.tabTitle}>
+            <Text 
+            //style={{ fontFamily: 'montserrat-regular' }} 
+            size={16} style={styles.tabTitle}>
               {optionLeft || 'Beauty'}
             </Text>
           </Block>
@@ -191,7 +193,10 @@ class Header extends React.Component {
               style={{ paddingRight: 8 }}
               color={nowTheme.COLORS.HEADER}
             />
-            <Text style={{ fontFamily: 'montserrat-regular' }} size={16} style={styles.tabTitle}>
+            <Text 
+            //style={{ fontFamily: 'montserrat-regular' }} 
+            size={16}
+             style={styles.tabTitle}>
               {optionRight || 'Fashion'}
             </Text>
           </Block>

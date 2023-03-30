@@ -40,7 +40,7 @@ class Card extends React.Component {
           <Block flex space="between" style={styles.cardDescription}>
             <Block flex>
               <Text
-                style={{ fontFamily: 'montserrat-regular' }}
+                //style={{ fontFamily: 'montserrat-regular' }}
                 size={14}
                 style={titleStyles}
                 color={nowTheme.COLORS.SECONDARY}

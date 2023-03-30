@@ -31,7 +31,7 @@ class Card2 extends React.Component {
 
     return (
       
-      <Block row={horizontal} card flex style={cardContainer,{backgroundColor: item.etatCurrentUser == 0? nowTheme.COLORS.TABS : 'rgba(250,0,0,0.2)', marginBottom:10}}>
+      <Block row={horizontal} card flex style={[cardContainer,{backgroundColor: item.etatCurrentUser == 0? nowTheme.COLORS.TABS : 'rgba(250,0,0,0.2)', marginBottom:10}]}>
         <TouchableWithoutFeedback onPress={() => 
           { 
             //TODO : 
@@ -316,7 +316,7 @@ class Card2 extends React.Component {
           <Block flex space="between" style={styles.cardDescription}>
             <Block flex>
               <Text
-                style={{ fontFamily: 'montserrat-regular' }}
+                //style={{ fontFamily: 'montserrat-regular' }}
                 size={13}
                 style={titleStyles}
                 color={nowTheme.COLORS.SECONDARY}
