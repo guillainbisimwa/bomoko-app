@@ -6,7 +6,7 @@
     "android": {
       "package": "com.wezalab.bomoko",
       "permissions": [],
-      "versionCode": 14
+      "versionCode": 20
     },
     "sdkVersion": "35.0.0",
     "platforms": [
