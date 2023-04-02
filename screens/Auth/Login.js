@@ -15,8 +15,9 @@ import {
 import { Block, Text, Button as GaButton, theme, Checkbox } from 'galio-framework';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 
-import { Button, Icon, Input } from '../components';
-import { Images, nowTheme } from '../constants';
+import { Button, Icon, Input } from '../../components';
+import { Images, nowTheme } from '../../constants';
+
 
 const { width, height } = Dimensions.get('screen');
 

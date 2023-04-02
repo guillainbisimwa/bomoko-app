@@ -25,7 +25,7 @@ const DismissKeyboard = ({ children }) => (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>{children}</TouchableWithoutFeedback>
 );
 
-const Otp = () => {
+const Reset = () => {
     const [code, setCode] = useState("");
 
     return (
@@ -77,7 +77,7 @@ const Otp = () => {
                                                         <Block center>
                                                             <Button color="primary" round style={styles.createButton}
                                                                 loading={isloading}
-                                                                onPress={this.submitOtp.bind(this)}
+                                                                onPress={this.submitReset.bind(this)}
                                                             >
                                                                 <Text
                                                                     style={{ fontFamily: 'montserrat-bold' }}
@@ -189,4 +189,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default Otp;
+export default Reset;
