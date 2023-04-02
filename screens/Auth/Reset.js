@@ -137,29 +137,7 @@ const styles = StyleSheet.create({
         elevation: 1,
         overflow: 'hidden'
     },
-    socialConnect: {
-        backgroundColor: nowTheme.COLORS.WHITE
-        // borderBottomWidth: StyleSheet.hairlineWidth,
-        // borderColor: "rgba(136, 152, 170, 0.3)"
-    },
-    socialButtons: {
-        width: 120,
-        height: 40,
-        backgroundColor: '#fff',
-        shadowColor: nowTheme.COLORS.BLACK,
-        shadowOffset: {
-            width: 0,
-            height: 4
-        },
-        shadowRadius: 8,
-        shadowOpacity: 0.1,
-        elevation: 1
-    },
-    socialTextButtons: {
-        color: nowTheme.COLORS.PRIMARY,
-        fontWeight: '800',
-        fontSize: 14
-    },
+
     inputIcons: {
         marginRight: 12,
         color: nowTheme.COLORS.ICON_INPUT
@@ -169,24 +147,13 @@ const styles = StyleSheet.create({
         borderColor: '#E3E3E3',
         borderRadius: 21.5
     },
-    passwordCheck: {
-        paddingLeft: 2,
-        paddingTop: 6,
-        paddingBottom: 15
-    },
+
     createButton: {
         width: width * 0.5,
         marginTop: 25,
         marginBottom: 40
     },
-    social: {
-        width: theme.SIZES.BASE * 3.5,
-        height: theme.SIZES.BASE * 3.5,
-        borderRadius: theme.SIZES.BASE * 1.75,
-        justifyContent: 'center',
-        marginHorizontal: 10,
-        elevation: 5
-    }
+
 });
 
 export default Reset;
