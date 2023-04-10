@@ -1,3 +1,9 @@
+---
+noteId: "20630520a92011ebbccd99903f9da0e3"
+tags: []
+
+---
+
 # BOMOKO APP
 
 > Help Congolese small-scale farmers who are unbanked to have access to affordable loans using mobile phones (USSD). Our solution is to facilitate the financial inclusion of farmers and use mobile phones to give loans to smallholder farmers. Built with: React Native, Redux, Couchbase, Docker, and NodeJs. Play store, Official website,
