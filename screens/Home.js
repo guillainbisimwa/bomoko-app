@@ -314,7 +314,7 @@ const Home = () => {
             <View style={{ flexDirection: 'row', padding: SIZES.padding, justifyContent: 'space-between', alignItems: 'center' }}>
                 {/* Title */}
                 <View>
-                    <Text style={{ color: COLORS.primary, ...FONTS.h3 }}>{viewMode == "income" ? "Crédit (Entrée)" : "Débit (Sortie)"}</Text>
+                    <Text style={{ color: viewMode == "expense" ? COLORS.secondary : COLORS.darkgreen, ...FONTS.h3 }}>{viewMode == "income" ? "Crédit (Entrée)" : "Débit (Sortie)"}</Text>
                     <Text style={{ color: COLORS.darkgray, ...FONTS.body4 }}>2000 FC</Text>
                 </View>
 
@@ -323,7 +323,7 @@ const Home = () => {
                         style={{
                             alignItems: 'center',
                             justifyContent: 'center',
-                            backgroundColor: viewMode == "income" ? COLORS.secondary : null,
+                            backgroundColor: viewMode == "income" ? COLORS.darkgreen : null,
                             height: 50,
                             width: 50,
                             borderRadius: 25
