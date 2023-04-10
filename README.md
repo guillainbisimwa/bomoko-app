@@ -1,3 +1,9 @@
+---
+noteId: "20630520a92011ebbccd99903f9da0e3"
+tags: []
+
+---
+
 # BOMOKO APP
 ## Brève description 
 Access aux services financiers via la technologie mobile
