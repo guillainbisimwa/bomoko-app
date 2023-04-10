@@ -21,174 +21,176 @@ import { COLORS, FONTS, SIZES, icons, images } from '../constants';
 
 const income = "income";
 const expense = "expense";
-  
-const Home = () => {
 
-    let categoriesData = [
+let categoriesData = [
+    {
+      id: 1,
+      name: "Ventes",
+      icon: icons.shopping,
+      cat: income,
+      color: COLORS.purple,
+      data: [
         {
           id: 1,
-          name: "Ventes",
-          icon: icons.shopping,
-          cat: income,
-          color: COLORS.purple,
-          data: [
-            {
-              id: 1,
-              description: "Vente 1kg de Legumes frais",
-              total: 100.00,
-              date: "2023-04-10"
-            },
-          ],
+          description: "Vente 1kg de Legumes frais",
+          total: 100.00,
+          date: "2023-04-10"
+        },
+      ],
+    },
+    {
+      id: 2,
+      name: "Remboursements",
+      icon: icons.refund,
+      cat: income,
+      color: COLORS.blue,
+      data: [
+        {
+          id: 1,
+          description: "Frais de déplacement pour la réunion avec le client",
+          total: 50.00,
+          date: "2023-04-11"
         },
         {
           id: 2,
-          name: "Remboursements",
-          icon: icons.refund,
-          cat: income,
-          color: COLORS.blue,
-          data: [
-            {
-              id: 1,
-              description: "Frais de déplacement pour la réunion avec le client",
-              total: 50.00,
-              date: "2023-04-11"
-            },
-            {
-              id: 2,
-              description: "Déjeuner avec le client",
-              total: 25.00,
-              date: "2023-04-12"
-            },
-          ],
+          description: "Déjeuner avec le client",
+          total: 25.00,
+          date: "2023-04-12"
         },
+      ],
+    },
+    {
+      id: 3,
+      name: "Intérêts",
+      icon: icons.interest,
+      cat: income,
+      color: COLORS.green,
+      data: [
         {
-          id: 3,
-          name: "Intérêts",
-          icon: icons.interest,
-          cat: income,
-          color: COLORS.green,
-          data: [
-            {
-              id: 1,
-              description: "Intérêts sur les comptes d'épargne",
-              total: 10.00,
-              date: "2023-04-15"
-            },
-          ],
+          id: 1,
+          description: "Intérêts sur les comptes d'épargne",
+          total: 10.00,
+          date: "2023-04-15"
         },
+      ],
+    },
+    {
+      id: 4,
+      name: "Subventions",
+      icon: icons.grant,
+      cat: income,
+      color: COLORS.red,
+      data: [
         {
-          id: 4,
-          name: "Subventions",
-          icon: icons.grant,
-          cat: income,
-          color: COLORS.red,
-          data: [
-            {
-              id: 1,
-              description: "Subvention pour le projet de recherche",
-              total: 5000.00,
-              date: "2023-04-20"
-            },
-          ],
+          id: 1,
+          description: "Subvention pour le projet de recherche",
+          total: 5000.00,
+          date: "2023-04-20"
         },
+      ],
+    },
+    {
+      id: 5,
+      name: "Investissements",
+      icon: icons.investment,
+      cat: income,
+      color: COLORS.peach,
+      data: [
         {
-          id: 5,
-          name: "Investissements",
-          icon: icons.investment,
-          cat: income,
-          color: COLORS.peach,
-          data: [
-            {
-              id: 1,
-              description: "Achat d'un immeuble à usage commercial",
-              total: 100000.00,
-              date: "2023-04-30"
-            },
-          ],
+          id: 1,
+          description: "Achat d'un immeuble à usage commercial",
+          total: 100000.00,
+          date: "2023-04-30"
         },
+      ],
+    },
 
-        {
-            id: 6,
-            name: "Achat",
-            icon: icons.shopping,
-            cat: expense,
-            color: COLORS.lightBlue,
-            data: [
-              {
-                id: 1,
-                description: "Achat 1kg de Legumes frais",
-                total: 100.00,
-                date: "2023-04-10"
-              },
-            ],
+    {
+        id: 6,
+        name: "Achat",
+        icon: icons.shopping,
+        cat: expense,
+        color: COLORS.lightBlue,
+        data: [
+          {
+            id: 1,
+            description: "Achat 1kg de Legumes frais",
+            total: 100.00,
+            date: "2023-04-10"
+          },
+        ],
+      },
+      {
+        id: 7,
+        name: "Sortie 2",
+        icon: icons.cash,
+        cat: expense,
+        color: COLORS.peach,
+        data: [
+          {
+            id: 1,
+            description: "Frais de déplacement pour la réunion avec le client",
+            total: 50.00,
+            date: "2023-04-11"
           },
           {
-            id: 7,
-            name: "Sortie 2",
-            icon: icons.cash,
-            cat: expense,
-            color: COLORS.peach,
-            data: [
-              {
-                id: 1,
-                description: "Frais de déplacement pour la réunion avec le client",
-                total: 50.00,
-                date: "2023-04-11"
-              },
-              {
-                id: 2,
-                description: "Déjeuner avec le client",
-                total: 25.00,
-                date: "2023-04-12"
-              },
-            ],
+            id: 2,
+            description: "Déjeuner avec le client",
+            total: 25.00,
+            date: "2023-04-12"
           },
+        ],
+      },
+      {
+        id: 8,
+        name: "Sortie 3",
+        icon: icons.cashbook,
+        cat: expense,
+        color: COLORS.darkgreen,
+        data: [
           {
-            id: 8,
-            name: "Sortie 3",
-            icon: icons.cashbook,
-            cat: expense,
-            color: COLORS.darkgreen,
-            data: [
-              {
-                id: 1,
-                description: "Intérêts sur les comptes d'épargne",
-                total: 10.00,
-                date: "2023-04-15"
-              },
-            ],
+            id: 1,
+            description: "Intérêts sur les comptes d'épargne",
+            total: 10.00,
+            date: "2023-04-15"
           },
+        ],
+      },
+      {
+        id: 9,
+        name: "Sortie 4",
+        icon: icons.sell,
+        cat: expense,
+        color: COLORS.red,
+        data: [
           {
-            id: 9,
-            name: "Sortie 4",
-            icon: icons.sell,
-            cat: expense,
-            color: COLORS.red,
-            data: [
-              {
-                id: 1,
-                description: "Subvention pour le projet de recherche",
-                total: 5000.00,
-                date: "2023-04-20"
-              },
-            ],
+            id: 1,
+            description: "Subvention pour le projet de recherche",
+            total: 5000.00,
+            date: "2023-04-20"
           },
+        ],
+      },
+      {
+        id: 10,
+        name: "Sortie 5",
+        icon: icons.income,
+        cat: expense,
+        color: COLORS.yellow,
+        data: [
           {
-            id: 10,
-            name: "Sortie 5",
-            icon: icons.income,
-            cat: expense,
-            color: COLORS.yellow,
-            data: [
-              {
-                id: 1,
-                description: "Achat d'un immeuble à usage commercial",
-                total: 100000.00,
-                date: "2023-04-30"
-              },
-            ],
+            id: 1,
+            description: "Achat d'un immeuble à usage commercial",
+            total: 100000.00,
+            date: "2023-04-30"
           },
-      ];
+        ],
+      },
+  ];
+  
+const Home = () => {
+
+    
 
     const categoryListHeightAnimationValue = useRef(new Animated.Value(115)).current;
 
@@ -212,13 +214,13 @@ const Home = () => {
             >
                 <TouchableOpacity
                     style={{ justifyContent: 'center', width: 50, }}
-                    onPress={() => console.log('Go Back')}
+                    onPress={() => console.log('Menu')}
                 >
                     <Image
                         source={icons.menu}
                         style={{
-                            width: 30,
-                            height: 30,
+                            width: 25,
+                            height: 25,
                             tintColor: COLORS.primary
                         }}
                     />
@@ -226,7 +228,7 @@ const Home = () => {
 
                 <TouchableOpacity
                     style={{ justifyContent: 'center', alignItems: 'flex-end', width: 50 }}
-                    onPress={() => console.log('More')}
+                    onPress={() => console.log('search')}
                 >
                     <Image
                         source={icons.search}
@@ -366,7 +368,8 @@ const Home = () => {
 
         return (
             <View style={{ paddingHorizontal: SIZES.padding - 5 }}>
-                <Animated.View style={{ height: categoryListHeightAnimationValue }}>
+                <Animated.View style={{  }}> 
+                {/* height: categoryListHeightAnimationValue */}
                     <FlatList
                         data={categories}
                         renderItem={renderItem}
@@ -375,7 +378,7 @@ const Home = () => {
                     />
                 </Animated.View>
 
-                <TouchableOpacity
+                {/* <TouchableOpacity
                     style={{
                         flexDirection: 'row',
                         marginVertical: SIZES.base,
@@ -399,12 +402,12 @@ const Home = () => {
                         setShowMoreToggle(!showMoreToggle)
                     }}
                 >
-                    <Text style={{ ...FONTS.body4 }}>{showMoreToggle ? "LESS" : "MORE"}</Text>
+                    <Text style={{ ...FONTS.body4 }}>{showMoreToggle ? "MOINS" : "PLUS"}</Text>
                     <Image
                         source={showMoreToggle ? icons.up_arrow : icons.down_arrow}
                         style={{ marginLeft: 5, width: 15, height: 15, alignSelf: 'center' }}
                     />
-                </TouchableOpacity>
+                </TouchableOpacity> */}
             </View>
         )
     }
@@ -420,8 +423,8 @@ const Home = () => {
     }
 
     function renderIncomingExpenses() {
-        let allExpenses = selectedCategory ? selectedCategory.expenses : []
-        let incomingExpenses = allExpenses.filter(a => a.status == "P")
+        let allExpenses = selectedCategory ? selectedCategory.data : []
+        let incomingExpenses = allExpenses.filter(a => a.cat == "income")
 
         const renderItem = ({ item, index }) => (
             <View style={{
@@ -529,7 +532,9 @@ const Home = () => {
     function processCategoryDataToDisplay() {
         // Filter expenses with "Confirmed" status
         let chartData = categories.map((item) => {
-            let confirmExpenses = item.expenses.filter(a => a.status == "C")
+            //console.log("item ===>", item);
+            console.log(" -----> ");
+            let confirmExpenses = item.data //.filter(a => a.cat == "expense")
             var total = confirmExpenses.reduce((a, b) => a + (b.total || 0), 0)
 
             return {
@@ -575,7 +580,7 @@ const Home = () => {
         let totalExpenseCount = chartData.reduce((a, b) => a + (b.expenseCount || 0), 0)
 
         console.log("Check Chart")
-        console.log(chartData)
+        //console.log(chartData)
 
         if(Platform.OS == 'ios')
         {
