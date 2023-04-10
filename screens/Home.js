@@ -19,26 +19,9 @@ import {Svg} from 'react-native-svg';
 
 import { COLORS, FONTS, SIZES, icons, images } from '../constants';
 
-const icons = {
-    education: "education icon",
-    refund: "refund icon",
-    interest: "interest icon",
-    grant: "grant icon",
-    investment: "investment icon",
-  };
+const income = "income";
+const expense = "expense";
   
-  const income = "income";
-  const expense = "expense";
-  
-  const COLORS = {
-    yellow: "yellow",
-    blue: "blue",
-    green: "green",
-    red: "red",
-    purple: "purple",
-  };
-    
-
 const Home = () => {
 
     let categoriesData = [
@@ -47,7 +30,7 @@ const Home = () => {
           name: "Ventes",
           icon: icons.shopping,
           cat: income,
-          color: COLORS.yellow,
+          color: COLORS.purple,
           data: [
             {
               id: 1,
@@ -113,7 +96,7 @@ const Home = () => {
           name: "Investissements",
           icon: icons.investment,
           cat: income,
-          color: COLORS.purple,
+          color: COLORS.peach,
           data: [
             {
               id: 1,
@@ -123,6 +106,88 @@ const Home = () => {
             },
           ],
         },
+
+        {
+            id: 6,
+            name: "Achat",
+            icon: icons.shopping,
+            cat: expense,
+            color: COLORS.lightBlue,
+            data: [
+              {
+                id: 1,
+                description: "Achat 1kg de Legumes frais",
+                total: 100.00,
+                date: "2023-04-10"
+              },
+            ],
+          },
+          {
+            id: 7,
+            name: "Sortie 2",
+            icon: icons.cash,
+            cat: expense,
+            color: COLORS.peach,
+            data: [
+              {
+                id: 1,
+                description: "Frais de déplacement pour la réunion avec le client",
+                total: 50.00,
+                date: "2023-04-11"
+              },
+              {
+                id: 2,
+                description: "Déjeuner avec le client",
+                total: 25.00,
+                date: "2023-04-12"
+              },
+            ],
+          },
+          {
+            id: 8,
+            name: "Sortie 3",
+            icon: icons.cashbook,
+            cat: expense,
+            color: COLORS.darkgreen,
+            data: [
+              {
+                id: 1,
+                description: "Intérêts sur les comptes d'épargne",
+                total: 10.00,
+                date: "2023-04-15"
+              },
+            ],
+          },
+          {
+            id: 9,
+            name: "Sortie 4",
+            icon: icons.sell,
+            cat: expense,
+            color: COLORS.red,
+            data: [
+              {
+                id: 1,
+                description: "Subvention pour le projet de recherche",
+                total: 5000.00,
+                date: "2023-04-20"
+              },
+            ],
+          },
+          {
+            id: 10,
+            name: "Sortie 5",
+            icon: icons.income,
+            cat: expense,
+            color: COLORS.yellow,
+            data: [
+              {
+                id: 1,
+                description: "Achat d'un immeuble à usage commercial",
+                total: 100000.00,
+                date: "2023-04-30"
+              },
+            ],
+          },
       ];
 
     const categoryListHeightAnimationValue = useRef(new Animated.Value(115)).current;
