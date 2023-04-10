@@ -18,6 +18,7 @@ import { VictoryPie } from 'victory-native';
 import {Svg} from 'react-native-svg';
 
 import { COLORS, FONTS, SIZES, icons, images } from '../constants';
+import { Colors } from "react-native/Libraries/NewAppScreen";
 
 const income = "income";
 const expense = "expense";
@@ -228,37 +229,27 @@ let categoriesData = [
           },
         ],
       },
-    //   {
-    //     id: 11,
-    //     name: "Autres",
-    //     icon: icons.investment,
-    //     cat: income,
-    //     color: COLORS.peach,
-    //     data: [
-    //       {
-    //         id: 1,
-    //         description: "Achat d'un immeuble à usage commercial",
-    //         total: 100000.00,
-    //         date: "2023-04-30"
-    //       },
-    //     ],
-    //   },
+      {
+        id: 11,
+        name: "Autres",
+        icon: icons.more,
+        cat: income,
+        color: COLORS.peach,
+        data: [
+          
+        ],
+      },
 
-    //   {
-    //     id: 12,
-    //     name: "Autres",
-    //     icon: icons.investment,
-    //     cat: expense,
-    //     color: COLORS.peach,
-    //     data: [
-    //       {
-    //         id: 1,
-    //         description: "Achat d'un immeuble à usage commercial",
-    //         total: 100000.00,
-    //         date: "2023-04-30"
-    //       },
-    //     ],
-    //   },
+      {
+        id: 12,
+        name: "Autres",
+        icon: icons.more,
+        cat: expense,
+        color: COLORS.peach,
+        data: [
+          
+        ],
+      },
   ];
   
 const Home = () => {
@@ -289,10 +280,10 @@ const Home = () => {
                     onPress={() => console.log('Menu')}
                 >
                     <Image
-                        source={icons.menu}
+                        source={icons.income}
                         style={{
-                            width: 25,
-                            height: 25,
+                            width: 35,
+                            height: 35,
                             tintColor: COLORS.primary
                         }}
                     />
@@ -317,13 +308,89 @@ const Home = () => {
 
     function renderHeader() {
         return (
-            <View style={{ paddingHorizontal: SIZES.padding, paddingVertical: SIZES.padding, backgroundColor: COLORS.white }}>
-                <View>
-                    <Text style={{ color: COLORS.primary, ...FONTS.h2 }}>Balance totale</Text>
-                    <Text style={{ ...FONTS.h3, color: COLORS.darkgray }}>(Résumé)</Text>
+            <View style={{ paddingHorizontal: SIZES.padding, paddingVertical: SIZES.padding,
+             backgroundColor: COLORS.white, marginBottom:  SIZES.padding}}>
+                <View style={{paddingBottom:  SIZES.padding*3}}>
+                    <Text style={{ color: COLORS.primary, ...FONTS.h2 }}>BOMOKO Application</Text>
+                    <Text style={{ ...FONTS.h3, color: COLORS.darkgray }}>(Portefeuil electronique)</Text>
                 </View>
 
-                <View style={{ flexDirection: 'row', marginTop: SIZES.padding, alignItems: 'center' }}>
+                <View style={{margin: SIZES.padding, position:"absolute", top:SIZES.padding * 4.6, width:"100%",
+                 backgroundColor: COLORS.secondary, paddingTop:  SIZES.padding, 
+                borderRadius: SIZES.radius,...styles.shadow}}>
+                    <View style={{  flexDirection: 'row',
+                    width: "100%",
+                    justifyContent: 'space-around',
+                   
+                    }}>
+                        <View style={{
+                            backgroundColor: COLORS.lightGray,
+                            height: 50,
+                            width: 50,
+                            borderRadius: 25,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            ...styles.shadow
+                        }}>
+                            <Image
+                                source={icons.calendar}
+                                style={{
+                                    width: 20,
+                                    height: 20,
+                                    tintColor: COLORS.lightBlue
+                                }}
+                            />
+                        </View>
+
+                        <View style={{
+                            backgroundColor: COLORS.lightGray,
+                            height: 50,
+                            width: 50,
+                            borderRadius: 25,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                             ...styles.shadow
+                        }}>
+                            <Image
+                                source={icons.calendar}
+                                style={{
+                                    width: 20,
+                                    height: 20,
+                                    tintColor: COLORS.lightBlue
+                                }}
+                            />
+                        </View>
+
+                        <View style={{
+                            backgroundColor: COLORS.lightGray,
+                            height: 50,
+                            width: 50,
+                            borderRadius: 25,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                             ...styles.shadow
+                        }}>
+                            <Image
+                                source={icons.calendar}
+                                style={{
+                                    width: 20,
+                                    height: 20,
+                                    tintColor: COLORS.lightBlue,
+                                }}
+                            />
+                        </View>
+                    </View>
+
+                    <View style={{ borderTopWidth: 1, width:"95%", alignSelf:"center",marginVertical:SIZES.padding/2, borderColor: Colors.white }}>
+                        <View style={{ marginHorizontal: SIZES.padding/2, marginVertical:SIZES.padding/2 }}>
+                            <Text style={{ color: COLORS.white, ...FONTS.body5 }}>BALANCE TOTALE AU {date.toLocaleDateString('fr-FR')}</Text>
+                            <Text style={{ ...FONTS.h2, color: COLORS.lightGray }}>2000 FC</Text>
+                        </View>
+                    </View>
+
+                </View>
+
+                {/* <View style={{ flexDirection: 'row', marginTop: SIZES.padding, alignItems: 'center' }}>
                     <View style={{
                         backgroundColor: COLORS.lightGray,
                         height: 50,
@@ -346,14 +413,14 @@ const Home = () => {
                         <Text style={{ color: COLORS.primary, ...FONTS.h3 }}>{date.toLocaleDateString('fr-FR')}</Text>
                         <Text style={{ ...FONTS.body3, color: COLORS.darkgray }}>18% plus que le mois passé</Text>
                     </View>
-                </View>
+                </View> */}
             </View>
         )
     }
 
     function renderCategoryHeaderSection() {
         return (
-            <View style={{ flexDirection: 'row', padding: SIZES.padding, justifyContent: 'space-between', alignItems: 'center' }}>
+            <View style={{ flexDirection: 'row', padding: SIZES.padding, marginTop: SIZES.padding* 4, justifyContent: 'space-between', alignItems: 'center' }}>
                 {/* Title */}
                 <View>
                     <Text style={{ color: Cat == "expense" ? COLORS.secondary : COLORS.darkgreen, ...FONTS.h3 }}>{Cat == "income" ? "Crédit (Entrée)" : "Débit (Sortie)"}</Text>
@@ -469,7 +536,7 @@ const Home = () => {
     function renderIncomingExpensesTitle() {
 
         const sumCat = 
-             selectedCategory.data.reduce((sum, nbr) => {
+            selectedCategory && selectedCategory.data.reduce((sum, nbr) => {
                 return sum + nbr.total
             }, 0)
         
@@ -479,8 +546,8 @@ const Home = () => {
                 {/* Title */}
                 <Text style={{ ...FONTS.h3, color: COLORS.primary }}> {Cat === "income"? "MES ENTREES" : "MES SORTIES"} </Text>
                 <View  style={{ flexDirection: 'row', }}>
-                    <Text style={{ ...FONTS.body4, color: COLORS.darkgray }}> {selectedCategory.name} totale : </Text>
-                    <Text style={{ ...FONTS.h4, color: Cat === "income"? COLORS.darkgreen : COLORS.red }}>{sumCat.toFixed(2)} FC</Text>
+                    <Text style={{ ...FONTS.body4, color: COLORS.darkgray }}> {selectedCategory && selectedCategory.name} totale : </Text>
+                    <Text style={{ ...FONTS.h4, color: Cat === "income"? COLORS.darkgreen : COLORS.red }}>{selectedCategory && sumCat.toFixed(2)} FC</Text>
                 </View>
             </View>
         )
@@ -524,7 +591,7 @@ const Home = () => {
                             />
                         </View>
                         <View>
-                            <Text style={{ ...FONTS.h3, color: selectedCategory.color, }}>{selectedCategory.name}</Text>
+                            <Text style={{ ...FONTS.h3, color: selectedCategory.color, }}>{selectedCategory && selectedCategory.name}</Text>
                             <Text style={{ ...FONTS.body5, flexWrap: 'wrap', color: COLORS.darkgray }}>
                                 {item.description}
                             </Text>
@@ -573,7 +640,7 @@ const Home = () => {
                 {
                     incomingExpenses.length == 0 &&
                     <View style={{ alignItems: 'center', justifyContent: 'center', height: 300 }}>
-                        <Text style={{ color: COLORS.primary, ...FONTS.h3 }}>Aucune sortie trouvee</Text>
+                        <Text style={{ color: COLORS.primary, ...FONTS.h3 }}>Aucune {Cat == "expense" ? "sortie" : "entrée"} trouvée</Text>
                     </View>
                 }
 
