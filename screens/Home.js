@@ -333,7 +333,7 @@ const Home = () => {
                             ...styles.shadow
                         }}>
                             <Image
-                                source={icons.calendar}
+                                source={icons.expense}
                                 style={{
                                     width: 20,
                                     height: 20,
@@ -352,7 +352,7 @@ const Home = () => {
                              ...styles.shadow
                         }}>
                             <Image
-                                source={icons.calendar}
+                                source={icons.income}
                                 style={{
                                     width: 20,
                                     height: 20,
@@ -371,7 +371,7 @@ const Home = () => {
                              ...styles.shadow
                         }}>
                             <Image
-                                source={icons.calendar}
+                                source={icons.more}
                                 style={{
                                     width: 20,
                                     height: 20,
