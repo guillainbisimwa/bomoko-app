@@ -64,7 +64,7 @@ let categoriesData = [
       name: "Intérêts",
       icon: icons.interest,
       cat: income,
-      color: COLORS.green,
+      color: COLORS.darkgreen,
       data: [
         {
           id: 1,
@@ -194,11 +194,12 @@ const Home = () => {
 
     const categoryListHeightAnimationValue = useRef(new Animated.Value(115)).current;
 
-    const [categories, setCategories] = useState(categoriesData)
-    const [viewMode, setViewMode] = React.useState("income");
+    const [categories, setCategories] = useState(categoriesData.filter((value, key)=> value.cat === "income"))
+    const [ Cat, setCat ] = React.useState("income");
     const [selectedCategory, setSelectedCategory] = useState(null)
     const [showMoreToggle, setShowMoreToggle] = useState(false)
     const [ date, setDate ] = useState(new Date());
+
 
     function renderNavBar() {
         return (
@@ -284,7 +285,7 @@ const Home = () => {
             <View style={{ flexDirection: 'row', padding: SIZES.padding, justifyContent: 'space-between', alignItems: 'center' }}>
                 {/* Title */}
                 <View>
-                    <Text style={{ color: viewMode == "expense" ? COLORS.secondary : COLORS.darkgreen, ...FONTS.h3 }}>{viewMode == "income" ? "Crédit (Entrée)" : "Débit (Sortie)"}</Text>
+                    <Text style={{ color: Cat == "expense" ? COLORS.secondary : COLORS.darkgreen, ...FONTS.h3 }}>{Cat == "income" ? "Crédit (Entrée)" : "Débit (Sortie)"}</Text>
                     <Text style={{ color: COLORS.darkgray, ...FONTS.body4 }}>2000 FC</Text>
                 </View>
 
@@ -293,12 +294,16 @@ const Home = () => {
                         style={{
                             alignItems: 'center',
                             justifyContent: 'center',
-                            backgroundColor: viewMode == "income" ? COLORS.darkgreen : null,
+                            backgroundColor: Cat == "income" ? COLORS.darkgreen : null,
                             height: 50,
                             width: 50,
                             borderRadius: 25
                         }}
-                        onPress={() => setViewMode("income")}
+                        onPress={() => {
+                            setCat("income");
+                            setCategories(categoriesData.filter((value, key)=> value.cat === "income"))
+                        }}
+
                     >
                         <Image
                             source={icons.income}
@@ -306,7 +311,7 @@ const Home = () => {
                             style={{
                                 width: 20,
                                 height: 20,
-                                tintColor: viewMode == "income" ? COLORS.white : COLORS.darkgray,
+                                tintColor: Cat == "income" ? COLORS.white : COLORS.darkgray,
                             }}
                         />
                     </TouchableOpacity>
@@ -315,13 +320,17 @@ const Home = () => {
                         style={{
                             alignItems: 'center',
                             justifyContent: 'center',
-                            backgroundColor: viewMode == "expense" ? COLORS.secondary : null,
+                            backgroundColor: Cat == "expense" ? COLORS.secondary : null,
                             height: 50,
                             width: 50,
                             borderRadius: 25,
                             marginLeft: SIZES.base
                         }}
-                        onPress={() => setViewMode("expense")}
+                        onPress={() => {
+                            setCat("expense")
+                            setCategories(categoriesData.filter((value, key)=> value.cat === "expense"))
+                            }
+                        }
                     >
                         <Image
                             source={icons.expense}
@@ -329,7 +338,7 @@ const Home = () => {
                             style={{
                                 width: 20,
                                 height: 20,
-                                tintColor: viewMode == "expense" ? COLORS.white : COLORS.darkgray,
+                                tintColor: Cat == "expense" ? COLORS.white : COLORS.darkgray,
                             }}
                         />
                     </TouchableOpacity>
@@ -342,7 +351,10 @@ const Home = () => {
     function renderCategoryList() {
         const renderItem = ({ item }) => (
             <TouchableOpacity
-                onPress={() => setSelectedCategory(item)}
+                onPress={() => {
+                    setSelectedCategory(item);
+                    //console.log(item)
+                    }}
                 style={{
                     flex: 1,
                     flexDirection: 'row',
@@ -416,111 +428,100 @@ const Home = () => {
         return (
             <View style={{ height: 80, backgroundColor: COLORS.lightGray2, padding: SIZES.padding }}>
                 {/* Title */}
-                <Text style={{ ...FONTS.h3, color: COLORS.primary }}>INCOMING EXPENSES</Text>
-                <Text style={{ ...FONTS.body4, color: COLORS.darkgray }}>12 Total</Text>
+                <Text style={{ ...FONTS.h3, color: COLORS.primary }}> {Cat === "income"? "MES ENTREES" : "MES SORTIES"} </Text>
+                <Text style={{ ...FONTS.body4, color: COLORS.darkgray }}>Nombre totale : {selectedCategory.data.length} </Text>
             </View>
         )
     }
 
     function renderIncomingExpenses() {
-        let allExpenses = selectedCategory ? selectedCategory.data : []
-        let incomingExpenses = allExpenses.filter(a => a.cat == "income")
+        let allExpenses = selectedCategory ? selectedCategory.data : [];
+        console.log("allExpenses ---->", allExpenses);
+        let incomingExpenses = allExpenses; //.filter(a => a.cat == "income")
 
-        const renderItem = ({ item, index }) => (
+        const renderItem = (item, index ) => (
             <View style={{
-                width: 300,
                 marginRight: SIZES.padding,
-                marginLeft: index == 0 ? SIZES.padding : 0,
+                marginLeft: SIZES.padding,
                 marginVertical: SIZES.radius,
                 borderRadius: SIZES.radius,
                 backgroundColor: COLORS.white,
                 ...styles.shadow
             }}>
                 {/* Title */}
-                <View style={{ flexDirection: 'row', padding: SIZES.padding, alignItems: 'center' }}>
-                    <View
-                        style={{
-                            height: 50,
-                            width: 50,
-                            borderRadius: 25,
-                            backgroundColor: COLORS.lightGray,
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            marginRight: SIZES.base
-                        }}
-                    >
-                        <Image
-                            source={selectedCategory.icon}
+                <View style={{ flexDirection: 'row', padding: SIZES.padding, alignItems: 'center',  justifyContent: 'space-between', }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', }}>   
+                        <View
                             style={{
-                                width: 30,
-                                height: 30,
-                                tintColor: selectedCategory.color
+                                height: 50,
+                                width: 50,
+                                borderRadius: 25,
+                                backgroundColor: COLORS.lightGray,
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                marginRight: SIZES.base
                             }}
-                        />
-                    </View>
+                        >
+                            <Image
+                                source={selectedCategory.icon}
+                                style={{
+                                    width: 30,
+                                    height: 30,
+                                    tintColor: selectedCategory.color
+                                }}
+                            />
+                        </View>
+                        <View>
+                            <Text style={{ ...FONTS.h3, color: selectedCategory.color, }}>{selectedCategory.name}</Text>
+                            <Text style={{ ...FONTS.body5, flexWrap: 'wrap', color: COLORS.darkgray }}>
+                                {item.description}
+                            </Text>
+                        </View>
+                        
+                        
+                    </View> 
 
-                    <Text style={{ ...FONTS.h3, color: selectedCategory.color, }}>{selectedCategory.name}</Text>
+                   <View style={{  alignItems:"flex-end"}} >
+                        <Text style={{ ...FONTS.h5, color: COLORS.red, }}> +{item.total.toFixed(2)} FC </Text>
+                        <View style={{ flexDirection: 'row' }}>
+                            <Image
+                                source={icons.calendar}
+                                style={{
+                                    width: 12,
+                                    height: 12,
+                                    tintColor: COLORS.darkgray,
+                                    marginRight: 7,
+                                    marginTop: 3
+                                }}
+                            />
+                            <Text style={{ marginBottom: SIZES.base, color: COLORS.darkgray, ...FONTS.body5 }}>{item.date}</Text>
+                        </View>
+                   </View>
                 </View>
 
-                {/* Expense Description */}
-                <View style={{ paddingHorizontal: SIZES.padding }}>
-                    {/* Title and description */}
-                    <Text style={{ ...FONTS.h2, }}>{item.title}</Text>
-                    <Text style={{ ...FONTS.body3, flexWrap: 'wrap', color: COLORS.darkgray }}>
-                        {item.description}
-                    </Text>
-
-                    {/* Location */}
-                    <Text style={{ marginTop: SIZES.padding, ...FONTS.h4, }}>Location</Text>
-                    <View style={{ flexDirection: 'row' }}>
-                        <Image
-                            source={icons.pin}
-                            style={{
-                                width: 20,
-                                height: 20,
-                                tintColor: COLORS.darkgray,
-                                marginRight: 5
-                            }}
-                        />
-                        <Text style={{ marginBottom: SIZES.base, color: COLORS.darkgray, ...FONTS.body4 }}>{item.location}</Text>
-                    </View>
-                </View>
-
-                {/* Price */}
-                <View
-                    style={{
-                        height: 50,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        borderBottomStartRadius: SIZES.radius,
-                        borderBottomEndRadius: SIZES.radius,
-                        backgroundColor: selectedCategory.color,
-                    }}
-                >
-                    <Text style={{ color: COLORS.white, ...FONTS.body3 }}>CONFIRM {item.total.toFixed(2)} USD</Text>
-                </View>
             </View>
         )
 
         return (
             <View>
-                {renderIncomingExpensesTitle()}
+              {renderIncomingExpensesTitle()}  
 
                 {
                     incomingExpenses.length > 0 &&
-                    <FlatList
-                        data={incomingExpenses}
-                        renderItem={renderItem}
-                        keyExtractor={item => `${item.id}`}
-                        horizontal
-                        showsHorizontalScrollIndicator={false}
-                    />
+                    <View>
+                        {
+                            incomingExpenses.map((value, key) => {
+                                return renderItem(value, key)
+                            })
+                        }
+                    </View>
+
                 }
 
                 {
                     incomingExpenses.length == 0 &&
                     <View style={{ alignItems: 'center', justifyContent: 'center', height: 300 }}>
-                        <Text style={{ color: COLORS.primary, ...FONTS.h3 }}>No Record</Text>
+                        <Text style={{ color: COLORS.primary, ...FONTS.h3 }}>Aucune sortie trouvee</Text>
                     </View>
                 }
 
@@ -743,8 +744,8 @@ const Home = () => {
                 {renderCategoryList()}
                 {renderIncomingExpenses()}
 
-                {renderChart()}
-                {renderExpenseSummary()}
+                {/* {renderChart()} */}
+                {/* {renderExpenseSummary()} */}
             </View>
                 
             </ScrollView>
