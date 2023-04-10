@@ -15,7 +15,17 @@ export const up_arrow = require("../assets/icons/up_arrow.png");
 export const search = require("../assets/icons/search.png");
 export const app_icon = require("../assets/app-icon.png");
 export const expense = require("../assets/icons/expense.png"); // d
-export const income = require("../assets/icons/income.png"); // c
+export const income = require("../assets/icons/income.png");
+
+export const grant = require("../assets/icons/icons8-grant-50.png");
+export const interest = require("../assets/icons/icons8-interest-48.png");
+export const investment = require("../assets/icons/icons8-investment-64.png");
+export const refund = require("../assets/icons/icons8-refund-50.png");
+
+export const shopping = require("../assets/icons/icons8-shopping-bag-50.png");
+export const cash = require("../assets/icons/icons8-cash-30.png");
+export const cashbook = require("../assets/icons/icons8-cashbook-50.png");
+export const sell = require("../assets/icons/icons8-sell-50.png");
 
 export default {
     baby_car,
@@ -35,6 +45,15 @@ export default {
     search,
     income,
     expense,
+    grant,
+    refund,
+    interest,
+    investment,
+
+    shopping,
+    cash,
+    cashbook,
+    sell,
 
     //images
     app_icon
