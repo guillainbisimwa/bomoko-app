@@ -25,7 +25,7 @@ const expense = "expense";
 let categoriesData = [
     {
       id: 1,
-      name: "Ventes",
+      name: "Vente",
       icon: icons.shopping,
       cat: income,
       color: COLORS.purple,
@@ -40,7 +40,7 @@ let categoriesData = [
     },
     {
       id: 2,
-      name: "Remboursements",
+      name: "Remboursement",
       icon: icons.refund,
       cat: income,
       color: COLORS.blue,
@@ -61,7 +61,7 @@ let categoriesData = [
     },
     {
       id: 3,
-      name: "Intérêts",
+      name: "Intérêt",
       icon: icons.interest,
       cat: income,
       color: COLORS.darkgreen,
@@ -76,7 +76,7 @@ let categoriesData = [
     },
     {
       id: 4,
-      name: "Subventions",
+      name: "Subvention",
       icon: icons.grant,
       cat: income,
       color: COLORS.red,
@@ -91,7 +91,7 @@ let categoriesData = [
     },
     {
       id: 5,
-      name: "Investissements",
+      name: "Investissement",
       icon: icons.investment,
       cat: income,
       color: COLORS.peach,
@@ -184,13 +184,84 @@ let categoriesData = [
             total: 100000.00,
             date: "2023-04-30"
           },
+          {
+            id: 2,
+            description: "Achat d'un immeuble à usage commercial",
+            total: 100000.00,
+            date: "2023-04-30"
+          },
+          {
+            id: 3,
+            description: "Achat d'un immeuble à usage commercial",
+            total: 100000.00,
+            date: "2023-04-30"
+          },
+          {
+            id: 4,
+            description: "Achat d'un immeuble à usage commercial",
+            total: 100000.00,
+            date: "2023-04-30"
+          },
+          {
+            id: 11,
+            description: "Achat d'un immeuble à usage commercial",
+            total: 100000.00,
+            date: "2023-04-30"
+          },
+          {
+            id: 12,
+            description: "Achat d'un immeuble à usage commercial",
+            total: 100000.00,
+            date: "2023-04-30"
+          },
+          {
+            id: 13,
+            description: "Achat d'un immeuble à usage commercial",
+            total: 100000.00,
+            date: "2023-04-30"
+          },
+          {
+            id: 14,
+            description: "Achat d'un immeuble à usage commercial",
+            total: 100000.00,
+            date: "2023-04-30"
+          },
         ],
       },
+    //   {
+    //     id: 11,
+    //     name: "Autres",
+    //     icon: icons.investment,
+    //     cat: income,
+    //     color: COLORS.peach,
+    //     data: [
+    //       {
+    //         id: 1,
+    //         description: "Achat d'un immeuble à usage commercial",
+    //         total: 100000.00,
+    //         date: "2023-04-30"
+    //       },
+    //     ],
+    //   },
+
+    //   {
+    //     id: 12,
+    //     name: "Autres",
+    //     icon: icons.investment,
+    //     cat: expense,
+    //     color: COLORS.peach,
+    //     data: [
+    //       {
+    //         id: 1,
+    //         description: "Achat d'un immeuble à usage commercial",
+    //         total: 100000.00,
+    //         date: "2023-04-30"
+    //       },
+    //     ],
+    //   },
   ];
   
 const Home = () => {
-
-    
 
     const categoryListHeightAnimationValue = useRef(new Animated.Value(115)).current;
 
@@ -381,7 +452,7 @@ const Home = () => {
         return (
             <View style={{ paddingHorizontal: SIZES.padding - 5 }}>
                 <Animated.View style={{  }}> 
-                {/* height: categoryListHeightAnimationValue */}
+               
                     <FlatList
                         data={categories}
                         renderItem={renderItem}
@@ -390,46 +461,27 @@ const Home = () => {
                     />
                 </Animated.View>
 
-                {/* <TouchableOpacity
-                    style={{
-                        flexDirection: 'row',
-                        marginVertical: SIZES.base,
-                        justifyContent: 'center'
-                    }}
-                    onPress={() => {
-                        if (showMoreToggle) {
-                            Animated.timing(categoryListHeightAnimationValue, {
-                                toValue: 115,
-                                duration: 500,
-                                useNativeDriver: false
-                            }).start()
-                        } else {
-                            Animated.timing(categoryListHeightAnimationValue, {
-                                toValue: 172.5,
-                                duration: 500,
-                                useNativeDriver: false
-                            }).start()
-                        }
-
-                        setShowMoreToggle(!showMoreToggle)
-                    }}
-                >
-                    <Text style={{ ...FONTS.body4 }}>{showMoreToggle ? "MOINS" : "PLUS"}</Text>
-                    <Image
-                        source={showMoreToggle ? icons.up_arrow : icons.down_arrow}
-                        style={{ marginLeft: 5, width: 15, height: 15, alignSelf: 'center' }}
-                    />
-                </TouchableOpacity> */}
+               
             </View>
         )
     }
 
     function renderIncomingExpensesTitle() {
+
+        const sumCat = 
+             selectedCategory.data.reduce((sum, nbr) => {
+                return sum + nbr.total
+            }, 0)
+        
+
         return (
             <View style={{ height: 80, backgroundColor: COLORS.lightGray2, padding: SIZES.padding }}>
                 {/* Title */}
                 <Text style={{ ...FONTS.h3, color: COLORS.primary }}> {Cat === "income"? "MES ENTREES" : "MES SORTIES"} </Text>
-                <Text style={{ ...FONTS.body4, color: COLORS.darkgray }}>Nombre totale : {selectedCategory.data.length} </Text>
+                <View  style={{ flexDirection: 'row', }}>
+                    <Text style={{ ...FONTS.body4, color: COLORS.darkgray }}> {selectedCategory.name} totale : </Text>
+                    <Text style={{ ...FONTS.h4, color: Cat === "income"? COLORS.darkgreen : COLORS.red }}>{sumCat.toFixed(2)} FC</Text>
+                </View>
             </View>
         )
     }
@@ -439,7 +491,7 @@ const Home = () => {
         console.log("allExpenses ---->", allExpenses);
         let incomingExpenses = allExpenses; //.filter(a => a.cat == "income")
 
-        const renderItem = (item, index ) => (
+        const renderItem = (item) => (
             <View style={{
                 marginRight: SIZES.padding,
                 marginLeft: SIZES.padding,
@@ -482,7 +534,7 @@ const Home = () => {
                     </View> 
 
                    <View style={{  alignItems:"flex-end"}} >
-                        <Text style={{ ...FONTS.h5, color: COLORS.red, }}> +{item.total.toFixed(2)} FC </Text>
+                        <Text style={{ ...FONTS.h5, color: COLORS.red, }}> {Cat === "income"? "+" : "-"} {item.total.toFixed(2)} FC </Text>
                         <View style={{ flexDirection: 'row' }}>
                             <Image
                                 source={icons.calendar}
@@ -533,8 +585,7 @@ const Home = () => {
     function processCategoryDataToDisplay() {
         // Filter expenses with "Confirmed" status
         let chartData = categories.map((item) => {
-            //console.log("item ===>", item);
-            console.log(" -----> ");
+
             let confirmExpenses = item.data //.filter(a => a.cat == "expense")
             var total = confirmExpenses.reduce((a, b) => a + (b.total || 0), 0)
 
