@@ -1,13 +1,13 @@
 {
   "expo": {
-    "name": "LCRN07-expense-tracker-app-expo",
-    "slug": "LCRN07-expense-tracker-app-expo",
-    "version": "1.0.0",
+    "name": "Bomoko app",
+    "slug": "bomoko-app",
+    "privacy": "public",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/app-icon.png",
     "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
+      "image": "./assets/login1_bg.png",
+      "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
     "updates": {
@@ -21,7 +21,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/app-icon.png",
         "backgroundColor": "#FFFFFF"
       }
     },
