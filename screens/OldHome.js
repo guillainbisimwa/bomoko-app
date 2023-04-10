@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import {
     SafeAreaView,
     StyleSheet,
@@ -19,7 +19,7 @@ import {Svg} from 'react-native-svg';
 
 import { COLORS, FONTS, SIZES, icons, images } from '../constants';
 
-const Home = () => {
+const OldHome = () => {
 
     // dummy data
     const confirmStatus = "C"
@@ -224,11 +224,10 @@ const Home = () => {
 
     const categoryListHeightAnimationValue = useRef(new Animated.Value(115)).current;
 
-    const [categories, setCategories] = useState(categoriesData)
-    const [viewMode, setViewMode] = useState("chart")
-    const [selectedCategory, setSelectedCategory] = useState(null)
-    const [showMoreToggle, setShowMoreToggle] = useState(false)
-    const [ date, setDate ] = useState(new Date());
+    const [categories, setCategories] = React.useState(categoriesData)
+    const [viewMode, setViewMode] = React.useState("chart")
+    const [selectedCategory, setSelectedCategory] = React.useState(null)
+    const [showMoreToggle, setShowMoreToggle] = React.useState(false)
 
     function renderNavBar() {
         return (
@@ -247,7 +246,7 @@ const Home = () => {
                     onPress={() => console.log('Go Back')}
                 >
                     <Image
-                        source={icons.menu}
+                        source={icons.back_arrow}
                         style={{
                             width: 30,
                             height: 30,
@@ -277,8 +276,8 @@ const Home = () => {
         return (
             <View style={{ paddingHorizontal: SIZES.padding, paddingVertical: SIZES.padding, backgroundColor: COLORS.white }}>
                 <View>
-                    <Text style={{ color: COLORS.primary, ...FONTS.h2 }}>Balance tottale</Text>
-                    <Text style={{ ...FONTS.h3, color: COLORS.darkgray }}>(Résumé)</Text>
+                    <Text style={{ color: COLORS.primary, ...FONTS.h2 }}>My Expenses</Text>
+                    <Text style={{ ...FONTS.h3, color: COLORS.darkgray }}>Summary (private)</Text>
                 </View>
 
                 <View style={{ flexDirection: 'row', marginTop: SIZES.padding, alignItems: 'center' }}>
@@ -301,8 +300,8 @@ const Home = () => {
                     </View>
 
                     <View style={{ marginLeft: SIZES.padding }}>
-                        <Text style={{ color: COLORS.primary, ...FONTS.h3 }}>{date.toLocaleDateString('fr-FR')}</Text>
-                        <Text style={{ ...FONTS.body3, color: COLORS.darkgray }}>18% plus que le mois passé</Text>
+                        <Text style={{ color: COLORS.primary, ...FONTS.h3 }}>11 Nov, 2020</Text>
+                        <Text style={{ ...FONTS.body3, color: COLORS.darkgray }}>18% more than last month</Text>
                     </View>
                 </View>
             </View>
@@ -315,11 +314,32 @@ const Home = () => {
                 {/* Title */}
                 <View>
                     <Text style={{ color: COLORS.primary, ...FONTS.h3 }}>CATEGORIES</Text>
-                    <Text style={{ color: COLORS.darkgray, ...FONTS.body4 }}>{categories.length} Totale</Text>
+                    <Text style={{ color: COLORS.darkgray, ...FONTS.body4 }}>{categories.length} Total</Text>
                 </View>
 
                 {/* Button */}
                 <View style={{ flexDirection: 'row' }}>
+                    <TouchableOpacity
+                        style={{
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            backgroundColor: viewMode == "chart" ? COLORS.secondary : null,
+                            height: 50,
+                            width: 50,
+                            borderRadius: 25
+                        }}
+                        onPress={() => setViewMode("chart")}
+                    >
+                        <Image
+                            source={icons.chart}
+                            resizeMode="contain"
+                            style={{
+                                width: 20,
+                                height: 20,
+                                tintColor: viewMode == "chart" ? COLORS.white : COLORS.darkgray,
+                            }}
+                        />
+                    </TouchableOpacity>
 
                     <TouchableOpacity
                         style={{
@@ -745,11 +765,20 @@ const Home = () => {
             {renderCategoryHeaderSection()}
 
             <ScrollView contentContainerStyle={{ paddingBottom: 60 }}>
-            <View>
-                {renderCategoryList()}
-                {renderIncomingExpenses()}
-            </View>
-                
+                {
+                    viewMode == "list" &&
+                    <View>
+                        {renderCategoryList()}
+                        {renderIncomingExpenses()}
+                    </View>
+                }
+                {
+                    viewMode == "chart" &&
+                    <View>
+                        {renderChart()}
+                        {renderExpenseSummary()}
+                    </View>
+                }
             </ScrollView>
         </View>
     )
@@ -768,4 +797,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default Home;
+export default OldHome;
