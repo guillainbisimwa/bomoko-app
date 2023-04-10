@@ -7,11 +7,15 @@ export const down_arrow = require("../assets/icons/down_arrow.png");
 export const education = require("../assets/icons/education_icon.png");
 export const food = require("../assets/icons/food_icon.png");
 export const healthcare = require("../assets/icons/healthcare_icon.png");
-export const menu = require("../assets/icons/menu_icon.png");
+export const menu = require("../assets/icons/icons8-menu-50.png");
 export const more = require("../assets/icons/more_icon.png");
 export const pin = require("../assets/icons/pin.png");
 export const sports_icon = require("../assets/icons/sports_icon.png");
 export const up_arrow = require("../assets/icons/up_arrow.png");
+export const search = require("../assets/icons/search.png");
+export const app_icon = require("../assets/app-icon.png");
+export const expense = require("../assets/icons/expense.png"); // d
+export const income = require("../assets/icons/income.png"); // c
 
 export default {
     baby_car,
@@ -27,5 +31,11 @@ export default {
     more,
     pin,
     sports_icon,
-    up_arrow
+    up_arrow,
+    search,
+    income,
+    expense,
+
+    //images
+    app_icon
 }

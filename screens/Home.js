@@ -225,7 +225,7 @@ const Home = () => {
     const categoryListHeightAnimationValue = useRef(new Animated.Value(115)).current;
 
     const [categories, setCategories] = useState(categoriesData)
-    const [viewMode, setViewMode] = useState("chart")
+    const [viewMode, setViewMode] = React.useState("income");
     const [selectedCategory, setSelectedCategory] = useState(null)
     const [showMoreToggle, setShowMoreToggle] = useState(false)
     const [ date, setDate ] = useState(new Date());
@@ -261,7 +261,7 @@ const Home = () => {
                     onPress={() => console.log('More')}
                 >
                     <Image
-                        source={icons.more}
+                        source={icons.search}
                         style={{
                             width: 30,
                             height: 30,
@@ -277,7 +277,7 @@ const Home = () => {
         return (
             <View style={{ paddingHorizontal: SIZES.padding, paddingVertical: SIZES.padding, backgroundColor: COLORS.white }}>
                 <View>
-                    <Text style={{ color: COLORS.primary, ...FONTS.h2 }}>Balance tottale</Text>
+                    <Text style={{ color: COLORS.primary, ...FONTS.h2 }}>Balance totale</Text>
                     <Text style={{ ...FONTS.h3, color: COLORS.darkgray }}>(Résumé)</Text>
                 </View>
 
@@ -314,36 +314,57 @@ const Home = () => {
             <View style={{ flexDirection: 'row', padding: SIZES.padding, justifyContent: 'space-between', alignItems: 'center' }}>
                 {/* Title */}
                 <View>
-                    <Text style={{ color: COLORS.primary, ...FONTS.h3 }}>CATEGORIES</Text>
-                    <Text style={{ color: COLORS.darkgray, ...FONTS.body4 }}>{categories.length} Totale</Text>
+                    <Text style={{ color: COLORS.primary, ...FONTS.h3 }}>{viewMode == "income" ? "Crédit (Entrée)" : "Débit (Sortie)"}</Text>
+                    <Text style={{ color: COLORS.darkgray, ...FONTS.body4 }}>2000 FC</Text>
                 </View>
 
-                {/* Button */}
                 <View style={{ flexDirection: 'row' }}>
+                    <TouchableOpacity
+                        style={{
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            backgroundColor: viewMode == "income" ? COLORS.secondary : null,
+                            height: 50,
+                            width: 50,
+                            borderRadius: 25
+                        }}
+                        onPress={() => setViewMode("income")}
+                    >
+                        <Image
+                            source={icons.income}
+                            resizeMode="contain"
+                            style={{
+                                width: 20,
+                                height: 20,
+                                tintColor: viewMode == "income" ? COLORS.white : COLORS.darkgray,
+                            }}
+                        />
+                    </TouchableOpacity>
 
                     <TouchableOpacity
                         style={{
                             alignItems: 'center',
                             justifyContent: 'center',
-                            backgroundColor: viewMode == "list" ? COLORS.secondary : null,
+                            backgroundColor: viewMode == "expense" ? COLORS.secondary : null,
                             height: 50,
                             width: 50,
                             borderRadius: 25,
                             marginLeft: SIZES.base
                         }}
-                        onPress={() => setViewMode("list")}
+                        onPress={() => setViewMode("expense")}
                     >
                         <Image
-                            source={icons.menu}
+                            source={icons.expense}
                             resizeMode="contain"
                             style={{
                                 width: 20,
                                 height: 20,
-                                tintColor: viewMode == "list" ? COLORS.white : COLORS.darkgray,
+                                tintColor: viewMode == "expense" ? COLORS.white : COLORS.darkgray,
                             }}
                         />
                     </TouchableOpacity>
                 </View>
+
             </View>
         )
     }
@@ -558,7 +579,7 @@ const Home = () => {
         // Calculate the total expenses
         let totalExpense = filterChartData.reduce((a, b) => a + (b.y || 0), 0)
 
-        // Calculate percentage and repopulate chart data
+        // Calculate percentage and repopulate income data
         let finalChartData = filterChartData.map((item) => {
             let percentage = (item.y / totalExpense * 100).toFixed(0)
             return {
@@ -748,6 +769,9 @@ const Home = () => {
             <View>
                 {renderCategoryList()}
                 {renderIncomingExpenses()}
+
+                {renderChart()}
+                {renderExpenseSummary()}
             </View>
                 
             </ScrollView>
