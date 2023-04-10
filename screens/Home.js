@@ -1,417 +1,800 @@
-import React from "react";
-import { StyleSheet, Dimensions, ScrollView, ToastAndroid, AsyncStorage, NetInfo
-,ActivityIndicator, RefreshControl} from "react-native";
+import React, { useRef } from "react";
+import {
+    SafeAreaView,
+    StyleSheet,
+    ScrollView,
+    View,
+    Text,
+    StatusBar,
+    Image,
+    ImageBackground,
+    TouchableOpacity,
+    FlatList,
+    Animated,
+    Platform
+} from 'react-native';
+import { VictoryPie } from 'victory-native';
 
-import { Block, Text, Button as GaButton, theme, Icon } from 'galio-framework';
+import {Svg} from 'react-native-svg';
 
-import ActionButton from 'react-native-action-button';
+import { COLORS, FONTS, SIZES, icons, images } from '../constants';
 
-import { Card2 as Card, Button } from "../components";
-const { width } = Dimensions.get("screen");
+const Home = () => {
 
-class Home extends React.Component {
-  constructor(props) {
-    super(props);
-   
-    this.state = {
-      groupss:[],
-      clients:[],
-      currentUser:{},
-      isLoading: true,
+    // dummy data
+    const confirmStatus = "C"
+    const pendingStatus = "P"
 
-      isRefreshing: false,
-    };
-  }
-
-  componentDidMount = async() =>{
-    //J = AsyncStorage.getItem('phone');
-    const currentAccount = await AsyncStorage.getItem('currentAccount')
-    .then(async (value) => {
-      //console.log("************************Get Value >> ", JSON.parse(value));
-      currentUser = await JSON.parse(value);
-      // ToastAndroid.show(JSON.stringify(currentUser)+" <--", ToastAndroid.LONG)
-      // ToastAndroid.show(JSON.stringify(currentUser)+" <--", ToastAndroid.LONG)
-      this.setState({
-        currentUser: await currentUser,
-      });
-      
-      //console.log(currentUser)
-
-    //console.log("*********************Put Value >> ", dataClients);
-    }).done();
-
-
-    await this._fetchGroup()
-    await this._bootstrapAsyncGroup();
-    await this._bootstrapAsyncClient();
-    await this._fetchCredit();
-    await this._fetchEcheances();
-  }
-
-    // Fetch the token from storage then navigate to our appropriate place
- _bootstrapAsyncGroup = async () => {
-  dataGroups = [];
-  const ClientsLocalStorage =  AsyncStorage.getItem('ClientsLocalStorage')
-  .then(async (valueC) => {
-    dataClients = await JSON.parse(valueC);
-    const currentAccount =  AsyncStorage.getItem('currentAccount')
-    .then(async (valueU) => {
-      currentUser = await JSON.parse(valueU);
-      currentProfile = await dataClients.find((item2) => item2.phone == currentUser['phone']);
-      const GroupsLocalStorage = await AsyncStorage.getItem('GroupsLocalStorage')
-      .then(async (value) => {
-        dataGroups002 = [];
-
-        dataGroups = await JSON.parse(value);
-
-        await dataGroups.forEach( async docG => {
-       
-          countGroupMember = 0
-          clientByGroup = dataClients.filter((item2) => item2.id_g == docG.id);
-          countGroupMember = clientByGroup.reduce((key, val) => key + 1, 0);
-          
-          etatCurrentUser = 0;
-          if(currentProfile.id_g != "")
-          {
-            if(docG.id == currentProfile.id_g) etatCurrentUser =  1 
-          }
-          else etatCurrentUser
-          
-          await dataGroups002.push({
-            cat : docG.cat,
-            date_creation : docG.date_creation,
-            date_debut : docG.date_debut,
-            date_fin : docG.date_fin,
-            details : docG.details,
-            etat : docG.etat,
-            id : docG.id,
-            id_responsable : docG.id_responsable,
-            nbr_jour : docG.nbr_jour,
-            nom_group : docG.nom_group,
-            somme : docG.somme,
-            taux : docG.taux,
-            type : docG.type,
-            etatCurrentUser: etatCurrentUser,
-            countGroupMember : countGroupMember
-          })
-        });
-        
-        this.setState({
-          isLoading:  false,
-          groupss: await dataGroups002,
-        });
-      }).done();
-    }).done();
-  }).done();
-};
-
-_bootstrapAsyncClient = async () => {
-  await this._fetchClients();
-
-  dataClients = [];
-  dataClients002 = [];
-  const GroupsLocalStorage = await AsyncStorage.getItem('ClientsLocalStorage')
-  .then(async (value) => {
-    dataClients = await JSON.parse(value);
-    this.setState({
-      isLoading:  false,
-      clients: await dataClients,
-    });
- }).done();
-};
-
-_fetchCredit = async () =>{
-  await NetInfo.isConnected.fetch().then(async isConnected => {
-    if(isConnected){
-      await fetch('http://188.166.46.8:3000/credits/', {
-        method: 'GET',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
+    let categoriesData = [
+        {
+            id: 1,
+            name: "Education",
+            icon: icons.education,
+            color: COLORS.yellow,
+            expenses: [
+                {
+                    id: 1,
+                    title: "Tuition Fee",
+                    description: "Tuition fee",
+                    location: "ByProgrammers' tuition center",
+                    total: 100.00,
+                    status: pendingStatus
+                },
+                {
+                    id: 2,
+                    title: "Arduino",
+                    description: "Hardward",
+                    location: "ByProgrammers' tuition center",
+                    total: 30.00,
+                    status: pendingStatus
+                },
+                {
+                    id: 3,
+                    title: "Javascript Books",
+                    description: "Javascript books",
+                    location: "ByProgrammers' Book Store",
+                    total: 20.00,
+                    status: confirmStatus
+                },
+                {
+                    id: 4,
+                    title: "PHP Books",
+                    description: "PHP books",
+                    location: "ByProgrammers' Book Store",
+                    total: 20.00,
+                    status: confirmStatus
+                }
+            ],
         },
-      })
-      .then((response) => response.json())
-      //If response is in json then in success
-      .then((responseJson) => {
-          //Success 
-          AsyncStorage.setItem('CreditsLocalStorage', JSON.stringify(responseJson))
-            .then(json => {
-              ToastAndroid.show('CreditsLocalStorage1 save locally', ToastAndroid.SHORT)
-          })
-            .catch(error => ToastAndroid.show('CreditsLocalStorage error local memory', ToastAndroid.SHORT));
-      })
-      //If response is not in json then in error
-      .catch((error) => {
-          //Error 
-          ToastAndroid.show('Une erreur est survenue. Verifier votre connexion internet ', ToastAndroid.LONG)
-      });  
-    }
-    else{
-      ToastAndroid.show('Aucune connexion internet!', ToastAndroid.LONG)
-    }
-  })
-}
+        {
+            id: 2,
+            name: "Nutrition",
+            icon: icons.food,
+            color: COLORS.lightBlue,
+            expenses: [
+                {
+                    id: 5,
+                    title: "Vitamins",
+                    description: "Vitamin",
+                    location: "ByProgrammers' Pharmacy",
+                    total: 25.00,
+                    status: pendingStatus,
+                },
 
-_fetchEcheances = async () =>{
-  await NetInfo.isConnected.fetch().then(async isConnected => {
-    if(isConnected){
-      await fetch('http://188.166.46.8:3000/echeances', {
-        method: 'GET',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
+                {
+                    id: 6,
+                    title: "Protein powder",
+                    description: "Protein",
+                    location: "ByProgrammers' Pharmacy",
+                    total: 50.00,
+                    status: confirmStatus,
+                },
+
+            ],
         },
-      })
-      .then((response) => response.json())
-      //If response is in json then in success
-      .then((responseJson) => {
-          //Success 
-          AsyncStorage.setItem('EcheancesLocalStorage', JSON.stringify(responseJson))
-            .then(json => {
-              ToastAndroid.show('EcheancesLocalStorage1 save locally', ToastAndroid.SHORT)
-          })
-            .catch(error => ToastAndroid.show('EcheancesLocalStorage error local memory', ToastAndroid.SHORT));
-      })
-      //If response is not in json then in error
-      .catch((error) => {
-          //Error 
-          ToastAndroid.show('Une erreur est survenue '+ error, ToastAndroid.LONG)
-      });  
-    }
-    else{
-      ToastAndroid.show('Aucune connexion internet!', ToastAndroid.LONG)
-    }
-  })
-}
-
-_fetchClients = async () =>{
-  await NetInfo.isConnected.fetch().then(async isConnected => {
-    if(isConnected){
-  
-      await fetch('http://188.166.46.8:3000/clients/', {
-        method: 'GET',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
+        {
+            id: 3,
+            name: "Child",
+            icon: icons.baby_car,
+            color: COLORS.darkgreen,
+            expenses: [
+                {
+                    id: 7,
+                    title: "Toys",
+                    description: "toys",
+                    location: "ByProgrammers' Toy Store",
+                    total: 25.00,
+                    status: confirmStatus,
+                },
+                {
+                    id: 8,
+                    title: "Baby Car Seat",
+                    description: "Baby Car Seat",
+                    location: "ByProgrammers' Baby Care Store",
+                    total: 100.00,
+                    status: pendingStatus,
+                },
+                {
+                    id: 9,
+                    title: "Pampers",
+                    description: "Pampers",
+                    location: "ByProgrammers' Supermarket",
+                    total: 100.00,
+                    status: pendingStatus,
+                },
+                {
+                    id: 10,
+                    title: "Baby T-Shirt",
+                    description: "T-Shirt",
+                    location: "ByProgrammers' Fashion Store",
+                    total: 20.00,
+                    status: pendingStatus,
+                },
+            ],
         },
-      })
-      .then((response) => response.json())
-      //If response is in json then in success
-      .then((responseJson) => {
-          //Success 
+        {
+            id: 4,
+            name: "Beauty & Care",
+            icon: icons.healthcare,
+            color: COLORS.peach,
+            expenses: [
+                {
+                    id: 11,
+                    title: "Skin Care product",
+                    description: "skin care",
+                    location: "ByProgrammers' Pharmacy",
+                    total: 10.00,
+                    status: pendingStatus,
+                },
+                {
+                    id: 12,
+                    title: "Lotion",
+                    description: "Lotion",
+                    location: "ByProgrammers' Pharmacy",
+                    total: 50.00,
+                    status: confirmStatus,
+                },
+                {
+                    id: 13,
+                    title: "Face Mask",
+                    description: "Face Mask",
+                    location: "ByProgrammers' Pharmacy",
+                    total: 50.00,
+                    status: pendingStatus,
+                },
+                {
+                    id: 14,
+                    title: "Sunscreen cream",
+                    description: "Sunscreen cream",
+                    location: "ByProgrammers' Pharmacy",
+                    total: 50.00,
+                    status: pendingStatus,
+                },
+            ],
+        },
+        {
+            id: 5,
+            name: "Sports",
+            icon: icons.sports_icon,
+            color: COLORS.purple,
+            expenses: [
+                {
+                    id: 15,
+                    title: "Gym Membership",
+                    description: "Monthly Fee",
+                    location: "ByProgrammers' Gym",
+                    total: 45.00,
+                    status: pendingStatus,
+                },
+                {
+                    id: 16,
+                    title: "Gloves",
+                    description: "Gym Equipment",
+                    location: "ByProgrammers' Gym",
+                    total: 15.00,
+                    status: confirmStatus,
+                },
+            ],
+        },
+        {
+            id: 6,
+            name: "Clothing",
+            icon: icons.cloth_icon,
+            color: COLORS.red,
+            expenses: [
+                {
+                    id: 17,
+                    title: "T-Shirt",
+                    description: "Plain Color T-Shirt",
+                    location: "ByProgrammers' Mall",
+                    total: 20.00,
+                    status: pendingStatus,
+                },
+                {
+                    id: 18,
+                    title: "Jeans",
+                    description: "Blue Jeans",
+                    location: "ByProgrammers' Mall",
+                    total: 50.00,
+                    status: confirmStatus,
+                },
+            ],
+        }
+    ]
 
-          //ToastAndroid.show('Ce message '+JSON.stringify(responseJson), ToastAndroid.LONG)
-          AsyncStorage.setItem('ClientsLocalStorage', JSON.stringify(responseJson))
-            .then(json => {
-              ToastAndroid.show('ClientsLocalStorage1 save locally', ToastAndroid.SHORT)
-             
-          })
-            .catch(error => ToastAndroid.show('ClientsLocalStorage error local memory', ToastAndroid.SHORT));
-      })
-      //If response is not in json then in error
-      .catch((error) => {
-          //Error 
-          //alert(JSON.stringify(error));
-          ToastAndroid.show('Une erreur est survenue '+ error, ToastAndroid.LONG)
-          console.error(error);
-      });  
+    const categoryListHeightAnimationValue = useRef(new Animated.Value(115)).current;
+
+    const [categories, setCategories] = React.useState(categoriesData)
+    const [viewMode, setViewMode] = React.useState("chart")
+    const [selectedCategory, setSelectedCategory] = React.useState(null)
+    const [showMoreToggle, setShowMoreToggle] = React.useState(false)
+
+    function renderNavBar() {
+        return (
+            <View
+                style={{
+                    flexDirection: 'row',
+                    height: 80,
+                    justifyContent: 'space-between',
+                    alignItems: 'flex-end',
+                    paddingHorizontal: SIZES.padding,
+                    backgroundColor: COLORS.white,
+                }}
+            >
+                <TouchableOpacity
+                    style={{ justifyContent: 'center', width: 50, }}
+                    onPress={() => console.log('Go Back')}
+                >
+                    <Image
+                        source={icons.back_arrow}
+                        style={{
+                            width: 30,
+                            height: 30,
+                            tintColor: COLORS.primary
+                        }}
+                    />
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                    style={{ justifyContent: 'center', alignItems: 'flex-end', width: 50 }}
+                    onPress={() => console.log('More')}
+                >
+                    <Image
+                        source={icons.more}
+                        style={{
+                            width: 30,
+                            height: 30,
+                            tintColor: COLORS.primary
+                        }}
+                    />
+                </TouchableOpacity>
+            </View>
+        )
     }
-    else{
-      ToastAndroid.show('Aucune connexion internet!', ToastAndroid.LONG)
+
+    function renderHeader() {
+        return (
+            <View style={{ paddingHorizontal: SIZES.padding, paddingVertical: SIZES.padding, backgroundColor: COLORS.white }}>
+                <View>
+                    <Text style={{ color: COLORS.primary, ...FONTS.h2 }}>My Expenses</Text>
+                    <Text style={{ ...FONTS.h3, color: COLORS.darkgray }}>Summary (private)</Text>
+                </View>
+
+                <View style={{ flexDirection: 'row', marginTop: SIZES.padding, alignItems: 'center' }}>
+                    <View style={{
+                        backgroundColor: COLORS.lightGray,
+                        height: 50,
+                        width: 50,
+                        borderRadius: 25,
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                    }}>
+                        <Image
+                            source={icons.calendar}
+                            style={{
+                                width: 20,
+                                height: 20,
+                                tintColor: COLORS.lightBlue
+                            }}
+                        />
+                    </View>
+
+                    <View style={{ marginLeft: SIZES.padding }}>
+                        <Text style={{ color: COLORS.primary, ...FONTS.h3 }}>11 Nov, 2020</Text>
+                        <Text style={{ ...FONTS.body3, color: COLORS.darkgray }}>18% more than last month</Text>
+                    </View>
+                </View>
+            </View>
+        )
     }
-  })
-}
 
-  _fetchGroup = async () =>{
-    await NetInfo.isConnected.fetch().then(async isConnected => {
-      if(isConnected){
-    
-        await fetch('http://188.166.46.8:3000/groups/', {
-          method: 'GET',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-        })
-        .then((response) => response.json())
-        //If response is in json then in success
-        .then((responseJson) => {
+    function renderCategoryHeaderSection() {
+        return (
+            <View style={{ flexDirection: 'row', padding: SIZES.padding, justifyContent: 'space-between', alignItems: 'center' }}>
+                {/* Title */}
+                <View>
+                    <Text style={{ color: COLORS.primary, ...FONTS.h3 }}>CATEGORIES</Text>
+                    <Text style={{ color: COLORS.darkgray, ...FONTS.body4 }}>{categories.length} Total</Text>
+                </View>
 
-            //Success 
-            AsyncStorage.setItem('GroupsLocalStorage', JSON.stringify(responseJson))
-              .then(json => {
-                ToastAndroid.show('GroupsLocalStorage1 save locally', ToastAndroid.SHORT)
-                //ToastAndroid.show(JSON.stringify(responseJson), ToastAndroid.LONG)
-                this._bootstrapAsyncGroup();
-                if(responseJson == null){
-                  this.setState({groupss: null});
+                {/* Button */}
+                <View style={{ flexDirection: 'row' }}>
+                    <TouchableOpacity
+                        style={{
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            backgroundColor: viewMode == "chart" ? COLORS.secondary : null,
+                            height: 50,
+                            width: 50,
+                            borderRadius: 25
+                        }}
+                        onPress={() => setViewMode("chart")}
+                    >
+                        <Image
+                            source={icons.chart}
+                            resizeMode="contain"
+                            style={{
+                                width: 20,
+                                height: 20,
+                                tintColor: viewMode == "chart" ? COLORS.white : COLORS.darkgray,
+                            }}
+                        />
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                        style={{
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            backgroundColor: viewMode == "list" ? COLORS.secondary : null,
+                            height: 50,
+                            width: 50,
+                            borderRadius: 25,
+                            marginLeft: SIZES.base
+                        }}
+                        onPress={() => setViewMode("list")}
+                    >
+                        <Image
+                            source={icons.menu}
+                            resizeMode="contain"
+                            style={{
+                                width: 20,
+                                height: 20,
+                                tintColor: viewMode == "list" ? COLORS.white : COLORS.darkgray,
+                            }}
+                        />
+                    </TouchableOpacity>
+                </View>
+            </View>
+        )
+    }
+
+    function renderCategoryList() {
+        const renderItem = ({ item }) => (
+            <TouchableOpacity
+                onPress={() => setSelectedCategory(item)}
+                style={{
+                    flex: 1,
+                    flexDirection: 'row',
+                    margin: 5,
+                    paddingVertical: SIZES.radius,
+                    paddingHorizontal: SIZES.padding,
+                    borderRadius: 5,
+                    backgroundColor: COLORS.white,
+                    ...styles.shadow
+                }}
+            >
+                <Image
+                    source={item.icon}
+                    style={{
+                        width: 20,
+                        height: 20,
+                        tintColor: item.color
+                    }}
+                />
+                <Text style={{ marginLeft: SIZES.base, color: COLORS.primary, ...FONTS.h4 }}>{item.name}</Text>
+            </TouchableOpacity>
+        )
+
+        return (
+            <View style={{ paddingHorizontal: SIZES.padding - 5 }}>
+                <Animated.View style={{ height: categoryListHeightAnimationValue }}>
+                    <FlatList
+                        data={categories}
+                        renderItem={renderItem}
+                        keyExtractor={item => `${item.id}`}
+                        numColumns={2}
+                    />
+                </Animated.View>
+
+                <TouchableOpacity
+                    style={{
+                        flexDirection: 'row',
+                        marginVertical: SIZES.base,
+                        justifyContent: 'center'
+                    }}
+                    onPress={() => {
+                        if (showMoreToggle) {
+                            Animated.timing(categoryListHeightAnimationValue, {
+                                toValue: 115,
+                                duration: 500,
+                                useNativeDriver: false
+                            }).start()
+                        } else {
+                            Animated.timing(categoryListHeightAnimationValue, {
+                                toValue: 172.5,
+                                duration: 500,
+                                useNativeDriver: false
+                            }).start()
+                        }
+
+                        setShowMoreToggle(!showMoreToggle)
+                    }}
+                >
+                    <Text style={{ ...FONTS.body4 }}>{showMoreToggle ? "LESS" : "MORE"}</Text>
+                    <Image
+                        source={showMoreToggle ? icons.up_arrow : icons.down_arrow}
+                        style={{ marginLeft: 5, width: 15, height: 15, alignSelf: 'center' }}
+                    />
+                </TouchableOpacity>
+            </View>
+        )
+    }
+
+    function renderIncomingExpensesTitle() {
+        return (
+            <View style={{ height: 80, backgroundColor: COLORS.lightGray2, padding: SIZES.padding }}>
+                {/* Title */}
+                <Text style={{ ...FONTS.h3, color: COLORS.primary }}>INCOMING EXPENSES</Text>
+                <Text style={{ ...FONTS.body4, color: COLORS.darkgray }}>12 Total</Text>
+            </View>
+        )
+    }
+
+    function renderIncomingExpenses() {
+        let allExpenses = selectedCategory ? selectedCategory.expenses : []
+        let incomingExpenses = allExpenses.filter(a => a.status == "P")
+
+        const renderItem = ({ item, index }) => (
+            <View style={{
+                width: 300,
+                marginRight: SIZES.padding,
+                marginLeft: index == 0 ? SIZES.padding : 0,
+                marginVertical: SIZES.radius,
+                borderRadius: SIZES.radius,
+                backgroundColor: COLORS.white,
+                ...styles.shadow
+            }}>
+                {/* Title */}
+                <View style={{ flexDirection: 'row', padding: SIZES.padding, alignItems: 'center' }}>
+                    <View
+                        style={{
+                            height: 50,
+                            width: 50,
+                            borderRadius: 25,
+                            backgroundColor: COLORS.lightGray,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            marginRight: SIZES.base
+                        }}
+                    >
+                        <Image
+                            source={selectedCategory.icon}
+                            style={{
+                                width: 30,
+                                height: 30,
+                                tintColor: selectedCategory.color
+                            }}
+                        />
+                    </View>
+
+                    <Text style={{ ...FONTS.h3, color: selectedCategory.color, }}>{selectedCategory.name}</Text>
+                </View>
+
+                {/* Expense Description */}
+                <View style={{ paddingHorizontal: SIZES.padding }}>
+                    {/* Title and description */}
+                    <Text style={{ ...FONTS.h2, }}>{item.title}</Text>
+                    <Text style={{ ...FONTS.body3, flexWrap: 'wrap', color: COLORS.darkgray }}>
+                        {item.description}
+                    </Text>
+
+                    {/* Location */}
+                    <Text style={{ marginTop: SIZES.padding, ...FONTS.h4, }}>Location</Text>
+                    <View style={{ flexDirection: 'row' }}>
+                        <Image
+                            source={icons.pin}
+                            style={{
+                                width: 20,
+                                height: 20,
+                                tintColor: COLORS.darkgray,
+                                marginRight: 5
+                            }}
+                        />
+                        <Text style={{ marginBottom: SIZES.base, color: COLORS.darkgray, ...FONTS.body4 }}>{item.location}</Text>
+                    </View>
+                </View>
+
+                {/* Price */}
+                <View
+                    style={{
+                        height: 50,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        borderBottomStartRadius: SIZES.radius,
+                        borderBottomEndRadius: SIZES.radius,
+                        backgroundColor: selectedCategory.color,
+                    }}
+                >
+                    <Text style={{ color: COLORS.white, ...FONTS.body3 }}>CONFIRM {item.total.toFixed(2)} USD</Text>
+                </View>
+            </View>
+        )
+
+        return (
+            <View>
+                {renderIncomingExpensesTitle()}
+
+                {
+                    incomingExpenses.length > 0 &&
+                    <FlatList
+                        data={incomingExpenses}
+                        renderItem={renderItem}
+                        keyExtractor={item => `${item.id}`}
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                    />
                 }
 
-            })
-              .catch(error => ToastAndroid.show('GroupsLocalStorage error local memory', ToastAndroid.SHORT));   
-        })
-        //If response is not in json then in error
-        .catch((error) => {
-            //Error 
-            //alert(JSON.stringify(error));
-            ToastAndroid.show('Une erreur est survenue '+ error, ToastAndroid.LONG)
-            console.error(error);
-        });  
-      }
-      else{
-        ToastAndroid.show('Aucune connexion internet!', ToastAndroid.LONG)
-      }
-    })
-  }
+                {
+                    incomingExpenses.length == 0 &&
+                    <View style={{ alignItems: 'center', justifyContent: 'center', height: 300 }}>
+                        <Text style={{ color: COLORS.primary, ...FONTS.h3 }}>No Record</Text>
+                    </View>
+                }
 
-  render() {
-    if(this.state.isLoading){
-      return( 
-        <Block style={styles.activity}>
-          <ActivityIndicator size="large" color="#0000ff" /> 
-        </Block>
-      )
+            </View>
+
+        )
     }
-    
-    return (
-      <Block flex center style={styles.home} >
-        <Block>
-        <ScrollView refreshControl={
-           <RefreshControl
-           refreshing={this.state.isRefreshing}
-           onRefresh={this.componentDidMount}
-         />
-        }
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.articles}
-        >
 
-        {this.state.groupss == null || this.state.groupss == ""? 
-        <Block flex center>
-          <Block>
-          <GaButton
-            round
-            onlyIcon
-            shadowless
-            icon="refresh"
-            iconFamily="Font-Awesome"
-            iconColor={theme.COLORS.WHITE}
-            iconSize={theme.SIZES.BASE * 1.625}
-            color="info"
-            style={[styles.social]}
-            onPress = {() => this._fetchGroup()}
-          />
-        </Block>
+    function processCategoryDataToDisplay() {
+        // Filter expenses with "Confirmed" status
+        let chartData = categories.map((item) => {
+            let confirmExpenses = item.expenses.filter(a => a.status == "C")
+            var total = confirmExpenses.reduce((a, b) => a + (b.total || 0), 0)
 
-       <Text>Aucun groupe disponible, veiller raffraichir cette page</Text>
-         
-        
-      </Block>
-      :
-      <Block flex>
+            return {
+                name: item.name,
+                y: total,
+                expenseCount: confirmExpenses.length,
+                color: item.color,
+                id: item.id
+            }
+        })
 
-            {this.state.groupss.map((item, index) => {
-               return <Block key={index} flex row>
-              <Card item={item} horizontal />
-            </Block>
-            })}   
-            
-          </Block>
-      } 
-        </ScrollView>
+        // filter out categories with no data/expenses
+        let filterChartData = chartData.filter(a => a.y > 0)
+
+        // Calculate the total expenses
+        let totalExpense = filterChartData.reduce((a, b) => a + (b.y || 0), 0)
+
+        // Calculate percentage and repopulate chart data
+        let finalChartData = filterChartData.map((item) => {
+            let percentage = (item.y / totalExpense * 100).toFixed(0)
+            return {
+                label: `${percentage}%`,
+                y: Number(item.y),
+                expenseCount: item.expenseCount,
+                color: item.color,
+                name: item.name,
+                id: item.id
+            }
+        })
+
+        return finalChartData
+    }
+
+    function setSelectCategoryByName(name) {
+        let category = categories.filter(a => a.name == name)
+        setSelectedCategory(category[0])
+    }
+
+    function renderChart() {
+
+        let chartData = processCategoryDataToDisplay()
+        let colorScales = chartData.map((item) => item.color)
+        let totalExpenseCount = chartData.reduce((a, b) => a + (b.expenseCount || 0), 0)
+
+        console.log("Check Chart")
+        console.log(chartData)
+
+        if(Platform.OS == 'ios')
         {
-        this.state.currentUser.phone == "+243000000000"? 
-        <ActionButton shadowStyle={styles.elevation} buttonColor="rgba(231,76,60,1)" >
-        <ActionButton.Item buttonColor='#9b59b6' title="Creer un groupe" onPress={() => 
-          this.props.navigation.navigate('AddGroup') 
-        }>
-          <Icon name="users" family="font-awesome" style={styles.actionButtonIcon} />
-        </ActionButton.Item>
-        <ActionButton.Item buttonColor='#3498db' title="Valider Credits" onPress={() => {
-          this.props.navigation.navigate('ValidCredits')
-        }}>
-          <Icon name="money" family="font-awesome" style={styles.actionButtonIcon} />
-        </ActionButton.Item>
-        <ActionButton.Item buttonColor='#1abc9c' title="Valider Groupes" onPress={() => {
-          this.props.navigation.navigate('ValidGroups')
-        }}>
-          <Icon name="users" family="font-awesome" style={styles.actionButtonIcon} />
-        </ActionButton.Item>
-      </ActionButton> 
-      :
-      <Block style={styles.fab}>
-      <GaButton
-        round
-        onlyIcon
-        shadowless
-        icon="plus"
-        iconFamily="Font-Awesome"
-        iconColor={theme.COLORS.WHITE}
-        iconSize={theme.SIZES.BASE * 1.625}
-        color="error"
-        style={[styles.social]}
-        onPress = {() => this.props.navigation.navigate('AddGroup')}
-      />
-    </Block>
+            return (
+                <View  style={{ alignItems: 'center', justifyContent: 'center' }}>
+                    <VictoryPie
+                        
+                        data={chartData}
+                        labels={(datum) => `${datum.y}`}
+                        radius={({ datum }) => (selectedCategory && selectedCategory.name == datum.name) ? SIZES.width * 0.4 : SIZES.width * 0.4 - 10}
+                        innerRadius={70}
+                        labelRadius={({ innerRadius }) => (SIZES.width * 0.4 + innerRadius) / 2.5}
+                        style={{
+                            labels: { fill: "white",  },
+                            parent: {
+                                ...styles.shadow
+                            },
+                        }}
+                        width={SIZES.width * 0.8}
+                        height={SIZES.width * 0.8}
+                        colorScale={colorScales}
+                        events={[{
+                            target: "data",
+                            eventHandlers: {
+                                onPress: () => {
+                                    return [{
+                                        target: "labels",
+                                        mutation: (props) => {
+                                            let categoryName = chartData[props.index].name
+                                            setSelectCategoryByName(categoryName)
+                                        }
+                                    }]
+                                }
+                            }
+                        }]}
+    
+                    />
+    
+                    <View style={{ position: 'absolute', top: '42%', left: "42%" }}>
+                        <Text style={{ ...FONTS.h1, textAlign: 'center' }}>{totalExpenseCount}</Text>
+                        <Text style={{ ...FONTS.body3, textAlign: 'center' }}>Expenses</Text>
+                    </View>
+                </View>
+    
+            )
         }
-        </Block>
-      </Block>
-    );
-  }
+        else
+        {
+            // Android workaround by wrapping VictoryPie with SVG
+            return (
+                <View  style={{ alignItems: 'center', justifyContent: 'center' }}>
+                    <Svg width={SIZES.width} height={SIZES.width} style={{width: "100%", height: "auto"}}>
+
+                        <VictoryPie
+                            standalone={false} // Android workaround
+                            data={chartData}
+                            labels={(datum) => `${datum.y}`}
+                            radius={({ datum }) => (selectedCategory && selectedCategory.name == datum.name) ? SIZES.width * 0.4 : SIZES.width * 0.4 - 10}
+                            innerRadius={70}
+                            labelRadius={({ innerRadius }) => (SIZES.width * 0.4 + innerRadius) / 2.5}
+                            style={{
+                                labels: { fill: "white" },
+                                parent: {
+                                    ...styles.shadow
+                                },
+                            }}
+                            width={SIZES.width}
+                            height={SIZES.width}
+                            colorScale={colorScales}
+                            events={[{
+                                target: "data",
+                                eventHandlers: {
+                                    onPress: () => {
+                                        return [{
+                                            target: "labels",
+                                            mutation: (props) => {
+                                                let categoryName = chartData[props.index].name
+                                                setSelectCategoryByName(categoryName)
+                                            }
+                                        }]
+                                    }
+                                }
+                            }]}
+        
+                        />
+                    </Svg>
+                    <View style={{ position: 'absolute', top: '42%', left: "42%" }}>
+                        <Text style={{ ...FONTS.h1, textAlign: 'center' }}>{totalExpenseCount}</Text>
+                        <Text style={{ ...FONTS.body3, textAlign: 'center' }}>Expenses</Text>
+                    </View>
+                </View>
+            )
+        }
+        
+    }
+
+    function renderExpenseSummary() {
+        let data = processCategoryDataToDisplay()
+
+        const renderItem = ({ item }) => (
+            <TouchableOpacity
+                style={{
+                    flexDirection: 'row',
+                    height: 40,
+                    paddingHorizontal: SIZES.radius,
+                    borderRadius: 10,
+                    backgroundColor: (selectedCategory && selectedCategory.name == item.name) ? item.color : COLORS.white
+                }}
+                onPress={() => {
+                    let categoryName = item.name
+                    setSelectCategoryByName(categoryName)
+                }}
+            >
+                {/* Name/Category */}
+                <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
+                    <View
+                        style={{
+                            width: 20,
+                            height: 20,
+                            backgroundColor: (selectedCategory && selectedCategory.name == item.name) ? COLORS.white : item.color,
+                            borderRadius: 5
+                        }}
+                    />
+
+                    <Text style={{ marginLeft: SIZES.base, color: (selectedCategory && selectedCategory.name == item.name) ? COLORS.white : COLORS.primary, ...FONTS.h3 }}>{item.name}</Text>
+                </View>
+
+                {/* Expenses */}
+                <View style={{ justifyContent: 'center' }}>
+                    <Text style={{ color: (selectedCategory && selectedCategory.name == item.name) ? COLORS.white : COLORS.primary, ...FONTS.h3 }}>{item.y} USD - {item.label}</Text>
+                </View>
+            </TouchableOpacity>
+        )
+
+        return (
+            <View style={{ padding: SIZES.padding }}>
+                <FlatList
+                    data={data}
+                    renderItem={renderItem}
+                    keyExtractor={item => `${item.id}`}
+                />
+            </View>
+
+        )
+    }
+
+    return (
+        <View style={{ flex: 1, backgroundColor: COLORS.lightGray2 }}>
+            {/* Nav bar section */}
+            {renderNavBar()}
+
+            {/* Header section */}
+            {renderHeader()}
+
+            {/* Category Header Section */}
+            {renderCategoryHeaderSection()}
+
+            <ScrollView contentContainerStyle={{ paddingBottom: 60 }}>
+                {
+                    viewMode == "list" &&
+                    <View>
+                        {renderCategoryList()}
+                        {renderIncomingExpenses()}
+                    </View>
+                }
+                {
+                    viewMode == "chart" &&
+                    <View>
+                        {renderChart()}
+                        {renderExpenseSummary()}
+                    </View>
+                }
+            </ScrollView>
+        </View>
+    )
 }
 
 const styles = StyleSheet.create({
-  home: {
-    width: width
-  },
-  articles: {
-    width: width - theme.SIZES.BASE * 2,
-    paddingVertical: theme.SIZES.BASE,
-    paddingHorizontal: 2,
-    fontFamily: 'montserrat-regular'
-  },
-  fab: {
-    position: 'absolute',
-    right: 0,
-    marginBottom:theme.SIZES.BASE * 1.75,
-    bottom: 0,position: 'absolute',
-    left: 0,
-    bottom: 0,
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-  },
-  social: {
-    width: theme.SIZES.BASE * 3.5,
-    height: theme.SIZES.BASE * 3.5,
-    borderRadius: theme.SIZES.BASE * 1.75,
-    justifyContent: 'center',
-    elevation: 5
-  },
-  activity: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  actionButtonIcon: {
-    fontSize: 20,
-    height: 22,
-    color: 'white',
-  },
-  elevation:{
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.23,
-    shadowRadius: 2.62,
-
-    elevation: 4,
-  }
-});
+    shadow: {
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 2,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 3,
+    }
+})
 
 export default Home;

@@ -1,23 +1,13 @@
 {
   "expo": {
-    "name": "Bomoko app",
-    "slug": "bomoko-app",
-    "privacy": "public",
-    "android": {
-      "package": "com.wezalab.bomoko",
-      "permissions": [],
-      "versionCode": 14
-    },
-    "sdkVersion": "35.0.0",
-    "platforms": [
-      "android"
-    ],
-    "version": "1.14.0",
+    "name": "LCRN07-expense-tracker-app-expo",
+    "slug": "LCRN07-expense-tracker-app-expo",
+    "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/app-icon.png",
+    "icon": "./assets/icon.png",
     "splash": {
-      "image": "./assets/login1_bg.png",
-      "resizeMode": "cover",
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "updates": {
@@ -26,11 +16,17 @@
     "assetBundlePatterns": [
       "**/*"
     ],
-    "packagerOpts": {
-      "assetExts": [
-        "ttf"
-      ]
+    "ios": {
+      "supportsTablet": true
     },
-    "description": "Bomoko app"
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#FFFFFF"
+      }
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
   }
 }

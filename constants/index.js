@@ -1,7 +1,5 @@
-import nowTheme from './Theme';
-import articles from './articles';
-import Images from './Images';
-import tabs from './tabs';
-import utils from './utils';
+import icons from "./icons";
+import images from "./images";
+import theme, { COLORS, SIZES, FONTS } from "./theme";
 
-export { articles, nowTheme, Images, tabs, utils };
+export { icons, images, theme, COLORS, SIZES, FONTS };
