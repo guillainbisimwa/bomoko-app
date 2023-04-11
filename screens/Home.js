@@ -123,107 +123,113 @@ let categoriesData = [
       },
       {
         id: 7,
-        name: "Sortie 2",
+        name: "Salaire",
         icon: icons.cash,
         cat: expense,
         color: COLORS.peach,
         data: [
           {
             id: 1,
-            description: "Frais de déplacement pour la réunion avec le client",
+            description: "Salaire pour le mois d'avril",
             total: 50.00,
             date: "2023-04-11"
           },
           {
             id: 2,
-            description: "Déjeuner avec le client",
+            description: "Salaire pour le mois de mars",
             total: 25.00,
-            date: "2023-04-12"
+            date: "2023-03-12"
           },
         ],
       },
       {
         id: 8,
-        name: "Sortie 3",
+        name: "Dépenses d'exploitation",
         icon: icons.cashbook,
         cat: expense,
         color: COLORS.darkgreen,
         data: [
           {
             id: 1,
-            description: "Intérêts sur les comptes d'épargne",
+            description: "Loyer mensuel",
             total: 10.00,
+            date: "2023-04-15"
+          },
+          {
+            id: 1,
+            description: "Location voiture",
+            total: 13.00,
             date: "2023-04-15"
           },
         ],
       },
       {
         id: 9,
-        name: "Sortie 4",
+        name: "Retraits d'argent",
         icon: icons.sell,
         cat: expense,
         color: COLORS.red,
         data: [
           {
             id: 1,
-            description: "Subvention pour le projet de recherche",
-            total: 5000.00,
+            description: "Retrait d'argent",
+            total: 1500.00,
             date: "2023-04-20"
           },
         ],
       },
       {
         id: 10,
-        name: "Sortie 5",
+        name: "paiements de dettes",
         icon: icons.income,
         cat: expense,
         color: COLORS.yellow,
         data: [
           {
             id: 1,
-            description: "Achat d'un immeuble à usage commercial",
+            description: "Paiement de prêt étudiant",
             total: 100000.00,
             date: "2023-04-30"
           },
           {
             id: 2,
-            description: "Achat d'un immeuble à usage commercial",
+            description: "Paiement de prêt étudiant",
             total: 100000.00,
             date: "2023-04-30"
           },
           {
             id: 3,
-            description: "Achat d'un immeuble à usage commercial",
+            description: "Paiement de prêt étudiant",
             total: 100000.00,
             date: "2023-04-30"
           },
           {
             id: 4,
-            description: "Achat d'un immeuble à usage commercial",
+            description: "Paiement de prêt étudiant",
             total: 100000.00,
             date: "2023-04-30"
           },
           {
             id: 11,
-            description: "Achat d'un immeuble à usage commercial",
+            description: "Paiement de prêt étudiant",
             total: 100000.00,
             date: "2023-04-30"
           },
           {
             id: 12,
-            description: "Achat d'un immeuble à usage commercial",
+            description: "Paiement de prêt étudiant",
             total: 100000.00,
             date: "2023-04-30"
           },
           {
             id: 13,
-            description: "Achat d'un immeuble à usage commercial",
+            description: "Paiement de prêt étudiant",
             total: 100000.00,
             date: "2023-04-30"
           },
           {
             id: 14,
-            description: "Achat d'un immeuble à usage commercial",
+            description: "Paiement de prêt étudiant",
             total: 100000.00,
             date: "2023-04-30"
           },
@@ -317,7 +323,8 @@ const Home = () => {
 
                 <View style={{margin: SIZES.padding, position:"absolute", top:SIZES.padding * 4.6, width:"100%",
                  backgroundColor: COLORS.secondary, paddingTop:  SIZES.padding, 
-                borderRadius: SIZES.radius,...styles.shadow}}>
+                borderRadius: SIZES.radius,...styles.shadow,
+                }}>
                     <View style={{  flexDirection: 'row',
                     width: "100%",
                     justifyContent: 'space-around',
