@@ -2,7 +2,7 @@
   "expo": {
     "name": "Bomoko app",
     "slug": "bomoko-app",
-    "version": "2.0.0",
+    "version": "2.1.0",
     "privacy": "public",
     "orientation": "portrait",
     "icon": "./assets/app-icon.png",
