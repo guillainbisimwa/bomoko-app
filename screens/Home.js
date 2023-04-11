@@ -172,7 +172,7 @@ let categoriesData = [
         data: [
           {
             id: 1,
-            description: "Retrait d'argent",
+            description: "Retrait d'argent aupres de la TMB",
             total: 1500.00,
             date: "2023-04-20"
           },
@@ -180,56 +180,56 @@ let categoriesData = [
       },
       {
         id: 10,
-        name: "paiements de dettes",
+        name: "Paiements de dettes",
         icon: icons.income,
         cat: expense,
         color: COLORS.yellow,
         data: [
           {
             id: 1,
-            description: "Paiement de prêt étudiant",
+            description: "Paiement de prêt étudiant Janvier",
             total: 100000.00,
             date: "2023-04-30"
           },
           {
             id: 2,
-            description: "Paiement de prêt étudiant",
+            description: "Paiement de prêt étudiant Fevrier",
             total: 100000.00,
             date: "2023-04-30"
           },
           {
             id: 3,
-            description: "Paiement de prêt étudiant",
+            description: "Paiement de prêt étudiant Mars",
             total: 100000.00,
             date: "2023-04-30"
           },
           {
             id: 4,
-            description: "Paiement de prêt étudiant",
+            description: "Paiement de prêt étudiant Avril",
             total: 100000.00,
             date: "2023-04-30"
           },
           {
             id: 11,
-            description: "Paiement de prêt étudiant",
+            description: "Paiement de prêt étudiant Mai",
             total: 100000.00,
             date: "2023-04-30"
           },
           {
             id: 12,
-            description: "Paiement de prêt étudiant",
+            description: "Paiement de prêt étudiant Juin",
             total: 100000.00,
             date: "2023-04-30"
           },
           {
             id: 13,
-            description: "Paiement de prêt étudiant",
+            description: "Paiement de prêt étudiant Juillet",
             total: 100000.00,
             date: "2023-04-30"
           },
           {
             id: 14,
-            description: "Paiement de prêt étudiant",
+            description: "Paiement de prêt étudiant Aout",
             total: 100000.00,
             date: "2023-04-30"
           },
