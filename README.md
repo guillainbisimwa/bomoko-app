@@ -1,59 +1,26 @@
 ---
-noteId: "20630520a92011ebbccd99903f9da0e3"
+noteId: "2bc60800d79911ed82956d7eae838669"
 tags: []
 
 ---
 
-# BOMOKO APP
+# LCRN07 - Expense Tracker App (Expo)
 
-> Help Congolese small-scale farmers who are unbanked to have access to affordable loans using mobile phones (USSD). Our solution is to facilitate the financial inclusion of farmers and use mobile phones to give loans to smallholder farmers. Built with: React Native, Redux, Couchbase, Docker, and NodeJs. Play store, Official website,
+## [Watch it on YouTube](https://youtu.be/uBcpWOQqbAQ)
 
-Additional description about the project and its features.
+In this episode of "Let’s Code React Native" series, we are going to build a clean looking Expense Tracker App based on the design created by Anastasiia on Dribbble.
 
-## Built With
+Be sure to subscribe to our YouTube channel for more videos like this!
 
-- React native
-- React/Redux
-- Expo
-- Genymotion Android Emulator
-- Docker, Nodejs and Couchbase (server side)
-- localStorage
+## Table of Contents
 
-## Links
+| Code | Project | Preview | Inspiration | No. of Screens |
+| ------ | ------ | ------ | ------ | ------ |
+| LCRN07 | [Expense Tracker App](https://youtu.be/uBcpWOQqbAQ) | <img src="https://cdn.dribbble.com/users/2141764/screenshots/6037420/money_tracker_app.png?compress=1&resize=1200x900" width="120" /> | [View](https://dribbble.com/shots/6037420-Expense-Tracker-App) | 1 |
 
-[Play store](https://play.google.com/store/apps/details?id=com.wezalab.bomoko), 
-[Official website](http://bomoko-app.com/)
+## Contributors
 
-## Getting Started
+<a href="https://github.com/byprogrammers/LCRN07-expense-tracker-app/graphs/contributors">
+   <img src="https://contrib.rocks/image?repo=byprogrammers/lets-code-react-native" />
+</a>
 
-In order to run locally this project type the following commands over the terminal in Linux or Mac or the Windows cmd console:
-
-```s
-$ git clone https://github.com/guillainbisimwa/bomoko-app.git
-$ cd bomoko-app
-$ npm install
-$ expo start
-
-```
-
-## Author
-
-👤 **Guillain Bisimwa**
-
-- Github : [@guillainbisimwa](https://github.com/guillainbisimwa)
-- Twitter : [@gullain_bisimwa](https://twitter.com/gullain_bisimwa)
-- Linkedin : [guillain-bisimwa](https://www.linkedin.com/in/guillain-bisimwa-8a8b7a7b/)
-
-## 🤝 Contributing
-
-Contributions, issues, and feature requests are welcome!
-
-Feel free to check the [issues page](https://github.com/guillainbisimwa/bomoko-app/issues).
-
-## Show your support
-
-Give a ⭐️ if you like this project!
-
-## 📝 License
-
-This project is [MIT](lic.url) licensed.

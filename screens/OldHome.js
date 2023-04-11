@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import {
     SafeAreaView,
     StyleSheet,
@@ -19,184 +19,215 @@ import {Svg} from 'react-native-svg';
 
 import { COLORS, FONTS, SIZES, icons, images } from '../constants';
 
-const income = "income";
-const expense = "expense";
-  
-const Home = () => {
+const OldHome = () => {
+
+    // dummy data
+    const confirmStatus = "C"
+    const pendingStatus = "P"
 
     let categoriesData = [
         {
-          id: 1,
-          name: "Ventes",
-          icon: icons.shopping,
-          cat: income,
-          color: COLORS.purple,
-          data: [
-            {
-              id: 1,
-              description: "Vente 1kg de Legumes frais",
-              total: 100.00,
-              date: "2023-04-10"
-            },
-          ],
+            id: 1,
+            name: "Education",
+            icon: icons.education,
+            color: COLORS.yellow,
+            expenses: [
+                {
+                    id: 1,
+                    title: "Tuition Fee",
+                    description: "Tuition fee",
+                    location: "ByProgrammers' tuition center",
+                    total: 100.00,
+                    status: pendingStatus
+                },
+                {
+                    id: 2,
+                    title: "Arduino",
+                    description: "Hardward",
+                    location: "ByProgrammers' tuition center",
+                    total: 30.00,
+                    status: pendingStatus
+                },
+                {
+                    id: 3,
+                    title: "Javascript Books",
+                    description: "Javascript books",
+                    location: "ByProgrammers' Book Store",
+                    total: 20.00,
+                    status: confirmStatus
+                },
+                {
+                    id: 4,
+                    title: "PHP Books",
+                    description: "PHP books",
+                    location: "ByProgrammers' Book Store",
+                    total: 20.00,
+                    status: confirmStatus
+                }
+            ],
         },
         {
-          id: 2,
-          name: "Remboursements",
-          icon: icons.refund,
-          cat: income,
-          color: COLORS.blue,
-          data: [
-            {
-              id: 1,
-              description: "Frais de déplacement pour la réunion avec le client",
-              total: 50.00,
-              date: "2023-04-11"
-            },
-            {
-              id: 2,
-              description: "Déjeuner avec le client",
-              total: 25.00,
-              date: "2023-04-12"
-            },
-          ],
-        },
-        {
-          id: 3,
-          name: "Intérêts",
-          icon: icons.interest,
-          cat: income,
-          color: COLORS.green,
-          data: [
-            {
-              id: 1,
-              description: "Intérêts sur les comptes d'épargne",
-              total: 10.00,
-              date: "2023-04-15"
-            },
-          ],
-        },
-        {
-          id: 4,
-          name: "Subventions",
-          icon: icons.grant,
-          cat: income,
-          color: COLORS.red,
-          data: [
-            {
-              id: 1,
-              description: "Subvention pour le projet de recherche",
-              total: 5000.00,
-              date: "2023-04-20"
-            },
-          ],
-        },
-        {
-          id: 5,
-          name: "Investissements",
-          icon: icons.investment,
-          cat: income,
-          color: COLORS.peach,
-          data: [
-            {
-              id: 1,
-              description: "Achat d'un immeuble à usage commercial",
-              total: 100000.00,
-              date: "2023-04-30"
-            },
-          ],
-        },
+            id: 2,
+            name: "Nutrition",
+            icon: icons.food,
+            color: COLORS.lightBlue,
+            expenses: [
+                {
+                    id: 5,
+                    title: "Vitamins",
+                    description: "Vitamin",
+                    location: "ByProgrammers' Pharmacy",
+                    total: 25.00,
+                    status: pendingStatus,
+                },
 
+                {
+                    id: 6,
+                    title: "Protein powder",
+                    description: "Protein",
+                    location: "ByProgrammers' Pharmacy",
+                    total: 50.00,
+                    status: confirmStatus,
+                },
+
+            ],
+        },
+        {
+            id: 3,
+            name: "Child",
+            icon: icons.baby_car,
+            color: COLORS.darkgreen,
+            expenses: [
+                {
+                    id: 7,
+                    title: "Toys",
+                    description: "toys",
+                    location: "ByProgrammers' Toy Store",
+                    total: 25.00,
+                    status: confirmStatus,
+                },
+                {
+                    id: 8,
+                    title: "Baby Car Seat",
+                    description: "Baby Car Seat",
+                    location: "ByProgrammers' Baby Care Store",
+                    total: 100.00,
+                    status: pendingStatus,
+                },
+                {
+                    id: 9,
+                    title: "Pampers",
+                    description: "Pampers",
+                    location: "ByProgrammers' Supermarket",
+                    total: 100.00,
+                    status: pendingStatus,
+                },
+                {
+                    id: 10,
+                    title: "Baby T-Shirt",
+                    description: "T-Shirt",
+                    location: "ByProgrammers' Fashion Store",
+                    total: 20.00,
+                    status: pendingStatus,
+                },
+            ],
+        },
+        {
+            id: 4,
+            name: "Beauty & Care",
+            icon: icons.healthcare,
+            color: COLORS.peach,
+            expenses: [
+                {
+                    id: 11,
+                    title: "Skin Care product",
+                    description: "skin care",
+                    location: "ByProgrammers' Pharmacy",
+                    total: 10.00,
+                    status: pendingStatus,
+                },
+                {
+                    id: 12,
+                    title: "Lotion",
+                    description: "Lotion",
+                    location: "ByProgrammers' Pharmacy",
+                    total: 50.00,
+                    status: confirmStatus,
+                },
+                {
+                    id: 13,
+                    title: "Face Mask",
+                    description: "Face Mask",
+                    location: "ByProgrammers' Pharmacy",
+                    total: 50.00,
+                    status: pendingStatus,
+                },
+                {
+                    id: 14,
+                    title: "Sunscreen cream",
+                    description: "Sunscreen cream",
+                    location: "ByProgrammers' Pharmacy",
+                    total: 50.00,
+                    status: pendingStatus,
+                },
+            ],
+        },
+        {
+            id: 5,
+            name: "Sports",
+            icon: icons.sports_icon,
+            color: COLORS.purple,
+            expenses: [
+                {
+                    id: 15,
+                    title: "Gym Membership",
+                    description: "Monthly Fee",
+                    location: "ByProgrammers' Gym",
+                    total: 45.00,
+                    status: pendingStatus,
+                },
+                {
+                    id: 16,
+                    title: "Gloves",
+                    description: "Gym Equipment",
+                    location: "ByProgrammers' Gym",
+                    total: 15.00,
+                    status: confirmStatus,
+                },
+            ],
+        },
         {
             id: 6,
-            name: "Achat",
-            icon: icons.shopping,
-            cat: expense,
-            color: COLORS.lightBlue,
-            data: [
-              {
-                id: 1,
-                description: "Achat 1kg de Legumes frais",
-                total: 100.00,
-                date: "2023-04-10"
-              },
-            ],
-          },
-          {
-            id: 7,
-            name: "Sortie 2",
-            icon: icons.cash,
-            cat: expense,
-            color: COLORS.peach,
-            data: [
-              {
-                id: 1,
-                description: "Frais de déplacement pour la réunion avec le client",
-                total: 50.00,
-                date: "2023-04-11"
-              },
-              {
-                id: 2,
-                description: "Déjeuner avec le client",
-                total: 25.00,
-                date: "2023-04-12"
-              },
-            ],
-          },
-          {
-            id: 8,
-            name: "Sortie 3",
-            icon: icons.cashbook,
-            cat: expense,
-            color: COLORS.darkgreen,
-            data: [
-              {
-                id: 1,
-                description: "Intérêts sur les comptes d'épargne",
-                total: 10.00,
-                date: "2023-04-15"
-              },
-            ],
-          },
-          {
-            id: 9,
-            name: "Sortie 4",
-            icon: icons.sell,
-            cat: expense,
+            name: "Clothing",
+            icon: icons.cloth_icon,
             color: COLORS.red,
-            data: [
-              {
-                id: 1,
-                description: "Subvention pour le projet de recherche",
-                total: 5000.00,
-                date: "2023-04-20"
-              },
+            expenses: [
+                {
+                    id: 17,
+                    title: "T-Shirt",
+                    description: "Plain Color T-Shirt",
+                    location: "ByProgrammers' Mall",
+                    total: 20.00,
+                    status: pendingStatus,
+                },
+                {
+                    id: 18,
+                    title: "Jeans",
+                    description: "Blue Jeans",
+                    location: "ByProgrammers' Mall",
+                    total: 50.00,
+                    status: confirmStatus,
+                },
             ],
-          },
-          {
-            id: 10,
-            name: "Sortie 5",
-            icon: icons.income,
-            cat: expense,
-            color: COLORS.yellow,
-            data: [
-              {
-                id: 1,
-                description: "Achat d'un immeuble à usage commercial",
-                total: 100000.00,
-                date: "2023-04-30"
-              },
-            ],
-          },
-      ];
+        }
+    ]
 
     const categoryListHeightAnimationValue = useRef(new Animated.Value(115)).current;
 
-    const [categories, setCategories] = useState(categoriesData)
-    const [viewMode, setViewMode] = React.useState("income");
-    const [selectedCategory, setSelectedCategory] = useState(null)
-    const [showMoreToggle, setShowMoreToggle] = useState(false)
-    const [ date, setDate ] = useState(new Date());
+    const [categories, setCategories] = React.useState(categoriesData)
+    const [viewMode, setViewMode] = React.useState("chart")
+    const [selectedCategory, setSelectedCategory] = React.useState(null)
+    const [showMoreToggle, setShowMoreToggle] = React.useState(false)
 
     function renderNavBar() {
         return (
@@ -215,7 +246,7 @@ const Home = () => {
                     onPress={() => console.log('Go Back')}
                 >
                     <Image
-                        source={icons.menu}
+                        source={icons.back_arrow}
                         style={{
                             width: 30,
                             height: 30,
@@ -229,7 +260,7 @@ const Home = () => {
                     onPress={() => console.log('More')}
                 >
                     <Image
-                        source={icons.search}
+                        source={icons.more}
                         style={{
                             width: 30,
                             height: 30,
@@ -245,8 +276,8 @@ const Home = () => {
         return (
             <View style={{ paddingHorizontal: SIZES.padding, paddingVertical: SIZES.padding, backgroundColor: COLORS.white }}>
                 <View>
-                    <Text style={{ color: COLORS.primary, ...FONTS.h2 }}>Balance totale</Text>
-                    <Text style={{ ...FONTS.h3, color: COLORS.darkgray }}>(Résumé)</Text>
+                    <Text style={{ color: COLORS.primary, ...FONTS.h2 }}>My Expenses</Text>
+                    <Text style={{ ...FONTS.h3, color: COLORS.darkgray }}>Summary (private)</Text>
                 </View>
 
                 <View style={{ flexDirection: 'row', marginTop: SIZES.padding, alignItems: 'center' }}>
@@ -269,8 +300,8 @@ const Home = () => {
                     </View>
 
                     <View style={{ marginLeft: SIZES.padding }}>
-                        <Text style={{ color: COLORS.primary, ...FONTS.h3 }}>{date.toLocaleDateString('fr-FR')}</Text>
-                        <Text style={{ ...FONTS.body3, color: COLORS.darkgray }}>18% plus que le mois passé</Text>
+                        <Text style={{ color: COLORS.primary, ...FONTS.h3 }}>11 Nov, 2020</Text>
+                        <Text style={{ ...FONTS.body3, color: COLORS.darkgray }}>18% more than last month</Text>
                     </View>
                 </View>
             </View>
@@ -282,29 +313,30 @@ const Home = () => {
             <View style={{ flexDirection: 'row', padding: SIZES.padding, justifyContent: 'space-between', alignItems: 'center' }}>
                 {/* Title */}
                 <View>
-                    <Text style={{ color: viewMode == "expense" ? COLORS.secondary : COLORS.darkgreen, ...FONTS.h3 }}>{viewMode == "income" ? "Crédit (Entrée)" : "Débit (Sortie)"}</Text>
-                    <Text style={{ color: COLORS.darkgray, ...FONTS.body4 }}>2000 FC</Text>
+                    <Text style={{ color: COLORS.primary, ...FONTS.h3 }}>CATEGORIES</Text>
+                    <Text style={{ color: COLORS.darkgray, ...FONTS.body4 }}>{categories.length} Total</Text>
                 </View>
 
+                {/* Button */}
                 <View style={{ flexDirection: 'row' }}>
                     <TouchableOpacity
                         style={{
                             alignItems: 'center',
                             justifyContent: 'center',
-                            backgroundColor: viewMode == "income" ? COLORS.darkgreen : null,
+                            backgroundColor: viewMode == "chart" ? COLORS.secondary : null,
                             height: 50,
                             width: 50,
                             borderRadius: 25
                         }}
-                        onPress={() => setViewMode("income")}
+                        onPress={() => setViewMode("chart")}
                     >
                         <Image
-                            source={icons.income}
+                            source={icons.chart}
                             resizeMode="contain"
                             style={{
                                 width: 20,
                                 height: 20,
-                                tintColor: viewMode == "income" ? COLORS.white : COLORS.darkgray,
+                                tintColor: viewMode == "chart" ? COLORS.white : COLORS.darkgray,
                             }}
                         />
                     </TouchableOpacity>
@@ -313,26 +345,25 @@ const Home = () => {
                         style={{
                             alignItems: 'center',
                             justifyContent: 'center',
-                            backgroundColor: viewMode == "expense" ? COLORS.secondary : null,
+                            backgroundColor: viewMode == "list" ? COLORS.secondary : null,
                             height: 50,
                             width: 50,
                             borderRadius: 25,
                             marginLeft: SIZES.base
                         }}
-                        onPress={() => setViewMode("expense")}
+                        onPress={() => setViewMode("list")}
                     >
                         <Image
-                            source={icons.expense}
+                            source={icons.menu}
                             resizeMode="contain"
                             style={{
                                 width: 20,
                                 height: 20,
-                                tintColor: viewMode == "expense" ? COLORS.white : COLORS.darkgray,
+                                tintColor: viewMode == "list" ? COLORS.white : COLORS.darkgray,
                             }}
                         />
                     </TouchableOpacity>
                 </View>
-
             </View>
         )
     }
@@ -547,7 +578,7 @@ const Home = () => {
         // Calculate the total expenses
         let totalExpense = filterChartData.reduce((a, b) => a + (b.y || 0), 0)
 
-        // Calculate percentage and repopulate income data
+        // Calculate percentage and repopulate chart data
         let finalChartData = filterChartData.map((item) => {
             let percentage = (item.y / totalExpense * 100).toFixed(0)
             return {
@@ -734,14 +765,20 @@ const Home = () => {
             {renderCategoryHeaderSection()}
 
             <ScrollView contentContainerStyle={{ paddingBottom: 60 }}>
-            <View>
-                {renderCategoryList()}
-                {renderIncomingExpenses()}
-
-                {renderChart()}
-                {renderExpenseSummary()}
-            </View>
-                
+                {
+                    viewMode == "list" &&
+                    <View>
+                        {renderCategoryList()}
+                        {renderIncomingExpenses()}
+                    </View>
+                }
+                {
+                    viewMode == "chart" &&
+                    <View>
+                        {renderChart()}
+                        {renderExpenseSummary()}
+                    </View>
+                }
             </ScrollView>
         </View>
     )
@@ -760,4 +797,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default Home;
+export default OldHome;
