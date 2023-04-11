@@ -36,6 +36,12 @@ $ expo start
 
 ```
 
+## Build
+
+Now that we have set up our build profile and app signing, running a build for internal distribution is just like any other build.
+
+`eas build --profile preview --platform all`
+
 ## Author
 
 👤 **Guillain Bisimwa**
