@@ -2,6 +2,7 @@
   "expo": {
     "name": "Bomoko app",
     "slug": "bomoko-app",
+    "version": "2.0.0",
     "privacy": "public",
     "orientation": "portrait",
     "icon": "./assets/app-icon.png",
@@ -23,10 +24,17 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/app-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.guillain.bomokoapp",
+      "versionCode": 2
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "42fbce96-1bba-4564-9659-e842690d1694"
+      }
     }
   }
 }
