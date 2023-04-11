@@ -15,7 +15,7 @@ import {
 } from 'react-native';
 import { VictoryPie } from 'victory-native';
 
-import {Svg} from 'react-native-svg';
+//import {Svg} from 'react-native-svg';
 
 import { COLORS, FONTS, SIZES, icons, images } from '../constants';
 import { Colors } from "react-native/Libraries/NewAppScreen";
@@ -758,7 +758,7 @@ const Home = () => {
             // Android workaround by wrapping VictoryPie with SVG
             return (
                 <View  style={{ alignItems: 'center', justifyContent: 'center' }}>
-                    <Svg width={SIZES.width} height={SIZES.width} style={{width: "100%", height: "auto"}}>
+                    {/* <Svg width={SIZES.width} height={SIZES.width} style={{width: "100%", height: "auto"}}>
 
                         <VictoryPie
                             standalone={false} // Android workaround
@@ -792,7 +792,7 @@ const Home = () => {
                             }]}
         
                         />
-                    </Svg>
+                    </Svg> */}
                     <View style={{ position: 'absolute', top: '42%', left: "42%" }}>
                         <Text style={{ ...FONTS.h1, textAlign: 'center' }}>{totalExpenseCount}</Text>
                         <Text style={{ ...FONTS.body3, textAlign: 'center' }}>Expenses</Text>
