@@ -18,7 +18,6 @@ import { VictoryPie } from 'victory-native';
 //import {Svg} from 'react-native-svg';
 
 import { COLORS, FONTS, SIZES, icons, images } from '../constants';
-import { Colors } from "react-native/Libraries/NewAppScreen";
 
 const income = "income";
 const expense = "expense";
@@ -388,7 +387,7 @@ const Home = () => {
                         </View>
                     </View>
 
-                    <View style={{ borderTopWidth: 1, width:"95%", alignSelf:"center",marginVertical:SIZES.padding/2, borderColor: Colors.white }}>
+                    <View style={{ borderTopWidth: 1, width:"95%", alignSelf:"center",marginVertical:SIZES.padding/2, borderColor: COLORS.white }}>
                         <View style={{ marginHorizontal: SIZES.padding/2, marginVertical:SIZES.padding/2 }}>
                             <Text style={{ color: COLORS.white, ...FONTS.body5 }}>BALANCE TOTALE AU {date.toLocaleDateString('fr-FR')}</Text>
                             <Text style={{ ...FONTS.h2, color: COLORS.lightGray }}>2000 FC</Text>
