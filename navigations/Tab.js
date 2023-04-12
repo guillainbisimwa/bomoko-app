@@ -13,26 +13,30 @@ const Tabs = () => {
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarIcon: ({ focused, color, size }) => {
+          console.log('route --> ', route.name);
           let iconName;
           if (route.name == 'Home') {
             iconName = focused ? 'ios-home' : 'ios-home';
+            size = focused ? size * 1.4 : size;
           }
           if (route.name == 'Income') {
-            iconName = focused ? 'ios-home' : 'ios-home';
+            iconName = focused ? 'notifications' : 'notifications';
+            size = focused ? size * 1.4 : size;
           }
           if (route.name == 'Expense') {
-            iconName = focused ? 'ios-home' : 'ios-home';
+            iconName = focused ? 'expense' : 'expense';
+            size = focused ? size * 1.4 : size;
           } else if (route.name == 'Settings') {
             iconName = 'cog';
+            size = focused ? size * 1.4 : size;
           } else {
             iconName = 'toggle-sharp';
-
-            //return <Ionicons onPress={()=> handleSnapPress(1)} name={iconName} color={color} size={size} />
+            size = focused ? size * 1.4 : size;
           }
           return <Ionicons name={iconName} color={color} size={size} />;
         },
         tabBarInactiveTintColor: COLORS.white,
-        tabBarActiveTintColor: COLORS.secondary,
+        tabBarActiveTintColor: COLORS.gray,
         tabBarShowLabel: false,
         tabBarStyle: {
           backgroundColor: COLORS.secondary,
