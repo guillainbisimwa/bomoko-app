@@ -65,7 +65,7 @@ export default class Input extends Component {
     const { toggleSecure } = this.state;
     const isSecure = toggleSecure ? false : secure;
 
-    const inputStyles = [styles.input, error && { borderColor: COLORS.accent }, style];
+    const inputStyles = [styles.input, error && { borderColor: COLORS.peach }, style];
 
     const inputType = email
       ? 'email-address'

@@ -24,7 +24,7 @@ const App = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setTimeout(() => setLoading(false), 0); //2000
+    setTimeout(() => setLoading(false), 2000); //2000
   }, []); //user
 
   const user = useSelector((state) => state.user);

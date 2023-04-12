@@ -196,7 +196,7 @@ export const styles = StyleSheet.create({
     shadowRadius: 13,
     elevation: 2,
   },
-  accent: { backgroundColor: COLORS.accent },
+  accent: { backgroundColor: COLORS.peach },
   primary: { backgroundColor: COLORS.primary },
   secondary: { backgroundColor: COLORS.secondary },
   tertiary: { backgroundColor: COLORS.tertiary },
