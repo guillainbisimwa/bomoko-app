@@ -1,16 +1,11 @@
 import React, { useState } from 'react';
-import {
-  KeyboardAvoidingView,
-  ActivityIndicator,
-  StyleSheet,
-  Text as text2,
-  View,
-  Image,
-} from 'react-native';
+import { KeyboardAvoidingView, ActivityIndicator, StyleSheet, Image } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 import { Button, Block, Input, Text } from '../components';
 import { COLORS, icons, SIZES } from '../constants';
+import { loginUser } from '../redux/authReducer';
 
-const Login = () => {
+const Login = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   //const [errors, setErrors] = useState(false);
 
@@ -22,6 +17,22 @@ const Login = () => {
     email: false,
     password: false,
   });
+
+  const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+
+  const login = () => {
+    const userObj = [
+      {
+        token: 'xyz',
+        id: 1,
+        user: [{ name: 'Guy' }],
+      },
+    ];
+
+    dispatch(loginUser(userObj));
+    navigation.navigate('Tab');
+  };
 
   return (
     <KeyboardAvoidingView style={styles.login}>
@@ -52,7 +63,7 @@ const Login = () => {
             style={[styles.input, styles.mt]}
           />
           <Block style={styles.mt}>
-            <Button color="#db7020" round>
+            <Button color="#db7020" round onPress={() => login()}>
               <Text white bold h4 center>
                 Connexion
               </Text>
