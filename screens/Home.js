@@ -319,6 +319,8 @@ const Home = ({ navigation }) => {
           paddingVertical: SIZES.padding,
           backgroundColor: COLORS.white,
           marginBottom: SIZES.padding,
+          borderBottomColor: COLORS.gray,
+          borderBottomWidth: 1,
         }}
       >
         <View style={{ paddingBottom: SIZES.padding * 3 }}>
@@ -328,7 +330,7 @@ const Home = ({ navigation }) => {
 
         <View
           style={{
-            margin: SIZES.padding,
+            //margin: SIZES.padding,
             position: 'absolute',
             top: SIZES.padding * 4.6,
             width: '100%',
@@ -413,7 +415,7 @@ const Home = ({ navigation }) => {
             }}
           >
             <View
-              style={{ marginHorizontal: SIZES.padding / 2, marginVertical: SIZES.padding / 2 }}
+              style={{ marginHorizontal: SIZES.padding / 1, marginVertical: SIZES.padding / 2 }}
             >
               <Text style={{ color: COLORS.white, ...FONTS.body5 }}>
                 BALANCE TOTALE AU {date.toLocaleDateString('fr-FR')}
