@@ -98,11 +98,27 @@ const Income = ({ navigation }) => {
     return (
       <Block flex={2} style={styles.center}>
         <Input
+          placeholder="Select categories"
+          error={errors.email}
+          defaultValue={email}
+          onChangeText={(text) => setEmail(text)}
+          style={styles.input}
+        />
+
+        <Input
           placeholder="Email"
           error={errors.email}
           defaultValue={email}
           onChangeText={(text) => setEmail(text)}
-          style={[styles.input]}
+          style={styles.input}
+        />
+
+        <Input
+          placeholder="Email"
+          error={errors.email}
+          defaultValue={email}
+          onChangeText={(text) => setEmail(text)}
+          style={styles.input}
         />
 
         <Block style={styles.mt}>

@@ -1,10 +1,12 @@
-import { configureStore } from "@reduxjs/toolkit";
-import authReducer from "./authReducer";
+import { configureStore } from '@reduxjs/toolkit';
+import authReducer from './authReducer';
+import catReducer from './catReducer';
 
 export const store = configureStore({
-    reducer: {
-        user: authReducer
-    },
+  reducer: {
+    user: authReducer,
+    categories: catReducer,
+  },
 });
 
-export default store
+export default store;
