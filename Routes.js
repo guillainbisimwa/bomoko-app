@@ -42,7 +42,7 @@ const App = () => {
   if (loading) {
     return <InitialLoader />;
   }
-  if (user.user?.token) {
+  if (!user.user?.token) {
     return (
       <NavigationContainer theme={theme}>
         <Stack.Navigator

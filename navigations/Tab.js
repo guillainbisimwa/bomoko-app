@@ -16,15 +16,15 @@ const Tabs = () => {
           console.log('route --> ', route.name);
           let iconName;
           if (route.name == 'Home') {
-            iconName = focused ? 'ios-home' : 'ios-home';
+            iconName = focused ? 'ios-home-sharp' : 'ios-home-outline';
             size = focused ? size * 1.4 : size;
           }
           if (route.name == 'Income') {
-            iconName = focused ? 'notifications' : 'notifications';
+            iconName = focused ? 'remove-circle' : 'remove-circle-outline';
             size = focused ? size * 1.4 : size;
           }
           if (route.name == 'Expense') {
-            iconName = focused ? 'expense' : 'expense';
+            iconName = focused ? 'add-circle' : 'add-circle-outline';
             size = focused ? size * 1.4 : size;
           } else if (route.name == 'Settings') {
             iconName = 'cog';
@@ -35,8 +35,8 @@ const Tabs = () => {
           }
           return <Ionicons name={iconName} color={color} size={size} />;
         },
-        tabBarInactiveTintColor: COLORS.white,
-        tabBarActiveTintColor: COLORS.gray,
+        tabBarInactiveTintColor: COLORS.gray,
+        tabBarActiveTintColor: COLORS.white,
         tabBarShowLabel: false,
         tabBarStyle: {
           backgroundColor: COLORS.secondary,
