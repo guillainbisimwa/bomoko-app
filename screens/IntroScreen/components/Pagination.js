@@ -6,7 +6,7 @@ import { COLORS } from '../../../constants';
 
 const { height, width } = Dimensions.get('window');
 
-const DOT_SIZE = 20;
+const DOT_SIZE = 30;
 
 export const Pagination = ({ scrollX, slides }) => {
   const inputRange = [0, width, width * 2];
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
   pagination: {
     position: 'absolute',
 
-    top: 10,
+    top: 23,
     flexDirection: 'row',
     height: DOT_SIZE,
     zIndex: 1000,

@@ -20,7 +20,7 @@ const slides = [
     lable: 'Vos revenus et dépenses',
     subtitle: "Suivez vos finances en un coup d'œil",
     des: 'Gardez une trace claire de vos revenus et dépenses. Catégorisez vos dépenses et obtenez des informations détaillées sur votre situation financière. Atteignez vos objectifs financiers avec BOMOKO.',
-    imageUrl: require('./../../assets/img/11.png'),
+    imageUrl: require('./../../assets/img/13.png'),
   },
 ];
 export default slides;

@@ -8,8 +8,8 @@ export const Slide = ({ imageUrl }) => {
       <Image
         style={{
           resizeMode: 'contain',
-          width: '90%',
-          height: height / 2,
+          width: '60%',
+          height: height / 2.5,
         }}
         source={imageUrl}
       />

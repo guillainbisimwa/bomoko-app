@@ -32,8 +32,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 40,
   },
   subTitle: {
-    fontSize: 24,
+    fontSize: 23,
     color: COLORS.blue,
+    fontWeight: '500',
+    marginBottom: 10,
   },
   des: {
     fontSize: 18,

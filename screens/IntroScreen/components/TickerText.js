@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     lineHeight: TICKER_HEIGHT,
     textTransform: 'uppercase',
     fontWeight: '800',
-    color: '#2CB9B0',
+    color: '#000',
     fontFamily: 'Roboto-Medium',
   },
 });

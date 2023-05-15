@@ -17,7 +17,7 @@ export const IntroScreen = () => {
     };
   }, []);
   const backgroundColor = scrollX.interpolate({
-    inputRange: [0, width, width * 2],
+    inputRange: [0, width, width * 3],
     outputRange: ['#BFEAF5', '#BEECC4', '#FFE4D9'],
     extrapolate: 'clamp',
   });
@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
   },
   slider: {
     paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 20,
-    height: 0.61 * height,
+    height: 0.51 * height,
     borderBottomEndRadius: 75,
   },
   footer: {
