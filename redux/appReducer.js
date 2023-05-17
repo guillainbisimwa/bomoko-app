@@ -1,32 +1,19 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const authSlice = createSlice({
-  name: 'user',
-  initialState: {
-    user: {
-      // token: '123456',
-      // id: '1',
-      // user: [
-      //   {
-      //     name: 'Guy',
-      //   },
-      // ],
-    },
-  },
+const initialState = {
+  isInstalled: false,
+};
+
+const appSlice = createSlice({
+  name: 'app',
+  initialState,
   reducers: {
-    loginUser: (state, action) => {
-      state.user = action.payload;
-    },
-    logoutUser: (state) => {
-      state.user = {
-        token: '',
-        id: '',
-        user: [],
-      };
+    setInstalled: (state) => {
+      state.isInstalled = true;
     },
   },
 });
 
-export const { loginUser, logoutUser } = authSlice.actions;
+export const { setInstalled } = appSlice.actions;
 
-export default authSlice.reducer;
+export default appSlice.reducer;
