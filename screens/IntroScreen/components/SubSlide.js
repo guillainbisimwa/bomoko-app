@@ -9,9 +9,13 @@ export const SubSlide = ({ subtitle, des, last, NextSlide, EnterApp }) => {
   const onPressHandler = last ? EnterApp : NextSlide;
   return (
     <View style={styles.subSlideContainer}>
-      <Text style={styles.subTitle}>{subtitle}</Text>
+      <Text numberOfLines={1} style={styles.subTitle}>
+        {subtitle}
+      </Text>
       <View>
-        <Text style={styles.des}>{des}</Text>
+        <Text numberOfLines={4} style={styles.des}>
+          {des}
+        </Text>
       </View>
       <TouchableOpacity onPress={onPressHandler}>
         <View style={[styles.buttonContainer, { backgroundColor: bgColor }]}>
@@ -32,13 +36,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 40,
   },
   subTitle: {
-    fontSize: 23,
+    fontSize: 20,
     color: COLORS.blue,
     fontWeight: '500',
     marginBottom: 10,
   },
   des: {
-    fontSize: 18,
+    fontSize: 14,
     lineHeight: 30,
     color: COLORS.gray,
     textAlign: 'center',

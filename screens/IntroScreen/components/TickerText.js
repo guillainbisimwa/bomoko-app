@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
   },
   tickerText: {
     textAlign: 'center',
-    fontSize: 30,
+    fontSize: 22,
     lineHeight: TICKER_HEIGHT,
     textTransform: 'uppercase',
     fontWeight: '800',

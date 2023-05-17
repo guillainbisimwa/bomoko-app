@@ -3,7 +3,7 @@ const slides = [
   {
     id: 1,
     lable: 'Bienvenue',
-    subtitle: ' Simplifiez votre vie avec BOMOKO',
+    subtitle: ' Simplifiez votre vie',
     des: 'Notre application de portefeuille électronique facilite vos calculs de revenus et vos dépenses au quotidien. Oubliez les tracas liés au calcul de rentabilite.',
     imageUrl: require('./../../assets/img/logo1.png'),
   },
@@ -18,7 +18,7 @@ const slides = [
   {
     id: 3,
     lable: 'Vos revenus et dépenses',
-    subtitle: "Suivez vos finances en un coup d'œil",
+    subtitle: 'Suivez vos finances',
     des: 'Gardez une trace claire de vos revenus et dépenses. Catégorisez vos dépenses et obtenez des informations détaillées sur votre situation financière. Atteignez vos objectifs financiers avec BOMOKO.',
     imageUrl: require('./../../assets/img/13.png'),
   },

@@ -6,7 +6,7 @@ import { COLORS } from '../../../constants';
 
 const { height, width } = Dimensions.get('window');
 
-const DOT_SIZE = 30;
+const DOT_SIZE = 20;
 
 export const Pagination = ({ scrollX, slides }) => {
   const inputRange = [0, width, width * 2];
