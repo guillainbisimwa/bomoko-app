@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 
-import { Home, Login } from './screens/';
 import { useFonts } from 'expo-font';
-//import { loginUser } from './redux/authReducer';
 import { useDispatch, useSelector } from 'react-redux';
 import Auth from './navigations/Auth';
 import Tabs from './navigations/Tab';
 import InitialLoader from './screens/InitialLoader';
+import Onboard from './navigations/Onboard';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { setInstalled } from './redux/appReducer';
 
 const theme = {
   ...DefaultTheme,
@@ -22,12 +23,29 @@ const Stack = createStackNavigator();
 
 const App = () => {
   const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
 
   useEffect(() => {
+    checkInstallationStatus();
     setTimeout(() => setLoading(false), 2000); //2000
-  }, []); //user
+  }, []);
 
-  const user = useSelector((state) => state.user);
+  const checkInstallationStatus = async () => {
+    try {
+      const value = await AsyncStorage.getItem('isInstalled');
+      if (value !== null && value === 'true') {
+        dispatch(setInstalled());
+      } else {
+        setLoading(false);
+        console.log('falseeeee');
+      }
+    } catch (error) {
+      console.log('Error retrieving installation status:', error);
+      setLoading(false);
+    }
+  };
+
+  const isInstalled = useSelector((state) => state.app.isInstalled);
 
   const [loaded] = useFonts({
     'Roboto-Black': require('./assets/fonts/Roboto-Black.ttf'),
@@ -42,7 +60,7 @@ const App = () => {
   if (loading) {
     return <InitialLoader />;
   }
-  if (!user.user?.token) {
+  if (isInstalled) {
     return (
       <NavigationContainer theme={theme}>
         <Stack.Navigator
@@ -56,7 +74,7 @@ const App = () => {
       </NavigationContainer>
     );
   }
-  return <Auth />;
+  return <Onboard />;
 };
 
 export default App;
