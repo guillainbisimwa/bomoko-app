@@ -10,6 +10,8 @@ import InitialLoader from './screens/InitialLoader';
 import Onboard from './navigations/Onboard';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { setInstalled } from './redux/appReducer';
+import { LoginScreen } from './screens/LoginScreen/LoginScreen';
+import { AuthScreen } from './screens/AuthScreen/AuthScreen';
 
 const theme = {
   ...DefaultTheme,
@@ -34,10 +36,9 @@ const App = () => {
     try {
       const value = await AsyncStorage.getItem('isInstalled');
       if (value !== null && value === 'true') {
-        dispatch(setInstalled());
+        await dispatch(setInstalled());
       } else {
         setLoading(false);
-        console.log('falseeeee');
       }
     } catch (error) {
       console.log('Error retrieving installation status:', error);
@@ -72,6 +73,8 @@ const App = () => {
           initialRouteName={'Tab'}
         >
           <Stack.Screen name="Tab" component={Tabs} />
+          <Stack.Screen name="LoginScreen" component={LoginScreen} />
+          <Stack.Screen name="AuthScreen" component={AuthScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     );

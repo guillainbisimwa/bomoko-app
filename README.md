@@ -36,6 +36,10 @@ $ expo start
 
 ```
 
+```s
+$ npx expo start --offline
+```
+
 ## Build
 
 Now that we have set up our build profile and app signing, running a build for internal distribution is just like any other build.
