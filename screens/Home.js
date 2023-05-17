@@ -32,9 +32,9 @@ const Home = ({ navigation }) => {
     catList.filter((value, key) => value.cat === 'income')
   );
 
-  const [categoriesSum, setCategoriesSum] = useState(200);
   const [Cat, setCat] = useState('income');
   const [selectedCategory, setSelectedCategory] = useState(null);
+
   const [showMoreToggle, setShowMoreToggle] = useState(false);
   const [date, setDate] = useState(new Date());
 
@@ -265,6 +265,7 @@ const Home = ({ navigation }) => {
             onPress={() => {
               setCat('income');
               setCategories(catList.filter((value, key) => value.cat === 'income'));
+              setSelectedCategory(null);
             }}
           >
             <Image
@@ -291,6 +292,7 @@ const Home = ({ navigation }) => {
             onPress={() => {
               setCat('expense');
               setCategories(catList.filter((value, key) => value.cat === 'expense'));
+              setSelectedCategory(null);
             }}
           >
             <Image
@@ -382,9 +384,9 @@ const Home = ({ navigation }) => {
   }
 
   function renderIncomingExpenses() {
-    let allExpenses = selectedCategory ? selectedCategory.data : [];
-    console.log('allExpenses ---->', allExpenses);
-    let incomingExpenses = allExpenses; //.filter(a => a.cat == "income")
+    let allExpensesCat = selectedCategory ? selectedCategory.data : [];
+
+    let incomingExpenses = allExpensesCat;
 
     const renderItem = (item) => (
       <View
@@ -455,6 +457,134 @@ const Home = ({ navigation }) => {
             <Text style={{ ...FONTS.h5, color: COLORS.red }}>
               {' '}
               {Cat === 'income' ? '+' : '-'} {item.total.toFixed(2)} USD{' '}
+            </Text>
+            <View style={{ flexDirection: 'row' }}>
+              <Image
+                source={icons.calendar}
+                style={{
+                  width: 12,
+                  height: 12,
+                  tintColor: COLORS.darkgray,
+                  marginRight: 7,
+                  marginTop: 3,
+                }}
+              />
+              <Text style={{ marginBottom: SIZES.base, color: COLORS.darkgray, ...FONTS.body5 }}>
+                {item.date}
+              </Text>
+            </View>
+          </View>
+        </View>
+      </View>
+    );
+
+    return (
+      <View>
+        {/* {renderIncomingExpensesTitle()} */}
+
+        {incomingExpenses.length > 0 && (
+          <View>
+            {incomingExpenses.map((value, key) => {
+              return renderItem(value, key);
+            })}
+          </View>
+        )}
+
+        {incomingExpenses.length == 0 && renderAllIncomingExpenses()}
+      </View>
+    );
+  }
+
+  function renderAllIncomingExpenses() {
+    var fin = [];
+    let category = categories.map((v, k) => {
+      var el = v.data.map((vv, kk) => {
+        // {"cat": "income", "color": "#8e44ad", "data":  "icon": 23, "id": 1, "name": "Vente"}
+
+        // console.log({ ...vv, cat: v.cat, color: v.color, icon: v.icon, id: 1, name: v.name });
+        return { ...vv, cat: v.cat, color: v.color, icon: v.icon, id: 1, name: v.name };
+      });
+      console.log('-------------');
+
+      //console.log(...el);
+      fin.push(...el);
+      //console.log('return', el);
+
+      return el[0];
+    });
+
+    console.log(' ==> ', fin);
+    console.log(' ==> ');
+
+    let incomingExpenses = fin;
+
+    const renderItem = (item, cat) => (
+      <View
+        style={{
+          marginRight: SIZES.padding,
+          marginLeft: SIZES.padding,
+          marginVertical: SIZES.radius,
+          borderRadius: SIZES.radius,
+          backgroundColor: COLORS.white,
+          ...styles.shadow,
+        }}
+      >
+        {/* Title */}
+        <View
+          style={{
+            flexDirection: 'row',
+            padding: SIZES.padding,
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
+          <View
+            style={{
+              width: '60%',
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}
+          >
+            <View
+              style={{
+                height: 50,
+                width: 50,
+                borderRadius: 25,
+                backgroundColor: COLORS.lightGray,
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginRight: SIZES.base,
+              }}
+            >
+              <Image
+                source={item.icon}
+                style={{
+                  width: 30,
+                  height: 30,
+                  tintColor: item.color,
+                }}
+              />
+            </View>
+            <View>
+              <Text style={{ ...FONTS.h3, color: item.color }}>{item && item.name}</Text>
+              <Text
+                numberOfLines={1}
+                style={{
+                  overflow: 'hidden',
+                  ...FONTS.body5,
+                  flexWrap: 'wrap',
+                  color: COLORS.darkgray,
+                }}
+              >
+                {item.description}
+              </Text>
+            </View>
+          </View>
+
+          <View style={{ width: '25%', alignItems: 'flex-end' }}>
+            <Text style={{ ...FONTS.h5, color: COLORS.red }}>
+              {' '}
+              {/* {Cat === 'income' ? '+' : '-'} {item.total.toFixed(2)} USD{' '} */}
             </Text>
             <View style={{ flexDirection: 'row' }}>
               <Image

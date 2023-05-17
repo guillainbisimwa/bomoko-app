@@ -21,6 +21,12 @@ const catSlice = createSlice({
             total: 100.0,
             date: '2023-04-10',
           },
+          {
+            id: 2,
+            description: 'Vente 100kg de Farine de Mais',
+            total: 40.0,
+            date: '2023-04-10',
+          },
         ],
       },
       {
@@ -69,7 +75,14 @@ const catSlice = createSlice({
           {
             id: 1,
             description: 'Subvention pour le projet de recherche',
-            total: 2000.0,
+            total: 100.0,
+            date: '2023-04-20',
+          },
+
+          {
+            id: 2,
+            description: 'Subvention pour le projet de recherche 2',
+            total: 30.0,
             date: '2023-04-20',
           },
         ],
@@ -84,7 +97,7 @@ const catSlice = createSlice({
           {
             id: 1,
             description: "Achat d'un immeuble à usage commercial",
-            total: 1000.0,
+            total: 40.0,
             date: '2023-04-30',
           },
         ],
@@ -101,6 +114,12 @@ const catSlice = createSlice({
             id: 1,
             description: 'Achat 1kg de Legumes frais',
             total: 100.0,
+            date: '2023-04-10',
+          },
+          {
+            id: 1,
+            description: 'Achat 100kg de farine de Mais ',
+            total: 44.0,
             date: '2023-04-10',
           },
         ],
@@ -157,7 +176,7 @@ const catSlice = createSlice({
           {
             id: 1,
             description: "Retrait d'argent aupres de la TMB",
-            total: 1500.0,
+            total: 300.0,
             date: '2023-04-20',
           },
         ],
@@ -224,8 +243,15 @@ const catSlice = createSlice({
         name: 'Autres',
         icon: icons.more,
         cat: income,
-        color: COLORS.peach,
-        data: [],
+        color: COLORS.gray,
+        data: [
+          {
+            id: 1,
+            description: 'Autre depenses',
+            total: 10.0,
+            date: '2023-04-30',
+          },
+        ],
       },
 
       {
@@ -233,8 +259,15 @@ const catSlice = createSlice({
         name: 'Autres',
         icon: icons.more,
         cat: expense,
-        color: COLORS.peach,
-        data: [],
+        color: COLORS.purple,
+        data: [
+          {
+            id: 1,
+            description: 'Autre depenses',
+            total: 10.0,
+            date: '2023-04-30',
+          },
+        ],
       },
     ],
   },

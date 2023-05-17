@@ -13,7 +13,7 @@ const Tabs = () => {
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarIcon: ({ focused, color, size }) => {
-          console.log('route --> ', route.name);
+          // console.log('route --> ', route.name);
           let iconName;
           if (route.name == 'Home') {
             iconName = focused ? 'ios-home-sharp' : 'ios-home-outline';
@@ -21,12 +21,12 @@ const Tabs = () => {
             return <Ionicons name={iconName} color={color} size={size} />;
           }
           if (route.name == 'Income') {
-            iconName = focused ? 'remove-circle' : 'remove-circle-outline';
+            iconName = focused ? 'add-circle' : 'add-circle-outline';
             size = focused ? size * 1.9 : size * 1.2;
             return <Ionicons name={iconName} color={color} size={size} />;
           }
           if (route.name == 'Expense') {
-            iconName = focused ? 'add-circle' : 'add-circle-outline';
+            iconName = focused ? 'remove-circle' : 'remove-circle-outline';
             size = focused ? size * 1.9 : size * 1.2;
             return <Ionicons name={iconName} color={color} size={size} />;
           } else if (route.name == 'Settings') {
