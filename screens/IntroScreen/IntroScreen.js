@@ -1,5 +1,8 @@
-import React, { useState, useRef, useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useRef, useEffect } from 'react';
 import { View, StyleSheet, Dimensions, Animated, StatusBar } from 'react-native';
+import { useDispatch } from 'react-redux';
+import { setInstalled } from '../../redux/appReducer';
 //Redux
 import { Slide, SubSlide, Ticker, Pagination } from './components';
 import slides from './IntroSlides';
@@ -7,10 +10,11 @@ import slides from './IntroSlides';
 const { height, width } = Dimensions.get('window');
 
 export const IntroScreen = () => {
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const scrollX = useRef(new Animated.Value(0)).current;
   const scrollClick = useRef(null);
   const unmounted = useRef(false);
+
   useEffect(() => {
     return () => {
       unmounted.current = true;
@@ -28,12 +32,11 @@ export const IntroScreen = () => {
   });
 
   const EnterApp = async () => {
-    // setLoading(true);
-    // await dispatch(CheckFirstTimeAction.firstOpen());
-    // if (!unmounted.current) {
-    //   setLoading(false);
-    // }
-    //setLoading(false);
+    await AsyncStorage.setItem('isInstalled', JSON.stringify(true))
+      .then(async (json) => {
+        dispatch(setInstalled());
+      })
+      .catch((error) => console.log('Error: ', error));
   };
 
   return (
