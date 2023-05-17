@@ -14,11 +14,11 @@ import {
   Platform,
 } from 'react-native';
 import { useSelector } from 'react-redux';
-//import { VictoryPie } from 'victory-native';
-
-//import {Svg} from 'react-native-svg';
 
 import { COLORS, FONTS, SIZES, icons, images } from '../constants';
+import { AuthScreen } from './AuthScreen/AuthScreen';
+import { LoginScreen } from './LoginScreen/LoginScreen';
+
 import Login from './Login';
 
 const Home = ({ navigation }) => {
@@ -40,18 +40,18 @@ const Home = ({ navigation }) => {
       <View
         style={{
           flexDirection: 'row',
-          height: 80,
+          paddingTop: SIZES.base * 2,
           justifyContent: 'space-between',
           alignItems: 'flex-end',
           paddingHorizontal: SIZES.padding,
-          backgroundColor: COLORS.white,
+          // backgroundColor: COLORS.white,
         }}
       >
         <TouchableOpacity
           style={{ justifyContent: 'center', width: 50 }}
           onPress={() => {
             console.log('Menu');
-            navigation.navigate(Login);
+            navigation.navigate(AuthScreen);
           }}
         >
           <Image
@@ -59,7 +59,7 @@ const Home = ({ navigation }) => {
             style={{
               width: 35,
               height: 35,
-              tintColor: COLORS.primary,
+              tintColor: COLORS.black,
             }}
           />
         </TouchableOpacity>
@@ -73,7 +73,7 @@ const Home = ({ navigation }) => {
             style={{
               width: 30,
               height: 30,
-              tintColor: COLORS.primary,
+              tintColor: COLORS.black,
             }}
           />
         </TouchableOpacity>
@@ -87,22 +87,23 @@ const Home = ({ navigation }) => {
         style={{
           paddingHorizontal: SIZES.padding,
           paddingVertical: SIZES.padding,
-          backgroundColor: COLORS.white,
-          marginBottom: SIZES.padding,
+          //backgroundColor: COLORS.white,
+          // paddingBottom: SIZES.padding,
           borderBottomColor: COLORS.gray,
           borderBottomWidth: 1,
         }}
       >
         <View style={{ paddingBottom: SIZES.padding * 3 }}>
-          <Text style={{ color: COLORS.primary, ...FONTS.h2 }}>BOMOKO Application</Text>
-          <Text style={{ ...FONTS.h3, color: COLORS.darkgray }}>(Portefeuil electronique)</Text>
+          <Text style={{ color: COLORS.black, ...FONTS.h2 }}>BOMOKO Cash</Text>
+          <Text style={{ ...FONTS.h3, color: COLORS.white }}>(Portefeuil electronique)</Text>
         </View>
 
         <View
           style={{
             margin: SIZES.padding,
+            zIndex: 10,
             position: 'absolute',
-            top: SIZES.padding * 4.6,
+            top: SIZES.padding * 2.6,
             width: '100%',
             backgroundColor: COLORS.secondary,
             paddingTop: SIZES.padding,
@@ -127,7 +128,7 @@ const Home = ({ navigation }) => {
                 style={{
                   width: 20,
                   height: 20,
-                  tintColor: COLORS.lightBlue,
+                  tintColor: COLORS.black,
                 }}
               />
             </View>
@@ -148,7 +149,7 @@ const Home = ({ navigation }) => {
                 style={{
                   width: 20,
                   height: 20,
-                  tintColor: COLORS.lightBlue,
+                  tintColor: COLORS.black,
                 }}
               />
             </View>
@@ -169,7 +170,7 @@ const Home = ({ navigation }) => {
                 style={{
                   width: 20,
                   height: 20,
-                  tintColor: COLORS.lightBlue,
+                  tintColor: COLORS.black,
                 }}
               />
             </View>
@@ -220,6 +221,7 @@ const Home = ({ navigation }) => {
                     </View>
                 </View> */}
       </View>
+      // </>
     );
   }
 
@@ -229,9 +231,11 @@ const Home = ({ navigation }) => {
         style={{
           flexDirection: 'row',
           padding: SIZES.padding,
-          marginTop: SIZES.padding * 4,
+          paddingTop: SIZES.padding * 3.4 + SIZES.padding,
           justifyContent: 'space-between',
           alignItems: 'center',
+          backgroundColor: COLORS.lightGray2,
+          zIndex: -10,
         }}
       >
         {/* Title */}
@@ -686,26 +690,33 @@ const Home = ({ navigation }) => {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: COLORS.lightGray2 }}>
-      {/* Nav bar section */}
-      {renderNavBar()}
+    <>
+      <ImageBackground
+        style={{ flex: 1, position: 'absolute', height: '100%', width: '100%' }}
+        source={require('./../assets/login1_bg.png')}
+        blurRadius={10}
+      ></ImageBackground>
+      <View style={{ flex: 1 }}>
+        {/* Nav bar section */}
+        {renderNavBar()}
 
-      {/* Header section */}
-      {renderHeader()}
+        {/* Header section */}
+        {renderHeader()}
 
-      {/* Category Header Section */}
-      {renderCategoryHeaderSection()}
+        {/* Category Header Section */}
+        {renderCategoryHeaderSection()}
 
-      <ScrollView contentContainerStyle={{ paddingBottom: 60 }}>
-        <View>
-          {renderCategoryList()}
-          {renderIncomingExpenses()}
+        <ScrollView contentContainerStyle={{ paddingBottom: 60 }}>
+          <View>
+            {renderCategoryList()}
+            {renderIncomingExpenses()}
 
-          {/* {renderChart()} */}
-          {/* {renderExpenseSummary()} */}
-        </View>
-      </ScrollView>
-    </View>
+            {/* {renderChart()} */}
+            {/* {renderExpenseSummary()} */}
+          </View>
+        </ScrollView>
+      </View>
+    </>
   );
 };
 
