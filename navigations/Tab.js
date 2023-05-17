@@ -17,35 +17,40 @@ const Tabs = () => {
           let iconName;
           if (route.name == 'Home') {
             iconName = focused ? 'ios-home-sharp' : 'ios-home-outline';
-            size = focused ? size * 1.4 : size;
+            size = focused ? size * 1.4 : size * 1.2;
+            return <Ionicons name={iconName} color={color} size={size} />;
           }
           if (route.name == 'Income') {
             iconName = focused ? 'remove-circle' : 'remove-circle-outline';
-            size = focused ? size * 1.4 : size;
+            size = focused ? size * 1.9 : size * 1.2;
+            return <Ionicons name={iconName} color={color} size={size} />;
           }
           if (route.name == 'Expense') {
             iconName = focused ? 'add-circle' : 'add-circle-outline';
-            size = focused ? size * 1.4 : size;
+            size = focused ? size * 1.9 : size * 1.2;
+            return <Ionicons name={iconName} color={color} size={size} />;
           } else if (route.name == 'Settings') {
             iconName = 'cog';
-            size = focused ? size * 1.4 : size;
+            size = focused ? size * 1.4 : size * 1.2;
+            return <Ionicons name={iconName} color={color} size={size} />;
           } else {
             iconName = 'toggle-sharp';
-            size = focused ? size * 1.4 : size;
+            size = focused ? size * 1.4 : size * 1.2;
           }
           return <Ionicons name={iconName} color={color} size={size} />;
         },
         tabBarInactiveTintColor: COLORS.gray,
         tabBarActiveTintColor: COLORS.white,
         tabBarShowLabel: false,
+
         tabBarStyle: {
           backgroundColor: COLORS.secondary,
-          marginBottom: 10,
-          height: 70,
+          marginBottom: 0,
+          height: 80,
           position: 'absolute',
           width: '100%',
           alignSelf: 'center',
-          borderRadius: 30,
+          //borderRadius: 30,
         },
       })}
     >
