@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
+import { StatusBar } from 'react-native';
 
 import { useFonts } from 'expo-font';
 import { useDispatch, useSelector } from 'react-redux';
-import Auth from './navigations/Auth';
 import Tabs from './navigations/Tab';
 import InitialLoader from './screens/InitialLoader';
 import Onboard from './navigations/Onboard';
@@ -63,6 +63,8 @@ const App = () => {
   if (isInstalled) {
     return (
       <NavigationContainer theme={theme}>
+        <StatusBar barStyle="light-content"></StatusBar>
+
         <Stack.Navigator
           screenOptions={{
             headerShown: false,
