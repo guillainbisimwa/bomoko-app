@@ -731,7 +731,7 @@ const Home = ({ navigation }) => {
 
           <View style={{ position: 'absolute', top: '42%', left: '42%' }}>
             <Text style={{ ...FONTS.h1, textAlign: 'center' }}>{totalExpenseCount}</Text>
-            <Text style={{ ...FONTS.body3, textAlign: 'center' }}>Expenses</Text>
+            <Text style={{ ...FONTS.body3, textAlign: 'center' }}>Credits</Text>
           </View>
         </View>
       );
@@ -780,9 +780,11 @@ const Home = ({ navigation }) => {
               ]}
             />
           </Svg>
-          <View style={{ position: 'absolute', top: '42%', left: '42%' }}>
+          <View style={{ position: 'absolute', top: '42%', left: '43.5%' }}>
             <Text style={{ ...FONTS.h1, textAlign: 'center' }}>{totalExpenseCount}</Text>
-            <Text style={{ ...FONTS.body3, textAlign: 'center' }}>Expenses</Text>
+            <Text style={{ ...FONTS.body2, textAlign: 'center' }}>
+              {Cat == 'income' ? 'Credits' : 'Debits'}
+            </Text>
           </View>
         </View>
       );
