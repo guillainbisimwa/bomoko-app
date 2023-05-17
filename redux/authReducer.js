@@ -3,15 +3,13 @@ import { createSlice } from '@reduxjs/toolkit';
 const authSlice = createSlice({
   name: 'user',
   initialState: {
-    user: {
-      // token: '123456',
-      // id: '1',
-      // user: [
-      //   {
-      //     name: 'Guy',
-      //   },
-      // ],
-    },
+    // token: '123456',
+    // id: '1',
+    // user: [
+    //   {
+    //     name: 'Guy',
+    //   },
+    // ],
   },
   reducers: {
     loginUser: (state, action) => {
