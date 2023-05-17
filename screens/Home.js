@@ -24,13 +24,15 @@ import { Svg } from 'react-native-svg';
 
 const Home = ({ navigation }) => {
   const catList = useSelector((state) => state.categories.categories);
-  console.log(catList);
+  // console.log(catList);
 
   const categoryListHeightAnimationValue = useRef(new Animated.Value(115)).current;
 
   const [categories, setCategories] = useState(
     catList.filter((value, key) => value.cat === 'income')
   );
+
+  const [categoriesSum, setCategoriesSum] = useState(200);
   const [Cat, setCat] = useState('income');
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [showMoreToggle, setShowMoreToggle] = useState(false);
@@ -247,7 +249,7 @@ const Home = ({ navigation }) => {
           >
             {Cat == 'income' ? 'Crédit (Entrée)' : 'Débit (Sortie)'}
           </Text>
-          <Text style={{ color: COLORS.darkgray, ...FONTS.body4 }}>2000 USD</Text>
+          <Text style={{ color: COLORS.darkgray, ...FONTS.body4 }}>{totalSum()} USD</Text>
         </View>
 
         <View style={{ flexDirection: 'row' }}>
@@ -496,6 +498,20 @@ const Home = ({ navigation }) => {
       </View>
     );
   }
+
+  const totalSum = () => {
+    var tot = 0;
+    categories.map((item) => {
+      let confirm = item.data; //.filter(a => a.cat == "expense")
+      var total = parseFloat(
+        confirm.reduce((a, b) => parseFloat(a) + (parseFloat(b.total) || 0), 0)
+      );
+      tot += total;
+      return total;
+    });
+    console.log(tot);
+    return tot;
+  };
 
   function processCategoryDataToDisplay() {
     // Filter expenses with "Confirmed" status
