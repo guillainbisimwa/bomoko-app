@@ -19,7 +19,8 @@ import { COLORS, FONTS, SIZES, icons, images } from '../constants';
 import { AuthScreen } from './AuthScreen/AuthScreen';
 import { LoginScreen } from './LoginScreen/LoginScreen';
 
-import Login from './Login';
+import { VictoryPie } from 'victory-native';
+import { Svg } from 'react-native-svg';
 
 const Home = ({ navigation }) => {
   const catList = useSelector((state) => state.categories.categories);
@@ -85,6 +86,7 @@ const Home = ({ navigation }) => {
     return (
       <View
         style={{
+          zIndex: 10,
           paddingHorizontal: SIZES.padding,
           paddingVertical: SIZES.padding,
           //backgroundColor: COLORS.white,
@@ -191,7 +193,7 @@ const Home = ({ navigation }) => {
               <Text style={{ color: COLORS.white, ...FONTS.body5 }}>
                 BALANCE TOTALE AU {date.toLocaleDateString('fr-FR')}
               </Text>
-              <Text style={{ ...FONTS.h2, color: COLORS.lightGray }}>2000 FC</Text>
+              <Text style={{ ...FONTS.h2, color: COLORS.lightGray }}>2000 USD</Text>
             </View>
           </View>
         </View>
@@ -235,7 +237,7 @@ const Home = ({ navigation }) => {
           justifyContent: 'space-between',
           alignItems: 'center',
           backgroundColor: COLORS.lightGray2,
-          zIndex: -10,
+          // zIndex: -10,
         }}
       >
         {/* Title */}
@@ -245,7 +247,7 @@ const Home = ({ navigation }) => {
           >
             {Cat == 'income' ? 'Crédit (Entrée)' : 'Débit (Sortie)'}
           </Text>
-          <Text style={{ color: COLORS.darkgray, ...FONTS.body4 }}>2000 FC</Text>
+          <Text style={{ color: COLORS.darkgray, ...FONTS.body4 }}>2000 USD</Text>
         </View>
 
         <View style={{ flexDirection: 'row' }}>
@@ -370,7 +372,7 @@ const Home = ({ navigation }) => {
             {selectedCategory && selectedCategory.name} totale :{' '}
           </Text>
           <Text style={{ ...FONTS.h4, color: Cat === 'income' ? COLORS.darkgreen : COLORS.red }}>
-            {selectedCategory && sumCat.toFixed(2)} FC
+            {selectedCategory && sumCat.toFixed(2)} USD
           </Text>
         </View>
       </View>
@@ -402,7 +404,13 @@ const Home = ({ navigation }) => {
             justifyContent: 'space-between',
           }}
         >
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <View
+            style={{
+              width: '60%',
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}
+          >
             <View
               style={{
                 height: 50,
@@ -427,16 +435,24 @@ const Home = ({ navigation }) => {
               <Text style={{ ...FONTS.h3, color: selectedCategory.color }}>
                 {selectedCategory && selectedCategory.name}
               </Text>
-              <Text style={{ ...FONTS.body5, flexWrap: 'wrap', color: COLORS.darkgray }}>
+              <Text
+                numberOfLines={1}
+                style={{
+                  overflow: 'hidden',
+                  ...FONTS.body5,
+                  flexWrap: 'wrap',
+                  color: COLORS.darkgray,
+                }}
+              >
                 {item.description}
               </Text>
             </View>
           </View>
 
-          <View style={{ alignItems: 'flex-end' }}>
+          <View style={{ width: '25%', alignItems: 'flex-end' }}>
             <Text style={{ ...FONTS.h5, color: COLORS.red }}>
               {' '}
-              {Cat === 'income' ? '+' : '-'} {item.total.toFixed(2)} FC{' '}
+              {Cat === 'income' ? '+' : '-'} {item.total.toFixed(2)} USD{' '}
             </Text>
             <View style={{ flexDirection: 'row' }}>
               <Image
@@ -460,7 +476,7 @@ const Home = ({ navigation }) => {
 
     return (
       <View>
-        {renderIncomingExpensesTitle()}
+        {/* {renderIncomingExpensesTitle()} */}
 
         {incomingExpenses.length > 0 && (
           <View>
@@ -528,7 +544,7 @@ const Home = ({ navigation }) => {
     let colorScales = chartData.map((item) => item.color);
     let totalExpenseCount = chartData.reduce((a, b) => a + (b.expenseCount || 0), 0);
 
-    console.log('Check Chart');
+    // console.log('Check Chart');
     //console.log(chartData)
 
     if (Platform.OS == 'ios') {
@@ -577,41 +593,47 @@ const Home = ({ navigation }) => {
       // Android workaround by wrapping VictoryPie with SVG
       return (
         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-          {/* <Svg width={SIZES.width} height={SIZES.width} style={{width: "100%", height: "auto"}}>
-
-                        <VictoryPie
-                            standalone={false} // Android workaround
-                            data={chartData}
-                            labels={(datum) => `${datum.y}`}
-                            radius={({ datum }) => (selectedCategory && selectedCategory.name == datum.name) ? SIZES.width * 0.4 : SIZES.width * 0.4 - 10}
-                            innerRadius={70}
-                            labelRadius={({ innerRadius }) => (SIZES.width * 0.4 + innerRadius) / 2.5}
-                            style={{
-                                labels: { fill: "white" },
-                                parent: {
-                                    ...styles.shadow
-                                },
-                            }}
-                            width={SIZES.width}
-                            height={SIZES.width}
-                            colorScale={colorScales}
-                            events={[{
-                                target: "data",
-                                eventHandlers: {
-                                    onPress: () => {
-                                        return [{
-                                            target: "labels",
-                                            mutation: (props) => {
-                                                let categoryName = chartData[props.index].name
-                                                setSelectCategoryByName(categoryName)
-                                            }
-                                        }]
-                                    }
-                                }
-                            }]}
-        
-                        />
-                    </Svg> */}
+          <Svg width={SIZES.width} height={SIZES.width} style={{ width: '100%', height: 'auto' }}>
+            <VictoryPie
+              standalone={false} // Android workaround
+              data={chartData}
+              labels={(datum) => `${datum.y}`}
+              radius={({ datum }) =>
+                selectedCategory && selectedCategory.name == datum.name
+                  ? SIZES.width * 0.4
+                  : SIZES.width * 0.4 - 10
+              }
+              innerRadius={70}
+              labelRadius={({ innerRadius }) => (SIZES.width * 0.4 + innerRadius) / 2.5}
+              style={{
+                labels: { fill: 'white' },
+                parent: {
+                  ...styles.shadow,
+                },
+              }}
+              width={SIZES.width}
+              height={SIZES.width}
+              colorScale={colorScales}
+              events={[
+                {
+                  target: 'data',
+                  eventHandlers: {
+                    onPress: () => {
+                      return [
+                        {
+                          target: 'labels',
+                          mutation: (props) => {
+                            let categoryName = chartData[props.index].name;
+                            setSelectCategoryByName(categoryName);
+                          },
+                        },
+                      ];
+                    },
+                  },
+                },
+              ]}
+            />
+          </Svg>
           <View style={{ position: 'absolute', top: '42%', left: '42%' }}>
             <Text style={{ ...FONTS.h1, textAlign: 'center' }}>{totalExpenseCount}</Text>
             <Text style={{ ...FONTS.body3, textAlign: 'center' }}>Expenses</Text>
@@ -706,13 +728,20 @@ const Home = ({ navigation }) => {
         {/* Category Header Section */}
         {renderCategoryHeaderSection()}
 
-        <ScrollView contentContainerStyle={{ paddingBottom: 60 }}>
+        <ScrollView
+          contentContainerStyle={{
+            paddingBottom: 60,
+            backgroundColor: COLORS.lightGray2,
+            zIndex: 10,
+          }}
+        >
           <View>
-            {renderCategoryList()}
+            {renderExpenseSummary()}
+
+            {/* {renderCategoryList()} */}
             {renderIncomingExpenses()}
 
-            {/* {renderChart()} */}
-            {/* {renderExpenseSummary()} */}
+            {renderChart()}
           </View>
         </ScrollView>
       </View>
