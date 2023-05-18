@@ -239,7 +239,7 @@ const catSlice = createSlice({
       },
       {
         id: 11,
-        name: 'Autres',
+        name: 'Autres entrées',
         icon: icons.more,
         cat: income,
         color: COLORS.gray,
@@ -255,7 +255,7 @@ const catSlice = createSlice({
 
       {
         id: 12,
-        name: 'Autres',
+        name: 'Autres Sorties',
         icon: icons.more,
         cat: expense,
         color: COLORS.purple,
@@ -272,7 +272,6 @@ const catSlice = createSlice({
   },
   reducers: {
     addCat: (state, action) => {
-      // state.categories.push(...action.payload);
       action.payload.forEach((category) => {
         const existingCategory = state.categories.find((cat) => cat.name === category.name);
         if (existingCategory) {

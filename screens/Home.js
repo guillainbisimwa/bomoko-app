@@ -29,7 +29,6 @@ const Home = ({ navigation }) => {
   const [Cat, setCat] = useState('income');
   const [selectedCategory, setSelectedCategory] = useState(null);
 
-  const [showMoreToggle, setShowMoreToggle] = useState(false);
   const [date, setDate] = useState(new Date());
 
   function renderNavBar() {
@@ -39,22 +38,27 @@ const Home = ({ navigation }) => {
           flexDirection: 'row',
           paddingTop: SIZES.base * 3,
           justifyContent: 'space-between',
-          alignItems: 'flex-end',
+          //alignItems: 'flex-end',
           paddingHorizontal: SIZES.padding,
         }}
       >
         <TouchableOpacity
-          style={{ justifyContent: 'center', width: 50 }}
+          style={{
+            width: 80,
+            //justifyContent: 'center',
+            //backgroundColor: COLORS.white,
+            //borderRadius: 30,
+          }}
           onPress={() => {
             console.log('Menu');
             navigation.navigate(AuthScreen);
           }}
         >
           <Image
-            source={icons.income}
+            source={images.appIcon}
             style={{
-              width: 35,
-              height: 35,
+              width: 80,
+              height: 70,
               tintColor: COLORS.black,
             }}
           />

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
-import { StatusBar } from 'react-native';
 
 import { useFonts } from 'expo-font';
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,6 +11,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { setInstalled } from './redux/appReducer';
 import { LoginScreen } from './screens/LoginScreen/LoginScreen';
 import { AuthScreen } from './screens/AuthScreen/AuthScreen';
+import { addCat } from './redux/catReducer';
 
 const theme = {
   ...DefaultTheme,
@@ -30,18 +30,35 @@ const App = () => {
   useEffect(() => {
     setTimeout(() => setLoading(false), 2000);
     checkInstallationStatus();
+    checkCategories();
   }, []);
 
   const checkInstallationStatus = async () => {
     try {
       const value = await AsyncStorage.getItem('isInstalled');
       if (value !== null && value === 'true') {
-        await dispatch(setInstalled());
+        dispatch(setInstalled());
       } else {
         // setLoading(false);
       }
     } catch (error) {
       console.log('Error retrieving installation status:', error);
+      setLoading(false);
+    }
+  };
+
+  const checkCategories = async () => {
+    try {
+      const value = await AsyncStorage.getItem('categories2');
+      console.log('......value', value);
+      if (value !== null && value === 'true') {
+        console.log('......value', value);
+        // dispatch(addCat());
+      } else {
+        // setLoading(false);
+      }
+    } catch (error) {
+      console.log('Error retrieving categories status:', error);
       setLoading(false);
     }
   };
