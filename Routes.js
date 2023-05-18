@@ -28,8 +28,8 @@ const App = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    setTimeout(() => setLoading(false), 2000);
     checkInstallationStatus();
-    setTimeout(() => setLoading(false), 2000); //2000
   }, []);
 
   const checkInstallationStatus = async () => {
@@ -38,7 +38,7 @@ const App = () => {
       if (value !== null && value === 'true') {
         await dispatch(setInstalled());
       } else {
-        setLoading(false);
+        // setLoading(false);
       }
     } catch (error) {
       console.log('Error retrieving installation status:', error);
