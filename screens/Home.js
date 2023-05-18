@@ -43,11 +43,10 @@ const Home = ({ navigation }) => {
       <View
         style={{
           flexDirection: 'row',
-          paddingTop: SIZES.base * 2,
+          paddingTop: SIZES.base * 3,
           justifyContent: 'space-between',
           alignItems: 'flex-end',
           paddingHorizontal: SIZES.padding,
-          // backgroundColor: COLORS.white,
         }}
       >
         <TouchableOpacity
@@ -98,8 +97,8 @@ const Home = ({ navigation }) => {
         }}
       >
         <View style={{ paddingBottom: SIZES.padding * 3 }}>
-          <Text style={{ color: COLORS.black, ...FONTS.h2 }}>BOMOKO Cash</Text>
-          <Text style={{ ...FONTS.h3, color: COLORS.white }}>(Portefeuil electronique)</Text>
+          <Text style={{ color: COLORS.white, ...FONTS.h2 }}>BOMOKO Cash</Text>
+          <Text style={{ ...FONTS.h3, color: COLORS.gray }}>(Portefeuil electronique)</Text>
         </View>
 
         <View
@@ -195,7 +194,7 @@ const Home = ({ navigation }) => {
               <Text style={{ color: COLORS.white, ...FONTS.body5 }}>
                 BALANCE TOTALE AU {date.toLocaleDateString('fr-FR')}
               </Text>
-              <Text style={{ ...FONTS.h2, color: COLORS.lightGray }}>2000 USD</Text>
+              <Text style={{ ...FONTS.h2, color: COLORS.lightGray }}>{totalSumDC()} USD</Text>
             </View>
           </View>
         </View>
@@ -513,8 +512,8 @@ const Home = ({ navigation }) => {
       return el[0];
     });
 
-    console.log(' ==> ', fin);
-    console.log(' ==> ');
+    // console.log(' ==> ', fin);
+    // console.log(' ==> ');
 
     let incomingExpenses = fin;
 
@@ -641,6 +640,34 @@ const Home = ({ navigation }) => {
     });
     console.log(tot);
     return tot;
+  };
+
+  const totalSumDC = () => {
+    var totExpense = 0;
+    var totIncome = 0;
+    catList
+      .filter((a) => a.cat == 'expense')
+      .map((item) => {
+        let confirm = item.data; //.filter(a => a.cat == "expense")
+        var total = parseFloat(
+          confirm.reduce((a, b) => parseFloat(a) + (parseFloat(b.total) || 0), 0)
+        );
+        totExpense += total;
+        return total;
+      });
+
+    catList
+      .filter((a) => a.cat == 'income')
+      .map((item) => {
+        let confirmI = item.data;
+        var totalI = parseFloat(
+          confirmI.reduce((a, b) => parseFloat(a) + (parseFloat(b.total) || 0), 0)
+        );
+        totIncome += totalI;
+        return totalI;
+      });
+
+    return totIncome - totExpense;
   };
 
   function processCategoryDataToDisplay() {

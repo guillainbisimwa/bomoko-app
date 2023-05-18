@@ -64,7 +64,7 @@ const App = () => {
   if (isInstalled) {
     return (
       <NavigationContainer theme={theme}>
-        <StatusBar barStyle="light-content"></StatusBar>
+        {/* <StatusBar barStyle=""></StatusBar> */}
 
         <Stack.Navigator
           screenOptions={{
