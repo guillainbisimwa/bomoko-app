@@ -272,16 +272,20 @@ const catSlice = createSlice({
   },
   reducers: {
     addCat: (state, action) => {
-      action.payload.forEach((category) => {
-        const existingCategory = state.categories.find((cat) => cat.name === category.name);
-        if (existingCategory) {
-          existingCategory.data.push(...category.data);
-        }
-      });
+      state.categories = action.payload;
+      // action.payload.forEach((category) => {
+      //   const existingCategory = state.categories.find((cat) => cat.name === category.name);
+      //   if (existingCategory) {
+      //     existingCategory.data.push(...category.data);
+      //   }
+      // });
+    },
+    removeAllCat: (state, action) => {
+      state.categories = action.payload;
     },
   },
 });
 
-export const { addCat } = catSlice.actions;
+export const { addCat, removeAllCat } = catSlice.actions;
 
 export default catSlice.reducer;

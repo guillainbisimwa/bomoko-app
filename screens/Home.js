@@ -59,7 +59,7 @@ const Home = ({ navigation }) => {
             style={{
               width: 80,
               height: 70,
-              tintColor: COLORS.black,
+              tintColor: COLORS.white,
             }}
           />
         </TouchableOpacity>
@@ -73,7 +73,7 @@ const Home = ({ navigation }) => {
             style={{
               width: 30,
               height: 30,
-              tintColor: COLORS.black,
+              tintColor: COLORS.white,
             }}
           />
         </TouchableOpacity>
@@ -494,22 +494,11 @@ const Home = ({ navigation }) => {
     var fin = [];
     let category = categories.map((v, k) => {
       var el = v.data.map((vv, kk) => {
-        // {"cat": "income", "color": "#8e44ad", "data":  "icon": 23, "id": 1, "name": "Vente"}
-
-        // console.log({ ...vv, cat: v.cat, color: v.color, icon: v.icon, id: 1, name: v.name });
         return { ...vv, cat: v.cat, color: v.color, icon: v.icon, id: 1, name: v.name };
       });
-      console.log('-------------');
-
-      //console.log(...el);
       fin.push(...el);
-      //console.log('return', el);
-
       return el[0];
     });
-
-    // console.log(' ==> ', fin);
-    // console.log(' ==> ');
 
     let incomingExpenses = fin;
 

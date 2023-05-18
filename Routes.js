@@ -11,7 +11,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { setInstalled } from './redux/appReducer';
 import { LoginScreen } from './screens/LoginScreen/LoginScreen';
 import { AuthScreen } from './screens/AuthScreen/AuthScreen';
-import { addCat } from './redux/catReducer';
+import { addCat, removeAllCat } from './redux/catReducer';
 
 const theme = {
   ...DefaultTheme,
@@ -28,7 +28,7 @@ const App = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    setTimeout(() => setLoading(false), 2000);
+    //setTimeout(() => setLoading(false), 2000);
     checkInstallationStatus();
     checkCategories();
   }, []);
@@ -39,7 +39,7 @@ const App = () => {
       if (value !== null && value === 'true') {
         dispatch(setInstalled());
       } else {
-        // setLoading(false);
+        setLoading(false);
       }
     } catch (error) {
       console.log('Error retrieving installation status:', error);
@@ -49,11 +49,12 @@ const App = () => {
 
   const checkCategories = async () => {
     try {
-      const value = await AsyncStorage.getItem('categories2');
-      console.log('......value', value);
-      if (value !== null && value === 'true') {
-        console.log('......value', value);
-        // dispatch(addCat());
+      const value = await AsyncStorage.getItem('categories');
+      console.log(value);
+
+      if (value !== null) {
+        // dispatch(addCat(JSON.parse(value)));
+        dispatch(removeAllCat(JSON.parse(value)));
       } else {
         // setLoading(false);
       }
@@ -95,8 +96,10 @@ const App = () => {
         </Stack.Navigator>
       </NavigationContainer>
     );
+  } else if (!isInstalled) {
+    return <Onboard />;
   }
-  return <Onboard />;
+  return <InitialLoader />;
 };
 
 export default App;
