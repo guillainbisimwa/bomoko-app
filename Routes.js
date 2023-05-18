@@ -11,7 +11,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { setInstalled } from './redux/appReducer';
 import { LoginScreen } from './screens/LoginScreen/LoginScreen';
 import { AuthScreen } from './screens/AuthScreen/AuthScreen';
-import { addCat, removeAllCat } from './redux/catReducer';
+import { resetAllCat } from './redux/catReducer';
 
 const theme = {
   ...DefaultTheme,
@@ -28,7 +28,8 @@ const App = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    //setTimeout(() => setLoading(false), 2000);
+    setTimeout(() => setLoading(false), 2000);
+    //AsyncStorage.clear();
     checkInstallationStatus();
     checkCategories();
   }, []);
@@ -50,11 +51,11 @@ const App = () => {
   const checkCategories = async () => {
     try {
       const value = await AsyncStorage.getItem('categories');
-      console.log(value);
+      console.log('----------', value);
 
       if (value !== null) {
         // dispatch(addCat(JSON.parse(value)));
-        dispatch(removeAllCat(JSON.parse(value)));
+        dispatch(resetAllCat(JSON.parse(value)));
       } else {
         // setLoading(false);
       }

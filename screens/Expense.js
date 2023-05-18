@@ -26,7 +26,7 @@ const Expense = () => {
   const [total, setTotal] = useState('');
   const [selectedValue, setSelectedValue] = useState('');
 
-  const handleSaveIncome = () => {
+  const handleSaveIncome = async () => {
     // Create a new expense object
 
     if (!selectedValue || !description || !total) {
@@ -60,10 +60,9 @@ const Expense = () => {
         data: updatedData,
       };
 
-      // Dispatch the updated categories to the reducer
       dispatch(addCat(updatedCategories));
-      // Reset the form
 
+      // Reset the form
       setSelectedValue('');
       setDescription('');
       setTotal('');

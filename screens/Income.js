@@ -11,7 +11,6 @@ import { Picker } from '@react-native-picker/picker';
 import { KeyboardAvoidingView } from 'react-native';
 import { addCat } from '../redux/catReducer';
 import { Alert } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Income = () => {
   const dispatch = useDispatch();
@@ -60,20 +59,14 @@ const Income = () => {
         ...updatedCategories[categoryIndex],
         data: updatedData,
       };
+      dispatch(addCat(updatedCategories));
 
-      await AsyncStorage.setItem('categories', JSON.stringify(updatedCategories))
-        .then(async (json) => {
-          // Dispatch the updated categories to the reducer
-          dispatch(addCat(updatedCategories));
+      // Reset the form
+      setSelectedValue('');
+      setDescription('');
+      setTotal('');
 
-          // Reset the form
-          setSelectedValue('');
-          setDescription('');
-          setTotal('');
-
-          navigation.goBack();
-        })
-        .catch((error) => console.log('Error: ', error));
+      navigation.goBack();
     }
   };
 

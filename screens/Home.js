@@ -18,18 +18,32 @@ import { AuthScreen } from './AuthScreen/AuthScreen';
 
 import { VictoryPie } from 'victory-native';
 import { Svg } from 'react-native-svg';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Home = ({ navigation }) => {
   const catList = useSelector((state) => state.categories.categories);
+  // console.log('catList', catList);
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
+    updatedAsyncStorage();
     setCategories(catList.filter((value, key) => value.cat === 'income'));
   }, [catList]);
+
   const [Cat, setCat] = useState('income');
   const [selectedCategory, setSelectedCategory] = useState(null);
 
   const [date, setDate] = useState(new Date());
+
+  const updatedAsyncStorage = async () => {
+    if (catList !== null) {
+      await AsyncStorage.setItem('categories', JSON.stringify(catList))
+        .then(async (json) => {
+          console.log('Updated');
+        })
+        .catch((error) => console.log('Error: ', error));
+    }
+  };
 
   function renderNavBar() {
     return (
