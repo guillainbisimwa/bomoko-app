@@ -10,6 +10,7 @@ import { COLORS, FONTS, SIZES, icons } from '../constants';
 import { Picker } from '@react-native-picker/picker';
 import { KeyboardAvoidingView } from 'react-native';
 import { addCat } from '../redux/catReducer';
+import { Alert } from 'react-native';
 
 const Income = () => {
   const dispatch = useDispatch();
@@ -27,6 +28,12 @@ const Income = () => {
 
   const handleSaveIncome = () => {
     // Create a new expense object
+
+    if (!selectedValue || !description || !total) {
+      // Throw UI error if any field is missing
+      Alert.alert('Erreur', 'Veuillez remplir tous les champs obligatoires');
+      return;
+    }
     const newIncome = {
       id: Math.random().toString(),
       description: description,
@@ -55,6 +62,11 @@ const Income = () => {
 
       // Dispatch the updated categories to the reducer
       dispatch(addCat(updatedCategories));
+      // Reset the form
+
+      setSelectedValue('');
+      setDescription('');
+      setTotal('');
 
       navigation.goBack();
     }
@@ -146,6 +158,7 @@ const Income = () => {
           onChangeText={setDescription}
           mode="outlined"
           style={styles.input}
+          required
         />
         <TextInput
           label="Total"
@@ -154,6 +167,7 @@ const Income = () => {
           mode="outlined"
           keyboardType="numeric"
           style={styles.input}
+          required
         />
         <Button
           elevated
