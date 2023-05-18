@@ -19,6 +19,7 @@ import { AuthScreen } from './AuthScreen/AuthScreen';
 import { VictoryPie } from 'victory-native';
 import { Svg } from 'react-native-svg';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Avatar, Button, Card, Modal, Text as MText } from 'react-native-paper';
 
 const Home = ({ navigation }) => {
   const catList = useSelector((state) => state.categories.categories);
@@ -27,6 +28,23 @@ const Home = ({ navigation }) => {
 
   const [Cat, setCat] = useState('income');
   const [selectedCategory, setSelectedCategory] = useState(null);
+
+  const [visible, setVisible] = useState(false);
+
+  const showModal = () => setVisible(true);
+  const hideModal = () => setVisible(false);
+  const containerStyle = {
+    backgroundColor: 'white',
+    padding: 20,
+    width: '80%',
+    borderRadius: 10,
+    alignSelf: 'center',
+  };
+
+  // SELECTED ITEM
+  const [selectedItem, setSelectedItem] = useState(null);
+
+  const LeftContent = (props) => <Avatar.Icon {...props} icon="folder" />;
 
   useEffect(() => {
     updatedAsyncStorage();
@@ -518,91 +536,99 @@ const Home = ({ navigation }) => {
     let incomingExpenses = fin;
 
     const renderItem = (item, cat) => (
-      <View
-        style={{
-          marginRight: SIZES.padding,
-          marginLeft: SIZES.padding,
-          marginVertical: SIZES.padding / 3.7,
-          borderRadius: SIZES.radius,
-          backgroundColor: COLORS.white,
-          ...styles.shadow,
+      <TouchableOpacity
+        onPress={() => {
+          console.log(item);
+          setSelectedItem(item);
+          showModal(true);
         }}
       >
-        {/* Title */}
         <View
           style={{
-            flexDirection: 'row',
-            padding: SIZES.padding / 2,
-            alignItems: 'center',
-            justifyContent: 'space-between',
+            marginRight: SIZES.padding,
+            marginLeft: SIZES.padding,
+            marginVertical: SIZES.padding / 3.7,
+            borderRadius: SIZES.radius,
+            backgroundColor: COLORS.white,
+            ...styles.shadow,
           }}
         >
+          {/* Title */}
           <View
             style={{
-              width: '60%',
               flexDirection: 'row',
+              padding: SIZES.padding / 2,
               alignItems: 'center',
+              justifyContent: 'space-between',
             }}
           >
             <View
               style={{
-                height: 50,
-                width: 50,
-                borderRadius: 25,
-                backgroundColor: COLORS.lightGray,
+                width: '60%',
+                flexDirection: 'row',
                 alignItems: 'center',
-                justifyContent: 'center',
-                marginRight: SIZES.base,
               }}
             >
-              <Image
-                source={item.icon}
+              <View
                 style={{
-                  width: 30,
-                  height: 30,
-                  tintColor: item.color,
-                }}
-              />
-            </View>
-            <View>
-              <Text style={{ ...FONTS.h3, color: item.color }}>{item && item.name}</Text>
-              <Text
-                numberOfLines={1}
-                style={{
-                  overflow: 'hidden',
-                  ...FONTS.body5,
-                  flexWrap: 'wrap',
-                  color: COLORS.darkgray,
+                  height: 50,
+                  width: 50,
+                  borderRadius: 25,
+                  backgroundColor: COLORS.lightGray,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginRight: SIZES.base,
                 }}
               >
-                {item.description}
-              </Text>
+                <Image
+                  source={item.icon}
+                  style={{
+                    width: 30,
+                    height: 30,
+                    tintColor: item.color,
+                  }}
+                />
+              </View>
+              <View>
+                <Text style={{ ...FONTS.h3, color: item.color }}>{item && item.name}</Text>
+                <Text
+                  numberOfLines={1}
+                  style={{
+                    overflow: 'hidden',
+                    ...FONTS.body5,
+                    flexWrap: 'wrap',
+                    color: COLORS.darkgray,
+                  }}
+                >
+                  {item.description}
+                </Text>
+              </View>
             </View>
-          </View>
 
-          <View style={{ width: '25%', alignItems: 'flex-end' }}>
-            <Text style={{ ...FONTS.h5, color: COLORS.red }}>
-              {' '}
-              {Cat === 'income' ? '+' : '-'} {item.total.toFixed(2)} USD{' '}
-            </Text>
-            <View style={{ flexDirection: 'row' }}>
-              <Image
-                source={icons.calendar}
-                style={{
-                  width: 12,
-                  height: 12,
-                  tintColor: COLORS.darkgray,
-                  marginRight: 7,
-                  marginTop: 3,
-                }}
-              />
-              <Text style={{ marginBottom: SIZES.base, color: COLORS.darkgray, ...FONTS.body5 }}>
-                {item.date}
+            <View style={{ width: '25%', alignItems: 'flex-end' }}>
+              <Text style={{ ...FONTS.h5, color: COLORS.red }}>
+                {' '}
+                {Cat === 'income' ? '+' : '-'} {item.total.toFixed(2)} USD{' '}
               </Text>
+              <View style={{ flexDirection: 'row' }}>
+                <Image
+                  source={icons.calendar}
+                  style={{
+                    width: 12,
+                    height: 12,
+                    tintColor: COLORS.darkgray,
+                    marginRight: 7,
+                    marginTop: 3,
+                  }}
+                />
+                <Text style={{ marginBottom: SIZES.base, color: COLORS.darkgray, ...FONTS.body5 }}>
+                  {item.date}
+                </Text>
+              </View>
             </View>
           </View>
         </View>
-      </View>
+      </TouchableOpacity>
     );
 
     return (
@@ -919,6 +945,61 @@ const Home = ({ navigation }) => {
             {renderChart()}
           </View>
         </ScrollView>
+
+        <Modal
+          style={{ zIndex: 99 }}
+          visible={visible}
+          onDismiss={hideModal}
+          contentContainerStyle={containerStyle}
+        >
+          <Card>
+            <Card.Title
+              titleStyle={{ fontWeight: 'bold', textTransform: 'uppercase' }}
+              title={selectedItem && selectedItem.name}
+              left={() => (
+                <Image
+                  source={selectedItem && selectedItem.icon}
+                  style={{
+                    // width: 30,
+                    // height: 30,
+                    tintColor: selectedItem && selectedItem.color,
+                  }}
+                />
+              )}
+            />
+            <Card.Content>
+              <Text variant="titleLarge">{selectedItem && selectedItem.description}</Text>
+
+              <View style={{ alignItems: 'flex-end' }}>
+                <Text style={{ ...FONTS.h3, color: COLORS.red }}>
+                  {' '}
+                  {Cat === 'income' ? '+' : '-'} {selectedItem && selectedItem.total.toFixed(2)} USD{' '}
+                </Text>
+                <View style={{ flexDirection: 'row' }}>
+                  <Image
+                    source={icons.calendar}
+                    style={{
+                      width: 12,
+                      height: 12,
+                      tintColor: COLORS.darkgray,
+                      marginRight: 7,
+                      marginTop: 3,
+                    }}
+                  />
+                  <Text style={{ marginBottom: SIZES.base, color: COLORS.darkgray, ...FONTS.h3 }}>
+                    {selectedItem && selectedItem.date}
+                  </Text>
+                </View>
+              </View>
+            </Card.Content>
+            {/* <Card.Cover source={{ uri: 'https://picsum.photos/700' }} /> */}
+
+            <Card.Actions style={{ marginTop: 20 }}>
+              <Button onPress={hideModal}>Annuler</Button>
+              <Button buttonColor={COLORS.red}>Modifier</Button>
+            </Card.Actions>
+          </Card>
+        </Modal>
       </View>
     </>
   );
