@@ -1,11 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-  SafeAreaView,
   StyleSheet,
   ScrollView,
   View,
   Text,
-  StatusBar,
   Image,
   ImageBackground,
   TouchableOpacity,
@@ -17,21 +15,17 @@ import { useSelector } from 'react-redux';
 
 import { COLORS, FONTS, SIZES, icons, images } from '../constants';
 import { AuthScreen } from './AuthScreen/AuthScreen';
-import { LoginScreen } from './LoginScreen/LoginScreen';
 
 import { VictoryPie } from 'victory-native';
 import { Svg } from 'react-native-svg';
 
 const Home = ({ navigation }) => {
   const catList = useSelector((state) => state.categories.categories);
-  // console.log(catList);
+  const [categories, setCategories] = useState([]);
 
-  const categoryListHeightAnimationValue = useRef(new Animated.Value(115)).current;
-
-  const [categories, setCategories] = useState(
-    catList.filter((value, key) => value.cat === 'income')
-  );
-
+  useEffect(() => {
+    setCategories(catList.filter((value, key) => value.cat === 'income'));
+  }, [catList]);
   const [Cat, setCat] = useState('income');
   const [selectedCategory, setSelectedCategory] = useState(null);
 
@@ -90,8 +84,6 @@ const Home = ({ navigation }) => {
           zIndex: 10,
           paddingHorizontal: SIZES.padding,
           paddingVertical: SIZES.padding,
-          //backgroundColor: COLORS.white,
-          // paddingBottom: SIZES.padding,
           borderBottomColor: COLORS.gray,
           borderBottomWidth: 1,
         }}
@@ -392,7 +384,7 @@ const Home = ({ navigation }) => {
         style={{
           marginRight: SIZES.padding,
           marginLeft: SIZES.padding,
-          marginVertical: SIZES.radius,
+          marginVertical: SIZES.padding / 3.7,
           borderRadius: SIZES.radius,
           backgroundColor: COLORS.white,
           ...styles.shadow,
@@ -402,7 +394,7 @@ const Home = ({ navigation }) => {
         <View
           style={{
             flexDirection: 'row',
-            padding: SIZES.padding,
+            padding: SIZES.padding / 2,
             alignItems: 'center',
             justifyContent: 'space-between',
           }}
@@ -522,7 +514,7 @@ const Home = ({ navigation }) => {
         style={{
           marginRight: SIZES.padding,
           marginLeft: SIZES.padding,
-          marginVertical: SIZES.radius,
+          marginVertical: SIZES.padding / 3.7,
           borderRadius: SIZES.radius,
           backgroundColor: COLORS.white,
           ...styles.shadow,
@@ -532,7 +524,7 @@ const Home = ({ navigation }) => {
         <View
           style={{
             flexDirection: 'row',
-            padding: SIZES.padding,
+            padding: SIZES.padding / 2,
             alignItems: 'center',
             justifyContent: 'space-between',
           }}
@@ -583,7 +575,7 @@ const Home = ({ navigation }) => {
           <View style={{ width: '25%', alignItems: 'flex-end' }}>
             <Text style={{ ...FONTS.h5, color: COLORS.red }}>
               {' '}
-              {/* {Cat === 'income' ? '+' : '-'} {item.total.toFixed(2)} USD{' '} */}
+              {Cat === 'income' ? '+' : '-'} {item.total.toFixed(2)} USD{' '}
             </Text>
             <View style={{ flexDirection: 'row' }}>
               <Image
@@ -900,9 +892,6 @@ const Home = ({ navigation }) => {
         {/* Header section */}
         {renderHeader()}
 
-        {/* Category Header Section */}
-        {renderCategoryHeaderSection()}
-
         <ScrollView
           contentContainerStyle={{
             paddingBottom: 60,
@@ -911,6 +900,9 @@ const Home = ({ navigation }) => {
           }}
         >
           <View>
+            {/* Category Header Section */}
+            {renderCategoryHeaderSection()}
+
             {renderExpenseSummary()}
 
             {/* {renderCategoryList()} */}
