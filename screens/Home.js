@@ -25,13 +25,14 @@ const Home = ({ navigation }) => {
   // console.log('catList', catList);
   const [categories, setCategories] = useState([]);
 
+  const [Cat, setCat] = useState('income');
+  const [selectedCategory, setSelectedCategory] = useState(null);
+
   useEffect(() => {
     updatedAsyncStorage();
     setCategories(catList.filter((value, key) => value.cat === 'income'));
+    setCat('income');
   }, [catList]);
-
-  const [Cat, setCat] = useState('income');
-  const [selectedCategory, setSelectedCategory] = useState(null);
 
   const [date, setDate] = useState(new Date());
 
