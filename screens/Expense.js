@@ -1,60 +1,93 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
-import { AuthScreen } from './AuthScreen/AuthScreen';
-import { LoginScreen } from './LoginScreen/LoginScreen';
-import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  StatusBar,
-  Image,
-  ImageBackground,
-  TouchableOpacity,
-  FlatList,
-  Animated,
-  Platform,
-} from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import { StyleSheet, View, Image, TouchableOpacity, Platform } from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
 import { FontAwesome } from '@expo/vector-icons';
-import { Block, Input, Text } from '../components';
+import { Text } from '../components';
+import { useNavigation } from '@react-navigation/native';
 
 import { COLORS, FONTS, SIZES, icons } from '../constants';
-import Tabs from '../navigations/Tab';
+import { Picker } from '@react-native-picker/picker';
+import { KeyboardAvoidingView } from 'react-native';
+import { addCat } from '../redux/catReducer';
+import { Alert } from 'react-native';
 
-const Expense = ({ navigation }) => {
-  const user = useSelector((state) => state.user);
+const Expense = () => {
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
+
+  const catList = useSelector((state) => state.categories.categories);
+
+  const [categories, setCategories] = useState(
+    catList.filter((value, key) => value.cat === 'expense')
+  );
+
   const [description, setDescription] = useState('');
   const [total, setTotal] = useState('');
+  const [selectedValue, setSelectedValue] = useState('');
 
-  const handleSaveExpense = () => {
-    // Handle saving the expense to the database
-    // You can use the description and total variables to access the input values
+  const handleSaveIncome = () => {
+    // Create a new expense object
+
+    if (!selectedValue || !description || !total) {
+      // Throw UI error if any field is missing
+      Alert.alert('Erreur', 'Veuillez remplir tous les champs obligatoires');
+      return;
+    }
+    const newExpense = {
+      id: Math.random().toString(),
+      description: description,
+      total: parseFloat(total),
+      date: new Date().toISOString().split('T')[0],
+    };
+
+    // Find the corresponding category in the categories array
+    const categoryIndex = categories.findIndex((cat) => cat.name === selectedValue);
+
+    if (categoryIndex !== -1) {
+      // Create a copy of the categories array
+      const updatedCategories = [...categories];
+
+      // Create a copy of the data array for the selected category
+      const updatedData = [...updatedCategories[categoryIndex].data];
+
+      // Add the new expense to the updated data array
+      updatedData.push(newExpense);
+
+      // Update the data array for the selected category in the updated categories array
+      updatedCategories[categoryIndex] = {
+        ...updatedCategories[categoryIndex],
+        data: updatedData,
+      };
+
+      // Dispatch the updated categories to the reducer
+      dispatch(addCat(updatedCategories));
+      // Reset the form
+
+      setSelectedValue('');
+      setDescription('');
+      setTotal('');
+
+      navigation.goBack();
+    }
   };
-
-  if (user?.token) {
-    return <LoginScreen />;
-  }
-
-  const [date, setDate] = useState(new Date());
 
   function renderNavBar() {
     return (
       <View
         style={{
           flexDirection: 'row',
-          height: 80,
+          paddingTop: SIZES.base * 3,
           justifyContent: 'space-between',
           alignItems: 'flex-end',
           paddingHorizontal: SIZES.padding,
-          backgroundColor: COLORS.white,
         }}
       >
         <TouchableOpacity
           style={{ justifyContent: 'center', width: 50 }}
           onPress={() => {
             console.log('Menu');
-            navigation.navigate(Tabs);
+            navigation.goBack();
           }}
         >
           <Image
@@ -96,7 +129,7 @@ const Expense = ({ navigation }) => {
         }}
       >
         <View style={{ paddingVertical: SIZES.padding }}>
-          <Text style={{ color: COLORS.primary, ...FONTS.h2 }}>Crédit (Entrée)</Text>
+          <Text style={{ color: COLORS.primary, ...FONTS.h2 }}>Débit (Sortie)</Text>
           <Text style={{ ...FONTS.h3, color: COLORS.darkgray }}>(Portefeuil electronique)</Text>
         </View>
       </View>
@@ -106,12 +139,26 @@ const Expense = ({ navigation }) => {
   const addIncome = () => {
     return (
       <>
+        <View style={styles.dropdownContainer}>
+          <Picker
+            selectedValue={selectedValue}
+            onValueChange={(itemValue) => setSelectedValue(itemValue)}
+            style={styles.picker}
+          >
+            <Picker.Item label="Selectioner une categorie" value="" />
+            {categories &&
+              categories.map((k, v) => {
+                return <Picker.Item key={k.id} label={k.name} value={k.name} />;
+              })}
+          </Picker>
+        </View>
         <TextInput
           label="Description"
           value={description}
           onChangeText={setDescription}
           mode="outlined"
           style={styles.input}
+          required
         />
         <TextInput
           label="Total"
@@ -120,29 +167,36 @@ const Expense = ({ navigation }) => {
           mode="outlined"
           keyboardType="numeric"
           style={styles.input}
+          required
         />
         <Button
+          elevated
           mode="contained"
-          onPress={handleSaveExpense}
+          onPress={handleSaveIncome}
           style={styles.button}
           icon={({ size, color }) => <FontAwesome name="save" size={size} color={color} />}
         >
-          Save Expense
+          Ajouter
         </Button>
       </>
     );
   };
 
   return (
-    <View style={styles.container}>
-      {/* Nav bar section */}
-      {renderNavBar()}
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
+      <View>
+        {/* Nav bar section */}
+        {renderNavBar()}
 
-      {/* Header section */}
-      {renderHeader()}
+        {/* Header section */}
+        {renderHeader()}
 
-      {addIncome()}
-    </View>
+        {addIncome()}
+      </View>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -151,9 +205,6 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     backgroundColor: COLORS.white,
-  },
-  input: {
-    marginBottom: 16,
   },
   button: {
     marginTop: 32,
@@ -164,7 +215,7 @@ const styles = StyleSheet.create({
     borderWidth: 0,
     borderBottomColor: COLORS.gray,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    marginBottom: SIZES.padding * 2,
+    marginTop: SIZES.padding,
   },
   hasErrors: {
     borderBottomColor: COLORS.purple,
@@ -192,6 +243,16 @@ const styles = StyleSheet.create({
   },
   center: {
     margin: 35,
+  },
+  dropdownContainer: {
+    borderWidth: 1.4,
+    borderColor: '#aaa',
+    borderRadius: 4,
+    backgroundColor: '#fff',
+  },
+  picker: {
+    height: 50,
+    padding: 8,
   },
 });
 
