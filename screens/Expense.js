@@ -11,6 +11,7 @@ import { Picker } from '@react-native-picker/picker';
 import { KeyboardAvoidingView } from 'react-native';
 import { addCat } from '../redux/catReducer';
 import { Alert } from 'react-native';
+import { ScrollView } from 'react-native';
 
 const Expense = () => {
   const dispatch = useDispatch();
@@ -186,7 +187,7 @@ const Expense = () => {
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
-      <View>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
         {/* Nav bar section */}
         {renderNavBar()}
 
@@ -194,7 +195,7 @@ const Expense = () => {
         {renderHeader()}
 
         {addIncome()}
-      </View>
+      </ScrollView>
     </KeyboardAvoidingView>
   );
 };
@@ -204,7 +205,11 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     backgroundColor: COLORS.white,
-    height: '100%',
+  },
+  scrollContainer: {
+    flexGrow: 1,
+    paddingHorizontal: 24,
+    paddingBottom: 120,
   },
   button: {
     marginTop: 32,
