@@ -11,6 +11,7 @@ import {
   Animated,
   Platform,
 } from 'react-native';
+//import { BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { COLORS, FONTS, SIZES, icons, images } from '../constants';
@@ -21,6 +22,7 @@ import { Svg } from 'react-native-svg';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Avatar, Button, Card, Modal, Text as MText } from 'react-native-paper';
 import { resetAllCat } from '../redux/catReducer';
+//import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 const Home = ({ navigation }) => {
   const catList = useSelector((state) => state.categories.categories);
@@ -37,8 +39,8 @@ const Home = ({ navigation }) => {
   const hideModal = () => setVisible(false);
   const containerStyle = {
     backgroundColor: 'white',
-    padding: 20,
-    width: '80%',
+    //padding: 20,
+    width: '85%',
     borderRadius: 10,
     alignSelf: 'center',
   };
@@ -1036,7 +1038,7 @@ const Home = ({ navigation }) => {
           contentContainerStyle={{
             paddingBottom: 60,
             backgroundColor: COLORS.lightGray2,
-            zIndex: 10,
+            zIndex: 100,
           }}
         >
           <View>
@@ -1051,62 +1053,61 @@ const Home = ({ navigation }) => {
             {renderChart()}
           </View>
         </ScrollView>
+      </View>
 
-        <Modal
-          style={{ zIndex: 99 }}
-          visible={visible}
-          onDismiss={hideModal}
-          contentContainerStyle={containerStyle}
-        >
-          <Card>
-            <Card.Title
-              titleStyle={{ fontWeight: 'bold', textTransform: 'uppercase' }}
-              title={selectedItem && selectedItem.name}
-              left={() => (
+      <Modal
+        style={{ zIndex: 99 }}
+        visible={visible}
+        onDismiss={hideModal}
+        //contentContainerStyle={containerStyle}
+        contentContainerStyle={[containerStyle, { zIndex: 999 }]} // Set a higher value for the z-index
+      >
+        <Card style={{ padding: 10 }}>
+          <Card.Title
+            titleStyle={{ fontWeight: 'bold', textTransform: 'uppercase' }}
+            title={selectedItem && selectedItem.name}
+            left={() => (
+              <Image
+                source={selectedItem && selectedItem.icon}
+                style={{
+                  // width: 30,
+                  // height: 30,
+                  tintColor: selectedItem && selectedItem.color,
+                }}
+              />
+            )}
+          />
+          <Card.Content>
+            <Text variant="titleLarge">{selectedItem && selectedItem.description}</Text>
+
+            <View style={{ alignItems: 'flex-end' }}>
+              <Text style={{ ...FONTS.h3, color: COLORS.red }}>
+                {' '}
+                {Cat === 'income' ? '+' : '-'} {selectedItem && selectedItem.total.toFixed(2)} USD{' '}
+              </Text>
+              <View style={{ flexDirection: 'row' }}>
                 <Image
-                  source={selectedItem && selectedItem.icon}
+                  source={icons.calendar}
                   style={{
-                    // width: 30,
-                    // height: 30,
-                    tintColor: selectedItem && selectedItem.color,
+                    width: 12,
+                    height: 12,
+                    tintColor: COLORS.darkgray,
+                    marginRight: 7,
+                    marginTop: 3,
                   }}
                 />
-              )}
-            />
-            <Card.Content>
-              <Text variant="titleLarge">{selectedItem && selectedItem.description}</Text>
-
-              <View style={{ alignItems: 'flex-end' }}>
-                <Text style={{ ...FONTS.h3, color: COLORS.red }}>
-                  {' '}
-                  {Cat === 'income' ? '+' : '-'} {selectedItem && selectedItem.total.toFixed(2)} USD{' '}
+                <Text style={{ marginBottom: SIZES.base, color: COLORS.darkgray, ...FONTS.h3 }}>
+                  {selectedItem && selectedItem.date}
                 </Text>
-                <View style={{ flexDirection: 'row' }}>
-                  <Image
-                    source={icons.calendar}
-                    style={{
-                      width: 12,
-                      height: 12,
-                      tintColor: COLORS.darkgray,
-                      marginRight: 7,
-                      marginTop: 3,
-                    }}
-                  />
-                  <Text style={{ marginBottom: SIZES.base, color: COLORS.darkgray, ...FONTS.h3 }}>
-                    {selectedItem && selectedItem.date}
-                  </Text>
-                </View>
               </View>
-            </Card.Content>
-            {/* <Card.Cover source={{ uri: 'https://picsum.photos/700' }} /> */}
-
-            <Card.Actions style={{ marginTop: 15 }}>
-              <Button onPress={hideModal}>Annuler</Button>
-              <Button buttonColor={COLORS.red}>Modifier</Button>
-            </Card.Actions>
-          </Card>
-        </Modal>
-      </View>
+            </View>
+          </Card.Content>
+          <Card.Actions style={{ marginTop: 15 }}>
+            <Button onPress={hideModal}>Annuler</Button>
+            <Button buttonColor={COLORS.red}>Modifier</Button>
+          </Card.Actions>
+        </Card>
+      </Modal>
     </>
   );
 };
