@@ -42,12 +42,12 @@ export const AuthBody = ({ navigation }) => {
         resizeMode="contain"
         style={{ height: 195 }}
       />
-      <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+      <TouchableOpacity>
         <View style={styles.signinContainer}>
           <Text style={styles.text}>SE CONNECTER</Text>
         </View>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate('SignupScreen')}>
+      <TouchableOpacity>
         <View
           style={[
             styles.signinContainer,
