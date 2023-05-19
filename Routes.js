@@ -30,7 +30,7 @@ const App = () => {
 
   useEffect(() => {
     setTimeout(() => setLoading(false), 2000);
-    AsyncStorage.clear();
+    //AsyncStorage.clear();
     checkInstallationStatus();
     checkCategories();
   }, []);
