@@ -26,7 +26,7 @@
         "foregroundImage": "./assets/app-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.guillain.bomokoapp",
+      "package": "com.wezalab.bomoko",
       "versionCode": 4
     },
     "web": {
