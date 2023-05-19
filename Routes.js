@@ -12,6 +12,7 @@ import { setInstalled } from './redux/appReducer';
 import { LoginScreen } from './screens/LoginScreen/LoginScreen';
 import { AuthScreen } from './screens/AuthScreen/AuthScreen';
 import { resetAllCat } from './redux/catReducer';
+import { StatusBar } from 'react-native';
 
 const theme = {
   ...DefaultTheme,
@@ -83,7 +84,7 @@ const App = () => {
   if (isInstalled) {
     return (
       <NavigationContainer theme={theme}>
-        {/* <StatusBar barStyle=""></StatusBar> */}
+        <StatusBar barStyle="default"></StatusBar>
 
         <Stack.Navigator
           screenOptions={{
