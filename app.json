@@ -2,7 +2,7 @@
   "expo": {
     "name": "Bomoko app",
     "slug": "bomoko-app",
-    "version": "2.1.0",
+    "version": "2.6.0",
     "privacy": "public",
     "orientation": "portrait",
     "icon": "./assets/app-icon.png",
@@ -19,15 +19,16 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.guillain.bomokoapp"
+      "bundleIdentifier": "com.wezalab.bomoko"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/app-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.guillain.bomokoapp",
-      "versionCode": 2
+      "package": "com.wezalab.bomoko",
+      "versionCode": 6,
+      "permissions": []
     },
     "web": {
       "favicon": "./assets/favicon.png"

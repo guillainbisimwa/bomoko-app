@@ -14,8 +14,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   logo: {
-    height: 200,
-    width: 200,
+    // height: 200,
+    // width: 200,
     position: 'absolute',
   },
   bg: {
@@ -29,8 +29,7 @@ const InitialLoader = () => (
     <View style={styles.container}>
       <View style={styles.rounded}>
         <Image source={require('../assets/app-icon.png')} style={styles.logo} />
-        {/* <ActivityIndicator animating color={COLORS.peach} /> */}
-        <ActivityIndicator size={40} color={COLORS.peach} />
+        <ActivityIndicator style={{ paddingTop: 20 }} size={30} color={COLORS.white} />
       </View>
     </View>
   </ImageBackground>
