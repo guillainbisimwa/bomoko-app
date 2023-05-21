@@ -49,7 +49,7 @@ const Home = ({ navigation }) => {
   const [selectedItem, setSelectedItem] = useState(null);
 
   useEffect(() => {
-    updatedAsyncStorage();
+    // updatedAsyncStorage();
     setCategories(catList.filter((value, key) => value.cat === 'income'));
     setCat('income');
   }, [catList]);

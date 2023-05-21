@@ -30,7 +30,7 @@ const App = () => {
 
   useEffect(() => {
     setTimeout(() => setLoading(false), 2000);
-    //AsyncStorage.clear();
+    // AsyncStorage.clear();
     checkInstallationStatus();
     checkCategories();
   }, []);
@@ -38,6 +38,7 @@ const App = () => {
   const checkInstallationStatus = async () => {
     try {
       const value = await AsyncStorage.getItem('isInstalled');
+      console.log('value', value);
       if (value !== null && value === 'true') {
         dispatch(setInstalled());
       } else {
