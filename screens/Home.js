@@ -26,7 +26,7 @@ import { resetAllCat } from '../redux/catReducer';
 
 const Home = ({ navigation }) => {
   const catList = useSelector((state) => state.categories.categories);
-  console.log('catList', catList);
+  // console.log('catList', catList);
   const [categories, setCategories] = useState([]);
   const dispatch = useDispatch();
 

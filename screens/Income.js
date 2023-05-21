@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { StyleSheet, View, Image, TouchableOpacity, Platform } from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
@@ -18,14 +18,21 @@ const Income = () => {
   const navigation = useNavigation();
 
   const catList = useSelector((state) => state.categories.categories);
+  //console.log('catList income: ', catList);
 
   const [categories, setCategories] = useState(
     catList.filter((value, key) => value.cat === 'income')
   );
 
+  console.log('categories in', catList);
+
   const [description, setDescription] = useState('');
   const [total, setTotal] = useState('');
   const [selectedValue, setSelectedValue] = useState('');
+
+  useEffect(() => {
+    setCategories(catList.filter((value, key) => value.cat === 'income'));
+  }, []);
 
   const handleSaveIncome = async () => {
     // Create a new expense object
