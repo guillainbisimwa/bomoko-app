@@ -12,27 +12,34 @@ import { KeyboardAvoidingView } from 'react-native';
 import { addCat } from '../redux/catReducer';
 import { Alert } from 'react-native';
 import { ScrollView } from 'react-native';
+import useFetchCategories from '../hooks/useFetchCategories';
 
 const Income = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
+  const { loading, error, categorie } = useFetchCategories();
+
   const catList = useSelector((state) => state.categories.categories);
   //console.log('catList income: ', catList);
 
   const [categories, setCategories] = useState(
-    catList.filter((value, key) => value.cat === 'income')
+    //catList.filter((value, key) => value.cat === 'income')
+    categorie.filter((value, key) => value.cat === 'income')
   );
 
-  console.log('categories in', catList);
+  console.log('categories in', categories);
 
   const [description, setDescription] = useState('');
   const [total, setTotal] = useState('');
   const [selectedValue, setSelectedValue] = useState('');
 
   useEffect(() => {
-    setCategories(catList.filter((value, key) => value.cat === 'income'));
-  }, []);
+    setCategories(
+      //catList.filter((value, key) => value.cat === 'income')
+      categorie.filter((value, key) => value.cat === 'income')
+    );
+  }, [categorie]);
 
   const handleSaveIncome = async () => {
     // Create a new expense object
@@ -47,14 +54,15 @@ const Income = () => {
       description: description,
       total: parseFloat(total),
       date: new Date().toISOString().split('T')[0],
+      cat: selectedValue,
     };
 
     // Find the corresponding category in the categories array
-    const categoryIndex = categories.findIndex((cat) => cat.name === selectedValue);
+    const categoryIndex = categorie.findIndex((cat) => cat.name === selectedValue);
 
     if (categoryIndex !== -1) {
-      // Create a copy of the categories array
-      const updatedCategories = [...categories];
+      // Create a copy of the categorie array
+      const updatedCategories = [...categorie];
 
       // Create a copy of the data array for the selected category
       const updatedData = [...updatedCategories[categoryIndex].data];
@@ -62,7 +70,7 @@ const Income = () => {
       // Add the new expense to the updated data array
       updatedData.push(newIncome);
 
-      // Update the data array for the selected category in the updated categories array
+      // Update the data array for the selected category in the updated categorie array
       updatedCategories[categoryIndex] = {
         ...updatedCategories[categoryIndex],
         data: updatedData,

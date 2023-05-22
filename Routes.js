@@ -57,7 +57,7 @@ const App = () => {
 
       if (value !== null) {
         // dispatch(addCat(JSON.parse(value)));
-        dispatch(resetAllCat(JSON.parse(value)));
+        //dispatch(resetAllCat(JSON.parse(value)));
       } else {
         // setLoading(false);
       }

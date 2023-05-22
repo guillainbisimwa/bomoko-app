@@ -21,12 +21,11 @@ import { VictoryPie } from 'victory-native';
 import { Svg } from 'react-native-svg';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Avatar, Button, Card, Modal, Text as MText } from 'react-native-paper';
-import { resetAllCat } from '../redux/catReducer';
-//import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { loadCategoriesFromStorage, resetAllCat } from '../redux/catReducer';
 
 const Home = ({ navigation }) => {
   const catList = useSelector((state) => state.categories.categories);
-  // console.log('catList', catList);
+  console.log('catList', catList);
   const [categories, setCategories] = useState([]);
   const dispatch = useDispatch();
 
@@ -50,126 +49,16 @@ const Home = ({ navigation }) => {
 
   useEffect(() => {
     // updatedAsyncStorage();
+
     setCategories(catList.filter((value, key) => value.cat === 'income'));
     setCat('income');
-  }, [catList]);
-  const income = 'income';
-  const expense = 'expense';
+  }, []);
   const [date, setDate] = useState(new Date());
 
-  const cat = [
-    {
-      id: 1,
-      name: 'Vente',
-      icon: icons.shopping,
-      cat: income,
-      color: COLORS.purple,
-      data: [],
-    },
-    {
-      id: 2,
-      name: 'Remboursement',
-      icon: icons.refund,
-      cat: income,
-      color: COLORS.blue,
-      data: [],
-    },
-    {
-      id: 3,
-      name: 'Intérêt',
-      icon: icons.interest,
-      cat: income,
-      color: COLORS.darkgreen,
-      data: [],
-    },
-    {
-      id: 4,
-      name: 'Subvention',
-      icon: icons.grant,
-      cat: income,
-      color: COLORS.red,
-      data: [],
-    },
-    {
-      id: 5,
-      name: 'Investissement',
-      icon: icons.investment,
-      cat: income,
-      color: COLORS.peach,
-      data: [],
-    },
-
-    {
-      id: 6,
-      name: 'Achat',
-      icon: icons.shopping,
-      cat: expense,
-      color: COLORS.lightBlue,
-      data: [],
-    },
-    {
-      id: 7,
-      name: 'Salaire',
-      icon: icons.cash,
-      cat: expense,
-      color: COLORS.peach,
-      data: [],
-    },
-    {
-      id: 8,
-      name: "Dépenses d'exploitation",
-      icon: icons.cashbook,
-      cat: expense,
-      color: COLORS.darkgreen,
-      data: [],
-    },
-    {
-      id: 9,
-      name: "Retraits d'argent",
-      icon: icons.sell,
-      cat: expense,
-      color: COLORS.red,
-      data: [],
-    },
-    {
-      id: 10,
-      name: 'Paiements de dettes',
-      icon: icons.income,
-      cat: expense,
-      color: COLORS.yellow,
-      data: [],
-    },
-    {
-      id: 11,
-      name: 'Autres entrées',
-      icon: icons.more,
-      cat: income,
-      color: COLORS.gray,
-      data: [],
-    },
-
-    {
-      id: 12,
-      name: 'Autres Sorties',
-      icon: icons.more,
-      cat: expense,
-      color: COLORS.purple,
-      data: [],
-    },
-  ];
-
   const updatedAsyncStorage = async () => {
-    console.log('test', catList !== null);
+    dispatch(loadCategoriesFromStorage());
+    console.log('test1', catList);
     console.log('test', [].length);
-    if (catList !== null && catList.length !== 0) {
-      await AsyncStorage.setItem('categories', JSON.stringify(catList))
-        .then(async (json) => {
-          console.log('Updated');
-        })
-        .catch((error) => console.log('Error: ', error));
-    } else if (catList === null || catList.length === 0) {
-      dispatch(resetAllCat(cat));
-    }
   };
 
   function renderNavBar() {
