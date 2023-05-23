@@ -28,7 +28,7 @@ const Expense = () => {
     categorie.filter((value, key) => value.cat === 'expense')
   );
 
-  console.log('categories in', categories);
+  // console.log('categories in', categories);
 
   const [description, setDescription] = useState('');
   const [total, setTotal] = useState('');
@@ -176,7 +176,7 @@ const Expense = () => {
           required
         />
         <TextInput
-          label="Total"
+          label="Montant"
           value={total}
           onChangeText={setTotal}
           mode="outlined"
