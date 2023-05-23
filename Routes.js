@@ -14,6 +14,7 @@ import { AuthScreen } from './screens/AuthScreen/AuthScreen';
 import { resetAllCat } from './redux/catReducer';
 import { StatusBar } from 'react-native';
 import MyDrawer from './navigations/MyDrawer';
+import { Expense, Income } from './screens';
 
 const theme = {
   ...DefaultTheme,
@@ -83,7 +84,7 @@ const App = () => {
   if (loading) {
     return <InitialLoader />;
   }
-  if (!isInstalled) {
+  if (isInstalled) {
     return (
       <NavigationContainer theme={theme}>
         <StatusBar barStyle="default"></StatusBar>
@@ -92,9 +93,12 @@ const App = () => {
           screenOptions={{
             headerShown: false,
           }}
-          initialRouteName={'Tab'}
+          initialRouteName={'MyDrawer'}
         >
-          <Stack.Screen name="Tab" component={Tabs} />
+          <Stack.Screen name="Main" component={MyDrawer} />
+          <Stack.Screen name="Income" component={Income} />
+          <Stack.Screen name="Expense" component={Expense} />
+
           <Stack.Screen name="LoginScreen" component={LoginScreen} />
           <Stack.Screen name="AuthScreen" component={AuthScreen} />
         </Stack.Navigator>
@@ -103,7 +107,7 @@ const App = () => {
   } else if (!isInstalled) {
     return <Onboard />;
   }
-  return <MyDrawer />;
+  return <InitialLoader />;
 };
 
 export default App;

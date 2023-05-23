@@ -10,69 +10,61 @@ const Drawer = createDrawerNavigator();
 
 export default function MyDrawer() {
   return (
-    <NavigationContainer>
-      <Drawer.Navigator
-        useLegacyImplementation
-        initialRouteName="Home"
-        drawerContent={(props) => <CustomDrawer {...props} />}
-        screenOptions={{
-          //headerShown: false,
-          // headerStyle: {
-          //   backgroundColor: '#',
-          // },
-          drawerActiveBackgroundColor: COLORS.primary,
-          drawerActiveTintColor: '#fff',
-          drawerInactiveTintColor: '#333',
-          drawerLabelStyle: {
-            marginLeft: -25,
-            fontSize: 15,
-          },
+    // <NavigationContainer>
+    <Drawer.Navigator
+      useLegacyImplementation
+      initialRouteName="Home"
+      drawerContent={(props) => <CustomDrawer {...props} />}
+      screenOptions={{
+        //headerShown: false,
+        // headerStyle: {
+        //   backgroundColor: '#',
+        // },
+        drawerActiveBackgroundColor: COLORS.primary,
+        drawerActiveTintColor: '#fff',
+        drawerInactiveTintColor: '#333',
+        drawerLabelStyle: {
+          marginLeft: -25,
+          fontSize: 15,
+        },
+      }}
+    >
+      <Drawer.Screen
+        name="Revenus et Depenses"
+        component={Home}
+        options={{
+          headerShown: false,
+          drawerIcon: ({ color }) => <Ionicons color={color} size={SIZES.base * 2} name={'home'} />,
         }}
-      >
-        <Drawer.Screen
-          name="Revenus et Depenses"
-          component={Home}
-          options={{
-            headerShown: false,
-            drawerIcon: ({ color }) => (
-              <Ionicons color={color} size={SIZES.base * 2} name={'home'} />
-            ),
-          }}
-        />
+      />
 
-        <Drawer.Screen
-          name="Produits / services"
-          component={Settings}
-          options={{
-            headerShown: true,
-            drawerIcon: ({ color }) => (
-              <Ionicons color={color} size={SIZES.base * 2} name={'home'} />
-            ),
-          }}
-        />
+      <Drawer.Screen
+        name="Produits / services"
+        component={Settings}
+        options={{
+          headerShown: true,
+          drawerIcon: ({ color }) => <Ionicons color={color} size={SIZES.base * 2} name={'home'} />,
+        }}
+      />
 
-        <Drawer.Screen
-          name="Creances et dettes"
-          component={Settings}
-          options={{
-            headerShown: true,
-            drawerIcon: ({ color }) => (
-              <Ionicons color={color} size={SIZES.base * 2} name={'home'} />
-            ),
-          }}
-        />
+      <Drawer.Screen
+        name="Creances et dettes"
+        component={Settings}
+        options={{
+          headerShown: true,
+          drawerIcon: ({ color }) => <Ionicons color={color} size={SIZES.base * 2} name={'home'} />,
+        }}
+      />
 
-        <Drawer.Screen
-          name="Parametres"
-          component={Settings}
-          options={{
-            headerShown: true,
-            drawerIcon: ({ color }) => (
-              <Ionicons color={color} size={SIZES.base * 2} name={'cog'} />
-            ),
-          }}
-        />
-      </Drawer.Navigator>
-    </NavigationContainer>
+      <Drawer.Screen
+        name="Parametres"
+        component={Settings}
+        options={{
+          headerShown: true,
+          drawerIcon: ({ color }) => <Ionicons color={color} size={SIZES.base * 2} name={'cog'} />,
+        }}
+      />
+    </Drawer.Navigator>
+    // </NavigationContainer>
   );
 }
