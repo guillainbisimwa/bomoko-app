@@ -2,7 +2,7 @@
   "expo": {
     "name": "Bomoko app",
     "slug": "bomoko-app",
-    "version": "2.8.0",
+    "version": "2.9.0",
     "privacy": "public",
     "orientation": "portrait",
     "icon": "./assets/app-icon.png",
@@ -27,7 +27,7 @@
         "backgroundColor": "#FFFFFF"
       },
       "package": "com.wezalab.bomoko",
-      "versionCode": 28,
+      "versionCode": 29,
       "permissions": []
     },
     "web": {

@@ -10,7 +10,6 @@ const Drawer = createDrawerNavigator();
 
 export default function MyDrawer() {
   return (
-    // <NavigationContainer>
     <Drawer.Navigator
       useLegacyImplementation
       initialRouteName="Home"
@@ -65,6 +64,5 @@ export default function MyDrawer() {
         }}
       />
     </Drawer.Navigator>
-    // </NavigationContainer>
   );
 }
