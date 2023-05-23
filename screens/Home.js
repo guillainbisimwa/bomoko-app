@@ -25,7 +25,7 @@ import { loadCategoriesFromStorage, resetAllCat } from '../redux/catReducer';
 
 const Home = ({ navigation }) => {
   const catList = useSelector((state) => state.categories.categories);
-  console.log('catList', catList);
+  //console.log('catList', catList);
   const [categories, setCategories] = useState([]);
   const dispatch = useDispatch();
 
@@ -72,27 +72,36 @@ const Home = ({ navigation }) => {
           paddingHorizontal: SIZES.padding,
         }}
       >
-        <TouchableOpacity
+        <View
           style={{
-            width: 80,
-            //justifyContent: 'center',
-            //backgroundColor: COLORS.white,
-            //borderRadius: 30,
-          }}
-          onPress={() => {
-            console.log('Menu');
-            navigation.navigate(AuthScreen);
+            flexDirection: 'row',
           }}
         >
-          <Image
-            source={images.appIcon}
+          <TouchableOpacity
             style={{
               width: 80,
-              height: 70,
-              tintColor: COLORS.white,
+              //justifyContent: 'center',
+              //backgroundColor: COLORS.white,
+              //borderRadius: 30,
             }}
-          />
-        </TouchableOpacity>
+            onPress={() => {
+              console.log('Menu');
+              //navigation.navigate(AuthScreen);
+              navigation.openDrawer();
+            }}
+          >
+            <Image
+              source={icons.menu}
+              style={{
+                width: SIZES.base * 4,
+                height: SIZES.base * 3,
+                tintColor: COLORS.white,
+              }}
+            />
+          </TouchableOpacity>
+
+          <Text style={{ color: COLORS.white, ...FONTS.h2 }}>BOMOKO Cash</Text>
+        </View>
 
         <TouchableOpacity
           style={{ justifyContent: 'center', alignItems: 'flex-end', width: 50 }}
@@ -117,13 +126,12 @@ const Home = ({ navigation }) => {
         style={{
           zIndex: 10,
           paddingHorizontal: SIZES.padding,
-          paddingVertical: SIZES.padding,
+          paddingVertical: SIZES.padding / 2,
           borderBottomColor: COLORS.gray,
           borderBottomWidth: 1,
         }}
       >
-        <View style={{ paddingBottom: SIZES.padding * 3 }}>
-          <Text style={{ color: COLORS.white, ...FONTS.h2 }}>BOMOKO Cash</Text>
+        <View style={{ paddingBottom: SIZES.padding * 4 }}>
           <Text style={{ ...FONTS.h3, color: COLORS.gray }}>(Portefeuil electronique)</Text>
         </View>
 
@@ -132,7 +140,7 @@ const Home = ({ navigation }) => {
             margin: SIZES.padding,
             zIndex: 10,
             position: 'absolute',
-            top: SIZES.padding * 2.6,
+            top: SIZES.padding * 1.4,
             width: '100%',
             backgroundColor: COLORS.secondary,
             paddingTop: SIZES.padding,
@@ -661,7 +669,7 @@ const Home = ({ navigation }) => {
       tot += total;
       return total;
     });
-    console.log(tot);
+    // console.log(tot);
     return tot;
   };
 
