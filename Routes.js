@@ -13,6 +13,7 @@ import { LoginScreen } from './screens/LoginScreen/LoginScreen';
 import { AuthScreen } from './screens/AuthScreen/AuthScreen';
 import { resetAllCat } from './redux/catReducer';
 import { StatusBar } from 'react-native';
+import MyDrawer from './navigations/MyDrawer';
 
 const theme = {
   ...DefaultTheme,
@@ -56,8 +57,8 @@ const App = () => {
       console.log('----------', value);
 
       if (value !== null) {
-        // dispatch(addCat(JSON.parse(value)));
-        //dispatch(resetAllCat(JSON.parse(value)));
+        //dispatch(addCat(JSON.parse(value)));
+        dispatch(resetAllCat(JSON.parse(value)));
       } else {
         // setLoading(false);
       }
@@ -82,7 +83,7 @@ const App = () => {
   if (loading) {
     return <InitialLoader />;
   }
-  if (isInstalled) {
+  if (!isInstalled) {
     return (
       <NavigationContainer theme={theme}>
         <StatusBar barStyle="default"></StatusBar>
@@ -102,7 +103,7 @@ const App = () => {
   } else if (!isInstalled) {
     return <Onboard />;
   }
-  return <InitialLoader />;
+  return <MyDrawer />;
 };
 
 export default App;
