@@ -11,11 +11,10 @@ import {
   Animated,
   Platform,
 } from 'react-native';
-//import { BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { useDispatch, useSelector } from 'react-redux';
+import { FAB } from 'react-native-paper';
 
 import { COLORS, FONTS, SIZES, icons, images } from '../constants';
-import { AuthScreen } from './AuthScreen/AuthScreen';
 
 import { VictoryPie } from 'victory-native';
 import { Svg } from 'react-native-svg';
@@ -33,6 +32,12 @@ const Home = ({ navigation }) => {
   const [selectedCategory, setSelectedCategory] = useState(null);
 
   const [visible, setVisible] = useState(false);
+
+  const [state, setState] = useState({ open: false });
+
+  const onStateChange = ({ open }) => setState({ open });
+
+  const { open } = state;
 
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
@@ -79,10 +84,11 @@ const Home = ({ navigation }) => {
         >
           <TouchableOpacity
             style={{
-              width: 80,
+              //width: 80,
               //justifyContent: 'center',
               //backgroundColor: COLORS.white,
               //borderRadius: 30,
+              paddingRight: SIZES.base * 2,
             }}
             onPress={() => {
               console.log('Menu');
@@ -1005,6 +1011,31 @@ const Home = ({ navigation }) => {
           </Card.Actions>
         </Card>
       </Modal>
+
+      <FAB.Group
+        open={open}
+        visible
+        variant="tertiary"
+        icon={open ? 'close' : 'plus'}
+        actions={[
+          {
+            icon: 'plus-circle',
+            label: 'Credit (Entree)',
+            onPress: () => navigation.navigate('Income'),
+          },
+          {
+            icon: 'minus-circle',
+            label: 'Debit (Credit)',
+            onPress: () => navigation.navigate('Expense'),
+          },
+        ]}
+        onStateChange={onStateChange}
+        onPress={() => {
+          if (open) {
+            // do something if the speed dial is open
+          }
+        }}
+      />
     </>
   );
 };
