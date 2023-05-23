@@ -118,6 +118,7 @@ const useFetchCategories = () => {
     const fetchCategories = async () => {
       try {
         const storedCategories = await AsyncStorage.getItem('categories');
+        console.log('storedCategories', storedCategories);
         const categories = storedCategories ? JSON.parse(storedCategories) : [...cat];
 
         setCategorie(categories);

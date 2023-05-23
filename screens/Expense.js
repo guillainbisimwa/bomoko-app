@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { StyleSheet, View, Image, TouchableOpacity, Platform } from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
 import { FontAwesome } from '@expo/vector-icons';
@@ -12,34 +12,15 @@ import { KeyboardAvoidingView } from 'react-native';
 import { addCat } from '../redux/catReducer';
 import { Alert } from 'react-native';
 import { ScrollView } from 'react-native';
-import useFetchCategories from '../hooks/useFetchCategories';
 
-const Expense = () => {
+const Expense = ({ route }) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
-
-  const { loading, error, categorie } = useFetchCategories();
-
-  const catList = useSelector((state) => state.categories.categories);
-  //console.log('catList income: ', catList);
-
-  const [categories, setCategories] = useState(
-    //catList.filter((value, key) => value.cat === 'income')
-    categorie.filter((value, key) => value.cat === 'expense')
-  );
-
-  // console.log('categories in', categories);
+  const { cat } = route.params;
 
   const [description, setDescription] = useState('');
   const [total, setTotal] = useState('');
   const [selectedValue, setSelectedValue] = useState('');
-
-  useEffect(() => {
-    setCategories(
-      //catList.filter((value, key) => value.cat === 'expense')
-      categorie.filter((value, key) => value.cat === 'expense')
-    );
-  }, [categorie]);
 
   const handleSaveIncome = async () => {
     // Create a new expense object
@@ -57,34 +38,30 @@ const Expense = () => {
       cat: selectedValue,
     };
 
-    // Find the corresponding category in the categorie array
-    const categoryIndex = categorie.findIndex((cat) => cat.name === selectedValue);
+    var t = cat.map((category) => {
+      var existingCategory = category.name == selectedValue; //cat.find((cat) => cat.name === selectedValue);
+      const categoryIndex = cat.findIndex((cat) => cat.name === selectedValue);
 
-    if (categoryIndex !== -1) {
-      // Create a copy of the categorie array
-      const updatedCategories = [...categorie];
+      if (existingCategory) {
+        const updatedData = [...cat[categoryIndex].data];
+        updatedData.push(newExpense);
 
-      // Create a copy of the data array for the selected category
-      const updatedData = [...updatedCategories[categoryIndex].data];
+        return {
+          ...cat[categoryIndex],
+          data: updatedData,
+        };
+      }
+      return category;
+    });
 
-      // Add the new expense to the updated data array
-      updatedData.push(newExpense);
+    dispatch(addCat(t));
 
-      // Update the data array for the selected category in the updated categorie array
-      updatedCategories[categoryIndex] = {
-        ...updatedCategories[categoryIndex],
-        data: updatedData,
-      };
+    // Reset the form
+    setSelectedValue('');
+    setDescription('');
+    setTotal('');
 
-      dispatch(addCat(updatedCategories));
-
-      // Reset the form
-      setSelectedValue('');
-      setDescription('');
-      setTotal('');
-
-      navigation.goBack();
-    }
+    navigation.goBack();
   };
 
   function renderNavBar() {
@@ -161,10 +138,12 @@ const Expense = () => {
             style={styles.picker}
           >
             <Picker.Item label="Selectioner une categorie" value="" />
-            {categories &&
-              categories.map((k, v) => {
-                return <Picker.Item key={k.id} label={k.name} value={k.name} />;
-              })}
+            {cat &&
+              cat
+                .filter((value, key) => value.cat === 'expense')
+                .map((k, v) => {
+                  return <Picker.Item key={k.id} label={k.name} value={k.name} />;
+                })}
           </Picker>
         </View>
         <TextInput

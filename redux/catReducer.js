@@ -132,7 +132,11 @@ const catSlice = createSlice({
   },
   reducers: {
     addCat: (state, action) => {
-      console.log('action.payload: ', action.payload);
+      console.log('');
+      //console.log('action.payload: ', action.payload);
+
+      console.log('');
+
       state.categories = action.payload;
       AsyncStorage.setItem('categories', JSON.stringify(action.payload));
 
@@ -143,8 +147,7 @@ const catSlice = createSlice({
       //     console.log('');
 
       //     console.log('--- ');
-      //     console.log('existingCategory: ', ...category.data);
-
+      //     console.log('existingCategory: ', state.categories);
       //   }
       // });
     },

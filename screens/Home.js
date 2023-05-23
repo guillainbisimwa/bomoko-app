@@ -57,7 +57,7 @@ const Home = ({ navigation }) => {
 
     setCategories(catList.filter((value, key) => value.cat === 'income'));
     setCat('income');
-  }, []);
+  }, [catList]);
   const [date, setDate] = useState(new Date());
 
   const updatedAsyncStorage = async () => {
@@ -1021,18 +1021,19 @@ const Home = ({ navigation }) => {
           {
             icon: 'plus-circle',
             label: 'Credit (Entree)',
-            onPress: () => navigation.navigate('Income'),
+            onPress: () => navigation.navigate('Income', { cat: catList }),
           },
           {
             icon: 'minus-circle',
             label: 'Debit (Credit)',
-            onPress: () => navigation.navigate('Expense'),
+            onPress: () => navigation.navigate('Expense', { cat: catList }),
           },
         ]}
         onStateChange={onStateChange}
         onPress={() => {
           if (open) {
             // do something if the speed dial is open
+            console.log('catList', catList);
           }
         }}
       />

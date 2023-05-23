@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { StyleSheet, View, Image, TouchableOpacity, Platform } from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
 import { FontAwesome } from '@expo/vector-icons';
@@ -12,70 +12,51 @@ import { KeyboardAvoidingView } from 'react-native';
 import { addCat } from '../redux/catReducer';
 import { Alert } from 'react-native';
 import { ScrollView } from 'react-native';
-import useFetchCategories from '../hooks/useFetchCategories';
 
-const Income = () => {
+const Income = ({ route }) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
-  const { loading, error, categorie } = useFetchCategories();
-
-  const catList = useSelector((state) => state.categories.categories);
-  //console.log('catList income: ', catList);
-
-  const [categories, setCategories] = useState(
-    //catList.filter((value, key) => value.cat === 'income')
-    categorie.filter((value, key) => value.cat === 'income')
-  );
-
-  // console.log('categories in', categories);
+  const { cat } = route.params;
 
   const [description, setDescription] = useState('');
   const [total, setTotal] = useState('');
   const [selectedValue, setSelectedValue] = useState('');
 
-  useEffect(() => {
-    setCategories(
-      //catList.filter((value, key) => value.cat === 'income')
-      categorie.filter((value, key) => value.cat === 'income')
-    );
-  }, [categorie]);
-
   const handleSaveIncome = async () => {
-    // Create a new expense object
+    try {
+      // Create a new expense object
 
-    if (!selectedValue || !description || !total) {
-      // Throw UI error if any field is missing
-      Alert.alert('Erreur', 'Veuillez remplir tous les champs obligatoires');
-      return;
-    }
-    const newIncome = {
-      id: Math.random().toString(),
-      description: description,
-      total: parseFloat(total),
-      date: new Date().toISOString().split('T')[0],
-      cat: selectedValue,
-    };
-
-    // Find the corresponding category in the categories array
-    const categoryIndex = categorie.findIndex((cat) => cat.name === selectedValue);
-
-    if (categoryIndex !== -1) {
-      // Create a copy of the categorie array
-      const updatedCategories = [...categorie];
-
-      // Create a copy of the data array for the selected category
-      const updatedData = [...updatedCategories[categoryIndex].data];
-
-      // Add the new expense to the updated data array
-      updatedData.push(newIncome);
-
-      // Update the data array for the selected category in the updated categorie array
-      updatedCategories[categoryIndex] = {
-        ...updatedCategories[categoryIndex],
-        data: updatedData,
+      if (!selectedValue || !description || !total) {
+        // Throw UI error if any field is missing
+        Alert.alert('Erreur', 'Veuillez remplir tous les champs obligatoires');
+        return;
+      }
+      const newIncome = {
+        id: Math.random().toString(),
+        description: description,
+        total: parseFloat(total),
+        date: new Date().toISOString().split('T')[0],
+        cat: selectedValue,
       };
-      dispatch(addCat(updatedCategories));
+
+      var t = cat.map((category) => {
+        var existingCategory = category.name == selectedValue; //cat.find((cat) => cat.name === selectedValue);
+        const categoryIndex = cat.findIndex((cat) => cat.name === selectedValue);
+
+        if (existingCategory) {
+          const updatedData = [...cat[categoryIndex].data];
+          updatedData.push(newIncome);
+
+          return {
+            ...cat[categoryIndex],
+            data: updatedData,
+          };
+        }
+        return category;
+      });
+
+      dispatch(addCat(t));
 
       // Reset the form
       setSelectedValue('');
@@ -83,6 +64,8 @@ const Income = () => {
       setTotal('');
 
       navigation.goBack();
+    } catch (e) {
+      console.log('error', e);
     }
   };
 
@@ -160,10 +143,12 @@ const Income = () => {
             style={styles.picker}
           >
             <Picker.Item label="Selectioner une categorie" value="" />
-            {categories &&
-              categories.map((k, v) => {
-                return <Picker.Item key={k.id} label={k.name} value={k.name} />;
-              })}
+            {cat &&
+              cat
+                .filter((value, key) => value.cat === 'income')
+                .map((k, v) => {
+                  return <Picker.Item key={k.id} label={k.name} value={k.name} />;
+                })}
           </Picker>
         </View>
         <TextInput
