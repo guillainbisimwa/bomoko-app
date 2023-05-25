@@ -935,8 +935,8 @@ const Home = ({ navigation }) => {
               <Image
                 source={selectedItem && selectedItem.icon}
                 style={{
-                  // width: 30,
-                  // height: 30,
+                  width: 40,
+                  height: 40,
                   tintColor: selectedItem && selectedItem.color,
                 }}
               />
