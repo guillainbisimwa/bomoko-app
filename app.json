@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Bomoko app",
-    "slug": "bomoko-app",
+    "name": "Bomoko Cash",
+    "slug": "bomoko-cash",
     "version": "2.9.0",
     "privacy": "public",
     "orientation": "portrait",
@@ -26,7 +26,7 @@
         "foregroundImage": "./assets/app-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.wezalab.bomoko",
+      "package": "com.wezalab.bomoko3",
       "versionCode": 29,
       "permissions": []
     },
@@ -35,7 +35,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "42fbce96-1bba-4564-9659-e842690d1694"
+        "projectId": "96544713-72ae-499c-944a-481a090080c3"
       }
     }
   }
