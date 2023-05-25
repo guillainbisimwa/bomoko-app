@@ -64,51 +64,6 @@ const Expense = ({ route }) => {
     navigation.goBack();
   };
 
-  function renderNavBar() {
-    return (
-      <View
-        style={{
-          flexDirection: 'row',
-          paddingTop: SIZES.base * 3,
-          justifyContent: 'space-between',
-          alignItems: 'flex-end',
-          paddingHorizontal: SIZES.padding,
-        }}
-      >
-        <TouchableOpacity
-          style={{ justifyContent: 'center', width: 50 }}
-          onPress={() => {
-            console.log('Menu');
-            navigation.goBack();
-          }}
-        >
-          <Image
-            source={icons.back_arrow}
-            style={{
-              width: 30,
-              height: 30,
-              tintColor: COLORS.primary,
-            }}
-          />
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={{ justifyContent: 'center', alignItems: 'flex-end', width: 50 }}
-          onPress={() => console.log('search')}
-        >
-          <Image
-            source={icons.more}
-            style={{
-              width: 30,
-              height: 30,
-              tintColor: COLORS.primary,
-            }}
-          />
-        </TouchableOpacity>
-      </View>
-    );
-  }
-
   function renderHeader() {
     return (
       <View
@@ -120,8 +75,8 @@ const Expense = ({ route }) => {
           borderBottomWidth: 1,
         }}
       >
-        <View style={{ paddingVertical: SIZES.padding }}>
-          <Text style={{ color: COLORS.primary, ...FONTS.h2 }}>Débit (Sortie)</Text>
+        <View style={{ paddingVertical: SIZES.padding / 2 }}>
+          <Text style={{ color: COLORS.primary, ...FONTS.h2 }}>Bomoko Cash</Text>
           <Text style={{ ...FONTS.h3, color: COLORS.darkgray }}>(Portefeuil electronique)</Text>
         </View>
       </View>
@@ -182,9 +137,6 @@ const Expense = ({ route }) => {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        {/* Nav bar section */}
-        {renderNavBar()}
-
         {/* Header section */}
         {renderHeader()}
 

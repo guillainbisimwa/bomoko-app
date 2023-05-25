@@ -194,15 +194,16 @@ const App = () => {
       <NavigationContainer theme={theme}>
         <StatusBar barStyle="default"></StatusBar>
 
-        <Stack.Navigator
-          screenOptions={{
-            headerShown: false,
-          }}
-          initialRouteName={'MyDrawer'}
-        >
-          <Stack.Screen name="Main" component={MyDrawer} />
-          <Stack.Screen name="Income" component={Income} />
-          <Stack.Screen name="Expense" component={Expense} />
+        <Stack.Navigator initialRouteName={'MyDrawer'}>
+          <Stack.Screen
+            name="Main"
+            component={MyDrawer}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen name="Income" component={Income} options={{ title: 'Crédit (Entrée)' }} />
+          <Stack.Screen name="Expense" component={Expense} options={{ title: 'Débit (Sortie)' }} />
 
           <Stack.Screen name="LoginScreen" component={LoginScreen} />
           <Stack.Screen name="AuthScreen" component={AuthScreen} />
