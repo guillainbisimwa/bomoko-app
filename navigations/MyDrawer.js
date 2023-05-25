@@ -5,6 +5,7 @@ import { COLORS, SIZES } from '../constants';
 import CustomDrawer from '../components/CustomDrawer';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Home, Settings } from '../screens';
+import Product from '../screens/Product';
 
 const Drawer = createDrawerNavigator();
 
@@ -39,7 +40,7 @@ export default function MyDrawer() {
 
       <Drawer.Screen
         name="Produits / services"
-        component={Settings}
+        component={Product}
         options={{
           headerShown: true,
           drawerIcon: ({ color }) => <Ionicons color={color} size={SIZES.base * 2} name={'home'} />,
