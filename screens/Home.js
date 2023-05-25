@@ -155,9 +155,8 @@ const Home = ({ navigation }) => {
           }}
         >
           <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'space-around' }}>
-            {renderIncomingExpensesTitle('expense')}
-
             {renderIncomingExpensesTitle('income')}
+            {renderIncomingExpensesTitle('expense')}
           </View>
 
           <View
@@ -337,28 +336,25 @@ const Home = ({ navigation }) => {
   }
 
   function renderIncomingExpensesTitle(myCat) {
-    const sumCat =
-      selectedCategory &&
-      selectedCategory.data.reduce((sum, nbr) => {
-        return sum + nbr.total;
-      }, 0);
-
+    console.log('breee', myCat);
     return (
-      <View style={{ height: 80, backgroundColor: COLORS.lightGray2, padding: SIZES.padding }}>
+      <View
+        style={{
+          borderRadius: 25,
+          height: 80,
+          backgroundColor: COLORS.lightGray2,
+          padding: SIZES.padding,
+        }}
+      >
         {/* Title */}
         <Text style={{ ...FONTS.h3, color: COLORS.primary }}>
           {' '}
-          {myCat === 'income' ? 'MES ENTREES' : 'MES SORTIES'}{' '}
+          {myCat === 'income' ? 'ENTREES' : 'SORTIES'}{' '}
         </Text>
-        <View style={{ flexDirection: 'row' }}>
-          <Text style={{ ...FONTS.body4, color: COLORS.darkgray }}>
-            {' '}
-            {selectedCategory && selectedCategory.name} totale :{' '}
-          </Text>
-          <Text style={{ ...FONTS.h4, color: myCat === 'income' ? COLORS.darkgreen : COLORS.red }}>
-            {selectedCategory && sumCat.toFixed(2)} USD
-          </Text>
-        </View>
+
+        <Text style={{ ...FONTS.h4, color: myCat === 'income' ? COLORS.darkgreen : COLORS.red }}>
+          {totalSumDCHome(myCat).toFixed(2) && totalSumDCHome(myCat).toFixed(2)} USD
+        </Text>
       </View>
     );
   }
@@ -654,6 +650,23 @@ const Home = ({ navigation }) => {
       });
 
     return totIncome - totExpense;
+  };
+
+  const totalSumDCHome = (myCat) => {
+    console.log(myCat);
+    var tot = 0;
+    catList
+      .filter((a) => a.cat == myCat)
+      .map((item) => {
+        let confirm = item.data;
+        var total = parseFloat(
+          confirm.reduce((a, b) => parseFloat(a) + (parseFloat(b.total) || 0), 0)
+        );
+        tot += total;
+        return total;
+      });
+    console.log('tot', tot);
+    return tot;
   };
 
   function processCategoryDataToDisplay() {
@@ -969,12 +982,12 @@ const Home = ({ navigation }) => {
         actions={[
           {
             icon: 'plus-circle',
-            label: 'Credit (Entree)',
+            label: 'Crédit (Entrée)',
             onPress: () => navigation.navigate('Income', { cat: catList }),
           },
           {
             icon: 'minus-circle',
-            label: 'Debit (Credit)',
+            label: 'Débit (Sortie)',
             onPress: () => navigation.navigate('Expense', { cat: catList }),
           },
         ]}
