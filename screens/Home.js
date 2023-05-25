@@ -155,68 +155,9 @@ const Home = ({ navigation }) => {
           }}
         >
           <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'space-around' }}>
-            <View
-              style={{
-                backgroundColor: COLORS.lightGray,
-                height: 50,
-                width: 50,
-                borderRadius: 25,
-                justifyContent: 'center',
-                alignItems: 'center',
-                ...styles.shadow,
-              }}
-            >
-              <Image
-                source={icons.expense}
-                style={{
-                  width: 20,
-                  height: 20,
-                  tintColor: COLORS.black,
-                }}
-              />
-            </View>
+            {renderIncomingExpensesTitle('expense')}
 
-            <View
-              style={{
-                backgroundColor: COLORS.lightGray,
-                height: 50,
-                width: 50,
-                borderRadius: 25,
-                justifyContent: 'center',
-                alignItems: 'center',
-                ...styles.shadow,
-              }}
-            >
-              <Image
-                source={icons.income}
-                style={{
-                  width: 20,
-                  height: 20,
-                  tintColor: COLORS.black,
-                }}
-              />
-            </View>
-
-            <View
-              style={{
-                backgroundColor: COLORS.lightGray,
-                height: 50,
-                width: 50,
-                borderRadius: 25,
-                justifyContent: 'center',
-                alignItems: 'center',
-                ...styles.shadow,
-              }}
-            >
-              <Image
-                source={icons.more}
-                style={{
-                  width: 20,
-                  height: 20,
-                  tintColor: COLORS.black,
-                }}
-              />
-            </View>
+            {renderIncomingExpensesTitle('income')}
           </View>
 
           <View
@@ -274,7 +215,7 @@ const Home = ({ navigation }) => {
         style={{
           flexDirection: 'row',
           padding: SIZES.padding,
-          paddingTop: SIZES.padding * 3.4 + SIZES.padding,
+          paddingTop: SIZES.padding * 4.5 + SIZES.padding,
           justifyContent: 'space-between',
           alignItems: 'center',
           backgroundColor: COLORS.lightGray2,
@@ -395,7 +336,7 @@ const Home = ({ navigation }) => {
     );
   }
 
-  function renderIncomingExpensesTitle() {
+  function renderIncomingExpensesTitle(myCat) {
     const sumCat =
       selectedCategory &&
       selectedCategory.data.reduce((sum, nbr) => {
@@ -407,14 +348,14 @@ const Home = ({ navigation }) => {
         {/* Title */}
         <Text style={{ ...FONTS.h3, color: COLORS.primary }}>
           {' '}
-          {Cat === 'income' ? 'MES ENTREES' : 'MES SORTIES'}{' '}
+          {myCat === 'income' ? 'MES ENTREES' : 'MES SORTIES'}{' '}
         </Text>
         <View style={{ flexDirection: 'row' }}>
           <Text style={{ ...FONTS.body4, color: COLORS.darkgray }}>
             {' '}
             {selectedCategory && selectedCategory.name} totale :{' '}
           </Text>
-          <Text style={{ ...FONTS.h4, color: Cat === 'income' ? COLORS.darkgreen : COLORS.red }}>
+          <Text style={{ ...FONTS.h4, color: myCat === 'income' ? COLORS.darkgreen : COLORS.red }}>
             {selectedCategory && sumCat.toFixed(2)} USD
           </Text>
         </View>
@@ -428,93 +369,101 @@ const Home = ({ navigation }) => {
     let incomingExpenses = allExpensesCat;
 
     const renderItem = (item) => (
-      <View
-        style={{
-          marginRight: SIZES.padding,
-          marginLeft: SIZES.padding,
-          marginVertical: SIZES.padding / 3.7,
-          borderRadius: SIZES.radius,
-          backgroundColor: COLORS.white,
-          ...styles.shadow,
+      <TouchableOpacity
+        onPress={() => {
+          console.log(item);
+          setSelectedItem(item);
+          showModal(true);
         }}
       >
-        {/* Title */}
         <View
           style={{
-            flexDirection: 'row',
-            padding: SIZES.padding / 2,
-            alignItems: 'center',
-            justifyContent: 'space-between',
+            marginRight: SIZES.padding,
+            marginLeft: SIZES.padding,
+            marginVertical: SIZES.padding / 3.7,
+            borderRadius: SIZES.radius,
+            backgroundColor: COLORS.white,
+            ...styles.shadow,
           }}
         >
+          {/* Title */}
           <View
             style={{
-              width: '60%',
               flexDirection: 'row',
+              padding: SIZES.padding / 2,
               alignItems: 'center',
+              justifyContent: 'space-between',
             }}
           >
             <View
               style={{
-                height: 50,
-                width: 50,
-                borderRadius: 25,
-                backgroundColor: COLORS.lightGray,
+                width: '60%',
+                flexDirection: 'row',
                 alignItems: 'center',
-                justifyContent: 'center',
-                marginRight: SIZES.base,
               }}
             >
-              <Image
-                source={selectedCategory.icon}
+              <View
                 style={{
-                  width: 30,
-                  height: 30,
-                  tintColor: selectedCategory.color,
-                }}
-              />
-            </View>
-            <View>
-              <Text style={{ ...FONTS.h3, color: selectedCategory.color }}>
-                {selectedCategory && selectedCategory.name}
-              </Text>
-              <Text
-                numberOfLines={1}
-                style={{
-                  overflow: 'hidden',
-                  ...FONTS.body5,
-                  flexWrap: 'wrap',
-                  color: COLORS.darkgray,
+                  height: 50,
+                  width: 50,
+                  borderRadius: 25,
+                  backgroundColor: COLORS.lightGray,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginRight: SIZES.base,
                 }}
               >
-                {item.description}
-              </Text>
+                <Image
+                  source={selectedCategory.icon}
+                  style={{
+                    width: 30,
+                    height: 30,
+                    tintColor: selectedCategory.color,
+                  }}
+                />
+              </View>
+              <View>
+                <Text style={{ ...FONTS.h3, color: selectedCategory.color }}>
+                  {selectedCategory && selectedCategory.name}
+                </Text>
+                <Text
+                  numberOfLines={1}
+                  style={{
+                    overflow: 'hidden',
+                    ...FONTS.body5,
+                    flexWrap: 'wrap',
+                    color: COLORS.darkgray,
+                  }}
+                >
+                  {item.description}
+                </Text>
+              </View>
             </View>
-          </View>
 
-          <View style={{ width: '25%', alignItems: 'flex-end' }}>
-            <Text style={{ ...FONTS.h5, color: COLORS.red }}>
-              {' '}
-              {Cat === 'income' ? '+' : '-'} {item.total.toFixed(2)} USD{' '}
-            </Text>
-            <View style={{ flexDirection: 'row' }}>
-              <Image
-                source={icons.calendar}
-                style={{
-                  width: 12,
-                  height: 12,
-                  tintColor: COLORS.darkgray,
-                  marginRight: 7,
-                  marginTop: 3,
-                }}
-              />
-              <Text style={{ marginBottom: SIZES.base, color: COLORS.darkgray, ...FONTS.body5 }}>
-                {item.date}
+            <View style={{ width: '25%', alignItems: 'flex-end' }}>
+              <Text style={{ ...FONTS.h5, color: COLORS.red }}>
+                {' '}
+                {Cat === 'income' ? '+' : '-'} {item.total.toFixed(2)} USD{' '}
               </Text>
+              <View style={{ flexDirection: 'row' }}>
+                <Image
+                  source={icons.calendar}
+                  style={{
+                    width: 12,
+                    height: 12,
+                    tintColor: COLORS.darkgray,
+                    marginRight: 7,
+                    marginTop: 3,
+                  }}
+                />
+                <Text style={{ marginBottom: SIZES.base, color: COLORS.darkgray, ...FONTS.body5 }}>
+                  {item.date}
+                </Text>
+              </View>
             </View>
           </View>
         </View>
-      </View>
+      </TouchableOpacity>
     );
 
     return (
