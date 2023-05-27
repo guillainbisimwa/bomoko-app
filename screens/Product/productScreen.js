@@ -1,17 +1,13 @@
 import React, { useState } from 'react';
-import {
-  Image,
-  ScrollView,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  View,
-  Text,
-} from 'react-native';
+import { Image, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import { COLORS, SIZES } from './../../constants';
 import Block from './Block';
 import Foods from './Foods';
+import Text from './Text';
+import Categories from './Categories';
+
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { Button, IconButton, MD3Colors } from 'react-native-paper';
 
 const ProductScreen = ({ navigation }) => {
   const [active, setActive] = useState('Featured');
@@ -30,6 +26,7 @@ const ProductScreen = ({ navigation }) => {
         {[...Array(starsNumber).keys()].map((star, index) => {
           return <Ionicons color={COLORS.yellow} size={SIZES.base * 3} name={'star'} />;
         })}
+        <Ionicons color={COLORS.yellow} size={SIZES.base * 3} name={'star-outline'} />
       </Block>
     );
   };
@@ -91,36 +88,30 @@ const ProductScreen = ({ navigation }) => {
                 }}
               >
                 <Block p={10} color="white" style={styles.container} m_t={14}>
+                  <View style={styles.price}>
+                    <Text white bold>
+                      600 USD
+                    </Text>
+                  </View>
+
+                  <View style={styles.like}>
+                    <IconButton
+                      icon="heart"
+                      iconColor={MD3Colors.error50}
+                      size={20}
+                      onPress={() => console.log('Pressed')}
+                    />
+                  </View>
                   <Image source={food.image} style={styles.imgFood} />
                   <Text numberOfLines={1} grey h2 bold>
                     {' '}
                     {food.title}{' '}
                   </Text>
-                  <Text numberOfLines={1} grey_two>
+                  <Text numberOfLines={1} grey>
                     {food.subtitle}
                   </Text>
                   <Block m_t={5} row center space="between">
                     {stars(food.stars)}
-                    <Block row>
-                      <Block row center style={styles.info}>
-                        <Ionicons
-                          color={COLORS.blue}
-                          size={SIZES.base * 3}
-                          name={'information-circle'}
-                        />
-
-                        <Text primary>{food.location} m</Text>
-                      </Block>
-                      <Block m_l={10} row center style={styles.info}>
-                        <Ionicons
-                          color={COLORS.blue}
-                          size={SIZES.base * 3}
-                          name={'information-circle'}
-                        />
-
-                        <Text primary>{food.deliveryTime}'</Text>
-                      </Block>
-                    </Block>
                   </Block>
                 </Block>
               </TouchableOpacity>
@@ -131,31 +122,35 @@ const ProductScreen = ({ navigation }) => {
     );
   };
 
-  // const categories = () => {
-  //     return (
-  //         <>
-  //             <Block row space="between" m_t={20} m_b={10}>
-  //                 <Text h2 grey bold>Explore categories</Text>
-  //                 <Text primary >View more</Text>
-  //             </Block>
+  const categories = () => {
+    return (
+      <>
+        <Block row space="between" m_t={20} m_b={10}>
+          <Text h2 grey bold>
+            Explore categories
+          </Text>
+          <Text primary>View more</Text>
+        </Block>
 
-  //             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-  //             {
-  //                 Categories.map((cat, index)=> {
-  //                     return (
-  //                             <Block center middle key={index} color={cat.color} style={styles.cat}>
-  //<Ionicons color={COLORS.blue} size={SIZES.base * 3} name={'information-circle'} />
-  //
-  //                                 <Text white bold h2>{cat.name}</Text>
-  //                                 <Text size={15} grey >{cat.places} places</Text>
-  //                             </Block>
-  //                     )
-  //                 })
-  //             }
-  //             </ScrollView>
-  //         </>
-  //     )
-  // };
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          {Categories.map((cat, index) => {
+            return (
+              <Block center middle key={index} color={cat.color} style={styles.cat}>
+                <Ionicons color={COLORS.blue} size={SIZES.base * 3} name={'information-circle'} />
+
+                <Text white bold h2>
+                  {cat.name}
+                </Text>
+                <Text size={15} grey>
+                  {cat.places} places
+                </Text>
+              </Block>
+            );
+          })}
+        </ScrollView>
+      </>
+    );
+  };
 
   // const recommended = () => {
   //     return (
@@ -263,8 +258,8 @@ const ProductScreen = ({ navigation }) => {
         {search.trim().length == 0 ? (
           <>
             {popular()}
-            {/*{ categories() }
-                        { recommended() }
+            {/* {categories()} */}
+            {/*  { recommended() }
                         { list() } */}
           </>
         ) : (
@@ -355,6 +350,22 @@ const styles = StyleSheet.create({
   },
   currentActive: {
     color: COLORS.primary,
+  },
+  price: {
+    position: 'absolute',
+    zIndex: 100,
+    backgroundColor: COLORS.peach,
+    padding: 10,
+    borderRadius: 20,
+    elevation: 5,
+  },
+  like: {
+    position: 'absolute',
+    zIndex: 100,
+    backgroundColor: COLORS.white,
+    borderRadius: 25,
+    right: 0,
+    margin: SIZES.base * 2,
   },
 });
 
