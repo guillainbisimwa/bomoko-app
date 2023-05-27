@@ -8,7 +8,9 @@ import { COLORS } from '../../constants';
 import { ProductBody } from './components';
 
 export const ProductScreen = (props) => {
-  const products = useSelector((state) => state.store.products);
+  //const products = useSelector((state) => state.store.products);
+
+  const products = [{ title: 'Đá Quý', data: 'stones' }];
 
   const [productsFilter, setproductsFilter] = useState(products);
   const searchFilterFunction = (text) => {

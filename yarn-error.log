@@ -1,20 +1,21 @@
 Arguments: 
-  /home/guillain/.nvm/versions/node/v16.15.0/bin/node /home/guillain/.yarn/bin/yarn.js add expo-blur
+  /usr/local/bin/node /usr/local/bin/yarn add @expo/vector-icons
 
 PATH: 
-  /home/guillain/.yarn/bin:/home/guillain/.config/yarn/global/node_modules/.bin:/home/guillain/.nvm/versions/node/v16.15.0/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/snap/bin:/home/guillain/.rvm/bin:~/.ruby/bin:/media/guillain/My Passport/WEZA/sdk//tools:/media/guillain/My Passport/WEZA/sdk//platform-tools
+  /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 Yarn version: 
   1.22.19
 
 Node version: 
-  16.15.0
+  18.16.0
 
 Platform: 
   linux x64
 
 Trace: 
-  Error: EACCES: permission denied, unlink '/home/guillain/Desktop/react-native/bomoko-app/node_modules/.yarn-integrity'
+  Error: getaddrinfo EAI_AGAIN registry.yarnpkg.com
+      at GetAddrInfoReqWrap.onlookup [as oncomplete] (node:dns:107:26)
 
 npm manifest: 
   {
@@ -37,6 +38,7 @@ npm manifest:
       "@react-navigation/stack": "^6.3.16",
       "@reduxjs/toolkit": "^1.9.5",
       "expo": "^48.0.16",
+      "expo-blur": "^12.3.0",
       "expo-local-authentication": "^13.3.0",
       "expo-secure-store": "^12.1.1",
       "expo-status-bar": "~1.4.4",
@@ -3517,6 +3519,11 @@ Lockfile:
       md5-file "^3.2.3"
       path-browserify "^1.0.0"
       url-parse "^1.5.9"
+  
+  expo-blur@^12.3.0:
+    version "12.3.0"
+    resolved "https://registry.yarnpkg.com/expo-blur/-/expo-blur-12.3.0.tgz#883907bd2bb2ac3aed15be701d3c8f98570d51d7"
+    integrity sha512-MwnLi57f7xpjwj/mG8CW40MJ6u81WW7HDEorIzYcvABO4+J+guO6P6e8uiWiYUdwomOzJzj25iMLiml6vJdISA==
   
   expo-constants@~14.2.0, expo-constants@~14.2.1:
     version "14.2.1"
