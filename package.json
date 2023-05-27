@@ -18,6 +18,7 @@
     "@react-navigation/stack": "^6.3.16",
     "@reduxjs/toolkit": "^1.9.5",
     "expo": "^48.0.16",
+    "expo-blur": "^12.3.0",
     "expo-local-authentication": "^13.3.0",
     "expo-secure-store": "^12.1.1",
     "expo-status-bar": "~1.4.4",
