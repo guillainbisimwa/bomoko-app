@@ -7,7 +7,7 @@ import Text from './Text';
 import Product_service from './Product_service';
 
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { Button, IconButton, MD3Colors, ProgressBar } from 'react-native-paper';
+import { IconButton, MD3Colors, ProgressBar } from 'react-native-paper';
 
 const ProductScreen = ({ navigation }) => {
   const [active, setActive] = useState('Tous');
@@ -56,10 +56,10 @@ const ProductScreen = ({ navigation }) => {
     } else if (tab == 'Produits') {
       //setProduct_serviceList([...product_serviceList.find((a, b) => a.type === 'Produit')]);
       console.log(product_serviceList.find((a, b) => a.type === 'Produit'));
-      setProduct_serviceList([...product_serviceList.sort((a, b) => a.stars - b.stars)]);
+      setProduct_serviceList([...product_serviceList.sort((a, b) => a.type - b.type)]);
     } else if (tab == 'Services') {
       //setProduct_serviceList([...product_serviceList.find((a, b) => a.type === 'Service')]);
-      setProduct_serviceList([...product_serviceList.sort((a, b) => a.stars - b.stars)]);
+      setProduct_serviceList([...product_serviceList.sort((a, b) => b.type - a.type)]);
     } else {
       setProduct_serviceList([...product_serviceList.sort((a, b) => a.stars - b.stars)]);
     }
@@ -215,26 +215,43 @@ const ProductScreen = ({ navigation }) => {
   };
 
   return (
-    <Block flex color="grey" p={15}>
-      <ScrollView style={{ paddingTop: 20 }} showsVerticalScrollIndicator={false}>
-        <Block flex={false}>
-          <TextInput
-            placeholder="Rechecher un produit/service"
-            style={styles.input}
-            value={search}
-            onChangeText={(text) => onSearch(text)}
-          />
-        </Block>
+    <Block flex color="grey">
+      <Block row center color="white" p={15}>
+        <TouchableOpacity
+          onPress={() => {
+            // navigation.navigate('Home')
+            navigation.goBack();
+          }}
+        >
+          <Ionicons name="arrow-back-outline" size={30} color={COLORS.grey} />
+        </TouchableOpacity>
 
-        {search.trim().length == 0 ? (
-          <>
-            {popular()}
-            {list()}
-          </>
-        ) : (
-          list()
-        )}
-      </ScrollView>
+        <Text size={19} semibold style={{ marginLeft: 15 }}>
+          Produits / services
+        </Text>
+      </Block>
+
+      <Block flex color="grey" p={15}>
+        <ScrollView style={{ paddingTop: 5 }} showsVerticalScrollIndicator={false}>
+          <Block flex={false}>
+            <TextInput
+              placeholder="Rechecher un produit/service"
+              style={styles.input}
+              value={search}
+              onChangeText={(text) => onSearch(text)}
+            />
+          </Block>
+
+          {search.trim().length == 0 ? (
+            <>
+              {popular()}
+              {list()}
+            </>
+          ) : (
+            list()
+          )}
+        </ScrollView>
+      </Block>
     </Block>
   );
 };

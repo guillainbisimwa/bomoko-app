@@ -25,10 +25,8 @@ const MyText = (props) => {
     props.black && styles.black,
     props.white && styles.white,
     props.warning && styles.warning,
-    props.grey_one && styles.grey_one,
-    props.grey_two && styles.grey_two,
-    props.grey_three && styles.grey_three,
-    props.grey_four && styles.grey_four,
+    props.grey && styles.grey_one,
+
     props.style, // rewrite predefined styles
   ];
 
@@ -88,7 +86,7 @@ const styles = StyleSheet.create({
   black: { color: COLORS.black },
   warning: { color: COLORS.warning },
   white: { color: COLORS.white },
-  grey: { color: COLORS.grey },
+  grey: { color: COLORS.gray },
 });
 
 export default MyText;

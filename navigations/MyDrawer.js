@@ -43,7 +43,7 @@ export default function MyDrawer() {
         name="Produits / services"
         component={ProductScreen}
         options={{
-          headerShown: true,
+          headerShown: false,
           drawerIcon: ({ color }) => <Ionicons color={color} size={SIZES.base * 2} name={'home'} />,
         }}
       />
