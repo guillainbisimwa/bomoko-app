@@ -32,42 +32,34 @@ const ProductScreen = ({ navigation }) => {
     );
   };
 
-  // const renderTab = (tab) => {
-  //     const isActive = active === tab;
+  const renderTab = (tab) => {
+    const isActive = active === tab;
 
-  //     return (
+    return (
+      <TouchableOpacity key={`tab-${tab}`} onPress={() => handleTab(tab)} style={styles.tab}>
+        <Block center>
+          <Text grey style={[styles.current, isActive ? styles.currentActive : null]}>
+            {tab}
+          </Text>
+          <Block center style={[isActive ? styles.active : null]}></Block>
+        </Block>
+      </TouchableOpacity>
+    );
+  };
 
-  //         <TouchableOpacity key={`tab-${tab}`}
-  //             onPress={() => handleTab(tab)}
-  //             style={styles.tab}
-  //         >
-  //             <Block center>
-  //                 <Text grey style={[styles.current, isActive ? styles.currentActive : null]} >
-  //                 {tab}
-  //                 </Text>
-  //                 <Block center style={[isActive ? styles.active : null]}></Block>
-  //             </Block>
+  const handleTab = (tab) => {
+    setActive(tab);
 
-  //         </TouchableOpacity>
-  //     );
-  // }
-
-  // const handleTab = (tab) => {
-  //     setActive(tab);
-
-  //     if(tab == "Featured"){
-  //         setFoodList([...foodList.sort((a, b) => a.title.localeCompare(b.title))])
-  //     }
-  //     else if(tab == "Popular"){
-  //         setFoodList([...foodList.sort((b, a) => a.stars - b.stars)])
-  //     } else if(tab == "Newest") {
-  //         setFoodList([...foodList.sort((a, b) => a.deliveryTime - b.deliveryTime)])
-  //     }
-  //     else {
-  //         setFoodList([...foodList.sort((a, b) => a.stars - b.stars)])
-  //     }
-
-  // };
+    if (tab == 'Featured') {
+      setFoodList([...foodList.sort((a, b) => a.title.localeCompare(b.title))]);
+    } else if (tab == 'Popular') {
+      setFoodList([...foodList.sort((b, a) => a.stars - b.stars)]);
+    } else if (tab == 'Newest') {
+      setFoodList([...foodList.sort((a, b) => a.deliveryTime - b.deliveryTime)]);
+    } else {
+      setFoodList([...foodList.sort((a, b) => a.stars - b.stars)]);
+    }
+  };
 
   const popular = () => {
     return (
@@ -134,6 +126,47 @@ const ProductScreen = ({ navigation }) => {
                       />
                       <Text numberOfLines={1} semibold size={19} style={{ marginLeft: 20 }}>
                         50%
+                      </Text>
+                    </Block>
+                  </Block>
+                  <Block row>
+                    <Block
+                      center
+                      middle
+                      key={index}
+                      style={[styles.cat, { backgroundColor: COLORS.primary }]}
+                    >
+                      <Text white bold size={20}>
+                        9%
+                      </Text>
+                      <Text white bold h2 numberOfLines={1}>
+                        Realisation
+                      </Text>
+                    </Block>
+                    <Block
+                      center
+                      middle
+                      key={index}
+                      style={[styles.cat, { backgroundColor: COLORS.purple }]}
+                    >
+                      <Text white bold size={20}>
+                        10
+                      </Text>
+                      <Text white bold h2 numberOfLines={1}>
+                        Membres
+                      </Text>
+                    </Block>
+                    <Block
+                      center
+                      middle
+                      key={index}
+                      style={[styles.cat, { backgroundColor: COLORS.peach }]}
+                    >
+                      <Text white bold size={20}>
+                        600$
+                      </Text>
+                      <Text white bold h2 numberOfLines={1}>
+                        Budjet
                       </Text>
                     </Block>
                   </Block>
@@ -218,53 +251,53 @@ const ProductScreen = ({ navigation }) => {
   // };
 
   // const list = () => {
-  //     return (
-  //         <>
-  //             <Block space="between" p={10} m_b={30} m_t={20} color="white" style={styles.listContainer}>
-  //                 <Block row m_t={10} m_b={20}>
-  //                     {
-  //                         ['Featured', 'Popular', 'Newest', 'Trending'].map((tab)=>{
-  //                             return renderTab(tab);
-  //                         })
-  //                     }
-  //                 </Block>
-  //                 <Block row m_b={20} space="between">
-  //                     <Block row style={styles.info} center >
-  //                         <Text h2 grey >Best match</Text>
-  //                         <Block m_l={10}>
-  //<Ionicons color={COLORS.blue} size={SIZES.base * 3} name={'information-circle'} />
-  //
-  //                         </Block>
-  //                     </Block>
-
-  //                     <Block row>
-  //                         <Block row style={styles.info} center >
-  //<Ionicons color={COLORS.blue} size={SIZES.base * 3} name={'information-circle'} />
-  //
-  //                         </Block>
-
-  //                         <Block m_l={10} row style={styles.info} center >
-  //<Ionicons color={COLORS.blue} size={SIZES.base * 3} name={'information-circle'} />
-  //
-  //                         </Block>
-  //                     </Block>
-  //                 </Block>
-  //                 <Block>
-  //                     {
-  //                         foodList.length == 0 ? <Text h2 primary bold center >No item found</Text> :
-  //                         <Text></Text>
-  //                     }
-  //                     {
-  //                         foodList.map((food, index)=> {
-  //                             return <TouchableOpacity  style={styles.horizontalList} key={index}>
-  //                                 <FoodList item={food} />
-  //                             </TouchableOpacity>
-  //                         })
-  //                     }
-  //                 </Block>
+  //   return (
+  //     <>
+  //       <Block space="between" p={10} m_b={30} m_t={20} color="white" style={styles.listContainer}>
+  //         <Block row m_t={10} m_b={20}>
+  //           {['Featured', 'Popular', 'Newest', 'Trending'].map((tab) => {
+  //             return renderTab(tab);
+  //           })}
+  //         </Block>
+  //         <Block row m_b={20} space="between">
+  //           <Block row style={styles.info} center>
+  //             <Text h2 grey>
+  //               Best match
+  //             </Text>
+  //             <Block m_l={10}>
+  //               <Ionicons color={COLORS.blue} size={SIZES.base * 3} name={'information-circle'} />
   //             </Block>
-  //         </>
-  //     )
+  //           </Block>
+
+  //           <Block row>
+  //             <Block row style={styles.info} center>
+  //               <Ionicons color={COLORS.blue} size={SIZES.base * 3} name={'information-circle'} />
+  //             </Block>
+
+  //             <Block m_l={10} row style={styles.info} center>
+  //               <Ionicons color={COLORS.blue} size={SIZES.base * 3} name={'information-circle'} />
+  //             </Block>
+  //           </Block>
+  //         </Block>
+  //         <Block>
+  //           {foodList.length == 0 ? (
+  //             <Text h2 primary bold center>
+  //               No item found
+  //             </Text>
+  //           ) : (
+  //             <Text></Text>
+  //           )}
+  //           {foodList.map((food, index) => {
+  //             return (
+  //               <TouchableOpacity style={styles.horizontalList} key={index}>
+  //                 <FoodList item={food} />
+  //               </TouchableOpacity>
+  //             );
+  //           })}
+  //         </Block>
+  //       </Block>
+  //     </>
+  //   );
   // };
 
   return (
@@ -283,8 +316,8 @@ const ProductScreen = ({ navigation }) => {
           <>
             {popular()}
             {/* {categories()} */}
-            {/*  { recommended() }
-                        { list() } */}
+            {/* {recommended()} */}
+            {/* {list()} */}
           </>
         ) : (
           list()
@@ -335,10 +368,13 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   cat: {
-    width: SIZES.width / 4,
-    height: SIZES.width / 3,
-    marginRight: 15,
+    width: SIZES.width / 4 - 4,
+    height: SIZES.width / 5,
+    marginRight: 2,
     borderRadius: 10,
+    //backgroundColor: COLORS.purple,
+    elevation: 4,
+    padding: 5,
   },
   recommended: {
     width: SIZES.width / 2.5,
