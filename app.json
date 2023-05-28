@@ -19,14 +19,14 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.wezalab.bomoko"
+      "bundleIdentifier": "com.wezalab.bomoko4"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/app-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.wezalab.bomoko3",
+      "package": "com.wezalab.bomoko4",
       "versionCode": 30,
       "permissions": []
     },
