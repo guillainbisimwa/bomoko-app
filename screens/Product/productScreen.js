@@ -4,18 +4,18 @@ import { COLORS, SIZES } from './../../constants';
 import Block from './Block';
 import Foods from './Foods';
 import Text from './Text';
-import Categories from './Categories';
+import Product_service from './Product_service';
 
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Button, IconButton, MD3Colors, ProgressBar } from 'react-native-paper';
 
 const ProductScreen = ({ navigation }) => {
-  const [active, setActive] = useState('Featured');
+  const [active, setActive] = useState('Tous');
   const [search, setSearch] = useState('');
-  const [foodList, setFoodList] = useState([...Foods]);
+  const [product_serviceList, setProduct_serviceList] = useState([...Foods]);
 
   const onSearch = (text) => {
-    setFoodList([
+    setProduct_serviceList([
       ...Foods.filter((food) => food.title.toLocaleLowerCase().includes(text.toLocaleLowerCase())),
     ]);
     setSearch(text);
@@ -50,14 +50,18 @@ const ProductScreen = ({ navigation }) => {
   const handleTab = (tab) => {
     setActive(tab);
 
-    if (tab == 'Featured') {
-      setFoodList([...foodList.sort((a, b) => a.title.localeCompare(b.title))]);
-    } else if (tab == 'Popular') {
-      setFoodList([...foodList.sort((b, a) => a.stars - b.stars)]);
-    } else if (tab == 'Newest') {
-      setFoodList([...foodList.sort((a, b) => a.deliveryTime - b.deliveryTime)]);
+    if (tab === 'Tous') {
+      // setProduct_serviceList([...product_serviceList.sort((a, b) => a.title.localeCompare(b.title))]);
+      setProduct_serviceList([...product_serviceList.sort((a, b) => a.stars - b.stars)]);
+    } else if (tab == 'Produits') {
+      //setProduct_serviceList([...product_serviceList.find((a, b) => a.type === 'Produit')]);
+      console.log(product_serviceList.find((a, b) => a.type === 'Produit'));
+      setProduct_serviceList([...product_serviceList.sort((a, b) => a.stars - b.stars)]);
+    } else if (tab == 'Services') {
+      //setProduct_serviceList([...product_serviceList.find((a, b) => a.type === 'Service')]);
+      setProduct_serviceList([...product_serviceList.sort((a, b) => a.stars - b.stars)]);
     } else {
-      setFoodList([...foodList.sort((a, b) => a.stars - b.stars)]);
+      setProduct_serviceList([...product_serviceList.sort((a, b) => a.stars - b.stars)]);
     }
   };
 
@@ -77,7 +81,7 @@ const ProductScreen = ({ navigation }) => {
               <TouchableOpacity
                 key={index}
                 onPress={() => {
-                  navigation.navigate('Details', { name: 'joe', cats: Categories });
+                  navigation.navigate('Details', { name: 'joe', cats: [] });
                 }}
               >
                 <Block p={10} color="white" style={styles.container} m_t={14}>
@@ -179,126 +183,36 @@ const ProductScreen = ({ navigation }) => {
     );
   };
 
-  // const categories = () => {
-  //   return (
-  //     <>
-  //       <Block row space="between" m_t={20} m_b={10}>
-  //         <Text h2 grey bold>
-  //           Explore categories
-  //         </Text>
-  //         <Text primary>View more</Text>
-  //       </Block>
+  const list = () => {
+    return (
+      <>
+        <Block space="between" p={10} m_b={30} m_t={20} color="white" style={styles.listContainer}>
+          <Block row m_t={10} m_b={20}>
+            {['Tous', 'Produits', 'Services'].map((tab) => {
+              return renderTab(tab);
+            })}
+          </Block>
 
-  //       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-  //         {Categories.map((cat, index) => {
-  //           return (
-  //             <Block center middle key={index} color={cat.color} style={styles.cat}>
-  //               <Ionicons color={COLORS.blue} size={SIZES.base * 3} name={'information-circle'} />
-
-  //               <Text white bold h2>
-  //                 {cat.name}
-  //               </Text>
-  //               <Text size={15} grey>
-  //                 {cat.places} places
-  //               </Text>
-  //             </Block>
-  //           );
-  //         })}
-  //       </ScrollView>
-  //     </>
-  //   );
-  // };
-
-  // const recommended = () => {
-  //     return (
-  //         <>
-  //             <Block row space="between" m_t={20} m_b={10}>
-  //                 <Text h2 grey bold>Recommended</Text>
-  //                 <Text primary >View more</Text>
-  //             </Block>
-
-  //             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-  //             {
-  //                 Foods.map((food, index)=> {
-  //                     return(
-  //                             <Block key={index} style={styles.recommended} color='white'>
-  //                                 <Image source={food.image} style={styles.imgRecommended} />
-  //                                 <Text numberOfLines={1} size={16} grey bold>{food.title}</Text>
-  //                                 <Text numberOfLines={1} grey_two>{food.subtitle}</Text>
-  //                                 <Block row>
-  //                                     {stars(food.stars)}
-  //                                 </Block>
-  //                                 <Block row m_t={10}>
-  //                                     <Block style={styles.info} center row>
-  //<Ionicons color={COLORS.blue} size={SIZES.base * 3} name={'information-circle'} />
-  //
-  //                                         <Text primary>{food.location} m</Text>
-  //                                     </Block>
-
-  //                                     <Block m_l={10} style={styles.info} center row>
-  //<Ionicons color={COLORS.blue} size={SIZES.base * 3} name={'information-circle'} />
-  //
-  //                                         <Text primary>{food.deliveryTime}'</Text>
-  //                                     </Block>
-  //                                 </Block>
-  //                         </Block>
-  //                     )
-  //                 })
-  //             }
-  //             </ScrollView>
-  //         </>
-  //     )
-  // };
-
-  // const list = () => {
-  //   return (
-  //     <>
-  //       <Block space="between" p={10} m_b={30} m_t={20} color="white" style={styles.listContainer}>
-  //         <Block row m_t={10} m_b={20}>
-  //           {['Featured', 'Popular', 'Newest', 'Trending'].map((tab) => {
-  //             return renderTab(tab);
-  //           })}
-  //         </Block>
-  //         <Block row m_b={20} space="between">
-  //           <Block row style={styles.info} center>
-  //             <Text h2 grey>
-  //               Best match
-  //             </Text>
-  //             <Block m_l={10}>
-  //               <Ionicons color={COLORS.blue} size={SIZES.base * 3} name={'information-circle'} />
-  //             </Block>
-  //           </Block>
-
-  //           <Block row>
-  //             <Block row style={styles.info} center>
-  //               <Ionicons color={COLORS.blue} size={SIZES.base * 3} name={'information-circle'} />
-  //             </Block>
-
-  //             <Block m_l={10} row style={styles.info} center>
-  //               <Ionicons color={COLORS.blue} size={SIZES.base * 3} name={'information-circle'} />
-  //             </Block>
-  //           </Block>
-  //         </Block>
-  //         <Block>
-  //           {foodList.length == 0 ? (
-  //             <Text h2 primary bold center>
-  //               No item found
-  //             </Text>
-  //           ) : (
-  //             <Text></Text>
-  //           )}
-  //           {foodList.map((food, index) => {
-  //             return (
-  //               <TouchableOpacity style={styles.horizontalList} key={index}>
-  //                 <FoodList item={food} />
-  //               </TouchableOpacity>
-  //             );
-  //           })}
-  //         </Block>
-  //       </Block>
-  //     </>
-  //   );
-  // };
+          <Block>
+            {product_serviceList.length == 0 ? (
+              <Text h2 primary bold center>
+                Aucun produit ou service
+              </Text>
+            ) : (
+              <Text></Text>
+            )}
+            {product_serviceList.map((food, index) => {
+              return (
+                <TouchableOpacity style={styles.horizontalList} key={index}>
+                  <Product_service item={food} />
+                </TouchableOpacity>
+              );
+            })}
+          </Block>
+        </Block>
+      </>
+    );
+  };
 
   return (
     <Block flex color="grey" p={15}>
@@ -315,9 +229,7 @@ const ProductScreen = ({ navigation }) => {
         {search.trim().length == 0 ? (
           <>
             {popular()}
-            {/* {categories()} */}
-            {/* {recommended()} */}
-            {/* {list()} */}
+            {list()}
           </>
         ) : (
           list()
@@ -398,7 +310,7 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
   },
   active: {
-    borderBottomColor: COLORS.primary,
+    borderBottomColor: COLORS.peach,
     borderBottomWidth: 5,
     width: 30,
     paddingBottom: 5,
