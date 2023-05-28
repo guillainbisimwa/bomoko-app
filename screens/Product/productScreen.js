@@ -7,18 +7,19 @@ import Text from './Text';
 import Categories from './Categories';
 
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { Button, IconButton, MD3Colors } from 'react-native-paper';
+import { Button, IconButton, MD3Colors, ProgressBar } from 'react-native-paper';
 
 const ProductScreen = ({ navigation }) => {
   const [active, setActive] = useState('Featured');
   const [search, setSearch] = useState('');
   const [foodList, setFoodList] = useState([...Foods]);
 
-  // const onSearch = (text) => {
-
-  //     setFoodList([...Foods.filter((food) => (food.title.toLocaleLowerCase().includes(text.toLocaleLowerCase())) )]);
-  //     setSearch(text);
-  // };
+  const onSearch = (text) => {
+    setFoodList([
+      ...Foods.filter((food) => food.title.toLocaleLowerCase().includes(text.toLocaleLowerCase())),
+    ]);
+    setSearch(text);
+  };
 
   const stars = (starsNumber) => {
     return (
@@ -113,6 +114,29 @@ const ProductScreen = ({ navigation }) => {
                   <Block m_t={5} row center space="between">
                     {stars(food.stars)}
                   </Block>
+                  <Block m_t={10} row center space="between">
+                    <Block row center>
+                      <IconButton
+                        icon="pin"
+                        iconColor={MD3Colors.error50}
+                        size={20}
+                        onPress={() => console.log('Pressed')}
+                      />
+                      <Text numberOfLines={1} semibold size={19}>
+                        Goma
+                      </Text>
+                    </Block>
+                    <Block row center space="between">
+                      <ProgressBar
+                        progress={0.5}
+                        color={MD3Colors.error50}
+                        style={{ width: SIZES.width / 4, height: SIZES.base }}
+                      />
+                      <Text numberOfLines={1} semibold size={19} style={{ marginLeft: 20 }}>
+                        50%
+                      </Text>
+                    </Block>
+                  </Block>
                 </Block>
               </TouchableOpacity>
             );
@@ -122,35 +146,35 @@ const ProductScreen = ({ navigation }) => {
     );
   };
 
-  const categories = () => {
-    return (
-      <>
-        <Block row space="between" m_t={20} m_b={10}>
-          <Text h2 grey bold>
-            Explore categories
-          </Text>
-          <Text primary>View more</Text>
-        </Block>
+  // const categories = () => {
+  //   return (
+  //     <>
+  //       <Block row space="between" m_t={20} m_b={10}>
+  //         <Text h2 grey bold>
+  //           Explore categories
+  //         </Text>
+  //         <Text primary>View more</Text>
+  //       </Block>
 
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {Categories.map((cat, index) => {
-            return (
-              <Block center middle key={index} color={cat.color} style={styles.cat}>
-                <Ionicons color={COLORS.blue} size={SIZES.base * 3} name={'information-circle'} />
+  //       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+  //         {Categories.map((cat, index) => {
+  //           return (
+  //             <Block center middle key={index} color={cat.color} style={styles.cat}>
+  //               <Ionicons color={COLORS.blue} size={SIZES.base * 3} name={'information-circle'} />
 
-                <Text white bold h2>
-                  {cat.name}
-                </Text>
-                <Text size={15} grey>
-                  {cat.places} places
-                </Text>
-              </Block>
-            );
-          })}
-        </ScrollView>
-      </>
-    );
-  };
+  //               <Text white bold h2>
+  //                 {cat.name}
+  //               </Text>
+  //               <Text size={15} grey>
+  //                 {cat.places} places
+  //               </Text>
+  //             </Block>
+  //           );
+  //         })}
+  //       </ScrollView>
+  //     </>
+  //   );
+  // };
 
   // const recommended = () => {
   //     return (
@@ -251,7 +275,7 @@ const ProductScreen = ({ navigation }) => {
             placeholder="Rechecher un produit/service"
             style={styles.input}
             value={search}
-            // onChangeText={(text) => onSearch(text)}
+            onChangeText={(text) => onSearch(text)}
           />
         </Block>
 
