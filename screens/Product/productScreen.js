@@ -8,11 +8,16 @@ import Product_service from './Product_service';
 
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { IconButton, MD3Colors, ProgressBar } from 'react-native-paper';
+import { useSelector } from 'react-redux';
 
 const ProductScreen = ({ navigation }) => {
+  const products = useSelector((state) => state.products);
+  console.log(products, 'ok---------------------------------------');
+  //console.log(JSON.stringify(products), 'ok---------------------------------------');
+
   const [active, setActive] = useState('Tous');
   const [search, setSearch] = useState('');
-  const [product_serviceList, setProduct_serviceList] = useState([...Foods]);
+  const [product_serviceList, setProduct_serviceList] = useState([...products.products]);
 
   const onSearch = (text) => {
     setProduct_serviceList([
@@ -76,7 +81,7 @@ const ProductScreen = ({ navigation }) => {
         </Block>
 
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {Foods.map((food, index) => {
+          {products.products.map((prod, index) => {
             return (
               <TouchableOpacity
                 key={index}
@@ -87,7 +92,7 @@ const ProductScreen = ({ navigation }) => {
                 <Block p={10} color="white" style={styles.container} m_t={14}>
                   <View style={styles.price}>
                     <Text white bold>
-                      600 USD
+                      {prod.amount} FC
                     </Text>
                   </View>
 
@@ -99,16 +104,16 @@ const ProductScreen = ({ navigation }) => {
                       onPress={() => console.log('Pressed')}
                     />
                   </View>
-                  <Image source={food.image} style={styles.imgFood} />
+                  <Image source={prod.image} style={styles.imgFood} />
                   <Text numberOfLines={1} grey h2 bold>
                     {' '}
-                    {food.title}{' '}
+                    {prod.name}{' '}
                   </Text>
-                  <Text numberOfLines={1} grey>
-                    {food.subtitle}
+                  <Text numberOfLines={2} grey>
+                    {prod.detail}
                   </Text>
                   <Block m_t={5} row center space="between">
-                    {stars(food.stars)}
+                    {stars(prod.stars)}
                   </Block>
                   <Block m_t={10} row center space="between">
                     <Block row center>
@@ -119,7 +124,7 @@ const ProductScreen = ({ navigation }) => {
                         onPress={() => console.log('Pressed')}
                       />
                       <Text numberOfLines={1} semibold size={19}>
-                        Goma
+                        {prod.location}
                       </Text>
                     </Block>
                     <Block row center space="between">
@@ -167,7 +172,7 @@ const ProductScreen = ({ navigation }) => {
                       style={[styles.cat, { backgroundColor: COLORS.peach }]}
                     >
                       <Text white bold size={20}>
-                        600$
+                        {prod.amount} FC
                       </Text>
                       <Text white bold h2 numberOfLines={1}>
                         Budjet

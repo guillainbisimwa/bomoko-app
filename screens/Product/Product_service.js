@@ -21,10 +21,10 @@ const Product_service = (props) => {
       <Block flex m_l={10} style={styles.containerText}>
         <Block>
           <Text numberOfLines={1} grey_one size={22} bold>
-            {props.item.title}
+            {props.item.name}
           </Text>
           <Text numberOfLines={1} size={18} grey_two>
-            {props.item.subtitle}
+            {props.item.detail}
           </Text>
         </Block>
 

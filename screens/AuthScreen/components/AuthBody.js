@@ -16,7 +16,7 @@ import { COLORS } from '../../../constants';
 
 const { height, width } = Dimensions.get('window');
 
-export const AuthBody = ({ navigation }) => {
+export const AuthBody = ({}) => {
   return (
     <>
       <ImageBackground
@@ -66,7 +66,7 @@ export const AuthBody = ({ navigation }) => {
 };
 
 AuthBody.propTypes = {
-  navigation: PropTypes.object.isRequired,
+  //navigation: PropTypes.object.isRequired,
 };
 
 const styles = StyleSheet.create({

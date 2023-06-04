@@ -336,14 +336,14 @@ const Home = ({ navigation }) => {
   }
 
   function renderIncomingExpensesTitle(myCat) {
-    console.log('breee', myCat);
     return (
       <View
         style={{
-          borderRadius: 25,
+          borderRadius: 8,
           height: 80,
-          backgroundColor: COLORS.lightGray2,
+          backgroundColor: COLORS.white,
           padding: SIZES.padding,
+          elevation: 5,
         }}
       >
         {/* Title */}
