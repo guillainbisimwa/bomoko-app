@@ -1,33 +1,54 @@
 import React from 'react';
-import Ionicons from '@expo/vector-icons/Ionicons';
-
-import { TouchableOpacity } from 'react-native';
+import { ImageBackground } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import Block from './Block';
 import Text from './Text';
-import { COLORS } from '../../constants';
+import { COLORS, SIZES } from '../../constants';
 
-const Details = ({ navigation, route }) => {
+const Details = ({ route }) => {
+  console.log(route.params);
   return (
-    <Block p={15}>
-      {/* <Block>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate('Home');
-          }}
+    <Block>
+      <Block style={{ height: SIZES.width / 2 }}>
+        <ImageBackground
+          source={route.params.food.image}
+          resizeMode="cover"
+          style={{ flex: 1, justifyContent: 'flex-end' }}
         >
-          <Ionicons name="arrow-back-outline" size={30} color={COLORS.grey} />
-        </TouchableOpacity>
-      </Block> */}
-      {/* <Text h1 bold> */}
-      {/* Details "route.params.name"
-      </Text>
-      <TouchableOpacity
-        onPress={() => {
-          // navigation.navigate('Category', { cats: route.params.cats });
+          <LinearGradient
+            colors={['rgba(0,0,0,0.1)', 'rgba(0,0,0,0.9)']}
+            style={{ position: 'absolute', left: 0, right: 0, top: 0, height: SIZES.width / 2 }}
+          ></LinearGradient>
+        </ImageBackground>
+      </Block>
+      <Block
+        p={20}
+        m={50}
+        style={{
+          backgroundColor: 'white',
+          position: 'absolute',
+          top: SIZES.width / 4,
+          width: '80%',
+          borderRadius: 10,
+          height: 200,
+          elevation: 2,
         }}
       >
-        <Ionicons name="bulb-sharp" size={50} color={COLORS.blue} />
-      </TouchableOpacity> */}
+        {/* <Text>Hello</Text> */}
+        <Text numberOfLines={1} size={20} bold>
+          {route.params.food.name}
+        </Text>
+        <Text color={COLORS.gray}>{route.params.food.detail}</Text>
+        <Block mt={5}>
+          <Block row>
+            <Ionicons name="star" color={COLORS.primary} size={20} />
+            <Ionicons name="star" color={COLORS.primary} size={20} />
+            <Ionicons name="star" color={COLORS.primary} size={20} />
+            <Ionicons name="star" color={COLORS.primary} size={20} />
+          </Block>
+        </Block>
+      </Block>
     </Block>
   );
 };

@@ -1,21 +1,20 @@
 Arguments: 
-  /usr/local/bin/node /usr/local/bin/yarn add @expo/vector-icons
+  /home/guillain/.nvm/versions/node/v16.15.0/bin/node /home/guillain/.yarn/bin/yarn.js add expo-linear-gradient
 
 PATH: 
-  /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+  /home/guillain/.yarn/bin:/home/guillain/.config/yarn/global/node_modules/.bin:/home/guillain/.nvm/versions/node/v16.15.0/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/snap/bin:/home/guillain/.rvm/bin:~/.ruby/bin:/media/guillain/My Passport/WEZA/sdk//tools:/media/guillain/My Passport/WEZA/sdk//platform-tools
 
 Yarn version: 
   1.22.19
 
 Node version: 
-  18.16.0
+  16.15.0
 
 Platform: 
   linux x64
 
 Trace: 
-  Error: getaddrinfo EAI_AGAIN registry.yarnpkg.com
-      at GetAddrInfoReqWrap.onlookup [as oncomplete] (node:dns:107:26)
+  Error: EACCES: permission denied, unlink '/home/guillain/Desktop/react-native/bomoko-app/node_modules/.yarn-integrity'
 
 npm manifest: 
   {

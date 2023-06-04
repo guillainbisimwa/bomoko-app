@@ -86,7 +86,7 @@ const ProductScreen = ({ navigation }) => {
               <TouchableOpacity
                 key={index}
                 onPress={() => {
-                  navigation.navigate('Details', { name: 'joe', cats: [] });
+                  navigation.navigate('Details', { food: prod });
                 }}
               >
                 <Block p={10} color="white" style={styles.container} m_t={14}>
