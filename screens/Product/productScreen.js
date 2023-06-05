@@ -12,7 +12,7 @@ import { useSelector } from 'react-redux';
 
 const ProductScreen = ({ navigation }) => {
   const products = useSelector((state) => state.products);
-  console.log(products, 'ok---------------------------------------');
+  // console.log(products, 'ok---------------------------------------');
   //console.log(JSON.stringify(products), 'ok---------------------------------------');
 
   const [active, setActive] = useState('Tous');
