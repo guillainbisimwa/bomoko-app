@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { StyleSheet, View, Image, TouchableOpacity, Platform } from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
-import { FontAwesome } from '@expo/vector-icons';
 import { Block, Text } from './../../components';
 import { useNavigation } from '@react-navigation/native';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 import { COLORS, FONTS, SIZES, icons } from './../../constants';
 import { Picker } from '@react-native-picker/picker';
@@ -12,10 +12,12 @@ import { KeyboardAvoidingView } from 'react-native';
 //import { addCat } from '../redux/catReducer';
 import { Alert } from 'react-native';
 import { ScrollView } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
 
 const AddProduct = () => {
   const [description, setDescription] = useState('');
   const [total, setTotal] = useState('');
+  const [images, setImages] = useState([]);
 
   const handleSaveAddProduct = async () => {
     try {
@@ -43,6 +45,37 @@ const AddProduct = () => {
     );
   }
 
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    //try{
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: 'Images',
+      //mediaTypes: ImagePicker.MediaTypeOptions.All,
+
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+      base64: true,
+    });
+
+    if (!result.cancelled) {
+      const uri = result.uri;
+      const type = result.type;
+      const name = `${Math.floor(Math.random() * 900) + 100}_${Date.now()}`;
+      let base64Img = `data:image/jpg;base64,${result.base64}`;
+
+      const source = {
+        uri,
+        type,
+        name,
+        base64Img,
+      };
+      let imgCb2V2 = [...images];
+      imgCb2V2.push(uri);
+      setImages([...imgCb2V2]);
+    }
+  };
+
   const addAddProduct = () => {
     return (
       <>
@@ -69,11 +102,41 @@ const AddProduct = () => {
           mode="contained"
           onPress={handleSaveAddProduct}
           style={styles.button}
-          icon={({ size, color }) => <FontAwesome name="save" size={size} color={color} />}
+          icon={({ size, color }) => (
+            <Ionicons name="arrow-back-outline" size={30} color={COLORS.grey} />
+          )}
         >
           Ajouter
         </Button>
       </>
+    );
+  };
+
+  const renderImage = () => {
+    return (
+      <Block flex={1}>
+        <Block row space="between">
+          <TouchableOpacity
+            style={styles.btn}
+            onPress={() => (images.length >= 3 ? info() : pickImage())}
+          >
+            <Ionicons name="cloud-upload" size={30} color={COLORS.grey} style={styles.icon} />
+            {/* {loadPic?
+              <ActivityIndicator size="small" color={Colors.danger} />: <></>} */}
+            <Text>Upload</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.btn}
+            onPress={() => (images.length >= 3 ? info() : takePhoto())}
+          >
+            <Ionicons name="camera" size={30} color={COLORS.grey} style={styles.icon} />
+            {/* {loadPic?
+              <ActivityIndicator size="small" color={Colors.danger} />: <></>} */}
+            <Text>Take a photo</Text>
+          </TouchableOpacity>
+        </Block>
+      </Block>
     );
   };
 
@@ -85,7 +148,7 @@ const AddProduct = () => {
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         {/* Header section */}
         {renderHeader()}
-
+        {renderImage()}
         {addAddProduct()}
       </ScrollView>
     </KeyboardAvoidingView>
@@ -97,6 +160,9 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     backgroundColor: COLORS.white,
+  },
+  icon: {
+    marginHorizontal: 5,
   },
   scrollContainer: {
     flexGrow: 1,
@@ -150,6 +216,16 @@ const styles = StyleSheet.create({
   picker: {
     height: 50,
     padding: 8,
+  },
+  btn: {
+    backgroundColor: COLORS.peach,
+    padding: SIZES.base / 2,
+    width: SIZES.width / 2.5,
+    borderRadius: SIZES.radius,
+    elevation: 2,
+    marginTop: SIZES.base * 1.8,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 });
 
