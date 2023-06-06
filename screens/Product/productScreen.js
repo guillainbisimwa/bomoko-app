@@ -21,7 +21,9 @@ const ProductScreen = ({ navigation }) => {
 
   const onSearch = (text) => {
     setProduct_serviceList([
-      ...Foods.filter((food) => food.title.toLocaleLowerCase().includes(text.toLocaleLowerCase())),
+      ...products.products.filter((food) =>
+        food.name.toLocaleLowerCase().includes(text.toLocaleLowerCase())
+      ),
     ]);
     setSearch(text);
   };
