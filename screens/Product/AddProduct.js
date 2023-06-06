@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Image, TouchableOpacity, Platform, Alert } from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
 import { Block, Text } from './../../components';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import Constants from 'expo-constants';
 
 import { COLORS, FONTS, SIZES, icons } from './../../constants';
 import { KeyboardAvoidingView } from 'react-native';
@@ -13,6 +14,18 @@ const AddProduct = () => {
   const [description, setDescription] = useState('');
   const [total, setTotal] = useState('');
   const [images, setImages] = useState([]);
+
+  useEffect(() => {
+    (async () => {
+      if (Constants.platform.ios) {
+        const cameraRollStatus = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        const cameraStatus = await ImagePicker.requestCameraPermissionsAsync();
+        if (cameraRollStatus.status !== 'granted' || cameraStatus.status !== 'granted') {
+          alert('Sorry, we need these permissions to make this work!');
+        }
+      }
+    })();
+  }, []);
 
   const handleSaveAddProduct = async () => {
     try {
