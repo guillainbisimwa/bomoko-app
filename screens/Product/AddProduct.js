@@ -1,16 +1,11 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { StyleSheet, View, Image, TouchableOpacity, Platform } from 'react-native';
+import { StyleSheet, View, Image, TouchableOpacity, Platform, Alert } from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
 import { Block, Text } from './../../components';
-import { useNavigation } from '@react-navigation/native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 import { COLORS, FONTS, SIZES, icons } from './../../constants';
-import { Picker } from '@react-native-picker/picker';
 import { KeyboardAvoidingView } from 'react-native';
-//import { addCat } from '../redux/catReducer';
-import { Alert } from 'react-native';
 import { ScrollView } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 
@@ -60,16 +55,16 @@ const AddProduct = () => {
 
     if (!result.cancelled) {
       const uri = result.uri;
-      const type = result.type;
-      const name = `${Math.floor(Math.random() * 900) + 100}_${Date.now()}`;
-      let base64Img = `data:image/jpg;base64,${result.base64}`;
+      // const type = result.type;
+      // const name = `${Math.floor(Math.random() * 900) + 100}_${Date.now()}`;
+      // let base64Img = `data:image/jpg;base64,${result.base64}`;
 
-      const source = {
-        uri,
-        type,
-        name,
-        base64Img,
-      };
+      // const source = {
+      //   uri,
+      //   type,
+      //   name,
+      //   base64Img,
+      // };
       let imgCb2V2 = [...images];
       imgCb2V2.push(uri);
       setImages([...imgCb2V2]);
@@ -85,16 +80,16 @@ const AddProduct = () => {
 
     if (!result.cancelled) {
       const uri = result.uri;
-      const type = result.type;
-      const name = `${Math.floor(Math.random() * 900) + 100}_${Date.now()}`;
-      let base64Img = `data:image/jpg;base64,${result.base64}`;
+      // const type = result.type;
+      // const name = `${Math.floor(Math.random() * 900) + 100}_${Date.now()}`;
+      // let base64Img = `data:image/jpg;base64,${result.base64}`;
 
-      const source = {
-        uri,
-        type,
-        name,
-        base64Img,
-      };
+      // const source = {
+      //   uri,
+      //   type,
+      //   name,
+      //   base64Img,
+      // };
 
       let imgCb2V2 = [...images];
       imgCb2V2.push(uri);
@@ -109,6 +104,14 @@ const AddProduct = () => {
     var removedV2 = images.filter((value) => value !== id);
     setImages(removedV2);
   };
+
+  const info = () =>
+    Alert.alert(`Warning`, `You can't upload more than 3 pictures!!`, [
+      {
+        text: 'Okay',
+        style: 'cancel',
+      },
+    ]);
 
   const addAddProduct = () => {
     return (
