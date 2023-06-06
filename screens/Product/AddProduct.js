@@ -76,6 +76,32 @@ const AddProduct = () => {
     }
   };
 
+  const takePhoto = async () => {
+    let result = await ImagePicker.launchCameraAsync({
+      mediaTypes: 'Images',
+      aspect: [4, 3],
+      base64: true,
+    });
+
+    if (!result.cancelled) {
+      const uri = result.uri;
+      const type = result.type;
+      const name = `${Math.floor(Math.random() * 900) + 100}_${Date.now()}`;
+      let base64Img = `data:image/jpg;base64,${result.base64}`;
+
+      const source = {
+        uri,
+        type,
+        name,
+        base64Img,
+      };
+
+      let imgCb2V2 = [...images];
+      imgCb2V2.push(uri);
+      setImages([...imgCb2V2]);
+    }
+  };
+
   const addAddProduct = () => {
     return (
       <>
