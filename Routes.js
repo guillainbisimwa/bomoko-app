@@ -16,6 +16,7 @@ import MyDrawer from './navigations/MyDrawer';
 import { Expense, Income } from './screens';
 import { COLORS, icons } from './constants';
 import Details from './screens/Product/Details';
+import AddProduct from './screens/Product/AddProduct';
 
 const theme = {
   ...DefaultTheme,
@@ -206,6 +207,7 @@ const App = () => {
           <Stack.Screen name="Income" component={Income} options={{ title: 'Crédit (Entrée)' }} />
           <Stack.Screen name="Expense" component={Expense} options={{ title: 'Débit (Sortie)' }} />
           <Stack.Screen name="Details" component={Details} options={{ title: 'Details' }} />
+          <Stack.Screen name="AddProduct" component={AddProduct} options={{ title: 'Produit' }} />
 
           <Stack.Screen name="LoginScreen" component={LoginScreen} />
           <Stack.Screen name="AuthScreen" component={AuthScreen} />

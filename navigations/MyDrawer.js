@@ -44,7 +44,9 @@ export default function MyDrawer() {
         component={ProductScreen}
         options={{
           headerShown: false,
-          drawerIcon: ({ color }) => <Ionicons color={color} size={SIZES.base * 2} name={'home'} />,
+          drawerIcon: ({ color }) => (
+            <Ionicons color={color} size={SIZES.base * 2} name={'briefcase'} />
+          ),
         }}
       />
 
@@ -53,7 +55,7 @@ export default function MyDrawer() {
         component={Settings}
         options={{
           headerShown: true,
-          drawerIcon: ({ color }) => <Ionicons color={color} size={SIZES.base * 2} name={'home'} />,
+          drawerIcon: ({ color }) => <Ionicons color={color} size={SIZES.base * 2} name={'cash'} />,
         }}
       />
 
