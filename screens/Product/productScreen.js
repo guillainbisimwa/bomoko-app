@@ -21,8 +21,8 @@ const ProductScreen = ({ navigation }) => {
 
   const onSearch = (text) => {
     setProduct_serviceList([
-      ...products.products.filter((food) =>
-        food.name.toLocaleLowerCase().includes(text.toLocaleLowerCase())
+      ...products.products.filter((prod) =>
+        prod.name.toLocaleLowerCase().includes(text.toLocaleLowerCase())
       ),
     ]);
     setSearch(text);
@@ -58,17 +58,15 @@ const ProductScreen = ({ navigation }) => {
     setActive(tab);
 
     if (tab === 'Tous') {
-      // setProduct_serviceList([...product_serviceList.sort((a, b) => a.title.localeCompare(b.title))]);
-      setProduct_serviceList([...product_serviceList.sort((a, b) => a.stars - b.stars)]);
+      setProduct_serviceList([...products.products].sort((a, b) => a.stars - b.stars));
     } else if (tab == 'Produits') {
-      //setProduct_serviceList([...product_serviceList.find((a, b) => a.type === 'Produit')]);
-      console.log(product_serviceList.find((a, b) => a.type === 'Produit'));
-      setProduct_serviceList([...product_serviceList.sort((a, b) => a.type - b.type)]);
+      const filteredProducts = [...products.products].filter((item) => item.type === 'produit');
+      setProduct_serviceList([...filteredProducts]);
     } else if (tab == 'Services') {
-      //setProduct_serviceList([...product_serviceList.find((a, b) => a.type === 'Service')]);
-      setProduct_serviceList([...product_serviceList.sort((a, b) => b.type - a.type)]);
+      const filteredProducts = [...products.products].filter((item) => item.type === 'service');
+      setProduct_serviceList([...filteredProducts]);
     } else {
-      setProduct_serviceList([...product_serviceList.sort((a, b) => a.stars - b.stars)]);
+      setProduct_serviceList([...products.products].sort((a, b) => a.stars - b.stars));
     }
   };
 
