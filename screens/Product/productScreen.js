@@ -7,7 +7,7 @@ import Text from './Text';
 import Product_service from './Product_service';
 
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { IconButton, MD3Colors, ProgressBar } from 'react-native-paper';
+import { FAB, IconButton, MD3Colors, ProgressBar } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 
 const ProductScreen = ({ navigation }) => {
@@ -256,6 +256,7 @@ const ProductScreen = ({ navigation }) => {
             list()
           )}
         </ScrollView>
+        <FAB icon="plus" style={styles.fab} onPress={() => console.log('Pressed')} />
       </Block>
     </Block>
   );
@@ -360,6 +361,12 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     right: 0,
     margin: SIZES.base * 2,
+  },
+  fab: {
+    position: 'absolute',
+    margin: 16,
+    right: 0,
+    bottom: 0,
   },
 });
 
