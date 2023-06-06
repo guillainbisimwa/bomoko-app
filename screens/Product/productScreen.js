@@ -208,7 +208,13 @@ const ProductScreen = ({ navigation }) => {
             )}
             {product_serviceList.map((food, index) => {
               return (
-                <TouchableOpacity style={styles.horizontalList} key={index}>
+                <TouchableOpacity
+                  style={styles.horizontalList}
+                  key={index}
+                  onPress={() => {
+                    navigation.navigate('Details', { food });
+                  }}
+                >
                   <Product_service item={food} />
                 </TouchableOpacity>
               );
@@ -364,6 +370,7 @@ const styles = StyleSheet.create({
   fab: {
     position: 'absolute',
     margin: 16,
+    //backgroundColor: '#ff0000',
     right: 0,
     bottom: 0,
   },
