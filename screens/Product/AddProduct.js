@@ -102,6 +102,14 @@ const AddProduct = () => {
     }
   };
 
+  const removePic = (id) => {
+    var removed = images.filter((value) => value !== id);
+    setImages(removed);
+
+    var removedV2 = images.filter((value) => value !== id);
+    setImages(removedV2);
+  };
+
   const addAddProduct = () => {
     return (
       <>
