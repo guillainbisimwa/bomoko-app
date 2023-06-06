@@ -21,7 +21,7 @@ const AddProduct = () => {
         const cameraRollStatus = await ImagePicker.requestMediaLibraryPermissionsAsync();
         const cameraStatus = await ImagePicker.requestCameraPermissionsAsync();
         if (cameraRollStatus.status !== 'granted' || cameraStatus.status !== 'granted') {
-          alert('Sorry, we need these permissions to make this work!');
+          alert('Sorry,  we need these permissions to make this work!');
         }
       }
     })();
@@ -199,7 +199,25 @@ const AddProduct = () => {
         {/* Header section */}
         {renderHeader()}
         {renderImage()}
-        {addAddProduct()}
+        <Block flex={1}>
+          <Block style={styles.imgContainer}>
+            {images.map((img, key) => (
+              <Block key={key}>
+                <Ionicons
+                  color={COLORS.red}
+                  size={SIZES.base * 2}
+                  name={'close-circle'}
+                  style={styles.cancel}
+                  onPress={() => removePic(img)}
+                />
+                <Block style={styles.bg}>
+                  <Image source={{ uri: img }} style={styles.img} />
+                </Block>
+              </Block>
+            ))}
+          </Block>
+        </Block>
+        {/* {addAddProduct()} */}
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -215,7 +233,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   scrollContainer: {
-    flexGrow: 1,
+    //flexGrow: 1,
     paddingHorizontal: 24,
     paddingBottom: 120,
   },
@@ -232,14 +250,6 @@ const styles = StyleSheet.create({
   },
   hasErrors: {
     borderBottomColor: COLORS.purple,
-  },
-  login: {
-    flex: 1,
-    justifyContent: 'center',
-    paddingTop: 80,
-    paddingLeft: 50,
-    paddingRight: 50,
-    backgroundColor: COLORS.white,
   },
   logo: {
     height: 50,
@@ -267,15 +277,38 @@ const styles = StyleSheet.create({
     height: 50,
     padding: 8,
   },
+  imgContainer: {
+    marginVertical: SIZES.base,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+  },
+  img: {
+    width: SIZES.width / 4,
+    height: SIZES.width / 4,
+    borderRadius: SIZES.radius,
+    opacity: 0.8,
+  },
+  bg: {
+    borderRadius: SIZES.radius,
+    marginRight: SIZES.base * 1.7,
+  },
   btn: {
     backgroundColor: COLORS.peach,
-    padding: SIZES.base / 2,
+    padding: SIZES.base,
     width: SIZES.width / 2.5,
     borderRadius: SIZES.radius,
     elevation: 2,
     marginTop: SIZES.base * 1.8,
     flexDirection: 'row',
     alignItems: 'center',
+    ///height: SIZES.base * 7,
+  },
+  cancel: {
+    position: 'absolute',
+    zIndex: 100,
+    padding: 10,
+    right: SIZES.base,
+    elevation: 2,
   },
 });
 
