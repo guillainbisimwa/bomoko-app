@@ -37,8 +37,8 @@ const Product_service = (props) => {
             </Block>
 
             <Block style={styles.info} row m_l={8} center>
-              <Ionicons name="time-outline" size={15} color={COLORS.primary} />
-              <Text primary>{props.item.deliveryTime}</Text>
+              {/* <Ionicons name="time-outline" size={15} color={COLORS.primary} /> */}
+              <Text primary>{props.item.amount} USD</Text>
             </Block>
           </Block>
         </Block>

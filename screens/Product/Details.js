@@ -42,10 +42,10 @@ const Details = ({ route }) => {
         <Text color={COLORS.gray}>{route.params.food.detail}</Text>
         <Block mt={5}>
           <Block row>
-            <Ionicons name="star" color={COLORS.primary} size={20} />
-            <Ionicons name="star" color={COLORS.primary} size={20} />
-            <Ionicons name="star" color={COLORS.primary} size={20} />
-            <Ionicons name="star" color={COLORS.primary} size={20} />
+            <Ionicons name="star" color={COLORS.yellow} size={20} />
+            <Ionicons name="star" color={COLORS.yellow} size={20} />
+            <Ionicons name="star" color={COLORS.yellow} size={20} />
+            <Ionicons name="star" color={COLORS.yellow} size={20} />
           </Block>
         </Block>
       </Block>

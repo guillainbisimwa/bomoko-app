@@ -224,14 +224,13 @@ const ProductScreen = ({ navigation }) => {
       <Block row center color="white" p={15}>
         <TouchableOpacity
           onPress={() => {
-            // navigation.navigate('Home')
             navigation.goBack();
           }}
         >
           <Ionicons name="arrow-back-outline" size={30} color={COLORS.grey} />
         </TouchableOpacity>
 
-        <Text size={19} semibold style={{ marginLeft: 15 }}>
+        <Text bold style={{ marginLeft: 16, fontWeight: 'bold', fontSize: 20 }}>
           Produits / services
         </Text>
       </Block>
