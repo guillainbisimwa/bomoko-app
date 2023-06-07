@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { ImageBackground, ScrollView, Animated, View } from 'react-native';
+import { ImageBackground, ScrollView, Animated, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Block from './Block';
@@ -106,7 +106,29 @@ const Details = ({ route }) => {
         <Text numberOfLines={1} size={20} bold>
           {route.params.food.name}
         </Text>
-        <Text color={COLORS.gray}>{route.params.food.detail}</Text>
+
+        <Text center>Prix total</Text>
+        <Text bold size={30} center color={COLORS.peach}>
+          {route.params.food.amount} FC
+        </Text>
+
+        <Block>
+          <Block row space="around">
+            <Block row center style={styles.round}>
+              <Ionicons name="md-cash" color={COLORS.peach} size={20} />
+              <Text numberOfLines={1}> 20 Investisseurs</Text>
+            </Block>
+
+            <Block row center style={styles.round}>
+              <Ionicons name="md-time" color={COLORS.peach} size={20} />
+              <Text numberOfLines={1}> 35 Jours restent</Text>
+            </Block>
+          </Block>
+        </Block>
+      </Block>
+
+      <Block p={20} style={{ marginTop: 120, zIndex: -101 }}>
+        <Text color={COLORS.darkgray}>{route.params.food.detail}</Text>
         <Block mt={5}>
           <Block row>
             <Ionicons name="star" color={COLORS.yellow} size={20} />
@@ -119,5 +141,15 @@ const Details = ({ route }) => {
     </Block>
   );
 };
+
+const styles = StyleSheet.create({
+  round: {
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: COLORS.gray,
+    backgroundColor: COLORS.lightGray2,
+    padding: 5,
+  },
+});
 
 export default Details;
