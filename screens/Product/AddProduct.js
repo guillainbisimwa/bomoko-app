@@ -219,6 +219,7 @@ const AddProduct = () => {
             ))}
           </Block>
         </Block>
+
         {/* {addAddProduct()} */}
       </ScrollView>
     </KeyboardAvoidingView>

@@ -13,6 +13,7 @@ const product = [
     stars: 3,
     like: true,
     image: soja,
+    images: [cleaner, soja],
     type: 'produit',
     location: 'Goma',
     membres: [
@@ -29,6 +30,7 @@ const product = [
     stars: 2,
     like: true,
     image: cleaner,
+    images: [cleaner, soja],
     type: 'service',
     location: 'Kinshasa',
     membres: [
