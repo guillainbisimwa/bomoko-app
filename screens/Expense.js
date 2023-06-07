@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { StyleSheet, View, Image, TouchableOpacity, Platform } from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
 import { FontAwesome } from '@expo/vector-icons';
@@ -13,15 +13,10 @@ import { addCat } from '../redux/catReducer';
 import { Alert } from 'react-native';
 import { ScrollView } from 'react-native';
 
-const Expense = () => {
+const Expense = ({ route }) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
-
-  const catList = useSelector((state) => state.categories.categories);
-
-  const [categories, setCategories] = useState(
-    catList.filter((value, key) => value.cat === 'expense')
-  );
+  const { cat } = route.params;
 
   const [description, setDescription] = useState('');
   const [total, setTotal] = useState('');
@@ -40,82 +35,34 @@ const Expense = () => {
       description: description,
       total: parseFloat(total),
       date: new Date().toISOString().split('T')[0],
+      cat: selectedValue,
     };
 
-    // Find the corresponding category in the categories array
-    const categoryIndex = categories.findIndex((cat) => cat.name === selectedValue);
+    var t = cat.map((category) => {
+      var existingCategory = category.name == selectedValue; //cat.find((cat) => cat.name === selectedValue);
+      const categoryIndex = cat.findIndex((cat) => cat.name === selectedValue);
 
-    if (categoryIndex !== -1) {
-      // Create a copy of the categories array
-      const updatedCategories = [...categories];
+      if (existingCategory) {
+        const updatedData = [...cat[categoryIndex].data];
+        updatedData.push(newExpense);
 
-      // Create a copy of the data array for the selected category
-      const updatedData = [...updatedCategories[categoryIndex].data];
+        return {
+          ...cat[categoryIndex],
+          data: updatedData,
+        };
+      }
+      return category;
+    });
 
-      // Add the new expense to the updated data array
-      updatedData.push(newExpense);
+    dispatch(addCat(t));
 
-      // Update the data array for the selected category in the updated categories array
-      updatedCategories[categoryIndex] = {
-        ...updatedCategories[categoryIndex],
-        data: updatedData,
-      };
+    // Reset the form
+    setSelectedValue('');
+    setDescription('');
+    setTotal('');
 
-      dispatch(addCat(updatedCategories));
-
-      // Reset the form
-      setSelectedValue('');
-      setDescription('');
-      setTotal('');
-
-      navigation.goBack();
-    }
+    navigation.goBack();
   };
-
-  function renderNavBar() {
-    return (
-      <View
-        style={{
-          flexDirection: 'row',
-          paddingTop: SIZES.base * 3,
-          justifyContent: 'space-between',
-          alignItems: 'flex-end',
-          paddingHorizontal: SIZES.padding,
-        }}
-      >
-        <TouchableOpacity
-          style={{ justifyContent: 'center', width: 50 }}
-          onPress={() => {
-            console.log('Menu');
-            navigation.goBack();
-          }}
-        >
-          <Image
-            source={icons.back_arrow}
-            style={{
-              width: 30,
-              height: 30,
-              tintColor: COLORS.primary,
-            }}
-          />
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={{ justifyContent: 'center', alignItems: 'flex-end', width: 50 }}
-          onPress={() => console.log('search')}
-        >
-          <Image
-            source={icons.more}
-            style={{
-              width: 30,
-              height: 30,
-              tintColor: COLORS.primary,
-            }}
-          />
-        </TouchableOpacity>
-      </View>
-    );
-  }
 
   function renderHeader() {
     return (
@@ -128,8 +75,8 @@ const Expense = () => {
           borderBottomWidth: 1,
         }}
       >
-        <View style={{ paddingVertical: SIZES.padding }}>
-          <Text style={{ color: COLORS.primary, ...FONTS.h2 }}>Débit (Sortie)</Text>
+        <View style={{ paddingVertical: SIZES.padding / 2 }}>
+          <Text style={{ color: COLORS.primary, ...FONTS.h2 }}>Bomoko Cash</Text>
           <Text style={{ ...FONTS.h3, color: COLORS.darkgray }}>(Portefeuil electronique)</Text>
         </View>
       </View>
@@ -146,10 +93,12 @@ const Expense = () => {
             style={styles.picker}
           >
             <Picker.Item label="Selectioner une categorie" value="" />
-            {categories &&
-              categories.map((k, v) => {
-                return <Picker.Item key={k.id} label={k.name} value={k.name} />;
-              })}
+            {cat &&
+              cat
+                .filter((value, key) => value.cat === 'expense')
+                .map((k, v) => {
+                  return <Picker.Item key={k.id} label={k.name} value={k.name} />;
+                })}
           </Picker>
         </View>
         <TextInput
@@ -161,7 +110,7 @@ const Expense = () => {
           required
         />
         <TextInput
-          label="Total"
+          label="Montant"
           value={total}
           onChangeText={setTotal}
           mode="outlined"
@@ -188,9 +137,6 @@ const Expense = () => {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        {/* Nav bar section */}
-        {renderNavBar()}
-
         {/* Header section */}
         {renderHeader()}
 

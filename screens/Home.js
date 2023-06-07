@@ -11,22 +11,20 @@ import {
   Animated,
   Platform,
 } from 'react-native';
-//import { BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { useDispatch, useSelector } from 'react-redux';
+import { FAB } from 'react-native-paper';
 
 import { COLORS, FONTS, SIZES, icons, images } from '../constants';
-import { AuthScreen } from './AuthScreen/AuthScreen';
 
 import { VictoryPie } from 'victory-native';
 import { Svg } from 'react-native-svg';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Avatar, Button, Card, Modal, Text as MText } from 'react-native-paper';
-import { resetAllCat } from '../redux/catReducer';
-//import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { loadCategoriesFromStorage, resetAllCat } from '../redux/catReducer';
 
 const Home = ({ navigation }) => {
   const catList = useSelector((state) => state.categories.categories);
-  console.log('catList', catList);
+  //console.log('catList', catList);
   const [categories, setCategories] = useState([]);
   const dispatch = useDispatch();
 
@@ -34,6 +32,12 @@ const Home = ({ navigation }) => {
   const [selectedCategory, setSelectedCategory] = useState(null);
 
   const [visible, setVisible] = useState(false);
+
+  const [state, setState] = useState({ open: false });
+
+  const onStateChange = ({ open }) => setState({ open });
+
+  const { open } = state;
 
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
@@ -49,127 +53,17 @@ const Home = ({ navigation }) => {
   const [selectedItem, setSelectedItem] = useState(null);
 
   useEffect(() => {
-    updatedAsyncStorage();
+    // updatedAsyncStorage();
+
     setCategories(catList.filter((value, key) => value.cat === 'income'));
     setCat('income');
   }, [catList]);
-  const income = 'income';
-  const expense = 'expense';
   const [date, setDate] = useState(new Date());
 
-  const cat = [
-    {
-      id: 1,
-      name: 'Vente',
-      icon: icons.shopping,
-      cat: income,
-      color: COLORS.purple,
-      data: [],
-    },
-    {
-      id: 2,
-      name: 'Remboursement',
-      icon: icons.refund,
-      cat: income,
-      color: COLORS.blue,
-      data: [],
-    },
-    {
-      id: 3,
-      name: 'Intérêt',
-      icon: icons.interest,
-      cat: income,
-      color: COLORS.darkgreen,
-      data: [],
-    },
-    {
-      id: 4,
-      name: 'Subvention',
-      icon: icons.grant,
-      cat: income,
-      color: COLORS.red,
-      data: [],
-    },
-    {
-      id: 5,
-      name: 'Investissement',
-      icon: icons.investment,
-      cat: income,
-      color: COLORS.peach,
-      data: [],
-    },
-
-    {
-      id: 6,
-      name: 'Achat',
-      icon: icons.shopping,
-      cat: expense,
-      color: COLORS.lightBlue,
-      data: [],
-    },
-    {
-      id: 7,
-      name: 'Salaire',
-      icon: icons.cash,
-      cat: expense,
-      color: COLORS.peach,
-      data: [],
-    },
-    {
-      id: 8,
-      name: "Dépenses d'exploitation",
-      icon: icons.cashbook,
-      cat: expense,
-      color: COLORS.darkgreen,
-      data: [],
-    },
-    {
-      id: 9,
-      name: "Retraits d'argent",
-      icon: icons.sell,
-      cat: expense,
-      color: COLORS.red,
-      data: [],
-    },
-    {
-      id: 10,
-      name: 'Paiements de dettes',
-      icon: icons.income,
-      cat: expense,
-      color: COLORS.yellow,
-      data: [],
-    },
-    {
-      id: 11,
-      name: 'Autres entrées',
-      icon: icons.more,
-      cat: income,
-      color: COLORS.gray,
-      data: [],
-    },
-
-    {
-      id: 12,
-      name: 'Autres Sorties',
-      icon: icons.more,
-      cat: expense,
-      color: COLORS.purple,
-      data: [],
-    },
-  ];
-
   const updatedAsyncStorage = async () => {
-    console.log('test', catList !== null);
+    dispatch(loadCategoriesFromStorage());
+    console.log('test1', catList);
     console.log('test', [].length);
-    if (catList !== null && catList.length !== 0) {
-      await AsyncStorage.setItem('categories', JSON.stringify(catList))
-        .then(async (json) => {
-          console.log('Updated');
-        })
-        .catch((error) => console.log('Error: ', error));
-    } else if (catList === null || catList.length === 0) {
-      dispatch(resetAllCat(cat));
-    }
   };
 
   function renderNavBar() {
@@ -183,27 +77,37 @@ const Home = ({ navigation }) => {
           paddingHorizontal: SIZES.padding,
         }}
       >
-        <TouchableOpacity
+        <View
           style={{
-            width: 80,
-            //justifyContent: 'center',
-            //backgroundColor: COLORS.white,
-            //borderRadius: 30,
-          }}
-          onPress={() => {
-            console.log('Menu');
-            navigation.navigate(AuthScreen);
+            flexDirection: 'row',
           }}
         >
-          <Image
-            source={images.appIcon}
+          <TouchableOpacity
             style={{
-              width: 80,
-              height: 70,
-              tintColor: COLORS.white,
+              //width: 80,
+              //justifyContent: 'center',
+              //backgroundColor: COLORS.white,
+              //borderRadius: 30,
+              paddingRight: SIZES.base * 2,
             }}
-          />
-        </TouchableOpacity>
+            onPress={() => {
+              console.log('Menu');
+              //navigation.navigate(AuthScreen);
+              navigation.openDrawer();
+            }}
+          >
+            <Image
+              source={icons.menu}
+              style={{
+                width: SIZES.base * 4,
+                height: SIZES.base * 3,
+                tintColor: COLORS.white,
+              }}
+            />
+          </TouchableOpacity>
+
+          <Text style={{ color: COLORS.white, ...FONTS.h2 }}>BOMOKO Cash</Text>
+        </View>
 
         <TouchableOpacity
           style={{ justifyContent: 'center', alignItems: 'flex-end', width: 50 }}
@@ -228,13 +132,12 @@ const Home = ({ navigation }) => {
         style={{
           zIndex: 10,
           paddingHorizontal: SIZES.padding,
-          paddingVertical: SIZES.padding,
+          paddingVertical: SIZES.padding / 2,
           borderBottomColor: COLORS.gray,
           borderBottomWidth: 1,
         }}
       >
-        <View style={{ paddingBottom: SIZES.padding * 3 }}>
-          <Text style={{ color: COLORS.white, ...FONTS.h2 }}>BOMOKO Cash</Text>
+        <View style={{ paddingBottom: SIZES.padding * 4 }}>
           <Text style={{ ...FONTS.h3, color: COLORS.gray }}>(Portefeuil electronique)</Text>
         </View>
 
@@ -243,7 +146,7 @@ const Home = ({ navigation }) => {
             margin: SIZES.padding,
             zIndex: 10,
             position: 'absolute',
-            top: SIZES.padding * 2.6,
+            top: SIZES.padding * 1.4,
             width: '100%',
             backgroundColor: COLORS.secondary,
             paddingTop: SIZES.padding,
@@ -252,68 +155,8 @@ const Home = ({ navigation }) => {
           }}
         >
           <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'space-around' }}>
-            <View
-              style={{
-                backgroundColor: COLORS.lightGray,
-                height: 50,
-                width: 50,
-                borderRadius: 25,
-                justifyContent: 'center',
-                alignItems: 'center',
-                ...styles.shadow,
-              }}
-            >
-              <Image
-                source={icons.expense}
-                style={{
-                  width: 20,
-                  height: 20,
-                  tintColor: COLORS.black,
-                }}
-              />
-            </View>
-
-            <View
-              style={{
-                backgroundColor: COLORS.lightGray,
-                height: 50,
-                width: 50,
-                borderRadius: 25,
-                justifyContent: 'center',
-                alignItems: 'center',
-                ...styles.shadow,
-              }}
-            >
-              <Image
-                source={icons.income}
-                style={{
-                  width: 20,
-                  height: 20,
-                  tintColor: COLORS.black,
-                }}
-              />
-            </View>
-
-            <View
-              style={{
-                backgroundColor: COLORS.lightGray,
-                height: 50,
-                width: 50,
-                borderRadius: 25,
-                justifyContent: 'center',
-                alignItems: 'center',
-                ...styles.shadow,
-              }}
-            >
-              <Image
-                source={icons.more}
-                style={{
-                  width: 20,
-                  height: 20,
-                  tintColor: COLORS.black,
-                }}
-              />
-            </View>
+            {renderIncomingExpensesTitle('income')}
+            {renderIncomingExpensesTitle('expense')}
           </View>
 
           <View
@@ -371,7 +214,7 @@ const Home = ({ navigation }) => {
         style={{
           flexDirection: 'row',
           padding: SIZES.padding,
-          paddingTop: SIZES.padding * 3.4 + SIZES.padding,
+          paddingTop: SIZES.padding * 4.5 + SIZES.padding,
           justifyContent: 'space-between',
           alignItems: 'center',
           backgroundColor: COLORS.lightGray2,
@@ -492,29 +335,26 @@ const Home = ({ navigation }) => {
     );
   }
 
-  function renderIncomingExpensesTitle() {
-    const sumCat =
-      selectedCategory &&
-      selectedCategory.data.reduce((sum, nbr) => {
-        return sum + nbr.total;
-      }, 0);
-
+  function renderIncomingExpensesTitle(myCat) {
     return (
-      <View style={{ height: 80, backgroundColor: COLORS.lightGray2, padding: SIZES.padding }}>
+      <View
+        style={{
+          borderRadius: 8,
+          height: 80,
+          backgroundColor: COLORS.white,
+          padding: SIZES.padding,
+          elevation: 5,
+        }}
+      >
         {/* Title */}
         <Text style={{ ...FONTS.h3, color: COLORS.primary }}>
           {' '}
-          {Cat === 'income' ? 'MES ENTREES' : 'MES SORTIES'}{' '}
+          {myCat === 'income' ? 'ENTREES' : 'SORTIES'}{' '}
         </Text>
-        <View style={{ flexDirection: 'row' }}>
-          <Text style={{ ...FONTS.body4, color: COLORS.darkgray }}>
-            {' '}
-            {selectedCategory && selectedCategory.name} totale :{' '}
-          </Text>
-          <Text style={{ ...FONTS.h4, color: Cat === 'income' ? COLORS.darkgreen : COLORS.red }}>
-            {selectedCategory && sumCat.toFixed(2)} USD
-          </Text>
-        </View>
+
+        <Text style={{ ...FONTS.h4, color: myCat === 'income' ? COLORS.darkgreen : COLORS.red }}>
+          {totalSumDCHome(myCat).toFixed(2) && totalSumDCHome(myCat).toFixed(2)} USD
+        </Text>
       </View>
     );
   }
@@ -525,93 +365,101 @@ const Home = ({ navigation }) => {
     let incomingExpenses = allExpensesCat;
 
     const renderItem = (item) => (
-      <View
-        style={{
-          marginRight: SIZES.padding,
-          marginLeft: SIZES.padding,
-          marginVertical: SIZES.padding / 3.7,
-          borderRadius: SIZES.radius,
-          backgroundColor: COLORS.white,
-          ...styles.shadow,
+      <TouchableOpacity
+        onPress={() => {
+          console.log(item);
+          setSelectedItem(item);
+          showModal(true);
         }}
       >
-        {/* Title */}
         <View
           style={{
-            flexDirection: 'row',
-            padding: SIZES.padding / 2,
-            alignItems: 'center',
-            justifyContent: 'space-between',
+            marginRight: SIZES.padding,
+            marginLeft: SIZES.padding,
+            marginVertical: SIZES.padding / 3.7,
+            borderRadius: SIZES.radius,
+            backgroundColor: COLORS.white,
+            ...styles.shadow,
           }}
         >
+          {/* Title */}
           <View
             style={{
-              width: '60%',
               flexDirection: 'row',
+              padding: SIZES.padding / 2,
               alignItems: 'center',
+              justifyContent: 'space-between',
             }}
           >
             <View
               style={{
-                height: 50,
-                width: 50,
-                borderRadius: 25,
-                backgroundColor: COLORS.lightGray,
+                width: '60%',
+                flexDirection: 'row',
                 alignItems: 'center',
-                justifyContent: 'center',
-                marginRight: SIZES.base,
               }}
             >
-              <Image
-                source={selectedCategory.icon}
+              <View
                 style={{
-                  width: 30,
-                  height: 30,
-                  tintColor: selectedCategory.color,
-                }}
-              />
-            </View>
-            <View>
-              <Text style={{ ...FONTS.h3, color: selectedCategory.color }}>
-                {selectedCategory && selectedCategory.name}
-              </Text>
-              <Text
-                numberOfLines={1}
-                style={{
-                  overflow: 'hidden',
-                  ...FONTS.body5,
-                  flexWrap: 'wrap',
-                  color: COLORS.darkgray,
+                  height: 50,
+                  width: 50,
+                  borderRadius: 25,
+                  backgroundColor: COLORS.lightGray,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginRight: SIZES.base,
                 }}
               >
-                {item.description}
-              </Text>
+                <Image
+                  source={selectedCategory.icon}
+                  style={{
+                    width: 30,
+                    height: 30,
+                    tintColor: selectedCategory.color,
+                  }}
+                />
+              </View>
+              <View>
+                <Text style={{ ...FONTS.h3, color: selectedCategory.color }}>
+                  {selectedCategory && selectedCategory.name}
+                </Text>
+                <Text
+                  numberOfLines={1}
+                  style={{
+                    overflow: 'hidden',
+                    ...FONTS.body5,
+                    flexWrap: 'wrap',
+                    color: COLORS.darkgray,
+                  }}
+                >
+                  {item.description}
+                </Text>
+              </View>
             </View>
-          </View>
 
-          <View style={{ width: '25%', alignItems: 'flex-end' }}>
-            <Text style={{ ...FONTS.h5, color: COLORS.red }}>
-              {' '}
-              {Cat === 'income' ? '+' : '-'} {item.total.toFixed(2)} USD{' '}
-            </Text>
-            <View style={{ flexDirection: 'row' }}>
-              <Image
-                source={icons.calendar}
-                style={{
-                  width: 12,
-                  height: 12,
-                  tintColor: COLORS.darkgray,
-                  marginRight: 7,
-                  marginTop: 3,
-                }}
-              />
-              <Text style={{ marginBottom: SIZES.base, color: COLORS.darkgray, ...FONTS.body5 }}>
-                {item.date}
+            <View style={{ width: '25%', alignItems: 'flex-end' }}>
+              <Text style={{ ...FONTS.h5, color: COLORS.red }}>
+                {' '}
+                {Cat === 'income' ? '+' : '-'} {item.total.toFixed(2)} USD{' '}
               </Text>
+              <View style={{ flexDirection: 'row' }}>
+                <Image
+                  source={icons.calendar}
+                  style={{
+                    width: 12,
+                    height: 12,
+                    tintColor: COLORS.darkgray,
+                    marginRight: 7,
+                    marginTop: 3,
+                  }}
+                />
+                <Text style={{ marginBottom: SIZES.base, color: COLORS.darkgray, ...FONTS.body5 }}>
+                  {item.date}
+                </Text>
+              </View>
             </View>
           </View>
         </View>
-      </View>
+      </TouchableOpacity>
     );
 
     return (
@@ -772,7 +620,7 @@ const Home = ({ navigation }) => {
       tot += total;
       return total;
     });
-    console.log(tot);
+    // console.log(tot);
     return tot;
   };
 
@@ -802,6 +650,23 @@ const Home = ({ navigation }) => {
       });
 
     return totIncome - totExpense;
+  };
+
+  const totalSumDCHome = (myCat) => {
+    console.log(myCat);
+    var tot = 0;
+    catList
+      .filter((a) => a.cat == myCat)
+      .map((item) => {
+        let confirm = item.data;
+        var total = parseFloat(
+          confirm.reduce((a, b) => parseFloat(a) + (parseFloat(b.total) || 0), 0)
+        );
+        tot += total;
+        return total;
+      });
+    console.log('tot', tot);
+    return tot;
   };
 
   function processCategoryDataToDisplay() {
@@ -1070,8 +935,8 @@ const Home = ({ navigation }) => {
               <Image
                 source={selectedItem && selectedItem.icon}
                 style={{
-                  // width: 30,
-                  // height: 30,
+                  width: 40,
+                  height: 40,
                   tintColor: selectedItem && selectedItem.color,
                 }}
               />
@@ -1108,6 +973,32 @@ const Home = ({ navigation }) => {
           </Card.Actions>
         </Card>
       </Modal>
+
+      <FAB.Group
+        open={open}
+        visible
+        variant="tertiary"
+        icon={open ? 'close' : 'plus'}
+        actions={[
+          {
+            icon: 'plus-circle',
+            label: 'Crédit (Entrée)',
+            onPress: () => navigation.navigate('Income', { cat: catList }),
+          },
+          {
+            icon: 'minus-circle',
+            label: 'Débit (Sortie)',
+            onPress: () => navigation.navigate('Expense', { cat: catList }),
+          },
+        ]}
+        onStateChange={onStateChange}
+        onPress={() => {
+          if (open) {
+            // do something if the speed dial is open
+            console.log('catList', catList);
+          }
+        }}
+      />
     </>
   );
 };

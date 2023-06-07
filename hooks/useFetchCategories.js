@@ -1,6 +1,9 @@
+import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { addCat } from '../redux/catReducer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { COLORS, icons } from '../constants';
+
 const income = 'income';
 const expense = 'expense';
 
@@ -105,58 +108,32 @@ const cat = [
   },
 ];
 
-export const loadCategoriesFromStorage = createAsyncThunk(
-  'categories/loadFromStorage',
-  async () => {
-    try {
-      // Retrieve data from AsyncStorage
-      const categoriesData = await AsyncStorage.getItem('categories');
-      if (categoriesData) {
-        // Parse the data as JSON
-        const categories = JSON.parse(categoriesData);
-        return categories;
-      } else {
-        return [...cat];
+const useFetchCategories = () => {
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(true);
+  const [categorie, setCategorie] = useState([]);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const storedCategories = await AsyncStorage.getItem('categories');
+        console.log('storedCategories', storedCategories);
+        const categories = storedCategories ? JSON.parse(storedCategories) : [...cat];
+
+        setCategorie(categories);
+        dispatch(addCat(categories));
+        setLoading(false);
+      } catch (error) {
+        setError(error);
+        setLoading(false);
       }
-    } catch (error) {
-      console.error('Error loading categories from AsyncStorage:', error);
-      throw error;
-    }
-  }
-);
+    };
 
-const catSlice = createSlice({
-  name: 'categories',
-  initialState: {
-    categories: [],
-  },
-  reducers: {
-    addCat: (state, action) => {
-      state.categories = action.payload;
-      AsyncStorage.setItem('categories', JSON.stringify(action.payload));
+    fetchCategories();
+  }, [dispatch]);
 
-      // action.payload.forEach(async (category) => {
-      //   const existingCategory = state.categories.find((cat) => cat.name === category.name);
-      //   if (existingCategory) {
-      //     existingCategory.data.push(...category.data);
-      //     console.log('');
+  return { loading, error, categorie };
+};
 
-      //     console.log('--- ');
-      //     console.log('existingCategory: ', state.categories);
-      //   }
-      // });
-    },
-    resetAllCat: (state, action) => {
-      state.categories = action.payload;
-    },
-  },
-  extraReducers: (builder) => {
-    builder.addCase(loadCategoriesFromStorage.fulfilled, (state, action) => {
-      state.categories = action.payload;
-    });
-  },
-});
-
-export const { addCat, resetAllCat } = catSlice.actions;
-
-export default catSlice.reducer;
+export default useFetchCategories;
