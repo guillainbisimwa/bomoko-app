@@ -3,6 +3,8 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 const cleaner = require('./../assets/img/cleaner.jpg');
 const soja = require('./../assets/img/soja.jpg');
+const cleaner2 = require('./../assets/img/cleaner2.jpg');
+const soja2 = require('./../assets/img/soja2.jpg');
 
 const product = [
   {
@@ -13,7 +15,7 @@ const product = [
     stars: 3,
     like: true,
     image: soja,
-    images: [cleaner, soja],
+    images: [soja, soja2],
     type: 'produit',
     location: 'Goma',
     membres: [
@@ -30,7 +32,7 @@ const product = [
     stars: 2,
     like: true,
     image: cleaner,
-    images: [cleaner, soja],
+    images: [cleaner, cleaner2],
     type: 'service',
     location: 'Kinshasa',
     membres: [
