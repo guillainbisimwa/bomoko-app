@@ -170,20 +170,20 @@ const AddProduct = () => {
             style={styles.btn}
             onPress={() => (images.length >= 3 ? info() : pickImage())}
           >
-            <Ionicons name="cloud-upload" size={30} color={COLORS.grey} style={styles.icon} />
+            <Ionicons name="cloud-upload" size={30} color={COLORS.white} style={styles.icon} />
             {/* {loadPic?
               <ActivityIndicator size="small" color={Colors.danger} />: <></>} */}
-            <Text>Upload</Text>
+            <Text style={{ color: COLORS.white }}>Upload</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={styles.btn}
             onPress={() => (images.length >= 3 ? info() : takePhoto())}
           >
-            <Ionicons name="camera" size={30} color={COLORS.grey} style={styles.icon} />
+            <Ionicons name="camera" size={30} color={COLORS.white} style={styles.icon} />
             {/* {loadPic?
               <ActivityIndicator size="small" color={Colors.danger} />: <></>} */}
-            <Text>Take a photo</Text>
+            <Text style={{ color: COLORS.white }}>Capture une photo</Text>
           </TouchableOpacity>
         </Block>
       </Block>
@@ -198,7 +198,9 @@ const AddProduct = () => {
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         {/* Header section */}
         {renderHeader()}
+
         {renderImage()}
+
         <Block flex={1}>
           <Block style={styles.imgContainer}>
             {images.map((img, key) => (
@@ -287,6 +289,8 @@ const styles = StyleSheet.create({
     height: SIZES.width / 4,
     borderRadius: SIZES.radius,
     opacity: 0.8,
+    borderColor: COLORS.black,
+    borderWidth: 3,
   },
   bg: {
     borderRadius: SIZES.radius,
@@ -307,7 +311,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     zIndex: 100,
     padding: 10,
-    right: SIZES.base,
     elevation: 2,
   },
 });
