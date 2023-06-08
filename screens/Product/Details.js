@@ -211,19 +211,11 @@ const Details = ({ route }) => {
               showsVerticalScrollIndicator={false}
             >
               {products.map((food, index) => {
-                return (
-                  <TouchableOpacity style={styles.horizontalList} key={index}>
-                    <CoutScreen item={food} />
-                  </TouchableOpacity>
-                );
+                return <CoutScreen key={index} item={food} />;
               })}
 
               {products.map((food, index) => {
-                return (
-                  <TouchableOpacity style={styles.horizontalList} key={index}>
-                    <CoutScreen item={food} />
-                  </TouchableOpacity>
-                );
+                return <CoutScreen key={index} item={food} />;
               })}
             </ScrollView>
           </Block>
