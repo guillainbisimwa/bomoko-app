@@ -7,11 +7,24 @@ import Text from './Text';
 import { COLORS, SIZES } from '../../constants';
 import { Button, MD3Colors, ProgressBar } from 'react-native-paper';
 import { BottomSheet } from 'react-native-btr';
+import { useSelector } from 'react-redux';
+import Product_service from './Product_service';
+import CoutScreen from './CoutScreen';
 
 const Details = ({ route }) => {
   const scrollX = useRef(new Animated.Value(0)).current;
 
+  const products = useSelector((state) => state.products.products);
+
   const [visible, setVisible] = useState(false);
+
+  const scrollRef = useRef(null);
+
+  const scrollToTop = () => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTo({ y: 0, animated: true });
+    }
+  };
 
   function toggle() {
     setVisible((visible) => !visible);
@@ -185,11 +198,35 @@ const Details = ({ route }) => {
         containerStyle={styles.bottomSheetContainer}
       >
         <Block style={styles.bottomSheetContent}>
-          <Text style={styles.bottomSheetTitle}>Scrollable Bottom Sheet</Text>
+          <Text style={styles.bottomSheetTitle}>Le coût total de production</Text>
           <Text style={styles.bottomSheetText}>
-            This is a scrollable content inside the BottomSheet. You can put any content here.
+            Il permet de prendre en compte tous les éléments de coût associés à la fabrication,
+            l'achat ou la prestation d'un bien ou d'un service.
           </Text>
           {/* Add your scrollable content here */}
+          <Block style={styles.card}>
+            <ScrollView
+              ref={scrollRef}
+              contentContainerStyle={styles.scrollContentContainer}
+              showsVerticalScrollIndicator={false}
+            >
+              {products.map((food, index) => {
+                return (
+                  <TouchableOpacity style={styles.horizontalList} key={index}>
+                    <CoutScreen item={food} />
+                  </TouchableOpacity>
+                );
+              })}
+
+              {products.map((food, index) => {
+                return (
+                  <TouchableOpacity style={styles.horizontalList} key={index}>
+                    <CoutScreen item={food} />
+                  </TouchableOpacity>
+                );
+              })}
+            </ScrollView>
+          </Block>
         </Block>
       </BottomSheet>
     </Block>
@@ -222,18 +259,24 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     alignItems: 'center',
   },
+  scrollContentContainer: {
+    flexGrow: 1,
+    //height: 250,
+  },
   card: {
     backgroundColor: '#fff',
-    height: 250,
+    height: '70%',
     justifyContent: 'center',
     alignItems: 'center',
   },
   bottomSheetContainer: {
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    //height: 200,
   },
   bottomSheetContent: {
     backgroundColor: 'white',
     padding: 16,
+    //height: 250,
   },
   bottomSheetTitle: {
     fontSize: 20,
