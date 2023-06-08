@@ -5,6 +5,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Block from './Block';
 import Text from './Text';
 import { COLORS, SIZES } from '../../constants';
+import { MD3Colors, ProgressBar } from 'react-native-paper';
 
 const Details = ({ route }) => {
   const scrollX = useRef(new Animated.Value(0)).current;
@@ -103,9 +104,9 @@ const Details = ({ route }) => {
           elevation: 2,
         }}
       >
-        <Text numberOfLines={1} size={20} bold>
+        {/* <Text numberOfLines={1} size={20} bold>
           {route.params.food.name}
-        </Text>
+        </Text> */}
 
         <Text center>Prix total</Text>
         <Text bold size={30} center color={COLORS.peach}>
@@ -113,7 +114,7 @@ const Details = ({ route }) => {
         </Text>
 
         <Block>
-          <Block row space="around">
+          <Block row space="between">
             <Block row center style={styles.round}>
               <Ionicons name="md-cash" color={COLORS.peach} size={20} />
               <Text numberOfLines={1}> 20 Investisseurs</Text>
@@ -123,6 +124,26 @@ const Details = ({ route }) => {
               <Ionicons name="md-time" color={COLORS.peach} size={20} />
               <Text numberOfLines={1}> 35 Jours restent</Text>
             </Block>
+          </Block>
+
+          <Block center m_t={10}>
+            <ProgressBar
+              progress={0.1}
+              color={MD3Colors.error50}
+              style={{ width: SIZES.width / 1.4, height: SIZES.base }}
+            />
+          </Block>
+          <Block m_t={5} row space="between">
+            <Text numberOfLines={1} semibold size={19} style={{ marginLeft: 0 }}>
+              50% Investisseurs
+            </Text>
+            <Text numberOfLines={1} semibold size={19} style={{ marginLeft: 0 }}>
+              12 FC restent
+            </Text>
+          </Block>
+          <Block style={styles.detailsD}>
+            <Block></Block>
+            <Text numberOfLines={1}> 35 Jours restent</Text>
           </Block>
         </Block>
       </Block>
@@ -145,10 +166,16 @@ const Details = ({ route }) => {
 const styles = StyleSheet.create({
   round: {
     borderRadius: 10,
-    borderWidth: 1,
+    //borderWidth: 1,
     borderColor: COLORS.gray,
     backgroundColor: COLORS.lightGray2,
-    padding: 5,
+    //padding: 5,
+  },
+  detailsD: {
+    elevation: 2,
+    //width: '80%',
+    padding: 10,
+    //marginTop: 20,
   },
 });
 
