@@ -1,11 +1,11 @@
 import React, { useRef } from 'react';
-import { ImageBackground, ScrollView, Animated, StyleSheet } from 'react-native';
+import { ImageBackground, ScrollView, Animated, StyleSheet, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Block from './Block';
 import Text from './Text';
 import { COLORS, SIZES } from '../../constants';
-import { MD3Colors, ProgressBar } from 'react-native-paper';
+import { Button, MD3Colors, ProgressBar } from 'react-native-paper';
 
 const Details = ({ route }) => {
   const scrollX = useRef(new Animated.Value(0)).current;
@@ -85,8 +85,19 @@ const Details = ({ route }) => {
     );
   };
 
+  const renderFloatingBlock = () => {
+    return (
+      <Block row space="between" style={styles.floatBlock}>
+        <Text bold>Les coûts directs et indirects</Text>
+        <Button textColor="#fff" elevated buttonColor={COLORS.purple}>
+          AJOUTER
+        </Button>
+      </Block>
+    );
+  };
+
   return (
-    <Block>
+    <Block flex={1}>
       <Block style={{ height: SIZES.width / 2 }}>
         {renderImages()}
         {renderScrollIndicator()}
@@ -141,9 +152,9 @@ const Details = ({ route }) => {
               12 FC restent
             </Text>
           </Block>
-          <Block style={styles.detailsD}>
+          <Block>
             <Block></Block>
-            <Text numberOfLines={1}> 35 Jours restent</Text>
+            <Text numberOfLines={1}> le coût de revient :</Text>
           </Block>
         </Block>
       </Block>
@@ -159,6 +170,7 @@ const Details = ({ route }) => {
           </Block>
         </Block>
       </Block>
+      {renderFloatingBlock()}
     </Block>
   );
 };
@@ -176,6 +188,18 @@ const styles = StyleSheet.create({
     //width: '80%',
     padding: 10,
     //marginTop: 20,
+  },
+  floatBlock: {
+    backgroundColor: COLORS.white,
+    padding: 10,
+    elevation: 5,
+    position: 'absolute',
+    bottom: 0,
+    margin: SIZES.base * 2,
+    borderRadius: 10,
+    width: '90%',
+    alignSelf: 'center',
+    alignItems: 'center',
   },
 });
 
