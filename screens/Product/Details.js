@@ -1,14 +1,13 @@
 import React, { useRef, useState } from 'react';
-import { ImageBackground, ScrollView, Animated, StyleSheet, TouchableOpacity } from 'react-native';
+import { ImageBackground, ScrollView, Animated, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Block from './Block';
 import Text from './Text';
 import { COLORS, SIZES } from '../../constants';
-import { Button, MD3Colors, ProgressBar } from 'react-native-paper';
+import { Button, MD3Colors, ProgressBar, TextInput } from 'react-native-paper';
 import { BottomSheet } from 'react-native-btr';
 import { useSelector } from 'react-redux';
-import Product_service from './Product_service';
 import CoutScreen from './CoutScreen';
 
 const Details = ({ route }) => {
@@ -105,12 +104,30 @@ const Details = ({ route }) => {
     );
   };
 
+  const renderFAaddCout = () => {
+    return (
+      <Block style={styles.floatBlockFA}>
+        {/* <TextInput
+          label="Somme"
+          value="ok"
+          //onChangeText={handleAmountChange}
+          mode="outlined"
+          style={[styles.input, { width: 200 }]}
+          required
+        /> */}
+        <Button textColor="#fff" elevated buttonColor={COLORS.peach}>
+          AJOUTER
+        </Button>
+      </Block>
+    );
+  };
+
   const renderFloatingBlock = () => {
     return (
       <Block row space="between" style={styles.floatBlock}>
         <Text bold>Les coûts directs et indirects</Text>
         <Button textColor="#fff" elevated buttonColor={COLORS.purple} onPress={toggle}>
-          AJOUTER
+          Mes coûts
         </Button>
       </Block>
     );
@@ -203,10 +220,9 @@ const Details = ({ route }) => {
             Il permet de prendre en compte tous les éléments de coût associés à la fabrication,
             l'achat ou la prestation d'un bien ou d'un service.
           </Text>
-          {/* Add your scrollable content here */}
           <Block style={styles.card}>
             <ScrollView
-              ref={scrollRef}
+              //ref={scrollRef}
               contentContainerStyle={styles.scrollContentContainer}
               showsVerticalScrollIndicator={false}
             >
@@ -217,8 +233,21 @@ const Details = ({ route }) => {
               {products.map((food, index) => {
                 return <CoutScreen key={index} item={food} />;
               })}
+
+              {products.map((food, index) => {
+                return <CoutScreen key={index} item={food} />;
+              })}
+
+              {products.map((food, index) => {
+                return <CoutScreen key={index} item={food} />;
+              })}
+
+              {products.map((food, index) => {
+                return <CoutScreen key={index} item={food} />;
+              })}
             </ScrollView>
           </Block>
+          {renderFAaddCout()}
         </Block>
       </BottomSheet>
     </Block>
@@ -228,16 +257,12 @@ const Details = ({ route }) => {
 const styles = StyleSheet.create({
   round: {
     borderRadius: 10,
-    //borderWidth: 1,
     borderColor: COLORS.gray,
     backgroundColor: COLORS.lightGray2,
-    //padding: 5,
   },
   detailsD: {
     elevation: 2,
-    //width: '80%',
     padding: 10,
-    //marginTop: 20,
   },
   floatBlock: {
     backgroundColor: COLORS.white,
@@ -251,9 +276,20 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     alignItems: 'center',
   },
+
+  floatBlockFA: {
+    //backgroundColor: COLORS.white,
+    padding: 10,
+    position: 'absolute',
+    bottom: 0,
+    margin: SIZES.base * 2,
+    borderRadius: 10,
+    width: '90%',
+    alignSelf: 'center',
+    alignItems: 'center',
+  },
   scrollContentContainer: {
     flexGrow: 1,
-    //height: 250,
   },
   card: {
     backgroundColor: '#fff',

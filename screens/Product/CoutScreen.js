@@ -21,6 +21,7 @@ const CoutScreen = (props) => {
 
   const handleCancel = () => {
     // Handle trash icon click event
+    setIsEditing(false);
   };
 
   const handleNameChange = (text) => {
@@ -56,7 +57,7 @@ const CoutScreen = (props) => {
           <Block>
             {isEditing ? (
               <TextInput
-                label="Amount"
+                label="Somme"
                 value={`${editedAmount}`}
                 onChangeText={handleAmountChange}
                 mode="outlined"
@@ -64,15 +65,15 @@ const CoutScreen = (props) => {
                 required
               />
             ) : (
-              <Text numberOfLines={1} grey_one size={22} bold>
-                {props.item.amount}
+              <Text numberOfLines={1} size={22} color={COLORS.peach}>
+                {props.item.amount} FC
               </Text>
             )}
           </Block>
           <Block row>
             {isEditing ? (
               <>
-                <TouchableOpacity onPress={handleTrash}>
+                <TouchableOpacity onPress={handleCancel}>
                   <Ionicons name="close" size={30} color={COLORS.blue} />
                 </TouchableOpacity>
 
@@ -95,6 +96,8 @@ const CoutScreen = (props) => {
 const styles = StyleSheet.create({
   container: {
     width: SIZES.width,
+
+    padding: 4,
   },
   input: {
     borderRadius: 0,
