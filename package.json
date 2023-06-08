@@ -29,6 +29,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-native": "0.71.8",
+    "react-native-btr": "^2.2.0",
     "react-native-gesture-handler": "2.9.0",
     "react-native-image-picker": "^5.4.0",
     "react-native-paper": "^5.7.2",

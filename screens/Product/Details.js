@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { ImageBackground, ScrollView, Animated, StyleSheet, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -6,9 +6,16 @@ import Block from './Block';
 import Text from './Text';
 import { COLORS, SIZES } from '../../constants';
 import { Button, MD3Colors, ProgressBar } from 'react-native-paper';
+import { BottomSheet } from 'react-native-btr';
 
 const Details = ({ route }) => {
   const scrollX = useRef(new Animated.Value(0)).current;
+
+  const [visible, setVisible] = useState(false);
+
+  function toggle() {
+    setVisible((visible) => !visible);
+  }
 
   const renderImages = () => {
     return (
@@ -89,7 +96,7 @@ const Details = ({ route }) => {
     return (
       <Block row space="between" style={styles.floatBlock}>
         <Text bold>Les coûts directs et indirects</Text>
-        <Button textColor="#fff" elevated buttonColor={COLORS.purple}>
+        <Button textColor="#fff" elevated buttonColor={COLORS.purple} onPress={toggle}>
           AJOUTER
         </Button>
       </Block>
@@ -171,6 +178,20 @@ const Details = ({ route }) => {
         </Block>
       </Block>
       {renderFloatingBlock()}
+      <BottomSheet
+        visible={visible}
+        onBackButtonPress={toggle}
+        onBackdropPress={toggle}
+        containerStyle={styles.bottomSheetContainer}
+      >
+        <Block style={styles.bottomSheetContent}>
+          <Text style={styles.bottomSheetTitle}>Scrollable Bottom Sheet</Text>
+          <Text style={styles.bottomSheetText}>
+            This is a scrollable content inside the BottomSheet. You can put any content here.
+          </Text>
+          {/* Add your scrollable content here */}
+        </Block>
+      </BottomSheet>
     </Block>
   );
 };
@@ -200,6 +221,28 @@ const styles = StyleSheet.create({
     width: '90%',
     alignSelf: 'center',
     alignItems: 'center',
+  },
+  card: {
+    backgroundColor: '#fff',
+    height: 250,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  bottomSheetContainer: {
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  bottomSheetContent: {
+    backgroundColor: 'white',
+    padding: 16,
+  },
+  bottomSheetTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  bottomSheetText: {
+    fontSize: 16,
+    marginBottom: 16,
   },
 });
 
