@@ -47,7 +47,7 @@ const CoutScreen = (props) => {
               required
             />
           ) : (
-            <Text numberOfLines={1} grey_one size={22} bold>
+            <Text numberOfLines={1} grey_one bold>
               {props.item.name}
             </Text>
           )}
@@ -65,7 +65,7 @@ const CoutScreen = (props) => {
                 required
               />
             ) : (
-              <Text numberOfLines={1} size={22} color={COLORS.peach}>
+              <Text numberOfLines={1} color={COLORS.peach}>
                 {props.item.amount} FC
               </Text>
             )}
