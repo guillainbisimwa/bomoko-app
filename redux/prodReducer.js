@@ -34,7 +34,7 @@ const product = [
     image: cleaner,
     images: [cleaner, cleaner2],
     type: 'service',
-    location: 'Kinshasa',
+    location: 'Kinshasa kisangani',
     membres: [
       { id: 1, name: 'Guy L', contrib: 20 },
       { id: 2, name: 'Eva U', contrib: 20 },
