@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import appReducer from './appReducer';
 import authReducer from './authReducer';
 import catReducer from './catReducer';
+import coutReducer from './coutReducer';
 import prodReducer from './prodReducer';
 
 export const store = configureStore({
@@ -10,6 +11,7 @@ export const store = configureStore({
     categories: catReducer,
     app: appReducer,
     products: prodReducer,
+    couts: coutReducer,
   },
 });
 
