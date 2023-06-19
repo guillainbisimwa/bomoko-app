@@ -22,6 +22,11 @@ const Details = ({ route }) => {
   const [visible, setVisible] = useState(false);
   const [editedName, setEditedName] = useState('');
   const [editedAmount, setEditedAmount] = useState('');
+  const [totAmount, setTotAmount] = useState(
+    couts
+      .filter((v, k) => v.prodId == route.params.food.id)
+      .reduce((a, b) => a + (b.amount || 0), 0)
+  );
 
   const scrollRef = useRef(null);
 
@@ -87,13 +92,15 @@ const Details = ({ route }) => {
     const coutObj = {
       id: 1,
       name: editedName,
-      amount: editedAmount,
+      amount: parseFloat(editedAmount),
       validate: true,
       prodId: route.params.food.id,
       date: '',
     };
 
     dispatch(addCout(coutObj));
+
+    setTotAmount(totAmount + parseFloat(editedAmount));
 
     setEditedName('');
     setEditedAmount('');
@@ -233,16 +240,27 @@ const Details = ({ route }) => {
             />
           </Block>
           <Block m_t={5} row space="between">
-            <Text numberOfLines={1} semibold size={19} style={{ marginLeft: 0 }}>
+            <Text numberOfLines={1} semibold size={16}>
               50% Investisseurs
             </Text>
-            <Text numberOfLines={1} semibold size={19} style={{ marginLeft: 0 }}>
+            <Text numberOfLines={1} semibold size={16}>
               12 FC restent
             </Text>
           </Block>
           <Block>
-            <Block></Block>
-            <Text numberOfLines={1}> le coût de revient :</Text>
+            <Block row space="between">
+              <Text numberOfLines={1} semibold>
+                Le coût total de production:
+              </Text>
+              <Text> {totAmount} FC</Text>
+            </Block>
+
+            <Block row space="between">
+              <Text numberOfLines={1} semibold>
+                Le coût total de Revient:
+              </Text>
+              <Text> 0 FC</Text>
+            </Block>
           </Block>
         </Block>
       </Block>
