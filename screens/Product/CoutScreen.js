@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { Alert, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { COLORS, SIZES } from '../../constants';
 import Block from './Block';
@@ -22,6 +22,9 @@ const CoutScreen = (props) => {
 
   const handleTrash = () => {
     // Handle trash icon click event
+
+    // Throw UI alert if user want de delete an item
+    Alert.alert('Attention', 'Etes-vous sure de vouloir supprimer cet element?');
   };
 
   const handleValidate = () => {
