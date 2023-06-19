@@ -15,6 +15,7 @@ const Details = ({ route }) => {
   const scrollX = useRef(new Animated.Value(0)).current;
 
   const products = useSelector((state) => state.products.products);
+  const couts = useSelector((state) => state.couts.couts);
 
   const [visible, setVisible] = useState(false);
   const [editedName, setEditedName] = useState('');
@@ -260,25 +261,11 @@ const Details = ({ route }) => {
               contentContainerStyle={styles.scrollContentContainer}
               showsVerticalScrollIndicator={false}
             >
-              {products.map((food, index) => {
-                return <CoutScreen key={index} item={food} />;
-              })}
-
-              {products.map((food, index) => {
-                return <CoutScreen key={index} item={food} />;
-              })}
-
-              {products.map((food, index) => {
-                return <CoutScreen key={index} item={food} />;
-              })}
-
-              {products.map((food, index) => {
-                return <CoutScreen key={index} item={food} />;
-              })}
-
-              {products.map((food, index) => {
-                return <CoutScreen key={index} item={food} />;
-              })}
+              {couts
+                .filter((v, k) => v.prodId == route.params.food.id)
+                .map((food, index) => {
+                  return <CoutScreen key={index} item={food} />;
+                })}
             </ScrollView>
           </Block>
           {renderFAaddCout()}
