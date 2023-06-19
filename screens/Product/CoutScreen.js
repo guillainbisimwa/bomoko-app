@@ -58,7 +58,7 @@ const CoutScreen = (props) => {
       <Block row style={styles.container}>
         <Avatar.Text
           size={44}
-          label={editBtn ? 'v' : props.item.id}
+          label={editBtn ? 'v' : props.count}
           style={{ marginRight: 10, backgroundColor: editBtn ? COLORS.red : COLORS.purple }}
         />
         <Block flex m_l={10} style={styles.containerText}>

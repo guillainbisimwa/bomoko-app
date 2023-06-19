@@ -94,6 +94,9 @@ const Details = ({ route }) => {
     };
 
     dispatch(addCout(coutObj));
+
+    setEditedName('');
+    setEditedAmount('');
   };
 
   const renderScrollIndicator = () => {
@@ -277,7 +280,7 @@ const Details = ({ route }) => {
               {couts
                 .filter((v, k) => v.prodId == route.params.food.id)
                 .map((food, index) => {
-                  return <CoutScreen key={index} item={food} />;
+                  return <CoutScreen key={index} item={food} count={index + 1} />;
                 })}
             </ScrollView>
           </Block>
