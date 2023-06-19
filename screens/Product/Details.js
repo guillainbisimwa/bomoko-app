@@ -106,16 +106,25 @@ const Details = ({ route }) => {
 
   const renderFAaddCout = () => {
     return (
-      <Block style={styles.floatBlockFA}>
-        {/* <TextInput
+      <Block row center style={styles.floatBlockFA}>
+        <TextInput
+          label="Description"
+          value="ok"
+          //onChangeText={handleAmountChange}
+          mode="outlined"
+          style={[styles.input, { width: '40%' }]}
+          required
+        />
+
+        <TextInput
           label="Somme"
           value="ok"
           //onChangeText={handleAmountChange}
           mode="outlined"
-          style={[styles.input, { width: 200 }]}
+          style={[styles.input, { width: '30%' }]}
           required
-        /> */}
-        <Button textColor="#fff" elevated buttonColor={COLORS.peach}>
+        />
+        <Button style={{ width: '30%' }} textColor="#fff" elevated buttonColor={COLORS.peach}>
           AJOUTER
         </Button>
       </Block>
@@ -260,6 +269,9 @@ const styles = StyleSheet.create({
     borderColor: COLORS.gray,
     backgroundColor: COLORS.lightGray2,
   },
+  input: {
+    marginRight: 10,
+  },
   detailsD: {
     elevation: 2,
     padding: 10,
@@ -283,10 +295,13 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     margin: SIZES.base * 2,
-    borderRadius: 10,
-    width: '90%',
+    //borderRadius: 10,
+    width: '100%',
     alignSelf: 'center',
     alignItems: 'center',
+    backgroundColor: COLORS.white,
+    borderTopColor: COLORS.black,
+    borderTopWidth: 1,
   },
   scrollContentContainer: {
     flexGrow: 1,

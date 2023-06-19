@@ -8,11 +8,16 @@ import { Avatar, TextInput } from 'react-native-paper';
 
 const CoutScreen = (props) => {
   const [isEditing, setIsEditing] = useState(false);
+  const [editBtn, setEditBtn] = useState(false);
   const [editedName, setEditedName] = useState(props.item.name);
   const [editedAmount, setEditedAmount] = useState(props.item.amount);
 
   const handleEdit = () => {
     setIsEditing(true);
+  };
+
+  const showEditBtn = (val) => {
+    setEditBtn(!val);
   };
 
   const handleTrash = () => {
@@ -33,63 +38,72 @@ const CoutScreen = (props) => {
   };
 
   return (
-    <Block m_b={25} row style={styles.container}>
-      <Avatar.Text size={44} label={props.item.id} style={{ marginRight: 10 }} />
-      <Block flex m_l={10} style={styles.containerText}>
-        <Block>
-          {isEditing ? (
-            <TextInput
-              label="Description"
-              value={editedName}
-              onChangeText={handleNameChange}
-              mode="outlined"
-              style={styles.input}
-              required
-            />
-          ) : (
-            <Text numberOfLines={1} grey_one bold>
-              {props.item.name}
-            </Text>
-          )}
-        </Block>
-
-        <Block m_t={5} row space="between" center>
+    <TouchableOpacity onLongPress={() => showEditBtn(editBtn)}>
+      <Block m_b={25} row style={styles.container}>
+        <Avatar.Text size={44} label={props.item.id} style={{ marginRight: 10 }} />
+        <Block flex m_l={10} style={styles.containerText}>
           <Block>
             {isEditing ? (
               <TextInput
-                label="Somme"
-                value={`${editedAmount}`}
-                onChangeText={handleAmountChange}
+                label="Description"
+                value={editedName}
+                onChangeText={handleNameChange}
                 mode="outlined"
-                style={[styles.input, { width: 200 }]}
+                style={styles.input}
                 required
               />
             ) : (
-              <Text numberOfLines={1} color={COLORS.peach}>
-                {props.item.amount} FC
+              <Text numberOfLines={1} semibold>
+                {props.item.name}
               </Text>
             )}
           </Block>
-          <Block row>
-            {isEditing ? (
-              <>
-                <TouchableOpacity onPress={handleCancel}>
-                  <Ionicons name="close" size={30} color={COLORS.blue} />
-                </TouchableOpacity>
 
-                <TouchableOpacity onPress={handleTrash}>
-                  <Ionicons name="trash" size={30} color={COLORS.peach} />
+          <Block m_t={5} row space="between" center>
+            <Block>
+              {isEditing ? (
+                <TextInput
+                  label="Somme"
+                  value={`${editedAmount}`}
+                  onChangeText={handleAmountChange}
+                  mode="outlined"
+                  style={[styles.input, { width: 200 }]}
+                  required
+                />
+              ) : (
+                <Text numberOfLines={1} color={COLORS.peach}>
+                  {props.item.amount} FC
+                </Text>
+              )}
+            </Block>
+            <Block row>
+              {isEditing ? (
+                <>
+                  <TouchableOpacity onPress={handleCancel}>
+                    <Ionicons name="close" size={30} color={COLORS.blue} />
+                  </TouchableOpacity>
+
+                  <TouchableOpacity onPress={handleTrash}>
+                    <Ionicons name="trash" size={30} color={COLORS.peach} />
+                  </TouchableOpacity>
+                </>
+              ) : editBtn ? (
+                <TouchableOpacity onPress={handleEdit}>
+                  <Ionicons
+                    name="create"
+                    size={30}
+                    color={COLORS.blue}
+                    style={{ marginRight: 12 }}
+                  />
                 </TouchableOpacity>
-              </>
-            ) : (
-              <TouchableOpacity onPress={handleEdit}>
-                <Ionicons name="create" size={30} color={COLORS.blue} style={{ marginRight: 12 }} />
-              </TouchableOpacity>
-            )}
+              ) : (
+                <></>
+              )}
+            </Block>
           </Block>
         </Block>
       </Block>
-    </Block>
+    </TouchableOpacity>
   );
 };
 
