@@ -65,7 +65,7 @@ const coutSlice = createSlice({
   },
   reducers: {
     addCout: (state, action) => {
-      state.couts = action.payload; // [... state.couts, action.payload]
+      state.couts = [...state.couts, action.payload];
       AsyncStorage.setItem('couts', JSON.stringify(action.payload));
     },
     resetAllCouts: (state, action) => {

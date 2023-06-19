@@ -7,15 +7,17 @@ import Text from './Text';
 import { COLORS, SIZES } from '../../constants';
 import { Button, MD3Colors, ProgressBar, TextInput } from 'react-native-paper';
 import { BottomSheet } from 'react-native-btr';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import CoutScreen from './CoutScreen';
 import { Alert } from 'react-native';
+import { addCout } from '../../redux/coutReducer';
 
 const Details = ({ route }) => {
   const scrollX = useRef(new Animated.Value(0)).current;
 
-  const products = useSelector((state) => state.products.products);
   const couts = useSelector((state) => state.couts.couts);
+
+  const dispatch = useDispatch();
 
   const [visible, setVisible] = useState(false);
   const [editedName, setEditedName] = useState('');
@@ -81,6 +83,17 @@ const Details = ({ route }) => {
       Alert.alert('Erreur', 'Veuillez remplir tous les champs obligatoires');
       return;
     }
+
+    const coutObj = {
+      id: 1,
+      name: editedName,
+      amount: editedAmount,
+      validate: true,
+      prodId: route.params.food.id,
+      date: '',
+    };
+
+    dispatch(addCout(coutObj));
   };
 
   const renderScrollIndicator = () => {
