@@ -24,6 +24,10 @@ const CoutScreen = (props) => {
     // Handle trash icon click event
   };
 
+  const handleValidate = () => {
+    // Handle trash icon click event
+  };
+
   const handleCancel = () => {
     // Handle trash icon click event
     setIsEditing(false);

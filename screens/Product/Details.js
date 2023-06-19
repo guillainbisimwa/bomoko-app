@@ -16,6 +16,8 @@ const Details = ({ route }) => {
   const products = useSelector((state) => state.products.products);
 
   const [visible, setVisible] = useState(false);
+  const [editedName, setEditedName] = useState('');
+  const [editedAmount, setEditedAmount] = useState('');
 
   const scrollRef = useRef(null);
 
@@ -61,6 +63,14 @@ const Details = ({ route }) => {
         ))}
       </ScrollView>
     );
+  };
+
+  const handleAmountChange = (text) => {
+    setEditedAmount(text);
+  };
+
+  const handleNameChange = (text) => {
+    setEditedName(text);
   };
 
   const renderScrollIndicator = () => {
@@ -109,8 +119,8 @@ const Details = ({ route }) => {
       <Block row center style={styles.floatBlockFA}>
         <TextInput
           label="Description"
-          value="ok"
-          //onChangeText={handleAmountChange}
+          value={editedName}
+          onChangeText={handleNameChange}
           mode="outlined"
           style={[styles.input, { width: '40%' }]}
           required
@@ -118,8 +128,8 @@ const Details = ({ route }) => {
 
         <TextInput
           label="Somme"
-          value="ok"
-          //onChangeText={handleAmountChange}
+          value={`${editedAmount}`}
+          onChangeText={handleAmountChange}
           mode="outlined"
           style={[styles.input, { width: '30%' }]}
           required
