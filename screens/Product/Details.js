@@ -9,6 +9,7 @@ import { Button, MD3Colors, ProgressBar, TextInput } from 'react-native-paper';
 import { BottomSheet } from 'react-native-btr';
 import { useSelector } from 'react-redux';
 import CoutScreen from './CoutScreen';
+import { Alert } from 'react-native';
 
 const Details = ({ route }) => {
   const scrollX = useRef(new Animated.Value(0)).current;
@@ -73,6 +74,14 @@ const Details = ({ route }) => {
     setEditedName(text);
   };
 
+  const handleAddCout = () => {
+    if (!editedName || !editedAmount) {
+      // Throw UI error if any field is missing
+      Alert.alert('Erreur', 'Veuillez remplir tous les champs obligatoires');
+      return;
+    }
+  };
+
   const renderScrollIndicator = () => {
     const dotPosition = Animated.divide(scrollX, SIZES.width);
 
@@ -134,7 +143,13 @@ const Details = ({ route }) => {
           style={[styles.input, { width: '30%' }]}
           required
         />
-        <Button style={{ width: '30%' }} textColor="#fff" elevated buttonColor={COLORS.peach}>
+        <Button
+          style={{ width: '30%' }}
+          textColor="#fff"
+          elevated
+          buttonColor={COLORS.peach}
+          onPress={() => handleAddCout()}
+        >
           AJOUTER
         </Button>
       </Block>
