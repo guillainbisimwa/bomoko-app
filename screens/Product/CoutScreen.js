@@ -38,9 +38,22 @@ const CoutScreen = (props) => {
   };
 
   return (
-    <TouchableOpacity onLongPress={() => showEditBtn(editBtn)}>
-      <Block m_b={25} row style={styles.container}>
-        <Avatar.Text size={44} label={props.item.id} style={{ marginRight: 10 }} />
+    <TouchableOpacity
+      onLongPress={() => showEditBtn(editBtn)}
+      style={{
+        width: '90%',
+        borderRadius: 15,
+        margin: 5,
+        backgroundColor: editBtn ? COLORS.lightGray : COLORS.white,
+        elevation: editBtn ? 2 : 0,
+      }}
+    >
+      <Block row style={styles.container}>
+        <Avatar.Text
+          size={44}
+          label={editBtn ? 'v' : props.item.id}
+          style={{ marginRight: 10, backgroundColor: editBtn ? COLORS.red : COLORS.purple }}
+        />
         <Block flex m_l={10} style={styles.containerText}>
           <Block>
             {isEditing ? (
@@ -82,20 +95,24 @@ const CoutScreen = (props) => {
                   <TouchableOpacity onPress={handleCancel}>
                     <Ionicons name="close" size={30} color={COLORS.blue} />
                   </TouchableOpacity>
-
+                  <TouchableOpacity>
+                    <Ionicons name="close" size={30} color={COLORS.darkgreen} />
+                  </TouchableOpacity>
+                </>
+              ) : editBtn ? (
+                <>
+                  <TouchableOpacity onPress={handleEdit}>
+                    <Ionicons
+                      name="create"
+                      size={30}
+                      color={COLORS.blue}
+                      style={{ marginRight: 12 }}
+                    />
+                  </TouchableOpacity>
                   <TouchableOpacity onPress={handleTrash}>
                     <Ionicons name="trash" size={30} color={COLORS.peach} />
                   </TouchableOpacity>
                 </>
-              ) : editBtn ? (
-                <TouchableOpacity onPress={handleEdit}>
-                  <Ionicons
-                    name="create"
-                    size={30}
-                    color={COLORS.blue}
-                    style={{ marginRight: 12 }}
-                  />
-                </TouchableOpacity>
               ) : (
                 <></>
               )}
