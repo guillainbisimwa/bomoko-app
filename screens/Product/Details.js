@@ -425,6 +425,19 @@ const Details = ({ route }) => {
               />
             </VictoryChart>
           </Svg>
+
+          {/*Slider with max, min, step and initial value*/}
+          <Slider
+            maximumValue={100}
+            minimumValue={0}
+            minimumTrackTintColor="#307ecc"
+            maximumTrackTintColor="#000000"
+            step={1}
+            value={sliderValue}
+            onValueChange={(sliderValue) => setSliderValue(sliderValue)}
+          />
+
+          <Text style={{ color: 'black' }}>Value of slider is : {sliderValue}</Text>
         </Block>
 
         <BottomSheet
