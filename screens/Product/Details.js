@@ -419,8 +419,8 @@ const Details = ({ route }) => {
                   x: ['Coût Total', 'Interet'],
                 }}
                 data={[
-                  { x: 'Coût Total', y: 300 },
-                  { x: 'Interet', y: 30 },
+                  { x: 'Coût Total', y: 600 },
+                  { x: 'Interet', y: sliderValue },
                 ]}
               />
             </VictoryChart>
@@ -428,7 +428,7 @@ const Details = ({ route }) => {
 
           {/*Slider with max, min, step and initial value*/}
           <Slider
-            maximumValue={100}
+            maximumValue={600}
             minimumValue={0}
             minimumTrackTintColor="#307ecc"
             maximumTrackTintColor="#000000"
@@ -437,7 +437,7 @@ const Details = ({ route }) => {
             onValueChange={(sliderValue) => setSliderValue(sliderValue)}
           />
 
-          <Text style={{ color: 'black' }}>Value of slider is : {sliderValue}</Text>
+          <Text style={{ color: 'black' }}>Vous investissez la somme de : {sliderValue} $</Text>
         </Block>
 
         <BottomSheet
