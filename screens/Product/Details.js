@@ -198,125 +198,128 @@ const Details = ({ route }) => {
   };
 
   return (
-    <Block flex={1}>
-      <Block style={{ height: 180 }}>
-        {renderImages()}
-        {renderScrollIndicator()}
-      </Block>
-      <Block
-        p={20}
-        style={{
-          backgroundColor: 'white',
-          marginHorizontal: '5%',
-          width: '90%',
-          borderRadius: 10,
-          elevation: 2,
-          marginTop: -20,
-        }}
-      >
-        <Text center numberOfLines={1} size={20} bold>
-          {route.params.food.name}
-        </Text>
+    <ScrollView showsVerticalScrollIndicator={false}>
+      <Block flex={1}>
+        <Block style={{ height: 180 }}>
+          {renderImages()}
+          {renderScrollIndicator()}
+        </Block>
+        <Block
+          p={20}
+          style={{
+            backgroundColor: 'white',
+            marginHorizontal: '5%',
+            width: '90%',
+            borderRadius: 10,
+            elevation: 2,
+            marginTop: -20,
+          }}
+        >
+          <Text center numberOfLines={1} size={20} bold>
+            {route.params.food.name}
+          </Text>
 
-        <Text center>Prix total</Text>
-        <Text bold size={30} center color={COLORS.peach}>
-          {route.params.food.amount} FC
-        </Text>
+          <Text center>Prix total</Text>
+          <Text bold size={30} center color={COLORS.peach}>
+            {route.params.food.amount} FC
+          </Text>
 
-        <Block>
-          <Block row space="between">
-            <Block row center style={styles.round}>
-              <Ionicons name="md-cash" color={COLORS.peach} size={20} />
-              <Text numberOfLines={1}> 20 Investisseurs</Text>
-            </Block>
-
-            <Block row center style={styles.round}>
-              <Ionicons name="md-time" color={COLORS.peach} size={20} />
-              <Text numberOfLines={1}> 35 Jours restent</Text>
-            </Block>
-          </Block>
-
-          <Block center m_t={10}>
-            <ProgressBar
-              progress={0.1}
-              color={MD3Colors.error50}
-              style={{ width: SIZES.width / 1.4, height: SIZES.base }}
-            />
-          </Block>
-          <Block m_t={5} row space="between">
-            <Text numberOfLines={1} semibold size={16}>
-              50% Investisseurs
-            </Text>
-            <Text numberOfLines={1} semibold size={16}>
-              12 FC restent
-            </Text>
-          </Block>
           <Block>
             <Block row space="between">
-              <Text numberOfLines={1} semibold>
-                Le coût total de production:
-              </Text>
-              <Text> {totAmount} FC</Text>
+              <Block row center style={styles.round}>
+                <Ionicons name="md-cash" color={COLORS.peach} size={20} />
+                <Text numberOfLines={1}> 20 Investisseurs</Text>
+              </Block>
+
+              <Block row center style={styles.round}>
+                <Ionicons name="md-time" color={COLORS.peach} size={20} />
+                <Text numberOfLines={1}> 35 Jours restent</Text>
+              </Block>
             </Block>
 
-            <Block row space="between">
-              <Text numberOfLines={1} semibold>
-                Le coût total de Revient:
+            <Block center m_t={10}>
+              <ProgressBar
+                progress={0.1}
+                color={MD3Colors.error50}
+                style={{ width: SIZES.width / 1.4, height: SIZES.base }}
+              />
+            </Block>
+            <Block m_t={5} row space="between">
+              <Text numberOfLines={1} semibold size={16}>
+                50% Investisseurs
               </Text>
-              <Text> 0 FC</Text>
+              <Text numberOfLines={1} semibold size={16}>
+                12 FC restent
+              </Text>
+            </Block>
+            <Block>
+              <Block row space="between">
+                <Text numberOfLines={1} semibold>
+                  Le coût total de production:
+                </Text>
+                <Text> {totAmount} FC</Text>
+              </Block>
+
+              <Block row space="between">
+                <Text numberOfLines={1} semibold>
+                  Le coût total de Revient:
+                </Text>
+                <Text> 0 FC</Text>
+              </Block>
             </Block>
           </Block>
         </Block>
-      </Block>
 
-      <Block p={20} style={{ zIndex: -101 }}>
-        <Text color={COLORS.darkgray} numberOfLines={expanded ? undefined : 2} black>
-          {route.params.food.detail}
-        </Text>
-        {route.params.food.detail.length > 50 && (
-          <Text color={COLORS.blue} onPress={toggleExpanded}>
-            {expanded ? 'Voir Plus' : 'Voir moins'}
+        <Block p={20} style={{ zIndex: -101 }}>
+          <Text color={COLORS.darkgray} numberOfLines={expanded ? undefined : 2} black>
+            {route.params.food.detail}
           </Text>
-        )}
-        <Block mt={5}>
-          <Block row>
-            <Ionicons name="star" color={COLORS.yellow} size={20} />
-            <Ionicons name="star" color={COLORS.yellow} size={20} />
-            <Ionicons name="star" color={COLORS.yellow} size={20} />
-            <Ionicons name="star" color={COLORS.yellow} size={20} />
+          {route.params.food.detail.length > 50 && (
+            <Text bold color={COLORS.blue} onPress={toggleExpanded}>
+              {expanded ? 'Voir moins' : 'Voir plus'}
+            </Text>
+          )}
+          <Block mt={5}>
+            <Block row>
+              <Ionicons name="star" color={COLORS.yellow} size={20} />
+              <Ionicons name="star" color={COLORS.yellow} size={20} />
+              <Ionicons name="star" color={COLORS.gray} size={20} />
+              <Ionicons name="star" color={COLORS.gray} size={20} />
+            </Block>
           </Block>
         </Block>
+
+        <BottomSheet
+          visible={visible}
+          onBackButtonPress={toggle}
+          onBackdropPress={toggle}
+          containerStyle={styles.bottomSheetContainer}
+        >
+          <Block style={styles.bottomSheetContent}>
+            <Text style={styles.bottomSheetTitle}>Le coût total de production</Text>
+            <Text style={styles.bottomSheetText}>
+              Il permet de prendre en compte tous les éléments de coût associés à la fabrication,
+              l'achat ou la prestation d'un bien ou d'un service.
+            </Text>
+            <Block style={styles.card}>
+              <ScrollView
+                //ref={scrollRef}
+                contentContainerStyle={styles.scrollContentContainer}
+                showsVerticalScrollIndicator={false}
+              >
+                {couts
+                  .filter((v, k) => v.prodId == route.params.food.id)
+                  .map((food, index) => {
+                    return <CoutScreen key={index} item={food} count={index + 1} />;
+                  })}
+              </ScrollView>
+            </Block>
+            {renderFAaddCout()}
+          </Block>
+        </BottomSheet>
       </Block>
       {renderFloatingBlock()}
-      <BottomSheet
-        visible={visible}
-        onBackButtonPress={toggle}
-        onBackdropPress={toggle}
-        containerStyle={styles.bottomSheetContainer}
-      >
-        <Block style={styles.bottomSheetContent}>
-          <Text style={styles.bottomSheetTitle}>Le coût total de production</Text>
-          <Text style={styles.bottomSheetText}>
-            Il permet de prendre en compte tous les éléments de coût associés à la fabrication,
-            l'achat ou la prestation d'un bien ou d'un service.
-          </Text>
-          <Block style={styles.card}>
-            <ScrollView
-              //ref={scrollRef}
-              contentContainerStyle={styles.scrollContentContainer}
-              showsVerticalScrollIndicator={false}
-            >
-              {couts
-                .filter((v, k) => v.prodId == route.params.food.id)
-                .map((food, index) => {
-                  return <CoutScreen key={index} item={food} count={index + 1} />;
-                })}
-            </ScrollView>
-          </Block>
-          {renderFAaddCout()}
-        </Block>
-      </BottomSheet>
-    </Block>
+    </ScrollView>
   );
 };
 
@@ -337,8 +340,8 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
     padding: 10,
     elevation: 5,
-    position: 'absolute',
-    bottom: 0,
+    position: 'relative',
+    //top: SIZES.height - 120,
     margin: SIZES.base * 2,
     borderRadius: 10,
     width: '90%',
