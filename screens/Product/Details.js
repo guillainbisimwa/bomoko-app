@@ -62,7 +62,7 @@ const Details = ({ route }) => {
             key={index}
             source={image}
             resizeMode="cover"
-            style={{ width: SIZES.width, height: SIZES.width / 2, justifyContent: 'flex-end' }}
+            style={{ width: SIZES.width, height: 170, justifyContent: 'flex-end' }}
           >
             <LinearGradient
               colors={['rgba(0,0,0,0.1)', 'rgba(0,0,0,0.9)']}
@@ -71,7 +71,7 @@ const Details = ({ route }) => {
                 left: 0,
                 right: 0,
                 top: 0,
-                height: SIZES.width / 2,
+                height: 170,
               }}
             ></LinearGradient>
           </ImageBackground>
@@ -199,7 +199,7 @@ const Details = ({ route }) => {
 
   return (
     <Block flex={1}>
-      <Block style={{ height: SIZES.width / 2 }}>
+      <Block style={{ height: 180 }}>
         {renderImages()}
         {renderScrollIndicator()}
       </Block>
