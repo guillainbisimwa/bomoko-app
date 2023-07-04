@@ -22,6 +22,7 @@ import { addCout } from '../../redux/coutReducer';
 import { View } from 'react-native';
 import { VictoryBar, VictoryChart, VictoryTheme } from 'victory-native';
 import Slider from '@react-native-community/slider';
+import Timeline from 'react-native-timeline-flatlist';
 
 const Details = ({ route }) => {
   const scrollX = useRef(new Animated.Value(0)).current;
@@ -38,6 +39,37 @@ const Details = ({ route }) => {
       .filter((v, k) => v.prodId == route.params.food.id)
       .reduce((a, b) => a + (b.amount || 0), 0)
   );
+
+  const myData = [
+    {
+      time: '22/05/23',
+      title: 'Fin probable de la Campagne',
+      description:
+        'Probablelent la campagne prendra fin apres 3 mois de la date de debut de la collecte',
+      lineColor: COLORS.peach,
+      //circleSize: 30,
+      //circleColor: COLORS.peach,
+      //dotColor: COLORS.blue,
+      //innerCircle: 'dot',
+    },
+    {
+      time: '22/05/23',
+      title: 'Fin de la recolte',
+      description: 'Le produit/service a reussi a mobiliser 290$ en 2 mois',
+    },
+    { time: '22/05/23', title: 'Debut de la Campagge' },
+    {
+      time: '22/05/23',
+      title: 'Validation du produit ',
+      description: "L'equipe de BOMOKO a autoriser le Produit/service d'exister sur la plateforme",
+      lineColor: '#009688',
+    },
+    {
+      time: '22/05/23',
+      title: 'Creation du produit/service',
+      description: '',
+    },
+  ];
 
   const [expanded, setExpanded] = useState(false);
 
@@ -440,6 +472,56 @@ const Details = ({ route }) => {
           <Text style={{ color: 'black' }}>Vous investissez la somme de : {sliderValue} $</Text>
         </Block>
 
+        <Block p_l={20} p_r={20}>
+          <Text bold numberOfLines={1}>
+            TIMELINE
+          </Text>
+          <Timeline
+            style={styles.list}
+            data={myData}
+            circleSize={20}
+            circleColor="rgb(45,156,219)"
+            lineColor="rgb(45,156,219)"
+            timeContainerStyle={{ minWidth: 52, marginTop: -5 }}
+            timeStyle={{
+              textAlign: 'center',
+              backgroundColor: '#ff9797',
+              color: 'white',
+              padding: 5,
+              borderRadius: 13,
+            }}
+            descriptionStyle={{ color: 'gray' }}
+            options={{
+              style: { paddingTop: 5 },
+            }}
+            columnFormat="single-column-left"
+          />
+
+          <Text bold color={COLORS.blue}>
+            {expanded ? 'Voir moins' : 'Voir plus'}
+          </Text>
+        </Block>
+
+        <Timeline
+          style={styles.list}
+          data={this.data}
+          circleSize={20}
+          circleColor="rgb(45,156,219)"
+          lineColor="rgb(45,156,219)"
+          timeContainerStyle={{ minWidth: 52, marginTop: -5 }}
+          timeStyle={{
+            textAlign: 'center',
+            backgroundColor: '#ff9797',
+            color: 'white',
+            padding: 5,
+            borderRadius: 13,
+          }}
+          descriptionStyle={{ color: 'gray' }}
+          options={{
+            style: { paddingTop: 5 },
+          }}
+        />
+
         <BottomSheet
           visible={visible}
           onBackButtonPress={toggle}
@@ -540,6 +622,10 @@ const styles = StyleSheet.create({
   bottomSheetText: {
     fontSize: 16,
     marginBottom: 16,
+  },
+  list: {
+    flex: 1,
+    marginTop: 20,
   },
 });
 
