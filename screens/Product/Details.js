@@ -116,7 +116,7 @@ const Details = ({ route }) => {
         middle
         style={{
           position: 'absolute',
-          bottom: 80,
+          bottom: 40,
           left: 0,
           right: 0,
           justifyContent: 'center',
@@ -199,15 +199,17 @@ const Details = ({ route }) => {
       </Block>
       <Block
         p={20}
-        m={50}
+        //m={50}
         style={{
           backgroundColor: 'white',
-          position: 'absolute',
-          top: SIZES.width / 4,
-          width: '80%',
+          //position: 'absolute',
+          //top: SIZES.width / 4,
+          marginHorizontal: '5%',
+          width: '90%',
           borderRadius: 10,
-          height: 200,
+          //height: 200,
           elevation: 2,
+          marginTop: -20,
         }}
       >
         {/* <Text numberOfLines={1} size={20} bold>
@@ -265,7 +267,7 @@ const Details = ({ route }) => {
         </Block>
       </Block>
 
-      <Block p={20} style={{ marginTop: 120, zIndex: -101 }}>
+      <Block p={20} style={{ zIndex: -101 }}>
         <Text color={COLORS.darkgray}>{route.params.food.detail}</Text>
         <Block mt={5}>
           <Block row>
