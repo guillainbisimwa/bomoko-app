@@ -274,7 +274,7 @@ const Details = ({ route }) => {
           </View>
 
           <View style={{ width: '25%', alignItems: 'flex-end' }}>
-            {/* <Text style={{ ...FONTS.h5, color: COLORS.red }}>300 $</Text> */}
+            <Text style={{ ...FONTS.h5, color: COLORS.red }}>+4% interret</Text>
             <View style={{ flexDirection: 'row' }}>
               <Image
                 source={icons.calendar}
@@ -398,6 +398,13 @@ const Details = ({ route }) => {
           <Text bold color={COLORS.blue}>
             {expanded ? 'Voir moins' : 'Voir plus'}
           </Text>
+        </Block>
+
+        <Block p={20}>
+          <Text bold numberOfLines={1}>
+            CALCUL D'INVESTISSEMENTS
+          </Text>
+          <Text>Projection du retour sur investissement de 600$ en 3 mois</Text>
         </Block>
 
         <BottomSheet
