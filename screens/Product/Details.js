@@ -8,6 +8,7 @@ import {
   Image,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Svg } from 'react-native-svg';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Block from './Block';
 import Text from './Text';
@@ -19,6 +20,8 @@ import CoutScreen from './CoutScreen';
 import { Alert } from 'react-native';
 import { addCout } from '../../redux/coutReducer';
 import { View } from 'react-native';
+import { VictoryBar, VictoryChart, VictoryTheme } from 'victory-native';
+import Slider from '@react-native-community/slider';
 
 const Details = ({ route }) => {
   const scrollX = useRef(new Animated.Value(0)).current;
@@ -37,6 +40,8 @@ const Details = ({ route }) => {
   );
 
   const [expanded, setExpanded] = useState(false);
+
+  const [sliderValue, setSliderValue] = useState(15);
 
   const scrollRef = useRef(null);
 
@@ -402,9 +407,24 @@ const Details = ({ route }) => {
 
         <Block p={20}>
           <Text bold numberOfLines={1}>
-            CALCUL D'INVESTISSEMENTS
+            CALCUL D'INVESTISSEMENT
           </Text>
           <Text>Projection du retour sur investissement de 600$ en 3 mois</Text>
+
+          <Svg style={{ width: '100%' }}>
+            <VictoryChart domainPadding={50} theme={VictoryTheme.material}>
+              <VictoryBar
+                style={{ data: { fill: COLORS.purple } }}
+                categories={{
+                  x: ['Coût Total', 'Interet'],
+                }}
+                data={[
+                  { x: 'Coût Total', y: 300 },
+                  { x: 'Interet', y: 30 },
+                ]}
+              />
+            </VictoryChart>
+          </Svg>
         </Block>
 
         <BottomSheet
