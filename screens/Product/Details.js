@@ -28,6 +28,8 @@ const Details = ({ route }) => {
       .reduce((a, b) => a + (b.amount || 0), 0)
   );
 
+  const [expanded, setExpanded] = useState(false);
+
   const scrollRef = useRef(null);
 
   const scrollToTop = () => {
@@ -39,6 +41,10 @@ const Details = ({ route }) => {
   function toggle() {
     setVisible((visible) => !visible);
   }
+
+  const toggleExpanded = () => {
+    setExpanded(!expanded);
+  };
 
   const renderImages = () => {
     return (
@@ -199,22 +205,18 @@ const Details = ({ route }) => {
       </Block>
       <Block
         p={20}
-        //m={50}
         style={{
           backgroundColor: 'white',
-          //position: 'absolute',
-          //top: SIZES.width / 4,
           marginHorizontal: '5%',
           width: '90%',
           borderRadius: 10,
-          //height: 200,
           elevation: 2,
           marginTop: -20,
         }}
       >
-        {/* <Text numberOfLines={1} size={20} bold>
+        <Text center numberOfLines={1} size={20} bold>
           {route.params.food.name}
-        </Text> */}
+        </Text>
 
         <Text center>Prix total</Text>
         <Text bold size={30} center color={COLORS.peach}>
@@ -268,7 +270,14 @@ const Details = ({ route }) => {
       </Block>
 
       <Block p={20} style={{ zIndex: -101 }}>
-        <Text color={COLORS.darkgray}>{route.params.food.detail}</Text>
+        <Text color={COLORS.darkgray} numberOfLines={expanded ? undefined : 2} black>
+          {route.params.food.detail}
+        </Text>
+        {route.params.food.detail.length > 50 && (
+          <Text color={COLORS.blue} onPress={toggleExpanded}>
+            {expanded ? 'Voir Plus' : 'Voir moins'}
+          </Text>
+        )}
         <Block mt={5}>
           <Block row>
             <Ionicons name="star" color={COLORS.yellow} size={20} />
