@@ -1,16 +1,24 @@
 import React, { useRef, useState } from 'react';
-import { ImageBackground, ScrollView, Animated, StyleSheet } from 'react-native';
+import {
+  ImageBackground,
+  ScrollView,
+  Animated,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Block from './Block';
 import Text from './Text';
-import { COLORS, SIZES } from '../../constants';
+import { COLORS, FONTS, icons, SIZES } from '../../constants';
 import { Button, MD3Colors, ProgressBar, TextInput } from 'react-native-paper';
 import { BottomSheet } from 'react-native-btr';
 import { useDispatch, useSelector } from 'react-redux';
 import CoutScreen from './CoutScreen';
 import { Alert } from 'react-native';
 import { addCout } from '../../redux/coutReducer';
+import { View } from 'react-native';
 
 const Details = ({ route }) => {
   const scrollX = useRef(new Animated.Value(0)).current;
@@ -197,6 +205,97 @@ const Details = ({ route }) => {
     );
   };
 
+  const renderItem = (item) => (
+    <TouchableOpacity
+      onPress={() => {
+        // console.log(item);
+        // setSelectedItem(item);
+        // showModal(true);
+      }}
+    >
+      <View
+        style={{
+          marginVertical: SIZES.padding / 3.7,
+          borderRadius: SIZES.radius,
+          backgroundColor: COLORS.white,
+          ...styles.shadow,
+        }}
+      >
+        {/* Title */}
+        <View
+          style={{
+            flexDirection: 'row',
+            padding: SIZES.padding / 2,
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
+          <View
+            style={{
+              width: '60%',
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}
+          >
+            <View
+              style={{
+                height: 50,
+                width: 50,
+                borderRadius: 25,
+                backgroundColor: COLORS.lightGray,
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginRight: SIZES.base,
+              }}
+            >
+              <Image
+                source={icons.investment}
+                style={{
+                  width: 30,
+                  height: 30,
+                  tintColor: COLORS.black,
+                }}
+              />
+            </View>
+            <View>
+              <Text style={{ ...FONTS.h3, color: COLORS.black }}>{item.name}</Text>
+              <Text
+                numberOfLines={1}
+                style={{
+                  overflow: 'hidden',
+                  ...FONTS.body5,
+                  flexWrap: 'wrap',
+                  color: COLORS.darkgray,
+                }}
+              >
+                {item.contribution}
+              </Text>
+            </View>
+          </View>
+
+          <View style={{ width: '25%', alignItems: 'flex-end' }}>
+            {/* <Text style={{ ...FONTS.h5, color: COLORS.red }}>300 $</Text> */}
+            <View style={{ flexDirection: 'row' }}>
+              <Image
+                source={icons.calendar}
+                style={{
+                  width: 12,
+                  height: 12,
+                  tintColor: COLORS.darkgray,
+                  marginRight: 7,
+                  marginTop: 3,
+                }}
+              />
+              <Text style={{ marginBottom: SIZES.base, color: COLORS.darkgray, ...FONTS.body5 }}>
+                {item.date}
+              </Text>
+            </View>
+          </View>
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
+
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <Block flex={1}>
@@ -221,7 +320,7 @@ const Details = ({ route }) => {
 
           <Text center>Prix total</Text>
           <Text bold size={30} center color={COLORS.peach}>
-            {route.params.food.amount} FC
+            {route.params.food.amount} $
           </Text>
 
           <Block>
@@ -249,7 +348,7 @@ const Details = ({ route }) => {
                 50% Investisseurs
               </Text>
               <Text numberOfLines={1} semibold size={16}>
-                12 FC restent
+                12 $ restent
               </Text>
             </Block>
             <Block>
@@ -287,6 +386,18 @@ const Details = ({ route }) => {
               <Ionicons name="star" color={COLORS.gray} size={20} />
             </Block>
           </Block>
+        </Block>
+
+        <Block p_l={20} p_r={20}>
+          <Text bold numberOfLines={1}>
+            INVESTISSEURS (20)
+          </Text>
+
+          {renderItem({ name: 'Jeanne MASIKA', contribution: '200 USD', date: '22/03/2023' })}
+          {renderItem({ name: 'Joseph KAKULE', contribution: '200 USD', date: '22/03/2023' })}
+          <Text bold color={COLORS.blue}>
+            {expanded ? 'Voir moins' : 'Voir plus'}
+          </Text>
         </Block>
 
         <BottomSheet
