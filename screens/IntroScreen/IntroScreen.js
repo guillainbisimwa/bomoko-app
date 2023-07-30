@@ -66,7 +66,7 @@ export const IntroScreen = () => {
           scrollEventThrottle={1}
           onScroll={Animated.event(
             [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-            { useNativeDriver: false } //
+            { useNativeDriver: false }
           )}
         >
           {slides.map((slide) => {

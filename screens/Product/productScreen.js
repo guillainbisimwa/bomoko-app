@@ -106,8 +106,7 @@ const ProductScreen = ({ navigation }) => {
                   </View>
                   <Image source={prod.image} style={styles.imgFood} />
                   <Text numberOfLines={1} grey h2 bold>
-                    {' '}
-                    {prod.name}{' '}
+                    {prod.name}
                   </Text>
                   <Text numberOfLines={2} grey>
                     {prod.detail}
@@ -116,7 +115,7 @@ const ProductScreen = ({ navigation }) => {
                     {stars(prod.stars)}
                   </Block>
                   <Block m_t={10} row center space="between">
-                    <Block row center>
+                    <Block row center style={{ width: '45%' }}>
                       <IconButton
                         icon="pin"
                         iconColor={MD3Colors.error50}

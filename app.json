@@ -2,7 +2,7 @@
   "expo": {
     "name": "Bomoko Cash",
     "slug": "bomoko-cash",
-    "version": "3.4.0",
+    "version": "3.9.0",
     "privacy": "public",
     "orientation": "portrait",
     "icon": "./assets/app-icon.png",
@@ -27,7 +27,7 @@
         "backgroundColor": "#FFFFFF"
       },
       "package": "com.wezalab.bomoko4",
-      "versionCode": 34,
+      "versionCode": 39,
       "permissions": []
     },
     "web": {
