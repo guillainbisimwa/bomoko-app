@@ -2,17 +2,31 @@ import React, { useState } from 'react';
 import { Image, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import { COLORS, FONTS, SIZES, icons } from './../../constants';
 import Block from './Block';
-import Foods from './Foods';
 import Text from './Text';
 import Product_service from './Product_service';
 
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { FAB, IconButton, MD3Colors, ProgressBar } from 'react-native-paper';
+import { FAB, IconButton, MD3Colors, ProgressBar, Button, Card, Modal } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 import { ImageBackground } from 'react-native';
 
 const ProductScreen = ({ navigation }) => {
   const products = useSelector((state) => state.products);
+
+  const u = useSelector((state) => state?.user);
+
+  // Modal
+  const [visible, setVisible] = useState(false);
+  const showModal = () => setVisible(true);
+  const hideModal = () => setVisible(false);
+
+  const containerStyle = {
+    backgroundColor: 'white',
+    width: '85%',
+    borderRadius: 10,
+    alignSelf: 'center',
+  };
+
   // console.log(products, 'ok---------------------------------------');
   //console.log(JSON.stringify(products), 'ok---------------------------------------');
 
@@ -33,7 +47,7 @@ const ProductScreen = ({ navigation }) => {
     return (
       <Block row>
         {[...Array(starsNumber).keys()].map((star, index) => {
-          return <Ionicons color={COLORS.yellow} size={SIZES.base * 3} name={'star'} />;
+          return <Ionicons color={COLORS.yellow} key={index} size={SIZES.base * 3} name={'star'} />;
         })}
         <Ionicons color={COLORS.yellow} size={SIZES.base * 3} name={'star-outline'} />
       </Block>
@@ -332,14 +346,50 @@ const ProductScreen = ({ navigation }) => {
 
           {search.trim().length == 0 ? (
             <>
-              {popular()}
+              {/* {popular()} */}
               {list()}
             </>
           ) : (
             list()
           )}
         </ScrollView>
-        <FAB icon="plus" variant="tertiary" style={styles.fab} onPress={() => navigation.navigate('AddProduct')} />
+
+        <Modal
+        style={{ zIndex: 99 }}
+        visible={visible}
+        onDismiss={hideModal}
+        //contentContainerStyle={containerStyle}
+        contentContainerStyle={[containerStyle, { zIndex: 999 }]} // Set a higher value for the z-index
+      >
+        <Card style={{ padding: 10 }}>
+          <Card.Title
+            titleStyle={{ fontWeight: 'bold', textTransform: 'uppercase' }}
+            title="ATTENTION!" 
+          />
+          <Card.Content>
+            <Text variant="titleLarge">Vpus devez d'abord vous connecter</Text>
+          </Card.Content>
+          <Card.Actions style={{ marginTop: 15 }}>
+            <Button onPress={hideModal}>Annuler</Button>
+            <Button buttonColor={COLORS.red}
+             onPress={() => {
+              navigation.navigate('AuthScreen')
+            }} >Connecter</Button>
+          </Card.Actions>
+        </Card>
+      </Modal>
+
+
+        <FAB icon="plus" variant="tertiary" style={styles.fab} 
+        onPress={() => {
+          console.log("user",u)
+          if(u) {
+            showModal(true);
+          }
+          else {
+            navigation.navigate('AddProduct')
+          }
+        }} />
       </Block>
     </Block>
     </View>

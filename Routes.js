@@ -146,7 +146,7 @@ const App = () => {
   const checkInstallationStatus = async () => {
     try {
       const value = await AsyncStorage.getItem('isInstalled');
-      console.log('value', value);
+      // console.log('value', value);
       if (value !== null && value === 'true') {
         dispatch(setInstalled());
       } else {
@@ -161,7 +161,7 @@ const App = () => {
   const checkCategories = async () => {
     try {
       const value = await AsyncStorage.getItem('categories');
-      console.log('----------', value);
+      //console.log('----------', value);
 
       if (value !== null) {
         //dispatch(addCat(JSON.parse(value)));
@@ -177,6 +177,8 @@ const App = () => {
   };
 
   const isInstalled = useSelector((state) => state.app.isInstalled);
+  const u = useSelector((state) => state?.user);
+  console.log("user",u)
 
   const [loaded] = useFonts({
     'Roboto-Black': require('./assets/fonts/Roboto-Black.ttf'),
@@ -209,8 +211,12 @@ const App = () => {
           <Stack.Screen name="Details" component={Details} options={{ title: 'Details' }} />
           <Stack.Screen name="AddProduct" component={AddProduct} options={{ title: 'Produit' }} />
 
-          <Stack.Screen name="LoginScreen" component={LoginScreen} />
-          <Stack.Screen name="AuthScreen" component={AuthScreen} />
+          <Stack.Screen name="LoginScreen" component={LoginScreen} options={{
+              headerShown: false,
+            }}/>
+          <Stack.Screen name="AuthScreen" component={AuthScreen} options={{
+              headerShown: false,
+            }}/>
         </Stack.Navigator>
       </NavigationContainer>
     );
