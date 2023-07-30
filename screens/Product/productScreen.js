@@ -346,7 +346,7 @@ const ProductScreen = ({ navigation }) => {
 
           {search.trim().length == 0 ? (
             <>
-              {/* {popular()} */}
+              {popular()}
               {list()}
             </>
           ) : (
@@ -358,7 +358,6 @@ const ProductScreen = ({ navigation }) => {
         style={{ zIndex: 99 }}
         visible={visible}
         onDismiss={hideModal}
-        //contentContainerStyle={containerStyle}
         contentContainerStyle={[containerStyle, { zIndex: 999 }]} // Set a higher value for the z-index
       >
         <Card style={{ padding: 10 }}>
@@ -373,6 +372,7 @@ const ProductScreen = ({ navigation }) => {
             <Button onPress={hideModal}>Annuler</Button>
             <Button buttonColor={COLORS.red}
              onPress={() => {
+              showModal(false);
               navigation.navigate('AuthScreen')
             }} >Connecter</Button>
           </Card.Actions>
@@ -387,7 +387,8 @@ const ProductScreen = ({ navigation }) => {
             showModal(true);
           }
           else {
-            navigation.navigate('AddProduct')
+            showModal(false);
+            navigation.navigate('AddProduct');
           }
         }} />
       </Block>

@@ -3,6 +3,7 @@ import { View, StyleSheet, ImageBackground, Dimensions } from 'react-native';
 import { Button, TextInput, RadioButton, Text, Menu, Divider } from 'react-native-paper';
 
 import LottieView from 'lottie-react-native';
+import { COLORS, FONTS } from '../../../constants';
 
 const { height, width } = Dimensions.get('window');
 
@@ -41,6 +42,9 @@ export const LoginForm = ({ navigation }) => {
         <Button mode="contained" onPress={handleLogin} style={styles.button}>
           Login
         </Button>
+
+        <Text style={{ marginVertical: 20, color: COLORS.white, ...FONTS.h2}} 
+      onPress={()=> navigation.goBack()} > Retour</Text>
       </View>
     </View>
   );

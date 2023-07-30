@@ -12,11 +12,11 @@ import {
 import LottieView from 'lottie-react-native';
 //PropTypes check
 import PropTypes from 'prop-types';
-import { COLORS } from '../../../constants';
+import { COLORS, FONTS } from '../../../constants';
 
 const { height, width } = Dimensions.get('window');
 
-export const AuthBody = ({}) => {
+export const AuthBody = ({navigation}) => {
   return (
     <>
       <ImageBackground
@@ -42,12 +42,12 @@ export const AuthBody = ({}) => {
         resizeMode="contain"
         style={{ height: 195 }}
       />
-      <TouchableOpacity>
+      <TouchableOpacity onPress={()=> navigation.navigate('LoginScreen')} >
         <View style={styles.signinContainer}>
           <Text style={styles.text}>SE CONNECTER</Text>
         </View>
       </TouchableOpacity>
-      <TouchableOpacity>
+      <TouchableOpacity  onPress={()=> navigation.navigate('LoginScreen')}  >
         <View
           style={[
             styles.signinContainer,
@@ -61,6 +61,8 @@ export const AuthBody = ({}) => {
           <Text style={[styles.text, { color: '#ffffff' }]}>CREER UN COMPTE</Text>
         </View>
       </TouchableOpacity>
+      <Text style={{ marginVertical: 20, color: COLORS.white, ...FONTS.h2}} 
+      onPress={()=> navigation.goBack()} > Retour</Text>
     </>
   );
 };
