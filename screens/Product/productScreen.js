@@ -265,8 +265,27 @@ const ProductScreen = ({ navigation }) => {
             />
           </TouchableOpacity>
 
+          
+          <View >
           <Text style={{ color: COLORS.white, ...FONTS.h2 }}>BOMOKO Cash</Text>
+          <Text style={{ ...FONTS.h3, color: COLORS.gray }}>(Produits et Services)</Text>
         </View>
+        </View>
+        
+        <View style={{ flexDirection: 'row' }}>
+        <TouchableOpacity
+          style={{ justifyContent: 'center', alignItems: 'flex-end', width: 50 }}
+          onPress={() => console.log('shopping')}
+        >
+          <Image
+            source={icons.shopping}
+            style={{
+              width: 30,
+              height: 30,
+              tintColor: COLORS.white,
+            }}
+          />
+        </TouchableOpacity>
 
         <TouchableOpacity
           style={{ justifyContent: 'center', alignItems: 'flex-end', width: 50 }}
@@ -281,6 +300,8 @@ const ProductScreen = ({ navigation }) => {
             }}
           />
         </TouchableOpacity>
+        </View>
+
       </View>
     );
   }
@@ -296,23 +317,8 @@ const ProductScreen = ({ navigation }) => {
       {/* Nav bar section */}
       {renderNavBar()}
 
-      {/* Header section */}
-      {/* {renderHeader()} */}
     <Block flex color="grey">
-      {/* <Block row center color="white" p={15}>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.goBack();
-          }}
-        >
-          <Ionicons name="arrow-back-outline" size={30} color={COLORS.grey} />
-        </TouchableOpacity>
-
-        <Text bold style={{ marginLeft: 16, fontWeight: 'bold', fontSize: 20 }}>
-          Produits / services
-        </Text>
-      </Block> */}
-
+      
       <Block flex color="grey" p={15}>
         <ScrollView style={{ paddingTop: 5 }} showsVerticalScrollIndicator={false}>
           <Block flex={false}>
