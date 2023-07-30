@@ -10,22 +10,9 @@ export const LoginForm = ({ navigation }) => {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
-  const [sex, setSex] = useState('male');
-  const [birthDate, setBirthDate] = useState('');
-  const [state, setState] = useState('');
-  const [stateMenuVisible, setStateMenuVisible] = useState(false);
-
+ 
   const handleLogin = () => {
     // Handle login functionality
-  };
-
-  const toggleStateMenu = () => {
-    setStateMenuVisible(!stateMenuVisible);
-  };
-
-  const selectState = (selectedState) => {
-    setState(selectedState);
-    setStateMenuVisible(false);
   };
 
   return (
@@ -42,8 +29,7 @@ export const LoginForm = ({ navigation }) => {
           autoPlay
           loop
         />
-        <TextInput label="Nom" value={name} onChangeText={setName} style={styles.input} />
-        <TextInput label="Telephone" value={phone} onChangeText={setPhone} style={styles.input} />
+        <TextInput keyboardType="phone-pad" label="Telephone" value={phone} onChangeText={setPhone} style={styles.input} />
         <TextInput
           label="Mots de passe"
           value={password}
@@ -51,43 +37,7 @@ export const LoginForm = ({ navigation }) => {
           secureTextEntry
           style={styles.input}
         />
-        {/* <Text style={styles.label}>Sex:</Text> */}
-        {/* <View style={styles.radioButtonsContainer}>
-          <RadioButton
-            value="male"
-            status={sex === 'male' ? 'checked' : 'unchecked'}
-            onPress={() => setSex('male')}
-          />
-          <Text style={styles.radioButtonText}>Male</Text>
-          <RadioButton
-            value="female"
-            status={sex === 'female' ? 'checked' : 'unchecked'}
-            onPress={() => setSex('female')}
-          />
-          <Text style={styles.radioButtonText}>Female</Text>
-        </View> */}
-        {/* <TextInput
-          label="Birth Date"
-          value={birthDate}
-          onChangeText={setBirthDate}
-          style={styles.input}
-        /> */}
-        {/* <Menu
-          visible={stateMenuVisible}
-          onDismiss={toggleStateMenu}
-          anchor={
-            <TextInput
-              label="State"
-              value={state}
-              onTouchStart={toggleStateMenu}
-              style={styles.input}
-            />
-          }
-        >
-          <Menu.Item onPress={() => selectState('New York')} title="New York" />
-          <Menu.Item onPress={() => selectState('California')} title="California" />
-          <Menu.Item onPress={() => selectState('Texas')} title="Texas" />
-        </Menu> */}
+        
         <Button mode="contained" onPress={handleLogin} style={styles.button}>
           Login
         </Button>
@@ -121,6 +71,7 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 20,
+    padding:10,
     width: '70%',
   },
 });
