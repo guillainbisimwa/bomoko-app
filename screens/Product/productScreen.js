@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Image, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
-import { COLORS, SIZES } from './../../constants';
+import { COLORS, FONTS, SIZES, icons } from './../../constants';
 import Block from './Block';
 import Foods from './Foods';
 import Text from './Text';
@@ -9,6 +9,7 @@ import Product_service from './Product_service';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { FAB, IconButton, MD3Colors, ProgressBar } from 'react-native-paper';
 import { useSelector } from 'react-redux';
+import { ImageBackground } from 'react-native';
 
 const ProductScreen = ({ navigation }) => {
   const products = useSelector((state) => state.products);
@@ -224,9 +225,81 @@ const ProductScreen = ({ navigation }) => {
     );
   };
 
+  function renderNavBar() {
+    return (
+      <View
+        style={{
+          flexDirection: 'row',
+          paddingTop: SIZES.base * 3,
+          justifyContent: 'space-between',
+          //alignItems: 'flex-end',
+          paddingHorizontal: SIZES.padding,
+        }}
+      >
+        <View
+          style={{
+            flexDirection: 'row',
+          }}
+        >
+          <TouchableOpacity
+            style={{
+              //width: 80,
+              //justifyContent: 'center',
+              //backgroundColor: COLORS.white,
+              //borderRadius: 30,
+              paddingRight: SIZES.base * 2,
+            }}
+            onPress={() => {
+              console.log('Menu');
+              //navigation.navigate(AuthScreen);
+              navigation.openDrawer();
+            }}
+          >
+            <Image
+              source={icons.menu}
+              style={{
+                width: SIZES.base * 4,
+                height: SIZES.base * 3,
+                tintColor: COLORS.white,
+              }}
+            />
+          </TouchableOpacity>
+
+          <Text style={{ color: COLORS.white, ...FONTS.h2 }}>BOMOKO Cash</Text>
+        </View>
+
+        <TouchableOpacity
+          style={{ justifyContent: 'center', alignItems: 'flex-end', width: 50 }}
+          onPress={() => console.log('search')}
+        >
+          <Image
+            source={icons.search}
+            style={{
+              width: 30,
+              height: 30,
+              tintColor: COLORS.white,
+            }}
+          />
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
   return (
+    <>
+    <ImageBackground
+      style={{ flex: 1, position: 'absolute', height: '100%', width: '100%' }}
+      source={require('./../../assets/login1_bg.png')}
+      blurRadius={10}
+    ></ImageBackground>
+    <View style={{ flex: 1 }}>
+      {/* Nav bar section */}
+      {renderNavBar()}
+
+      {/* Header section */}
+      {/* {renderHeader()} */}
     <Block flex color="grey">
-      <Block row center color="white" p={15}>
+      {/* <Block row center color="white" p={15}>
         <TouchableOpacity
           onPress={() => {
             navigation.goBack();
@@ -238,7 +311,7 @@ const ProductScreen = ({ navigation }) => {
         <Text bold style={{ marginLeft: 16, fontWeight: 'bold', fontSize: 20 }}>
           Produits / services
         </Text>
-      </Block>
+      </Block> */}
 
       <Block flex color="grey" p={15}>
         <ScrollView style={{ paddingTop: 5 }} showsVerticalScrollIndicator={false}>
@@ -263,6 +336,8 @@ const ProductScreen = ({ navigation }) => {
         <FAB icon="plus" style={styles.fab} onPress={() => navigation.navigate('AddProduct')} />
       </Block>
     </Block>
+    </View>
+    </>
   );
 };
 
