@@ -339,7 +339,7 @@ const ProductScreen = ({ navigation }) => {
             list()
           )}
         </ScrollView>
-        <FAB icon="plus" style={styles.fab} onPress={() => navigation.navigate('AddProduct')} />
+        <FAB icon="plus" variant="tertiary" style={styles.fab} onPress={() => navigation.navigate('AddProduct')} />
       </Block>
     </Block>
     </View>
