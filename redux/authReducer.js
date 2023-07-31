@@ -1,4 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
+import {getToken} from '../constants/utils';
+
+// Retrieve user data from LocalStorage
+const userData = getToken()
+console.log("userData", userData);
 
 const authSlice = createSlice({
   name: 'user',
