@@ -2,10 +2,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const BASE_URL = 'https://bomoko-backend.onrender.com/';
 
-export const checkAuth = () => {
+export const checkAuth = async () => {
   try {
-    const access_token = AsyncStorage.getItem('user');
-
+    const access_token = await AsyncStorage.getItem('user');
+    console.log(" ===?", access_token);
     if (!access_token) {
       return false;
     }
@@ -24,11 +24,30 @@ export const checkAuth = () => {
   }
 };
 
+export const getInitialStateFromAsyncStorage = async () => {
+  try {
+    // Retrieve the values from AsyncStorage
+    const token = await AsyncStorage.getItem('user');
 
-export const getToken = () => {
-  if (checkAuth()) {
+    // Return the initial state object with the retrieved values
+    return {
+      user: token, // Default value if token is not found in AsyncStorage
+    };
+  } catch (error) {
+    console.error('Error retrieving data from AsyncStorage:', error);
+    // Return default initial state in case of an error
+    return {
+      token: null,
+    };
+  }
+};
+
+
+export const getToken = async () => {
+  if (await checkAuth()) {
     return AsyncStorage.getItem('user');
   }
+  return null
 };
 
 export const removeTokens = () => {

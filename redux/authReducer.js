@@ -1,31 +1,50 @@
 import { createSlice } from '@reduxjs/toolkit';
-import {getToken} from '../constants/utils';
-
-// Retrieve user data from LocalStorage
-const userData = getToken()
-console.log("userData", userData);
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {getInitialStateFromAsyncStorage} from './../constants/utils'
 
 const authSlice = createSlice({
   name: 'user',
   initialState: {
-    // token: '123456',
-    // id: '1',
-    // user: [
-    //   {
-    //     name: 'Guy',
-    //   },
-    // ],
+    user: getInitialStateFromAsyncStorage()["_j"] ? getInitialStateFromAsyncStorage()["_j"] : null, // Use user data from LocalStorage or set to null
+    error: null,
+    isLoading: false,
   },
+  // initialState: 
+  // {
+  //   error: null,
+  //   isLoading: false,
+  //   user :{
+  //   token: '123456',
+  //   id: '1',
+  //   user: [
+  //     {
+  //       name: 'Guy',
+  //     },
+  //   ],
+  // }},
   reducers: {
-    loginUser: (state, action) => {
+    loginStart: (state) => {
+      state.isLoading = true;
+    },
+    loginSuccess: (state, action) => {
+      state.isLoading = false;
       state.user = action.payload;
+      state.error = null;
+
+      // Store user data to LocalStorage
+      AsyncStorage.setItem('user', JSON.stringify({ user: action.payload }));
+    },
+    loginFailure: (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
     },
     logoutUser: (state) => {
-      state.user = {
-        token: '',
-        id: '',
-        user: [],
-      };
+      state.isLoading = false;
+      state.user = null;
+      state.error = null;
+
+      AsyncStorage.clear();
+
     },
   },
 });
