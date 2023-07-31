@@ -47,7 +47,7 @@ const AddProduct = () => {
       >
         <View style={{ paddingVertical: SIZES.padding / 2 }}>
           <Text style={{ color: COLORS.primary, ...FONTS.h2 }}>Bomoko Cash</Text>
-          <Text style={{ ...FONTS.h3, color: COLORS.darkgray }}>(Portefeuil electronique)</Text>
+          <Text style={{ ...FONTS.h3, color: COLORS.darkgray }}>(Produits et Services)</Text>
         </View>
       </View>
     );
@@ -119,7 +119,7 @@ const AddProduct = () => {
   };
 
   const info = () =>
-    Alert.alert(`Warning`, `You can't upload more than 3 pictures!!`, [
+    Alert.alert(`Warning`, `You can't upload more than 3 pictures!`, [
       {
         text: 'Okay',
         style: 'cancel',
@@ -136,6 +136,8 @@ const AddProduct = () => {
           onChangeText={setDescription}
           mode="outlined"
           style={styles.input}
+          multiline
+          numberOfLines={2}
           required
         />
         <TextInput
@@ -153,7 +155,7 @@ const AddProduct = () => {
           onPress={handleSaveAddProduct}
           style={styles.button}
           icon={({ size, color }) => (
-            <Ionicons name="arrow-back-outline" size={30} color={COLORS.grey} />
+            <Ionicons name="save-outline" size={20} color={COLORS.white} />
           )}
         >
           Ajouter
@@ -173,7 +175,7 @@ const AddProduct = () => {
             <Ionicons name="cloud-upload" size={30} color={COLORS.white} style={styles.icon} />
             {/* {loadPic?
               <ActivityIndicator size="small" color={Colors.danger} />: <></>} */}
-            <Text style={{ color: COLORS.white }}>Upload</Text>
+            <Text style={{ color: COLORS.white }}>Téléverser</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -220,7 +222,7 @@ const AddProduct = () => {
           </Block>
         </Block>
 
-        {/* {addAddProduct()} */}
+        {addAddProduct()}
       </ScrollView>
     </KeyboardAvoidingView>
   );
