@@ -15,11 +15,11 @@ export const SignUpForm = ({ navigation }) => {
 
   const { error, isLoading, success, userSignUp } = useSelector((state) => state.user);
 
-  const [name, setNom] = useState('Guy');
-  const [password, setPassword] = useState('12345678');
+  const [name, setNom] = useState('');
+  const [password, setPassword] = useState('');
 
-  const [email, setEmail] = useState('guy@gmail.com');
-  const [mobile, setMobile] = useState('0978532756');
+  const [email, setEmail] = useState('');
+  const [mobile, setMobile] = useState('');
   const [role, setRole] = useState('user');
 
   const [visible, setVisible] = useState(false);
