@@ -13,7 +13,7 @@ const { height, width } = Dimensions.get('window');
 export const SignUpForm = ({ navigation }) => {
   const dispatch = useDispatch();
 
-  const { error, isLoading, success, userSignUp } = useSelector((state) => state.user);
+  const { errorSignUp, isLoadingSignUp, successSignUp, userSignUp } = useSelector((state) => state.user);
 
   const [name, setNom] = useState('');
   const [password, setPassword] = useState('');
@@ -31,15 +31,15 @@ export const SignUpForm = ({ navigation }) => {
   // Use useEffect or any other method to handle the success state and display the alert
     useEffect(() => {
       console.log("userSignUp", userSignUp);
-      if (userSignUp != null) {
+      if (successSignUp) {
         // Alert.alert("Success", "Login successful!");
         navigation.navigate('LoginScreen'); 
       }
-      if (error) {
+      if (errorSignUp) {
         onToggleSnackBar()
       }
       
-    }, [userSignUp, error]);
+    }, [successSignUp, errorSignUp]);
 
 const handleSignUp = async () => {
   try {
@@ -89,25 +89,25 @@ const handleSignUp = async () => {
           autoPlay
           loop
         />
-        <TextInput error={error} keyboardType="default" label="Nom d'utilisateur" value={name} onChangeText={setNom} style={styles.input} />
+        <TextInput error={errorSignUp} keyboardType="default" label="Nom d'utilisateur" value={name} onChangeText={setNom} style={styles.input} />
         <TextInput
           label="Mots de passe"
           value={password}
           onChangeText={setPassword}
           secureTextEntry
           style={styles.input}
-          error={error}
+          error={errorSignUp}
         />
 
-        <TextInput error={error} keyboardType="default" 
+        <TextInput error={errorSignUp} keyboardType="default" 
         label="E-mail" value={email} 
         onChangeText={setEmail} style={styles.input} />
 
-      <TextInput error={error} keyboardType="default" 
+      <TextInput error={errorSignUp} keyboardType="default" 
         label="Téléphone" value={mobile} 
         onChangeText={setMobile} style={styles.input} />
 
-          <ActivityIndicator  animating={isLoading} color={COLORS.red} />
+          <ActivityIndicator  animating={isLoadingSignUp} color={COLORS.red} />
 
         
         <Button mode="contained" onPress={handleSignUp} style={styles.button}>
@@ -128,7 +128,7 @@ const handleSignUp = async () => {
           },
         }}
         >
-        {error}
+        {errorSignUp}
         
       </Snackbar>
       </View>

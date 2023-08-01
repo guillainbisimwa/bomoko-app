@@ -62,7 +62,7 @@ const AddProduct = () => {
   // Location
 
   
-  const [checkedLocation1, setCheckedLocation1] = useState(false);
+  const [checkedLocation1, setCheckedLocation1] = useState(true);
   const [checkedLocation2, setCheckedLocation2] = useState(false);
   const [checkedLocation3, setCheckedLocation3] = useState(false);
 
@@ -280,6 +280,7 @@ const pickImage = async () => {
           onChangeText={name}
           mode="outlined"
           style={styles.input}
+          keyboardType='default'
           required
         />
 
@@ -291,16 +292,17 @@ const pickImage = async () => {
           style={styles.input}
           multiline
           numberOfLines={2}
+          keyboardType='default'
           required
         />
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+        {/* <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}> */}
           <TextInput
             label={`Montant disponible (${checkedDevise})`}
             value={initialAmount}
             onChangeText={setInitialAmount}
             mode="outlined"
             keyboardType="numeric"
-            style={[styles.input, styles.input_49]}
+            style={[styles.input, ]} //styles.input_49
           />
 
         <TextInput
@@ -309,14 +311,16 @@ const pickImage = async () => {
           onChangeText={setAmount}
           mode="outlined"
           keyboardType="numeric"
-          style={[styles.input, styles.input_49]}
+          style={[styles.input, ]} //styles.input_49
           //prefix="USD"
         />
-        </View>
+        {/* </View> */}
 
         <SafeAreaProvider>
-          <View style={{justifyContent: 'center', flex: 1, alignItems: 'center', marginVertical:20}}>
-            <Button onPress={() => setOpen(true)} uppercase={false} mode="outlined">
+          <View style={{justifyContent: 'center', flex: 1, alignItems: 'center', 
+          marginVertical:20,}}>
+            <Button onPress={() => setOpen(true)} uppercase={false} mode="outlined" style={{ 
+              padding: 7, width:"100%"}}>
               Choisir la durée de votre campagne
             </Button>
             <DatePickerModal
@@ -339,7 +343,7 @@ const pickImage = async () => {
 
         <View style={{ flexDirection: 'row' }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 16 }}>
-          <Checkbox value="paris" color="#4CAF50" status={checkedLocation1 ? 'checked' : 'unchecked'}
+          <Checkbox value="paris" color="#AF4C50" status={checkedLocation1 ? 'checked' : 'unchecked'}
       onPress={() => {
         setCheckedLocation1(!checkedLocation1);
       }}/>
@@ -354,7 +358,7 @@ const pickImage = async () => {
         </View>
 
         <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 16 }}>
-          <Checkbox value="newyork" color="#4CAF50" status={checkedLocation3 ? 'checked' : 'unchecked'}
+          <Checkbox value="newyork" color="#504CAF" status={checkedLocation3 ? 'checked' : 'unchecked'}
       onPress={() => {
         setCheckedLocation3(!checkedLocation3);
       }}/>
