@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import InitialLoader from './screens/InitialLoader';
 import Onboard from './navigations/Onboard';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { setInstalled } from './redux/appReducer';
+import { setInstalled, setUnInstalled } from './redux/appReducer';
 import { LoginScreen } from './screens/LoginScreen/LoginScreen';
 import { AuthScreen } from './screens/AuthScreen/AuthScreen';
 import { resetAllCat } from './redux/catReducer';
@@ -17,6 +17,8 @@ import { Expense, Income } from './screens';
 import { COLORS, icons } from './constants';
 import Details from './screens/Product/Details';
 import AddProduct from './screens/Product/AddProduct';
+import { loginSuccess, logoutUser } from './redux/authReducer';
+import { SignUpScreen } from './screens/SignUpScreen';
 
 const theme = {
   ...DefaultTheme,
@@ -137,9 +139,11 @@ const App = () => {
   ];
 
   useEffect(() => {
+    checkLoginStatus();
     setTimeout(() => setLoading(false), 2000);
     // AsyncStorage.clear();
     checkInstallationStatus();
+    
     checkCategories();
   }, []);
 
@@ -151,6 +155,7 @@ const App = () => {
         dispatch(setInstalled());
       } else {
         setLoading(false);
+        dispatch(setUnInstalled());
       }
     } catch (error) {
       console.log('Error retrieving installation status:', error);
@@ -158,10 +163,27 @@ const App = () => {
     }
   };
 
+  const checkLoginStatus = async () => {
+    try {
+      const value = await AsyncStorage.getItem('user');
+      console.log('value-user', value);
+      if (value !== null) {
+        dispatch(loginSuccess(value));
+        //dispatch(logoutUser());
+      } else {
+        //setLoading(false);
+        //dispatch(setUnInstalled());
+      }
+    } catch (error) {
+      console.log('Error retrieving installation status:', error);
+      //setLoading(false);
+    }
+  };
+
   const checkCategories = async () => {
     try {
       const value = await AsyncStorage.getItem('categories');
-      console.log('----------', value);
+      //console.log('----------', value);
 
       if (value !== null) {
         //dispatch(addCat(JSON.parse(value)));
@@ -177,6 +199,8 @@ const App = () => {
   };
 
   const isInstalled = useSelector((state) => state.app.isInstalled);
+  const u = useSelector((state) => state?.user);
+  console.log("user -->",u)
 
   const [loaded] = useFonts({
     'Roboto-Black': require('./assets/fonts/Roboto-Black.ttf'),
@@ -209,8 +233,16 @@ const App = () => {
           <Stack.Screen name="Details" component={Details} options={{ title: 'Details' }} />
           <Stack.Screen name="AddProduct" component={AddProduct} options={{ title: 'Produit' }} />
 
-          <Stack.Screen name="LoginScreen" component={LoginScreen} />
-          <Stack.Screen name="AuthScreen" component={AuthScreen} />
+          <Stack.Screen name="LoginScreen" component={LoginScreen} options={{
+              headerShown: false,
+            }}/>
+
+            <Stack.Screen name="SignUpScreen" component={SignUpScreen} options={{
+              headerShown: false,
+            }}/>
+          <Stack.Screen name="AuthScreen" component={AuthScreen} options={{
+              headerShown: false,
+            }}/>
         </Stack.Navigator>
       </NavigationContainer>
     );

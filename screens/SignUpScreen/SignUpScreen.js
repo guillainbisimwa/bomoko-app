@@ -1,12 +1,12 @@
 import React from 'react';
 import { View, StyleSheet} from 'react-native';
 //Components
-import { LoginForm } from './components';
+import { SignUpForm } from './components';
 
-export const LoginScreen = ({ navigation }) => {
+export const SignUpScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      <LoginForm navigation={navigation} />
+      <SignUpForm navigation={navigation} />
     </View>
   );
 };

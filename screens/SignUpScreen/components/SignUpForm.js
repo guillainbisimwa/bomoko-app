@@ -6,17 +6,21 @@ import NetInfo from "@react-native-community/netinfo";
 
 import LottieView from 'lottie-react-native';
 import { COLORS, FONTS } from '../../../constants';
-import { loginUser } from '../../../redux/userSlice';
+import { signUpUser } from '../../../redux/userSlice';
 
 const { height, width } = Dimensions.get('window');
 
-export const LoginForm = ({ navigation }) => {
+export const SignUpForm = ({ navigation }) => {
   const dispatch = useDispatch();
 
-  const { error, isLoading, success } = useSelector((state) => state.user);
+  const { error, isLoading, success, userSignUp } = useSelector((state) => state.user);
 
   const [name, setNom] = useState('');
   const [password, setPassword] = useState('');
+
+  const [email, setEmail] = useState('');
+  const [mobile, setMobile] = useState('');
+  const [role, setRole] = useState('user');
 
   const [visible, setVisible] = useState(false);
 
@@ -26,18 +30,18 @@ export const LoginForm = ({ navigation }) => {
 
   // Use useEffect or any other method to handle the success state and display the alert
     useEffect(() => {
-      if (success) {
-        //Alert.alert("Success", "Login successful!");
-        navigation.goBack(); // First go back
-        navigation.goBack(); // Second go back
+      console.log("userSignUp", userSignUp);
+      if (userSignUp != null) {
+        // Alert.alert("Success", "Login successful!");
+        navigation.navigate('LoginScreen'); 
       }
       if (error) {
         onToggleSnackBar()
       }
       
-    }, [success, error]);
+    }, [userSignUp, error]);
 
-const handleLogin = async () => {
+const handleSignUp = async () => {
   try {
     // Check internet connections
     const netInfo = await NetInfo.fetch();
@@ -48,7 +52,14 @@ const handleLogin = async () => {
     }
 
     // Handle login functionality
-    dispatch(loginUser({username:name, password}))
+    dispatch(signUpUser({
+      username:name,
+      name,
+      password,
+      email,
+      mobile,
+      role
+    }))
     //dispatch(loginUser({username:"bvenceslas", password: "1234567890"}))
  
   } catch (error) {
@@ -69,7 +80,7 @@ const handleLogin = async () => {
       <View style={styles.contentContainer}>
         <LottieView
           style={styles.animation}
-          source={require('./../../../assets/json/lf30_kj1v7uim.json')}
+          source={require('../../../assets/json/animation_lks5mkix.json')}
           autoPlay
           loop
         />
@@ -82,11 +93,20 @@ const handleLogin = async () => {
           style={styles.input}
           error={error}
         />
+
+        <TextInput error={error} keyboardType="default" 
+        label="E-mail" value={email} 
+        onChangeText={setEmail} style={styles.input} />
+
+      <TextInput error={error} keyboardType="default" 
+        label="Téléphone" value={mobile} 
+        onChangeText={setMobile} style={styles.input} />
+
           <ActivityIndicator  animating={isLoading} color={COLORS.red} />
 
         
-        <Button mode="contained" onPress={handleLogin} style={styles.button}>
-          Login
+        <Button mode="contained" onPress={handleSignUp} style={styles.button}>
+          S'enregistrer
         </Button>
 
         <Text style={{ marginVertical: 20, color: COLORS.white, ...FONTS.h2}} 
