@@ -18,6 +18,7 @@ import { COLORS, icons } from './constants';
 import Details from './screens/Product/Details';
 import AddProduct from './screens/Product/AddProduct';
 import { loginSuccess, logoutUser } from './redux/authReducer';
+import { SignUpScreen } from './screens/SignUpScreen';
 
 const theme = {
   ...DefaultTheme,
@@ -233,6 +234,10 @@ const App = () => {
           <Stack.Screen name="AddProduct" component={AddProduct} options={{ title: 'Produit' }} />
 
           <Stack.Screen name="LoginScreen" component={LoginScreen} options={{
+              headerShown: false,
+            }}/>
+
+            <Stack.Screen name="SignUpScreen" component={SignUpScreen} options={{
               headerShown: false,
             }}/>
           <Stack.Screen name="AuthScreen" component={AuthScreen} options={{

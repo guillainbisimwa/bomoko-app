@@ -3,7 +3,7 @@ import { View, StyleSheet} from 'react-native';
 //Components
 import { SignUpForm } from './components';
 
-export const SingUpScreen = ({ navigation }) => {
+export const SignUpScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <SignUpForm navigation={navigation} />
