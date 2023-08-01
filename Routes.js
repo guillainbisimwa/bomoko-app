@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import InitialLoader from './screens/InitialLoader';
 import Onboard from './navigations/Onboard';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { setInstalled } from './redux/appReducer';
+import { setInstalled, setUnInstalled } from './redux/appReducer';
 import { LoginScreen } from './screens/LoginScreen/LoginScreen';
 import { AuthScreen } from './screens/AuthScreen/AuthScreen';
 import { resetAllCat } from './redux/catReducer';
@@ -146,11 +146,12 @@ const App = () => {
   const checkInstallationStatus = async () => {
     try {
       const value = await AsyncStorage.getItem('isInstalled');
-      // console.log('value', value);
+      console.log('value', value);
       if (value !== null && value === 'true') {
         dispatch(setInstalled());
       } else {
         setLoading(false);
+        dispatch(setUnInstalled());
       }
     } catch (error) {
       console.log('Error retrieving installation status:', error);
