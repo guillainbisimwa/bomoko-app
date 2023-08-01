@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Image, TouchableOpacity, Platform, Alert } from 'react-native';
-import { TextInput, Button, ActivityIndicator } from 'react-native-paper';
+import { TextInput, Button, ActivityIndicator, RadioButton } from 'react-native-paper';
 import { Block, Text } from './../../components';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Constants from 'expo-constants';
@@ -11,11 +11,26 @@ import { ScrollView } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 
 const AddProduct = () => {
+  const [name, setName] = useState('');
+  const [location, setLocation] = useState([]);
+
+  const [amount, setAmount] = useState(0);
+  const [initialAmount, setInitialAmount] = useState(0);
+  const [type, setType] = useState('');
+  const [currency, setCurrency] = useState('');
+
+  const [timeline, settimeline] = useState([]);
+  const [owner, setowner] = useState('');
+  const [startDate, setstartDate] = useState(null);
+  const [endDate, setendDate] = useState(null);
+
   const [description, setDescription] = useState('');
   const [total, setTotal] = useState('');
   const [images, setImages] = useState([]);
 
   const [loadPic, setLoadPic] = useState(false);
+  const [checked, setChecked] = useState('produit');
+  const [checkedDevise, setCheckedDevise] = useState('USD');
 
 
   useEffect(() => {
@@ -183,8 +198,52 @@ const pickImage = async () => {
     return (
       <>
         <View style={styles.dropdownContainer}></View>
+
+        <Block style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop:10 }}>
+          <Block>
+            <Text  style={{ ...FONTS.h3, color: COLORS.darkgray }}>TYPE</Text>
+            <RadioButton.Group onValueChange={(value) => setChecked(value)} value={checked}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <RadioButton value="produit" color="red" /> 
+                <Text>Produit</Text>
+              </View>
+
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <RadioButton value="service" color="blue" /> 
+                <Text>Service</Text>
+              </View>
+            </RadioButton.Group>
+          </Block>
+
+          <Block>
+          <Text  style={{ ...FONTS.h3, color: COLORS.darkgray }}>DEVICE</Text>
+            <RadioButton.Group onValueChange={(value) => setCheckedDevise(value)} value={checkedDevise}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <RadioButton value="USD" color="red" /> 
+                <Text>USD</Text>
+              </View>
+
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <RadioButton value="FC" color="blue" /> 
+                <Text>FC</Text>
+              </View>
+            </RadioButton.Group>
+          </Block>
+        </Block>
+   
+          
+
         <TextInput
-          label="Description"
+          label={`Nom de votre ${checked}`}
+          value={name}
+          onChangeText={name}
+          mode="outlined"
+          style={styles.input}
+          required
+        />
+
+        <TextInput
+          label={`Description votre ${checked}`}
           value={description}
           onChangeText={setDescription}
           mode="outlined"
@@ -193,15 +252,27 @@ const pickImage = async () => {
           numberOfLines={2}
           required
         />
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+          <TextInput
+            label={`Montant disponible (${checkedDevise})`}
+            value={initialAmount}
+            onChangeText={setInitialAmount}
+            mode="outlined"
+            keyboardType="numeric"
+            style={[styles.input, styles.input_49]}
+          />
+
         <TextInput
-          label="Montant"
-          value={total}
-          onChangeText={setTotal}
+          label={`Besoin de financement (${checkedDevise})`}
+          value={amount}
+          onChangeText={setAmount}
           mode="outlined"
           keyboardType="numeric"
-          style={styles.input}
-          required
+          style={[styles.input, styles.input_49]}
+          //prefix="USD"
         />
+        </View>
+        
         <Button
           elevated
           mode="contained"
@@ -226,8 +297,6 @@ const pickImage = async () => {
             onPress={() => (images.length >= 3 ? info() : pickImage())}
           >
             <Ionicons name="cloud-upload" size={30} color={COLORS.white} style={styles.icon} />
-            {/* {loadPic?
-              <ActivityIndicator size="small" color={Colors.danger} />: <></>} */}
             <Text style={{ color: COLORS.white }}>Téléverser</Text>
           </TouchableOpacity>
 
@@ -236,11 +305,8 @@ const pickImage = async () => {
             onPress={() => (images.length >= 3 ? info() : takePhoto())}
           >
             <Ionicons name="camera" size={30} color={COLORS.white} style={styles.icon} />
-            {/* {loadPic?
-              <ActivityIndicator animating={true} color={COLORS.peach} />: <></>} */}
-               
-
-            <Text style={{ color: COLORS.white }}>Capture une photo</Text>
+           
+            <Text style={{ color: COLORS.white }}>Capturer une photo</Text>
           </TouchableOpacity>
         </Block>
       </Block>
@@ -309,6 +375,9 @@ const styles = StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth,
     marginTop: SIZES.padding,
   },
+  input_49: {
+    width: "49%"
+  },
   hasErrors: {
     borderBottomColor: COLORS.purple,
   },
@@ -374,3 +443,22 @@ const styles = StyleSheet.create({
 });
 
 export default AddProduct;
+
+// {
+//   "name": "Nettoyage de vitres",
+//   "detail": "Nous offrons des s"
+//   "location": ["1","2"],
+//   "amount": 300,
+//   "initialAmount": 250,
+//   "type": "service",
+//   "currency": "USD",
+//   "timeline": [
+//     {
+//       "title": "Creation du Produit/service",
+//       "details": "Le produit- cree par @"
+//     }
+//   ],
+//   "startDate": "2023-10-02T12:00:00Z",
+//   "endDate": "2023-10-05T12:00:00Z",
+//   "owner": "64c80f4e28a8242d951dea1d",
+// }
