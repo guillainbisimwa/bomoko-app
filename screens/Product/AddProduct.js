@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Image, TouchableOpacity, Platform, Alert } from 'react-native';
-import { TextInput, Button } from 'react-native-paper';
+import { TextInput, Button, ActivityIndicator } from 'react-native-paper';
 import { Block, Text } from './../../components';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Constants from 'expo-constants';
@@ -14,6 +14,9 @@ const AddProduct = () => {
   const [description, setDescription] = useState('');
   const [total, setTotal] = useState('');
   const [images, setImages] = useState([]);
+
+  const [loadPic, setLoadPic] = useState(false);
+
 
   useEffect(() => {
     (async () => {
@@ -29,6 +32,9 @@ const AddProduct = () => {
 
   const handleSaveAddProduct = async () => {
     try {
+      console.log('Add', images);
+      console.log('Add');
+
     } catch (e) {
       console.log('error', e);
     }
@@ -53,37 +59,6 @@ const AddProduct = () => {
     );
   }
 
-  const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
-    //try{
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: 'Images',
-      //mediaTypes: ImagePicker.MediaTypeOptions.All,
-
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-      base64: true,
-    });
-
-    if (!result.cancelled) {
-      const uri = result.uri;
-      // const type = result.type;
-      // const name = `${Math.floor(Math.random() * 900) + 100}_${Date.now()}`;
-      // let base64Img = `data:image/jpg;base64,${result.base64}`;
-
-      // const source = {
-      //   uri,
-      //   type,
-      //   name,
-      //   base64Img,
-      // };
-      let imgCb2V2 = [...images];
-      imgCb2V2.push(uri);
-      setImages([...imgCb2V2]);
-    }
-  };
-
   const takePhoto = async () => {
     let result = await ImagePicker.launchCameraAsync({
       mediaTypes: 'Images',
@@ -91,24 +66,87 @@ const AddProduct = () => {
       base64: true,
     });
 
-    if (!result.cancelled) {
-      const uri = result.uri;
-      // const type = result.type;
-      // const name = `${Math.floor(Math.random() * 900) + 100}_${Date.now()}`;
-      // let base64Img = `data:image/jpg;base64,${result.base64}`;
-
-      // const source = {
-      //   uri,
-      //   type,
-      //   name,
-      //   base64Img,
-      // };
+    if (!result.canceled) {
 
       let imgCb2V2 = [...images];
-      imgCb2V2.push(uri);
+      imgCb2V2.push(result.assets[0].uri);
       setImages([...imgCb2V2]);
     }
   };
+
+const pickImage = async () => {
+  try {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images, // Use proper syntax for mediaTypes
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+      base64: true,
+    });
+
+    if (!result.canceled) {
+      const { uri, type, base64 } = result.assets[0];
+      const name = `${Math.floor(Math.random() * 900) + 100}_${Date.now()}`;
+
+      let base64Img = `data:image/jpg;base64,${base64}`; // result.assets[0].base64
+
+      const source = {
+        uri,
+        type,
+        name,
+        base64Img,
+      };
+
+      //await onCloudinarySaveCb(source);
+      console.log("------------");
+      let imgCb = await onCloudinarySaveCb(source);
+      let imgCb2 = [...images];
+
+      imgCb2.push(imgCb);
+      setImages(imgCb2); // Use proper syntax for setting the state
+      console.log(images);
+    }
+  } catch (error) {
+    // Handle any errors that might occur during image picking
+    console.error('Error while picking image:', error);
+  }
+};
+
+
+  const onCloudinarySaveCb = async (obj) => {
+    setLoadPic(true)
+    var pic = "";
+        let apiUrl =
+          'https://api.cloudinary.com/v1_1/micity/image/upload';
+        let data = {
+          file: obj.base64Img,
+          upload_preset: 'ml_default'
+        };
+
+        await fetch(apiUrl, {
+          body: JSON.stringify(data),
+          headers: {
+            'content-type': 'application/json'
+          },
+          method: 'POST'
+        })
+          .then(async response => {
+            let data = await response.json();
+            //console.log(data);
+            if (await data.secure_url) {
+                //console.log('Upload successful');
+                setLoadPic(false);
+                pic = await data.secure_url;
+            }
+          })
+          .catch(err => {
+            console.log('Cannot upload');
+            setLoadPic(false);
+            console.log(err);
+          });
+      return pic;
+};
 
   const removePic = (id) => {
     var removed = images.filter((value) => value !== id);
@@ -184,7 +222,9 @@ const AddProduct = () => {
           >
             <Ionicons name="camera" size={30} color={COLORS.white} style={styles.icon} />
             {/* {loadPic?
-              <ActivityIndicator size="small" color={Colors.danger} />: <></>} */}
+              <ActivityIndicator animating={true} color={COLORS.peach} />: <></>} */}
+               
+
             <Text style={{ color: COLORS.white }}>Capture une photo</Text>
           </TouchableOpacity>
         </Block>
@@ -206,10 +246,10 @@ const AddProduct = () => {
         <Block flex={1}>
           <Block style={styles.imgContainer}>
             {images.map((img, key) => (
-              <Block key={key}>
+              <View key={key}>
                 <Ionicons
                   color={COLORS.red}
-                  size={SIZES.base * 2}
+                  size={SIZES.base * 6}
                   name={'close-circle'}
                   style={styles.cancel}
                   onPress={() => removePic(img)}
@@ -217,8 +257,9 @@ const AddProduct = () => {
                 <Block style={styles.bg}>
                   <Image source={{ uri: img }} style={styles.img} />
                 </Block>
-              </Block>
+              </View>
             ))}
+            <ActivityIndicator animating={loadPic} color={COLORS.peach} />
           </Block>
         </Block>
 
@@ -313,8 +354,7 @@ const styles = StyleSheet.create({
   cancel: {
     position: 'absolute',
     zIndex: 100,
-    padding: 10,
-    elevation: 2,
+    margin: 10,
   },
 });
 
