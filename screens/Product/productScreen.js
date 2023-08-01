@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Image, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import { COLORS, FONTS, SIZES, icons } from './../../constants';
 import Block from './Block';
 import Text from './Text';
 import Product_service from './Product_service';
+import LottieView from 'lottie-react-native';
 
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { FAB, IconButton, MD3Colors, ProgressBar, Button, Card, Modal } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 import { ImageBackground } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ProductScreen = ({ navigation }) => {
   const products = useSelector((state) => state.products);
@@ -19,6 +21,23 @@ const ProductScreen = ({ navigation }) => {
   const [visible, setVisible] = useState(false);
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
+
+  const [token, setToken] = useState(null);
+
+  useEffect(() => {
+    const getTokenFromAsyncStorage = async () => {
+      try {
+        const storedToken = await AsyncStorage.getItem('user');
+        setToken(storedToken);
+       
+      } catch (error) {
+        // Handle AsyncStorage read error if needed
+        console.error('Error reading token from AsyncStorage:', error);
+      }
+    };
+
+    getTokenFromAsyncStorage();
+  }, []);
 
   const containerStyle = {
     backgroundColor: 'white',
@@ -300,20 +319,26 @@ const ProductScreen = ({ navigation }) => {
             }}
           />
         </TouchableOpacity>
-
-        <TouchableOpacity
-          style={{ justifyContent: 'center', alignItems: 'flex-end', width: 50 }}
-          onPress={() => console.log('search')}
+        {
+          token?<>
+           <TouchableOpacity
+          style={{  justifyContent: 'center', alignItems: 'flex-end', width: 50 }}
+          onPress={() =>{ 
+            console.log('search', token)
+           
+          }}
         >
-          <Image
-            source={icons.search}
-            style={{
-              width: 30,
-              height: 30,
-              tintColor: COLORS.white,
-            }}
-          />
+          <LottieView
+          style={{width: 140, marginTop: 0, 
+            position:"absolute", left:-20}}
+          source={require('./../../assets/json/animation_lks5k3jp.json')}
+          autoPlay
+          loop
+        />
         </TouchableOpacity>
+        </>:<></>
+        }
+       
         </View>
 
       </View>
@@ -503,6 +528,10 @@ const styles = StyleSheet.create({
     //backgroundColor: '#ff0000',
     right: 0,
     bottom: 0,
+  },
+  animation: {
+    width: 50,
+    height: 50,
   },
 });
 

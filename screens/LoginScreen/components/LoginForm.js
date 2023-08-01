@@ -13,21 +13,25 @@ const { height, width } = Dimensions.get('window');
 export const LoginForm = ({ navigation }) => {
   const dispatch = useDispatch();
 
-  const { error, isLoading, success } = useSelector((state) => state.user);
+  const { error, isLoading, success, user } = useSelector((state) => state.user);
 
   const [name, setNom] = useState('');
   const [password, setPassword] = useState('');
 
   const [visible, setVisible] = useState(false);
+  const [visibleSuccess, setVisibleSuccess] = useState(false);
 
+  const onToggleSnackBarSuccess = () => setVisibleSuccess(!visibleSuccess);
   const onToggleSnackBar = () => setVisible(!visible);
 
   const onDismissSnackBar = () => setVisible(false);
+  const onDismissSnackBarSuccess = () => setVisibleSuccess(false);
 
   // Use useEffect or any other method to handle the success state and display the alert
     useEffect(() => {
       if (success) {
         //Alert.alert("Success", "Login successful!");
+        onToggleSnackBarSuccess()
         navigation.goBack(); // First go back
         navigation.goBack(); // Second go back
       }
@@ -104,6 +108,21 @@ const handleLogin = async () => {
         }}
         >
         {error}
+      
+        
+      </Snackbar>
+      <Snackbar
+        visible={visibleSuccess}
+        onDismiss={onDismissSnackBarSuccess}
+        style={{ backgroundColor: COLORS.success}}
+        action={{
+          label: 'Annuler',
+          onPress: () => {
+            // Do something
+          },
+        }}
+        >
+        {user?.msg}
         
       </Snackbar>
       </View>

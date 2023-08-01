@@ -52,7 +52,20 @@ initialState: {
     success: false,
     userSignUp: null
   },
-  reducers: {},
+  reducers: {
+    // Add a logoutUser action to clear user data
+    logoutUser: (state) => {
+      state.user = null;
+      state.error = null;
+      state.isLoading = false;
+      state.success = false;
+      state.userSignUp = null;
+
+      // Clear user data from AsyncStorage
+      AsyncStorage.removeItem('user');
+      // AsyncStorage.clear();
+    }
+  },
   // In the extraReducers field, we define how the state should change when the asynchronous
   // thunk loginUser is in a pending, fulfilled, or rejected state. 
   extraReducers: (builder) => {
@@ -99,5 +112,6 @@ initialState: {
       });
   },
 });
+export const { logoutUser } = userSlice.actions;
 
 export default userSlice.reducer;

@@ -19,7 +19,8 @@ const authSlice = createSlice({
       state.user = null;
       state.error = null;
 
-      AsyncStorage.clear();
+      // Clear user data from AsyncStorage
+      AsyncStorage.removeItem('user');
 
     },
   },
