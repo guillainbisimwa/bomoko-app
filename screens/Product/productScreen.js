@@ -7,7 +7,7 @@ import Product_service from './Product_service';
 import LottieView from 'lottie-react-native';
 
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { FAB, IconButton, MD3Colors, ProgressBar, Button, Card, Modal } from 'react-native-paper';
+import { FAB, IconButton, MD3Colors, ProgressBar, Button, Card, Modal, Menu, Divider, Provider } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 import { ImageBackground } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -17,10 +17,6 @@ const ProductScreen = ({ navigation }) => {
 
   const u = useSelector((state) => state?.user);
 
-  // Modal
-  const [visible, setVisible] = useState(false);
-  const showModal = () => setVisible(true);
-  const hideModal = () => setVisible(false);
 
   const [token, setToken] = useState(null);
 
@@ -38,6 +34,20 @@ const ProductScreen = ({ navigation }) => {
 
     getTokenFromAsyncStorage();
   }, []);
+
+
+  // Modal
+  const [visible, setVisible] = useState(false);
+  const showModal = () => setVisible(true);
+  const hideModal = () => setVisible(false);
+
+
+  // Menu
+  const [visibleMenu, setVisibleMenu] = useState(false);
+
+  const openMenu = () => setVisibleMenu(true);
+
+  const closeMenu = () => setVisibleMenu(false);
 
   const containerStyle = {
     backgroundColor: 'white',
@@ -319,25 +329,62 @@ const ProductScreen = ({ navigation }) => {
             }}
           />
         </TouchableOpacity>
-        {
-          token?<>
-           <TouchableOpacity
-          style={{  justifyContent: 'center', alignItems: 'flex-end', width: 50 }}
-          onPress={() =>{ 
-            console.log('search', token)
-           
-          }}
-        >
-          <LottieView
-          style={{width: 140, marginTop: 0, 
-            position:"absolute", left:-20}}
-          source={require('./../../assets/json/animation_lks5k3jp.json')}
-          autoPlay
-          loop
-        />
-        </TouchableOpacity>
-        </>:<></>
-        }
+        { 
+      token?  
+      <View
+        style={{
+          //paddingTop: 50,
+          justifyContent: 'center', alignItems: 'flex-end', width: 50
+        }}>
+        <Menu
+          visible={visibleMenu}
+          onDismiss={closeMenu}
+          anchor={
+
+            <TouchableOpacity
+            style={{  justifyContent: 'center', width: 40 }}
+            onPress={openMenu}
+          >
+            <LottieView
+            style={{width: 40, marginTop: 0, 
+              }}
+            source={require('./../../assets/json/animation_lksuvej7.json')}
+            autoPlay
+            loop
+          />
+          </TouchableOpacity>
+          }>
+          <Menu.Item leadingIcon="account" onPress={() => {}} title="Profile" />
+          <Divider />
+          <Menu.Item leadingIcon="logout" onPress={() => {}} title="Deconnexion" />
+        </Menu>
+      </View>
+      :<></>}
+
+
+
+
+
+{/* 
+               <TouchableOpacity
+              style={{  justifyContent: 'center', alignItems: 'flex-end', width: 50 }}
+              onPress={openMenu}
+            >
+              <LottieView
+              style={{width: 140, marginTop: 0, 
+                position:"absolute", left:-20}}
+              source={require('./../../assets/json/animation_lks5k3jp.json')}
+              autoPlay
+              loop
+            />
+            </TouchableOpacity> */}
+            
+            
+          
+
+
+
+
        
         </View>
 
@@ -346,7 +393,7 @@ const ProductScreen = ({ navigation }) => {
   }
 
   return (
-    <>
+    <Provider>
     <ImageBackground
       style={{ flex: 1, position: 'absolute', height: '100%', width: '100%' }}
       source={require('./../../assets/login1_bg.png')}
@@ -418,7 +465,7 @@ const ProductScreen = ({ navigation }) => {
       </Block>
     </Block>
     </View>
-    </>
+    </Provider>
   );
 };
 
