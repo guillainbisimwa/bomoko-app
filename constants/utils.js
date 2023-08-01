@@ -28,6 +28,7 @@ export const getInitialStateFromAsyncStorage = async () => {
   try {
     // Retrieve the values from AsyncStorage
     const token = await AsyncStorage.getItem('user');
+    console.log(" ===>>>>>>>", token);
 
     // Return the initial state object with the retrieved values
     return {
@@ -37,7 +38,7 @@ export const getInitialStateFromAsyncStorage = async () => {
     console.error('Error retrieving data from AsyncStorage:', error);
     // Return default initial state in case of an error
     return {
-      token: null,
+      user: null,
     };
   }
 };

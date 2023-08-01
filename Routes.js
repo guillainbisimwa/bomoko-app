@@ -180,7 +180,7 @@ const App = () => {
   const isInstalled = useSelector((state) => state.app.isInstalled);
   const u = useSelector((state) => state?.user);
   console.log("user",u)
-
+  
   const [loaded] = useFonts({
     'Roboto-Black': require('./assets/fonts/Roboto-Black.ttf'),
     'Roboto-Bold': require('./assets/fonts/Roboto-Bold.ttf'),

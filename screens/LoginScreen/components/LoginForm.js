@@ -1,20 +1,45 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, ImageBackground, Dimensions } from 'react-native';
-import { Button, TextInput, RadioButton, Text, Menu, Divider } from 'react-native-paper';
+import { Alert, View, StyleSheet, ImageBackground, Dimensions } from 'react-native';
+import { Button, TextInput, Text, } from 'react-native-paper';
+import { useDispatch, useSelector } from 'react-redux';
+import NetInfo from "@react-native-community/netinfo";
+
 
 import LottieView from 'lottie-react-native';
 import { COLORS, FONTS } from '../../../constants';
+import { loginUser } from '../../../redux/userSlice';
 
 const { height, width } = Dimensions.get('window');
 
 export const LoginForm = ({ navigation }) => {
-  const [name, setName] = useState('');
+  const dispatch = useDispatch();
+
+  const { error, isLoading } = useSelector((state) => state.user);
+
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
- 
-  const handleLogin = () => {
+
+
+const handleLogin = async () => {
+  try {
+    // Check internet connection
+    const netInfo = await NetInfo.fetch();
+    console.log("netInfo.isConnected", netInfo.isConnected);
+    if (!netInfo.isConnected) {
+      Alert.alert("No Internet Connection", "Please check your internet connection and try again.");
+      return;
+    }
+
     // Handle login functionality
-  };
+    dispatch(loginUser({username:"bvenceslas", password: "1234567890"}))
+
+  } catch (error) {
+    Alert.alert("Attention", "Error occurred during login.");
+
+    console.error("Error occurred during login:", error);
+  }
+};
+
 
   return (
     <View style={styles.container}>

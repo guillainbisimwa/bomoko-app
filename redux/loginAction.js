@@ -7,6 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export const login = (username, password) => async (dispatch) => {
   try {
     dispatch(loginStart());
+    console.log("-->",BASE_URL +'auth/login');
 
     const response = await axios.post( BASE_URL +'auth/login', {
       username,
