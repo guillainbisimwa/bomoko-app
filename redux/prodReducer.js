@@ -60,27 +60,70 @@ export const loadProductsFromStorage = createAsyncThunk('products/loadFromStorag
   }
 });
 
+
+export const postProduct = createAsyncThunk(
+  "product/add",
+  async ({  
+    name,
+    email,
+    mobile,
+    username,
+    password,
+    role}) => {
+    const response = await axios.post( BASE_URL +'product', {
+      name,
+      email,
+      mobile,
+      username,
+      password,
+      role
+    });
+    console.log("Add prod---?????? ",response.data);
+    
+    return response.data;
+  }
+);
+
+
 const productSlice = createSlice({
   name: 'products',
   initialState: {
     products: [...product],
+    isLoading: false,
+    error: '',
+    lastSaved: null
   },
   reducers: {
-    addProduct: (state, action) => {
-      state.products = action.payload;
-      AsyncStorage.setItem('products', JSON.stringify(action.payload));
-    },
-    resetAllProducts: (state, action) => {
-      state.products = action.payload;
-    },
+    // addProduct: (state, action) => {
+    //   state.products = action.payload;
+    //   AsyncStorage.setItem('products', JSON.stringify(action.payload));
+    // },
+    // resetAllProducts: (state, action) => {
+    //   state.products = action.payload;
+    // },
   },
   extraReducers: (builder) => {
-    builder.addCase(loadProductsFromStorage.fulfilled, (state, action) => {
+    builder
+    .addCase(loadProductsFromStorage.fulfilled, (state, action) => {
       state.products = action.payload;
+    })
+    .addCase(postProduct.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    })
+    .addCase(postProduct.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.lastSaved = action.payload;
+      state.error = null;
+
+    })
+    .addCase(postProduct.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.error.message;
     });
   },
 });
 
-export const { addProduct, resetAllProducts } = productSlice.actions;
+//export const { addProduct, resetAllProducts } = productSlice.actions;
 
 export default productSlice.reducer;

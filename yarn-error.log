@@ -1,5 +1,5 @@
 Arguments: 
-  /home/guillain/.nvm/versions/node/v20.5.0/bin/node /home/guillain/.nvm/versions/node/v20.5.0/bin/yarn add uuid
+  /home/guillain/.nvm/versions/node/v20.5.0/bin/node /home/guillain/.nvm/versions/node/v20.5.0/bin/yarn add react-native-paper-dates
 
 PATH: 
   /home/guillain/.nvm/versions/node/v20.5.0/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/snap/bin:/home/guillain/Android/Sdk/tools:/home/guillain/Android/Sdk/platform-tools:/home/guillain/Android/Sdk/tools:/home/guillain/Android/Sdk/platform-tools

@@ -1,14 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, View, Image, TouchableOpacity, Platform, Alert } from 'react-native';
-import { TextInput, Button, ActivityIndicator, RadioButton } from 'react-native-paper';
+import { TextInput, Button, ActivityIndicator, RadioButton, Checkbox } from 'react-native-paper';
 import { Block, Text } from './../../components';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Constants from 'expo-constants';
+import { format } from 'date-fns';
+import { fr } from 'date-fns/locale';
 
 import { COLORS, FONTS, SIZES, icons } from './../../constants';
 import { KeyboardAvoidingView } from 'react-native';
 import { ScrollView } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+
+import { DatePickerModal } from 'react-native-paper-dates';
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 const AddProduct = () => {
   const [name, setName] = useState('');
@@ -21,8 +26,8 @@ const AddProduct = () => {
 
   const [timeline, settimeline] = useState([]);
   const [owner, setowner] = useState('');
-  const [startDate, setstartDate] = useState(null);
-  const [endDate, setendDate] = useState(null);
+  // const [startDate, setstartDate] = useState(null);
+  //const [endDate, setendDate] = useState(null);
 
   const [description, setDescription] = useState('');
   const [total, setTotal] = useState('');
@@ -31,6 +36,36 @@ const AddProduct = () => {
   const [loadPic, setLoadPic] = useState(false);
   const [checked, setChecked] = useState('produit');
   const [checkedDevise, setCheckedDevise] = useState('USD');
+
+  // DATE RANGE PICKER
+  const [range, setRange] = useState({ startDate: undefined, endDate: undefined });
+
+  const [open, setOpen] = useState(false);
+
+  const onDismiss = useCallback(() => {
+    setOpen(false);
+  }, [setOpen]);
+
+  const onConfirm = useCallback(
+    ({ startDate, endDate }) => {
+      setOpen(false);
+      setRange({ startDate, endDate });
+    },
+    [setOpen, setRange]
+  );
+
+  // Fonction pour convertir la date en format français
+  const formatDateToFrench = (date) => {
+    return format(new Date(date), 'dd MMMM yyyy', { locale: fr });
+  };
+
+  // Location
+
+  
+  const [checkedLocation1, setCheckedLocation1] = useState(false);
+  const [checkedLocation2, setCheckedLocation2] = useState(false);
+  const [checkedLocation3, setCheckedLocation3] = useState(false);
+
 
 
   useEffect(() => {
@@ -49,6 +84,26 @@ const AddProduct = () => {
     try {
       console.log('Add', images);
       console.log('Add');
+
+      // {
+      //   name: name,
+      //   detail: "Nous offrons des s"
+      //   location: ["1","2"],
+      //   amount: 300,
+      //   initialAmount: 250,
+      //   type: "service",
+      //   currency: "USD",
+      //   timeline: [
+      //     {
+      //       title: "Creation du Produit/service",
+      //       details: "Le produit- cree par @"
+      //     }
+      //   ],
+      //   startDate: "2023-10-02T12:00:00Z",
+      //   endDate: "2023-10-05T12:00:00Z",
+      //   owner: "64c80f4e28a8242d951dea1d",
+      // }
+      
 
     } catch (e) {
       console.log('error', e);
@@ -231,8 +286,6 @@ const pickImage = async () => {
           </Block>
         </Block>
    
-          
-
         <TextInput
           label={`Nom de votre ${checked}`}
           value={name}
@@ -272,7 +325,56 @@ const pickImage = async () => {
           //prefix="USD"
         />
         </View>
+
+        <SafeAreaProvider>
+          <View style={{justifyContent: 'center', flex: 1, alignItems: 'center', marginVertical:20}}>
+            <Button onPress={() => setOpen(true)} uppercase={false} mode="outlined">
+              Choisir la durée de votre campagne
+            </Button>
+            <DatePickerModal
+              locale="fr"
+              mode="range"
+              visible={open}
+              onDismiss={onDismiss}
+              startDate={range.startDate}
+              endDate={range.endDate}
+              onConfirm={onConfirm}
+            />
+
+        {range.startDate && range.endDate && (
+          <Text style={{ marginTop: 20 }}>
+            Campagne du : {formatDateToFrench(range.startDate)} au {formatDateToFrench(range.endDate)}
+          </Text>
+        )}
+          </View>
+        </SafeAreaProvider>
+
+        <View style={{ flexDirection: 'row' }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 16 }}>
+          <Checkbox value="paris" color="#4CAF50" status={checkedLocation1 ? 'checked' : 'unchecked'}
+      onPress={() => {
+        setCheckedLocation1(!checkedLocation1);
+      }}/>
+          <Text>Goma</Text>
+        </View>
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 16 }}>
+          <Checkbox value="newyork" color="#4CAF50" status={checkedLocation2 ? 'checked' : 'unchecked'}
+      onPress={() => {
+        setCheckedLocation2(!checkedLocation2);
+      }}/>
+          <Text>Bukavu</Text>
+        </View>
+
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 16 }}>
+          <Checkbox value="newyork" color="#4CAF50" status={checkedLocation3 ? 'checked' : 'unchecked'}
+      onPress={() => {
+        setCheckedLocation3(!checkedLocation3);
+      }}/>
+          <Text>Kinshasa</Text>
+        </View>
         
+    </View>
+
         <Button
           elevated
           mode="contained"
