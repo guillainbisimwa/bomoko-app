@@ -6,17 +6,21 @@ import NetInfo from "@react-native-community/netinfo";
 
 import LottieView from 'lottie-react-native';
 import { COLORS, FONTS } from '../../../constants';
-import { loginUser } from '../../../redux/userSlice';
+import { signUpUser } from '../../../redux/userSlice';
 
 const { height, width } = Dimensions.get('window');
 
 export const SignUpForm = ({ navigation }) => {
   const dispatch = useDispatch();
 
-  const { error, isLoading, success } = useSelector((state) => state.user);
+  const { error, isLoading, success, userSignUp } = useSelector((state) => state.user);
 
-  const [name, setNom] = useState('');
-  const [password, setPassword] = useState('');
+  const [name, setNom] = useState('Guy');
+  const [password, setPassword] = useState('12345678');
+
+  const [email, setEmail] = useState('guy@gmail.com');
+  const [mobile, setMobile] = useState('0978532756');
+  const [role, setRole] = useState('user');
 
   const [visible, setVisible] = useState(false);
 
@@ -26,16 +30,16 @@ export const SignUpForm = ({ navigation }) => {
 
   // Use useEffect or any other method to handle the success state and display the alert
     useEffect(() => {
-      if (success) {
-        //Alert.alert("Success", "Login successful!");
-        navigation.goBack(); // First go back
-        navigation.goBack(); // Second go back
+      console.log("userSignUp", userSignUp);
+      if (userSignUp != null) {
+        // Alert.alert("Success", "Login successful!");
+        navigation.navigate('LoginScreen'); 
       }
       if (error) {
         onToggleSnackBar()
       }
       
-    }, [success, error]);
+    }, [userSignUp, error]);
 
 const handleSignUp = async () => {
   try {
@@ -48,7 +52,14 @@ const handleSignUp = async () => {
     }
 
     // Handle login functionality
-    dispatch(loginUser({username:name, password}))
+    dispatch(signUpUser({
+      username:name,
+      name,
+      password,
+      email,
+      mobile,
+      role
+    }))
     //dispatch(loginUser({username:"bvenceslas", password: "1234567890"}))
  
   } catch (error) {
@@ -69,7 +80,7 @@ const handleSignUp = async () => {
       <View style={styles.contentContainer}>
         <LottieView
           style={styles.animation}
-          source={require('../../../assets/json/lf30_kj1v7uim.json')}
+          source={require('../../../assets/json/animation_lks5mkix.json')}
           autoPlay
           loop
         />
@@ -82,6 +93,15 @@ const handleSignUp = async () => {
           style={styles.input}
           error={error}
         />
+
+        <TextInput error={error} keyboardType="default" 
+        label="E-mail" value={email} 
+        onChangeText={setEmail} style={styles.input} />
+
+      <TextInput error={error} keyboardType="default" 
+        label="Téléphone" value={mobile} 
+        onChangeText={setMobile} style={styles.input} />
+
           <ActivityIndicator  animating={isLoading} color={COLORS.red} />
 
         
