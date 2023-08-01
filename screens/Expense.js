@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { StyleSheet, View, Image, TouchableOpacity, Platform } from 'react-native';
+import { StyleSheet, View, Image, ScrollView, Platform } from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
 import { FontAwesome } from '@expo/vector-icons';
 import { Text } from '../components';
@@ -11,7 +11,6 @@ import { Picker } from '@react-native-picker/picker';
 import { KeyboardAvoidingView } from 'react-native';
 import { addCat } from '../redux/catReducer';
 import { Alert } from 'react-native';
-import { ScrollView } from 'react-native';
 
 const Expense = ({ route }) => {
   const dispatch = useDispatch();

@@ -8,11 +8,14 @@ import LottieView from 'lottie-react-native';
 
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { FAB, IconButton, MD3Colors, ProgressBar, Button, Card, Modal, Menu, Divider, Provider } from 'react-native-paper';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { ImageBackground } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { logoutUser } from '../../redux/userSlice';
 
 const ProductScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
+
   const products = useSelector((state) => state.products);
 
   const u = useSelector((state) => state?.user);
@@ -35,6 +38,14 @@ const ProductScreen = ({ navigation }) => {
     getTokenFromAsyncStorage();
   }, []);
 
+
+  const handleLogout = () => {
+    // Dispatch the logoutUser action
+    closeMenu();
+    dispatch(logoutUser());
+
+    navigation.navigate('AuthScreen')
+  };
 
   // Modal
   const [visible, setVisible] = useState(false);
@@ -333,7 +344,6 @@ const ProductScreen = ({ navigation }) => {
       token?  
       <View
         style={{
-          //paddingTop: 50,
           justifyContent: 'center', alignItems: 'flex-end', width: 50
         }}>
         <Menu
@@ -354,35 +364,15 @@ const ProductScreen = ({ navigation }) => {
           />
           </TouchableOpacity>
           }>
-          <Menu.Item leadingIcon="account" onPress={() => {}} title="Profile" />
+          <Menu.Item leadingIcon="account" onPress={() => {
+            console.log(JSON.parse(token).user.user.username);
+          }}
+           title={JSON.parse(token).user.user.username} />
           <Divider />
-          <Menu.Item leadingIcon="logout" onPress={() => {}} title="Deconnexion" />
+          <Menu.Item leadingIcon="logout" onPress={handleLogout} title="Deconnexion" />
         </Menu>
       </View>
       :<></>}
-
-
-
-
-
-{/* 
-               <TouchableOpacity
-              style={{  justifyContent: 'center', alignItems: 'flex-end', width: 50 }}
-              onPress={openMenu}
-            >
-              <LottieView
-              style={{width: 140, marginTop: 0, 
-                position:"absolute", left:-20}}
-              source={require('./../../assets/json/animation_lks5k3jp.json')}
-              autoPlay
-              loop
-            />
-            </TouchableOpacity> */}
-            
-            
-          
-
-
 
 
        
@@ -438,7 +428,7 @@ const ProductScreen = ({ navigation }) => {
             title="ATTENTION!" 
           />
           <Card.Content>
-            <Text variant="titleLarge">Vpus devez d'abord vous connecter</Text>
+            <Text variant="titleLarge">Vous devez d'abord vous connecter</Text>
           </Card.Content>
           <Card.Actions style={{ marginTop: 15 }}>
             <Button onPress={hideModal}>Annuler</Button>

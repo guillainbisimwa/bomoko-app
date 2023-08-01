@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Alert, View, StyleSheet, ImageBackground, Dimensions } from 'react-native';
+import { Alert, View, StyleSheet, ImageBackground, Dimensions,ScrollView, KeyboardAvoidingView } from 'react-native';
 import { Button, TextInput, Text, ActivityIndicator, Snackbar, } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import NetInfo from "@react-native-community/netinfo";
@@ -32,8 +32,8 @@ export const LoginForm = ({ navigation }) => {
       if (success) {
         //Alert.alert("Success", "Login successful!");
         onToggleSnackBarSuccess()
-        navigation.goBack(); // First go back
-        navigation.goBack(); // Second go back
+        navigation.goBack(null); // First go back
+        navigation.goBack(null); // Second go back
       }
       if (error) {
         onToggleSnackBar()
@@ -64,7 +64,12 @@ const handleLogin = async () => {
 
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+    style={styles.container}
+    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+  >
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
+    <View style={{}}>
       <ImageBackground
         style={styles.backgroundImage}
         source={require('./../../../assets/login1_bg.png')}
@@ -127,6 +132,8 @@ const handleLogin = async () => {
       </Snackbar>
       </View>
     </View>
+    </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -157,5 +164,9 @@ const styles = StyleSheet.create({
     marginTop: 20,
     padding:10,
     width: '70%',
+  },
+  scrollContainer: {
+    flexGrow: 1,
+    paddingBottom: 120,
   },
 });

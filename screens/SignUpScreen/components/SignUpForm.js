@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Alert, View, StyleSheet, ImageBackground, Dimensions } from 'react-native';
+import { Alert, View, StyleSheet, ScrollView, ImageBackground, Dimensions, KeyboardAvoidingView } from 'react-native';
 import { Button, TextInput, Text, ActivityIndicator, Snackbar, } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import NetInfo from "@react-native-community/netinfo";
@@ -71,7 +71,12 @@ const handleSignUp = async () => {
 
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+    style={styles.container}
+    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+  >
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
+    <View style={{}}>
       <ImageBackground
         style={styles.backgroundImage}
         source={require('./../../../assets/login1_bg.png')}
@@ -128,6 +133,8 @@ const handleSignUp = async () => {
       </Snackbar>
       </View>
     </View>
+    </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -145,6 +152,10 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  scrollContainer: {
+    flexGrow: 1,
+    paddingBottom: 20,
   },
   animation: {
     width: 300,
