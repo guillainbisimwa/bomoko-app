@@ -58,19 +58,34 @@ const AddProduct = () => {
       </View>
     );
   }
-
   const takePhoto = async () => {
     let result = await ImagePicker.launchCameraAsync({
-      mediaTypes: 'Images',
+      mediaTypes: "Images",
       aspect: [4, 3],
-      base64: true,
+      base64: true
     });
 
     if (!result.canceled) {
+        const uri = result.assets[0].uri;
+        const type = result.assets[0].type;
+        const name = `${Math.floor(Math.random() * 900) + 100}_${Date.now()}`;
+        let base64Img = `data:image/jpg;base64,${result.assets[0].base64}`;
 
-      let imgCb2V2 = [...images];
-      imgCb2V2.push(result.assets[0].uri);
-      setImages([...imgCb2V2]);
+        const source = {
+          uri,
+          type,
+          name,
+          base64Img
+        }
+     
+        //await onCloudinarySaveCb(source);
+        console.log("------------");
+        let imgCb = await onCloudinarySaveCb(source);
+        let imgCb2 = [...images];
+
+        imgCb2.push(imgCb);
+        setImages([...imgCb2]);
+        console.log(images);
     }
   };
 
