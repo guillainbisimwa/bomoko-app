@@ -17,6 +17,7 @@ import { Expense, Income } from './screens';
 import { COLORS, icons } from './constants';
 import Details from './screens/Product/Details';
 import AddProduct from './screens/Product/AddProduct';
+import { loginSuccess } from './redux/authReducer';
 
 const theme = {
   ...DefaultTheme,
@@ -137,9 +138,11 @@ const App = () => {
   ];
 
   useEffect(() => {
+    checkLoginStatus();
     setTimeout(() => setLoading(false), 2000);
     // AsyncStorage.clear();
     checkInstallationStatus();
+    
     checkCategories();
   }, []);
 
@@ -156,6 +159,22 @@ const App = () => {
     } catch (error) {
       console.log('Error retrieving installation status:', error);
       setLoading(false);
+    }
+  };
+
+  const checkLoginStatus = async () => {
+    try {
+      const value = await AsyncStorage.getItem('user');
+      console.log('value-user', value);
+      if (value !== null) {
+        dispatch(loginSuccess(value));
+      } else {
+        //setLoading(false);
+        //dispatch(setUnInstalled());
+      }
+    } catch (error) {
+      console.log('Error retrieving installation status:', error);
+      //setLoading(false);
     }
   };
 
@@ -179,8 +198,8 @@ const App = () => {
 
   const isInstalled = useSelector((state) => state.app.isInstalled);
   const u = useSelector((state) => state?.user);
-  console.log("user",u)
-  
+  console.log("user -->",u)
+
   const [loaded] = useFonts({
     'Roboto-Black': require('./assets/fonts/Roboto-Black.ttf'),
     'Roboto-Bold': require('./assets/fonts/Roboto-Bold.ttf'),

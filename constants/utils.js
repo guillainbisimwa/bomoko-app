@@ -32,14 +32,12 @@ export const getInitialStateFromAsyncStorage = async () => {
 
     // Return the initial state object with the retrieved values
     return {
-      user: token, // Default value if token is not found in AsyncStorage
+      token, // Default value if token is not found in AsyncStorage
     };
   } catch (error) {
     console.error('Error retrieving data from AsyncStorage:', error);
     // Return default initial state in case of an error
-    return {
-      user: null,
-    };
+    return 
   }
 };
 
