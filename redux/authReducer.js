@@ -10,8 +10,6 @@ const authSlice = createSlice({
   },
   reducers: {
     loginSuccess: (state, action) => {
-      console.log("bree");
-      console.log(action.payload);
       state.isLoading = false;
       state.user = action.payload;
       state.error = null;

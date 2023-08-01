@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Alert, View, StyleSheet, ImageBackground, Dimensions } from 'react-native';
-import { Button, TextInput, Text, } from 'react-native-paper';
+import { Button, TextInput, Text, ActivityIndicator, Snackbar, } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import NetInfo from "@react-native-community/netinfo";
-
 
 import LottieView from 'lottie-react-native';
 import { COLORS, FONTS } from '../../../constants';
@@ -14,25 +13,44 @@ const { height, width } = Dimensions.get('window');
 export const LoginForm = ({ navigation }) => {
   const dispatch = useDispatch();
 
-  const { error, isLoading } = useSelector((state) => state.user);
+  const { error, isLoading, success } = useSelector((state) => state.user);
 
-  const [phone, setPhone] = useState('');
+  const [name, setNom] = useState('');
   const [password, setPassword] = useState('');
 
+  const [visible, setVisible] = useState(false);
+
+  const onToggleSnackBar = () => setVisible(!visible);
+
+  const onDismissSnackBar = () => setVisible(false);
+
+  // Use useEffect or any other method to handle the success state and display the alert
+    useEffect(() => {
+      if (success) {
+        //Alert.alert("Success", "Login successful!");
+        navigation.goBack(); // First go back
+        navigation.goBack(); // Second go back
+      }
+      if (error) {
+        onToggleSnackBar()
+      }
+      
+    }, [success, error]);
 
 const handleLogin = async () => {
   try {
-    // Check internet connection
+    // Check internet connections
     const netInfo = await NetInfo.fetch();
-    console.log("netInfo.isConnected", netInfo.isConnected);
+    // console.log("netInfo.isConnected", netInfo.isConnected);
     if (!netInfo.isConnected) {
       Alert.alert("No Internet Connection", "Please check your internet connection and try again.");
       return;
     }
 
     // Handle login functionality
-    dispatch(loginUser({username:"bvenceslas", password: "1234567890"}))
-
+    dispatch(loginUser({username:name, password}))
+    //dispatch(loginUser({username:"bvenceslas", password: "1234567890"}))
+ 
   } catch (error) {
     Alert.alert("Attention", "Error occurred during login.");
 
@@ -55,14 +73,17 @@ const handleLogin = async () => {
           autoPlay
           loop
         />
-        <TextInput keyboardType="phone-pad" label="Telephone" value={phone} onChangeText={setPhone} style={styles.input} />
+        <TextInput error={error} keyboardType="default" label="Nom d'utilisateur" value={name} onChangeText={setNom} style={styles.input} />
         <TextInput
           label="Mots de passe"
           value={password}
           onChangeText={setPassword}
           secureTextEntry
           style={styles.input}
+          error={error}
         />
+          <ActivityIndicator  animating={isLoading} color={COLORS.red} />
+
         
         <Button mode="contained" onPress={handleLogin} style={styles.button}>
           Login
@@ -70,6 +91,21 @@ const handleLogin = async () => {
 
         <Text style={{ marginVertical: 20, color: COLORS.white, ...FONTS.h2}} 
       onPress={()=> navigation.goBack()} > Retour</Text>
+
+      <Snackbar
+        visible={visible}
+        onDismiss={onDismissSnackBar}
+        style={{ backgroundColor: COLORS.peach}}
+        action={{
+          label: 'Annuler',
+          onPress: () => {
+            // Do something
+          },
+        }}
+        >
+        {error}
+        
+      </Snackbar>
       </View>
     </View>
   );

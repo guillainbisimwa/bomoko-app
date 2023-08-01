@@ -17,7 +17,7 @@ import { Expense, Income } from './screens';
 import { COLORS, icons } from './constants';
 import Details from './screens/Product/Details';
 import AddProduct from './screens/Product/AddProduct';
-import { loginSuccess } from './redux/authReducer';
+import { loginSuccess, logoutUser } from './redux/authReducer';
 
 const theme = {
   ...DefaultTheme,
@@ -168,6 +168,7 @@ const App = () => {
       console.log('value-user', value);
       if (value !== null) {
         dispatch(loginSuccess(value));
+        //dispatch(logoutUser());
       } else {
         //setLoading(false);
         //dispatch(setUnInstalled());

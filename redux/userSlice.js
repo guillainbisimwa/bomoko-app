@@ -31,6 +31,7 @@ initialState: {
     user: null, // Use user data from AsyncStorage or set to null
     error: null,
     isLoading: false,
+    success: false
   },
   reducers: {},
   // In the extraReducers field, we define how the state should change when the asynchronous
@@ -40,17 +41,23 @@ initialState: {
       .addCase(loginUser.pending, (state) => {
         state.isLoading = true;
         state.error = null;
+        state.success = false
+
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.isLoading = false;
         state.user = action.payload;
         state.error = null;
+        state.success = true
+
         // Store user data to LocalStorage
         AsyncStorage.setItem('user', JSON.stringify({ user: action.payload }));
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message;
+        state.success = false
+
       });
   },
 });

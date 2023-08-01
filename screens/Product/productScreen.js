@@ -346,7 +346,7 @@ const ProductScreen = ({ navigation }) => {
 
           {search.trim().length == 0 ? (
             <>
-              {popular()}
+              {/* {popular()} */}
               {list()}
             </>
           ) : (
@@ -372,7 +372,7 @@ const ProductScreen = ({ navigation }) => {
             <Button onPress={hideModal}>Annuler</Button>
             <Button buttonColor={COLORS.red}
              onPress={() => {
-              showModal(false);
+              hideModal()
               navigation.navigate('AuthScreen')
             }} >Connecter</Button>
           </Card.Actions>
@@ -382,12 +382,11 @@ const ProductScreen = ({ navigation }) => {
 
         <FAB icon="plus" variant="tertiary" style={styles.fab} 
         onPress={() => {
-          console.log("user",u)
-          if(u) {
+          console.log("user",u.user)
+          if(!u.user) {
             showModal(true);
           }
           else {
-            showModal(false);
             navigation.navigate('AddProduct');
           }
         }} />
