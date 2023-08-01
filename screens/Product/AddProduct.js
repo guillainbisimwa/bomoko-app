@@ -129,33 +129,27 @@ const AddProduct = () => {
     );
   }
   const takePhoto = async () => {
-    let result = await ImagePicker.launchCameraAsync({
-      mediaTypes: "Images",
-      aspect: [4, 3],
-      base64: true
-    });
+    try{
+      let result = await ImagePicker.launchCameraAsync({
+        mediaTypes: "Images",
+        aspect: [4, 3],
+        base64: true
+      });
 
-    if (!result.canceled) {
-        const uri = result.assets[0].uri;
-        const type = result.assets[0].type;
-        const name = `${Math.floor(Math.random() * 900) + 100}_${Date.now()}`;
-        let base64Img = `data:image/jpg;base64,${result.assets[0].base64}`;
+      if (!result.canceled) {
+          let base64Img = `data:image/jpg;base64,${result.assets[0].base64}`;
 
-        const source = {
-          uri,
-          type,
-          name,
-          base64Img
-        }
-     
-        //await onCloudinarySaveCb(source);
-        console.log("------------");
-        let imgCb = await onCloudinarySaveCb(source);
-        let imgCb2 = [...images];
+          console.log("------------");
+          let imgCb = await onCloudinarySaveCb(base64Img);
+          let imgCb2 = [...images];
 
-        imgCb2.push(imgCb);
-        setImages([...imgCb2]);
-        console.log(images);
+          imgCb2.push(imgCb);
+          setImages([...imgCb2]);
+          console.log(images);
+      }
+    }catch(e){
+      setLoadPic(false);
+      console.log("Error while uploading image", e);
     }
   };
 
@@ -171,41 +165,31 @@ const pickImage = async () => {
     });
 
     if (!result.canceled) {
-      const { uri, type, base64 } = result.assets[0];
-      const name = `${Math.floor(Math.random() * 900) + 100}_${Date.now()}`;
+      let base64Img = `data:image/jpg;base64,${result.assets[0].base64}`; // result.assets[0].base64
 
-      let base64Img = `data:image/jpg;base64,${base64}`; // result.assets[0].base64
-
-      const source = {
-        uri,
-        type,
-        name,
-        base64Img,
-      };
-
-      //await onCloudinarySaveCb(source);
       console.log("------------");
-      let imgCb = await onCloudinarySaveCb(source);
+      let imgCb = await onCloudinarySaveCb(base64Img);
       let imgCb2 = [...images];
 
       imgCb2.push(imgCb);
       setImages(imgCb2); // Use proper syntax for setting the state
       console.log(images);
     }
-  } catch (error) {
-    // Handle any errors that might occur during image picking
-    console.error('Error while picking image:', error);
-  }
+  } catch(e) {
+      setLoadPic(false);
+      console.log("Error while picking image", e);
+    }
 };
 
 
-  const onCloudinarySaveCb = async (obj) => {
+  const onCloudinarySaveCb = async (base64Img) => {
+    try{
     setLoadPic(true)
     var pic = "";
         let apiUrl =
           'https://api.cloudinary.com/v1_1/micity/image/upload';
         let data = {
-          file: obj.base64Img,
+          file: base64Img,
           upload_preset: 'ml_default'
         };
 
@@ -231,6 +215,10 @@ const pickImage = async () => {
             console.log(err);
           });
       return pic;
+    }catch(e){
+      setLoadPic(false);
+      console.log("Error while onCloudinarySave", e);
+    }
 };
 
   const removePic = (id) => {
