@@ -216,7 +216,7 @@ const pickImage = async () => {
       setLoadPic(false);
       console.log("Error while onCloudinarySave", e);
     }
-};
+  };
 
   const removePic = (id) => {
     var removed = images.filter((value) => value !== id);

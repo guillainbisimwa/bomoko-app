@@ -167,9 +167,12 @@ const App = () => {
   const checkLoginStatus = async () => {
     try {
       const value = await AsyncStorage.getItem('user');
+      //AsyncStorage.clear();
+
       console.log('value-user', value);
       if (value !== null) {
         dispatch(loginSuccess(value));
+        //AsyncStorage.clear();
         //dispatch(logoutUser());
 
       } else {

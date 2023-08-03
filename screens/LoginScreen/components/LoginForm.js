@@ -31,9 +31,13 @@ export const LoginForm = ({ navigation }) => {
     useEffect(() => {
       if (success) {
         //Alert.alert("Success", "Login successful!");
-        onToggleSnackBarSuccess()
-        navigation.goBack(null); // First go back
-        navigation.goBack(null); // Second go back
+        onToggleSnackBarSuccess();
+        setTimeout(() => {
+          navigation.goBack(null); // First go back
+          navigation.goBack(null); // Second go back
+        }
+        , 2000);
+       
       }
       if (error) {
         onToggleSnackBar()
@@ -101,10 +105,14 @@ const handleLogin = async () => {
         <Text style={{ marginVertical: 20, color: COLORS.white, ...FONTS.h2}} 
       onPress={()=> navigation.goBack()} > Retour</Text>
 
-      <Snackbar
+      
+      </View>
+    </View>
+    <Snackbar
         visible={visible}
         onDismiss={onDismissSnackBar}
         style={{ backgroundColor: COLORS.peach}}
+        wrapperStyle={{ bottom: 30 }}
         action={{
           label: 'Annuler',
           onPress: () => {
@@ -119,7 +127,9 @@ const handleLogin = async () => {
       <Snackbar
         visible={visibleSuccess}
         onDismiss={onDismissSnackBarSuccess}
-        style={{ backgroundColor: COLORS.success}}
+        style={{ backgroundColor: COLORS.darkgreen}}
+        wrapperStyle={{ bottom: 30 }}
+        
         action={{
           label: 'Annuler',
           onPress: () => {
@@ -127,11 +137,9 @@ const handleLogin = async () => {
           },
         }}
         >
-        {user?.msg}
+        Login avec success
         
       </Snackbar>
-      </View>
-    </View>
     </ScrollView>
     </KeyboardAvoidingView>
   );
