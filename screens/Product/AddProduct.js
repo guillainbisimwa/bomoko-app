@@ -59,13 +59,10 @@ const AddProduct = () => {
     return format(new Date(date), 'dd MMMM yyyy', { locale: fr });
   };
 
-  // Location
-
-  
-  const [checkedLocation1, setCheckedLocation1] = useState(true);
-  const [checkedLocation2, setCheckedLocation2] = useState(false);
-  const [checkedLocation3, setCheckedLocation3] = useState(false);
-
+  // Location  
+  const [checkedGoma, setCheckedGoma] = useState(true);
+  const [checkedBukavu, setCheckedBukavu] = useState(false);
+  const [checkedKinshasa, setCheckedKinshasa] = useState(false);
 
 
   useEffect(() => {
@@ -343,24 +340,24 @@ const pickImage = async () => {
 
         <View style={{ flexDirection: 'row' }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 16 }}>
-          <Checkbox value="paris" color="#AF4C50" status={checkedLocation1 ? 'checked' : 'unchecked'}
+          <Checkbox value="paris" color="#AF4C50" status={checkedGoma ? 'checked' : 'unchecked'}
       onPress={() => {
-        setCheckedLocation1(!checkedLocation1);
+        setCheckedGoma(!checkedGoma);
       }}/>
           <Text>Goma</Text>
         </View>
         <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 16 }}>
-          <Checkbox value="newyork" color="#4CAF50" status={checkedLocation2 ? 'checked' : 'unchecked'}
+          <Checkbox value="newyork" color="#4CAF50" status={checkedBukavu ? 'checked' : 'unchecked'}
       onPress={() => {
-        setCheckedLocation2(!checkedLocation2);
+        setCheckedBukavu(!checkedBukavu);
       }}/>
           <Text>Bukavu</Text>
         </View>
 
         <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 16 }}>
-          <Checkbox value="newyork" color="#504CAF" status={checkedLocation3 ? 'checked' : 'unchecked'}
+          <Checkbox value="newyork" color="#504CAF" status={checkedKinshasa ? 'checked' : 'unchecked'}
       onPress={() => {
-        setCheckedLocation3(!checkedLocation3);
+        setCheckedKinshasa(!checkedKinshasa);
       }}/>
           <Text>Kinshasa</Text>
         </View>
