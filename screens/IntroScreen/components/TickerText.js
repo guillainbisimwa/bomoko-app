@@ -11,7 +11,7 @@ export const Ticker = ({ scrollX }) => {
   const inputRange = [0, width, width * 2];
   const translateY = scrollX.interpolate({
     inputRange,
-    outputRange: [0, -TICKER_HEIGHT, -TICKER_HEIGHT * 2],
+    outputRange: [0, -TICKER_HEIGHT - 12, -TICKER_HEIGHT *2.3 ],
   });
   return (
     <View style={styles.tickerContainer}>
