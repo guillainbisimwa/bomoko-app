@@ -125,30 +125,31 @@ const AddProduct = () => {
       </View>
     );
   }
-  const takePhoto = async () => {
-    try{
-      let result = await ImagePicker.launchCameraAsync({
-        mediaTypes: "Images",
-        aspect: [4, 3],
-        base64: true
-      });
 
-      if (!result.canceled) {
-          let base64Img = `data:image/jpg;base64,${result.assets[0].base64}`;
+  // const takePhoto = async () => {
+  //   try{
+  //     let result = await ImagePicker.launchCameraAsync({
+  //       mediaTypes: "Images",
+  //       aspect: [4, 3],
+  //       base64: true
+  //     });
 
-          console.log("------------");
-          let imgCb = await onCloudinarySaveCb(base64Img);
-          let imgCb2 = [...images];
+  //     if (!result.canceled) {
+  //         let base64Img = `data:image/jpg;base64,${result.assets[0].base64}`;
 
-          imgCb2.push(imgCb);
-          setImages([...imgCb2]);
-          console.log(images);
-      }
-    }catch(e){
-      setLoadPic(false);
-      console.log("Error while uploading image", e);
-    }
-  };
+  //         console.log("------------");
+  //         let imgCb = await onCloudinarySaveCb(base64Img);
+  //         let imgCb2 = [...images];
+
+  //         imgCb2.push(imgCb);
+  //         setImages([...imgCb2]);
+  //         console.log(images);
+  //     }
+  //   }catch(e){
+  //     setLoadPic(false);
+  //     console.log("Error while uploading image", e);
+  //   }
+  // };
 
 const pickImage = async () => {
   try {
@@ -388,17 +389,17 @@ const pickImage = async () => {
             onPress={() => (images.length >= 3 ? info() : pickImage())}
           >
             <Ionicons name="cloud-upload" size={30} color={COLORS.white} style={styles.icon} />
-            <Text style={{ color: COLORS.white }}>Téléverser</Text>
+            <Text style={{ color: COLORS.white }}>Téléverser une image</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={styles.btn}
             onPress={() => (images.length >= 3 ? info() : takePhoto())}
           >
             <Ionicons name="camera" size={30} color={COLORS.white} style={styles.icon} />
            
             <Text style={{ color: COLORS.white }}>Capturer une photo</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </Block>
       </Block>
     );
