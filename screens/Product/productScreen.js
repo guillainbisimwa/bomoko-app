@@ -372,12 +372,8 @@ const ProductScreen = ({ navigation }) => {
           <Menu.Item leadingIcon="logout" onPress={handleLogout} title="Deconnexion" />
         </Menu>
       </View>
-      :<></>}
-
-
-       
-        </View>
-
+      :<></>}       
+      </View>
       </View>
     );
   }
@@ -408,7 +404,7 @@ const ProductScreen = ({ navigation }) => {
 
           {search.trim().length == 0 ? (
             <>
-              {popular()}
+              {/* {popular()} */}
               {list()}
             </>
           ) : (
@@ -441,11 +437,16 @@ const ProductScreen = ({ navigation }) => {
         </Card>
       </Modal>
 
-
         <FAB icon="plus" variant="tertiary" style={styles.fab} 
         onPress={() => {
-          console.log("user",u.user)
-          if(!u.user) {
+          console.log()
+          //console.log("user",JSON.parse(token)) //.user.user.username
+          //console.log("user",u) //.user.user.username
+          //console.log(JSON.parse(token).user?.user?.username);
+          // if(!u.user) {
+          //   showModal(true);
+          // }
+          if(!token) {
             showModal(true);
           }
           else {
@@ -524,7 +525,6 @@ const styles = StyleSheet.create({
   listContainer: {
     borderRadius: 20,
   },
-
   tab: {
     marginRight: 20,
     paddingBottom: 5,
