@@ -14,8 +14,11 @@ import * as ImagePicker from 'expo-image-picker';
 
 import { DatePickerModal } from 'react-native-paper-dates';
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { postProduct } from '../../redux/prodReducer';
 
-const AddProduct = () => {
+const AddProduct = ({route, navigation}) => {
+  const { owner, username } = route.params;
+
   const [name, setName] = useState('');
   const [location, setLocation] = useState([]);
 
@@ -24,8 +27,8 @@ const AddProduct = () => {
   const [type, setType] = useState('');
   const [currency, setCurrency] = useState('');
 
-  const [timeline, settimeline] = useState([]);
-  const [owner, setowner] = useState('');
+  //const [timeline, settimeline] = useState([]);
+  //const [owner, setowner] = useState('');
   // const [startDate, setstartDate] = useState(null);
   //const [endDate, setendDate] = useState(null);
 
@@ -81,25 +84,27 @@ const AddProduct = () => {
     try {
       console.log('Add', images);
       console.log('Add');
+      //postProduct()
 
-      // {
-      //   name: name,
-      //   detail: "Nous offrons des s"
-      //   location: ["1","2"],
-      //   amount: 300,
-      //   initialAmount: 250,
-      //   type: "service",
-      //   currency: "USD",
-      //   timeline: [
-      //     {
-      //       title: "Creation du Produit/service",
-      //       details: "Le produit- cree par @"
-      //     }
-      //   ],
-      //   startDate: "2023-10-02T12:00:00Z",
-      //   endDate: "2023-10-05T12:00:00Z",
-      //   owner: "64c80f4e28a8242d951dea1d",
-      // }
+      var p = {
+        name: name,
+        detail: detail,
+        location: ["1","2"],
+        amount: amount,
+        initialAmount: initialAmount,
+        type: type,
+        currency: currency,
+        timeline: [
+          {
+            title: `Creation du ${type} : ${name}`,
+            details: `Le ${type} : ${name}- cree par ${username}`
+          }
+        ],
+        startDate: range.startDate, //formatDateToFrench(range.startDate)
+        endDate: range.endDate,
+        owner: owner,
+      }
+      console.log(p);
       
 
     } catch (e) {
@@ -275,7 +280,7 @@ const pickImage = async () => {
         <TextInput
           label={`Nom de votre ${checked}`}
           value={name}
-          onChangeText={name}
+          onChangeText={setName}
           mode="outlined"
           style={styles.input}
           keyboardType='default'
