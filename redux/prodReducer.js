@@ -65,20 +65,33 @@ export const postProduct = createAsyncThunk(
   "product/add",
   async ({  
     name,
-    email,
-    mobile,
-    username,
-    password,
-    role}) => {
+    detail,
+    location,
+    amount,
+    images,
+    initialAmount,
+    type,
+    currency,
+    timeline,
+    startDate,
+    endDate,
+    owner 
+  }) => {
     const response = await axios.post( BASE_URL +'product', {
       name,
-      email,
-      mobile,
-      username,
-      password,
-      role
+      detail,
+      location,
+      amount,
+      images,
+      initialAmount,
+      type,
+      currency,
+      timeline,
+      startDate,
+      endDate,
+      owner 
     });
-    console.log("Add prod---?????? ",response.data);
+    console.log("Add prod---?????? ok==",response.data);
     
     return response.data;
   }
