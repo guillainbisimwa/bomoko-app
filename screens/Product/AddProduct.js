@@ -16,25 +16,22 @@ import * as ImagePicker from 'expo-image-picker';
 import { DatePickerModal } from 'react-native-paper-dates';
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { postProduct } from '../../redux/prodReducer';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 const AddProduct = ({route, navigation}) => {
   const { owner, username } = route.params;
-
-  const [name, setName] = useState('');
-
+  const dispatch = useDispatch();
   const { error, isLoading } = useSelector((state) => state.products);
 
+  const [name, setName] = useState('');
   const [amount, setAmount] = useState(0);
   const [initialAmount, setInitialAmount] = useState(0);
   const [type, setType] = useState('produit');
 
   const [description, setDescription] = useState('');
-  const [total, setTotal] = useState('');
   const [images, setImages] = useState([]);
 
   const [loadPic, setLoadPic] = useState(false);
-  const [checked, setChecked] = useState('produit');
   const [checkedDevise, setCheckedDevise] = useState('USD');
 
   // DATE RANGE PICKER
@@ -108,9 +105,10 @@ const AddProduct = ({route, navigation}) => {
         endDate: range.endDate,
         owner: owner,
       }
-      console.log(p);
 
-      postProduct(p)
+      console.log(p);
+      dispatch(postProduct(p))  
+
 
     } catch (e) {
       console.log('error', e);
@@ -283,7 +281,7 @@ const pickImage = async () => {
         </Block>
    
         <TextInput
-          label={`Nom de votre ${checked}`}
+          label={`Nom de votre ${type}`}
           value={name}
           onChangeText={setName}
           mode="outlined"
@@ -293,7 +291,7 @@ const pickImage = async () => {
         />
 
         <TextInput
-          label={`Description votre ${checked}`}
+          label={`Description votre ${type}`}
           value={description}
           onChangeText={setDescription}
           mode="outlined"
