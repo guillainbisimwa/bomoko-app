@@ -450,8 +450,17 @@ const ProductScreen = ({ navigation }) => {
             showModal(true);
           }
           else {
-            navigation.navigate('AddProduct');
+            navigation.navigate('AddProduct', { owner: JSON.parse(token).user?.user?.userId,
+              username: JSON.parse(token).user?.user?.username });
           }
+
+          // {"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.
+          // eyJ1c2VySWQiOiI2NGM5NjAzOGUxOTliY2JmZTFlMDI2NTQiL
+          // CJlbWFpbCI6IkdiQHRlc3QuY29tIiwidXNlcm5hbWUiOiJHYi
+          // IsImlhdCI6MTY5MTE2MzE2OCwiZXhwIjoxNjkxMjQ5NTY4fQ.
+          // 5-vU88YKOBGg6rVk5zLuekAmKzuoYLO4QAXRWNFxtNo", 
+          // "user": {"email": "Gb@test.com", 
+          // "userId": "64c96038e199bcbfe1e02654", "username": "Gb"}}
         }} />
       </Block>
     </Block>

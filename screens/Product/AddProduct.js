@@ -24,8 +24,7 @@ const AddProduct = ({route, navigation}) => {
 
   const [amount, setAmount] = useState(0);
   const [initialAmount, setInitialAmount] = useState(0);
-  const [type, setType] = useState('');
-  const [currency, setCurrency] = useState('');
+  const [type, setType] = useState('produit');
 
   //const [timeline, settimeline] = useState([]);
   //const [owner, setowner] = useState('');
@@ -84,16 +83,16 @@ const AddProduct = ({route, navigation}) => {
     try {
       console.log('Add', images);
       console.log('Add');
-      //postProduct()
 
       var p = {
         name: name,
-        detail: detail,
+        detail: description,
         location: ["1","2"],
-        amount: amount,
-        initialAmount: initialAmount,
+        amount: parseInt(amount),
+        images: images,
+        initialAmount: parseInt(initialAmount),
         type: type,
-        currency: currency,
+        currency: checkedDevise,
         timeline: [
           {
             title: `Creation du ${type} : ${name}`,
@@ -105,6 +104,9 @@ const AddProduct = ({route, navigation}) => {
         owner: owner,
       }
       console.log(p);
+
+      postProduct(p)
+
       
 
     } catch (e) {
@@ -248,7 +250,7 @@ const pickImage = async () => {
         <Block style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop:10 }}>
           <Block>
             <Text  style={{ ...FONTS.h3, color: COLORS.darkgray }}>TYPE</Text>
-            <RadioButton.Group onValueChange={(value) => setChecked(value)} value={checked}>
+            <RadioButton.Group onValueChange={(value) => setType(value)} value={type}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <RadioButton value="produit" color="red" /> 
                 <Text>Produit</Text>
@@ -262,7 +264,7 @@ const pickImage = async () => {
           </Block>
 
           <Block>
-          <Text  style={{ ...FONTS.h3, color: COLORS.darkgray }}>DEVICE</Text>
+          <Text  style={{ ...FONTS.h3, color: COLORS.darkgray }}>DEVISE</Text>
             <RadioButton.Group onValueChange={(value) => setCheckedDevise(value)} value={checkedDevise}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <RadioButton value="USD" color="red" /> 
@@ -524,7 +526,7 @@ const styles = StyleSheet.create({
   btn: {
     backgroundColor: COLORS.peach,
     padding: SIZES.base,
-    width: SIZES.width / 2.5,
+   // width: SIZES.width / 2.5,
     borderRadius: SIZES.radius,
     elevation: 2,
     marginTop: SIZES.base * 1.8,
