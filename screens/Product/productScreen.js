@@ -404,7 +404,7 @@ const ProductScreen = ({ navigation }) => {
 
           {search.trim().length == 0 ? (
             <>
-              {/* {popular()} */}
+              {popular()}
               {list()}
             </>
           ) : (

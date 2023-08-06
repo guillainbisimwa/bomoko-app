@@ -7,40 +7,40 @@ const cleaner2 = require('./../assets/img/cleaner2.jpg');
 const soja2 = require('./../assets/img/soja2.jpg');
 
 const product = [
-  {
-    id: 1,
-    name: 'Farine de Soja',
-    detail:
-      'La farine de soja est une poudre fine obtenue à partir de graines de soja dégraissées. Elle est riche en protéines végétales et présente de nombreux avantages nutritionnels. ',
-    stars: 3,
-    like: true,
-    image: soja,
-    images: [soja, soja2],
-    type: 'produit',
-    location: 'Goma',
-    membres: [
-      { id: 1, name: 'Guy L', contrib: 20 },
-      { id: 2, name: 'Eva U', contrib: 20 },
-    ],
-    amount: 600,
-  },
-  {
-    id: 2,
-    name: 'Nettoyage de vitres',
-    detail:
-      "Nous offrons des solutions professionnelles pour le nettoyage et l'entretien des vitres de bâtiments résidentiels, commerciaux et industriels.",
-    stars: 2,
-    like: true,
-    image: cleaner,
-    images: [cleaner, cleaner2],
-    type: 'service',
-    location: 'Kinshasa kisangani',
-    membres: [
-      { id: 1, name: 'Guy L', contrib: 20 },
-      { id: 2, name: 'Eva U', contrib: 20 },
-    ],
-    amount: 300,
-  },
+  // {
+  //   id: 1,
+  //   name: 'Farine de Soja',
+  //   detail:
+  //     'La farine de soja est une poudre fine obtenue à partir de graines de soja dégraissées. Elle est riche en protéines végétales et présente de nombreux avantages nutritionnels. ',
+  //   stars: 3,
+  //   like: true,
+  //   image: soja,
+  //   images: [soja, soja2],
+  //   type: 'produit',
+  //   location: 'Goma',
+  //   membres: [
+  //     { id: 1, name: 'Guy L', contrib: 20 },
+  //     { id: 2, name: 'Eva U', contrib: 20 },
+  //   ],
+  //   amount: 600,
+  // },
+  // {
+  //   id: 2,
+  //   name: 'Nettoyage de vitres',
+  //   detail:
+  //     "Nous offrons des solutions professionnelles pour le nettoyage et l'entretien des vitres de bâtiments résidentiels, commerciaux et industriels.",
+  //   stars: 2,
+  //   like: true,
+  //   image: cleaner,
+  //   images: [cleaner, cleaner2],
+  //   type: 'service',
+  //   location: 'Kinshasa kisangani',
+  //   membres: [
+  //     { id: 1, name: 'Guy L', contrib: 20 },
+  //     { id: 2, name: 'Eva U', contrib: 20 },
+  //   ],
+  //   amount: 300,
+  // },
 ];
 
 export const loadProductsFromStorage = createAsyncThunk('products/loadFromStorage', async () => {
@@ -59,6 +59,21 @@ export const loadProductsFromStorage = createAsyncThunk('products/loadFromStorag
     throw error;
   }
 });
+
+// Here, we are using the createAsyncThunk function to create an asynchronous thunk to fetch 
+// the list of products. 
+// Then we define a new slice with an initial state containing 
+// an empty list of products, isLoading flag, and an error message if any.
+
+export const fetchProducts = createAsyncThunk(
+  "products/fetchProducts",
+  async () => {
+    const response = await axios.get(
+      BASE_URL +'product',
+    );
+    return response.data;
+  }
+);
 
 
 export const postProduct = createAsyncThunk(
@@ -131,6 +146,19 @@ const productSlice = createSlice({
 
     })
     .addCase(postProduct.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.error.message;
+    })
+    .addCase(fetchProducts.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    })
+    .addCase(fetchProducts.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.products = action.payload;
+      state.error = null;
+    })
+    .addCase(fetchProducts.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.error.message;
     });
