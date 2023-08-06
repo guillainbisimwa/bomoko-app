@@ -12,16 +12,21 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ImageBackground } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { logoutUser } from '../../redux/userSlice';
+import { fetchProducts } from '../../redux/prodReducer';
 
 const ProductScreen = ({ navigation }) => {
   const dispatch = useDispatch();
 
   const products = useSelector((state) => state.products);
 
-  const u = useSelector((state) => state?.user);
+  const [token, setToken] = useState(null);y
 
+  useEffect(() => {
+    // Fetch products lists when component mounts
+    dispatch(fetchProducts());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  const [token, setToken] = useState(null);
 
   useEffect(() => {
     const getTokenFromAsyncStorage = async () => {
