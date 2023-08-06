@@ -6,6 +6,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import Constants from 'expo-constants';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
+import NetInfo from "@react-native-community/netinfo";
 
 import { COLORS, FONTS, SIZES, icons } from './../../constants';
 import { KeyboardAvoidingView } from 'react-native';
@@ -15,21 +16,18 @@ import * as ImagePicker from 'expo-image-picker';
 import { DatePickerModal } from 'react-native-paper-dates';
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { postProduct } from '../../redux/prodReducer';
+import { useSelector } from 'react-redux';
 
 const AddProduct = ({route, navigation}) => {
   const { owner, username } = route.params;
 
   const [name, setName] = useState('');
-  const [location, setLocation] = useState([]);
+
+  const { error, isLoading } = useSelector((state) => state.products);
 
   const [amount, setAmount] = useState(0);
   const [initialAmount, setInitialAmount] = useState(0);
   const [type, setType] = useState('produit');
-
-  //const [timeline, settimeline] = useState([]);
-  //const [owner, setowner] = useState('');
-  // const [startDate, setstartDate] = useState(null);
-  //const [endDate, setendDate] = useState(null);
 
   const [description, setDescription] = useState('');
   const [total, setTotal] = useState('');
@@ -81,13 +79,20 @@ const AddProduct = ({route, navigation}) => {
 
   const handleSaveAddProduct = async () => {
     try {
+      const netInfo = await NetInfo.fetch();
+      // console.log("netInfo.isConnected", netInfo.isConnected);
+      if (!netInfo.isConnected) {
+        Alert.alert("No Internet Connection", "Please check your internet connection and try again.");
+        return;
+      }
       console.log('Add', images);
       console.log('Add');
 
       var p = {
         name: name,
         detail: description,
-        location: ["1","2"],
+        location: [checkedGoma?'Goma':'',
+          checkedBukavu?'Bukavu':'', checkedKinshasa?'Kinshasa':'' ],
         amount: parseInt(amount),
         images: images,
         initialAmount: parseInt(initialAmount),
@@ -106,8 +111,6 @@ const AddProduct = ({route, navigation}) => {
       console.log(p);
 
       postProduct(p)
-
-      
 
     } catch (e) {
       console.log('error', e);
@@ -380,8 +383,10 @@ const pickImage = async () => {
           icon={({ size, color }) => (
             <Ionicons name="save-outline" size={20} color={COLORS.white} />
           )}
+
+        loading={isLoading}
         >
-          Ajouter
+          Ajouter 
         </Button>
       </>
     );
