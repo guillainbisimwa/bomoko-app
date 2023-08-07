@@ -17,15 +17,18 @@ import { fetchProducts } from '../../redux/prodReducer';
 const ProductScreen = ({ navigation }) => {
   const dispatch = useDispatch();
 
-  const products = useSelector((state) => state.products);
+  const { error, isLoading, products } = useSelector((state) => state.products);
+console.log("Prod", products);
 
-  const [token, setToken] = useState(null);y
+  const [token, setToken] = useState(null);
 
   useEffect(() => {
     // Fetch products lists when component mounts
     dispatch(fetchProducts());
+    console.log("Eror ****", error);
+  
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [products]);
 
 
   useEffect(() => {
@@ -77,11 +80,11 @@ const ProductScreen = ({ navigation }) => {
 
   const [active, setActive] = useState('Tous');
   const [search, setSearch] = useState('');
-  const [product_serviceList, setProduct_serviceList] = useState([...products.products]);
+  const [product_serviceList, setProduct_serviceList] = useState([...products]);
 
   const onSearch = (text) => {
     setProduct_serviceList([
-      ...products.products.filter((prod) =>
+      ...products.filter((prod) =>
         prod.name.toLocaleLowerCase().includes(text.toLocaleLowerCase())
       ),
     ]);
@@ -118,15 +121,15 @@ const ProductScreen = ({ navigation }) => {
     setActive(tab);
 
     if (tab === 'Tous') {
-      setProduct_serviceList([...products.products].sort((a, b) => a.stars - b.stars));
+      setProduct_serviceList([...products].sort((a, b) => a.stars - b.stars));
     } else if (tab == 'Produits') {
-      const filteredProducts = [...products.products].filter((item) => item.type === 'produit');
+      const filteredProducts = [...products].filter((item) => item.type === 'produit');
       setProduct_serviceList([...filteredProducts]);
     } else if (tab == 'Services') {
-      const filteredProducts = [...products.products].filter((item) => item.type === 'service');
+      const filteredProducts = [...products].filter((item) => item.type === 'service');
       setProduct_serviceList([...filteredProducts]);
     } else {
-      setProduct_serviceList([...products.products].sort((a, b) => a.stars - b.stars));
+      setProduct_serviceList([...products].sort((a, b) => a.stars - b.stars));
     }
   };
 
@@ -141,7 +144,7 @@ const ProductScreen = ({ navigation }) => {
         </Block>
 
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {products.products.map((prod, index) => {
+          {products.map((prod, index) => {
             return (
               <TouchableOpacity
                 key={index}

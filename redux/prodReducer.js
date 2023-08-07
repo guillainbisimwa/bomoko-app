@@ -1,5 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { BASE_URL } from '../constants/utils';
+import axios from 'axios';
 
 const cleaner = require('./../assets/img/cleaner.jpg');
 const soja = require('./../assets/img/soja.jpg');
@@ -69,8 +71,9 @@ export const fetchProducts = createAsyncThunk(
   "products/fetchProducts",
   async () => {
     const response = await axios.get(
-      BASE_URL +'product',
+      BASE_URL +'api/product',
     );
+    console.log("response.data ------->>", response.data);
     return response.data;
   }
 );
@@ -92,7 +95,8 @@ export const postProduct = createAsyncThunk(
     endDate,
     owner 
   }) => {
-    const response = await axios.post( BASE_URL +'product', {
+    console.log(BASE_URL);
+    const response = await axios.post( BASE_URL +'api/product', {
       name,
       detail,
       location,

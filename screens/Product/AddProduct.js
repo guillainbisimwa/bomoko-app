@@ -74,6 +74,10 @@ const AddProduct = ({route, navigation}) => {
     })();
   }, []);
 
+  useEffect(()=>{
+    console.log(" error---", error);
+  },[error])
+
   const handleSaveAddProduct = async () => {
     try {
       const netInfo = await NetInfo.fetch();
@@ -82,10 +86,34 @@ const AddProduct = ({route, navigation}) => {
         Alert.alert("No Internet Connection", "Please check your internet connection and try again.");
         return;
       }
-      console.log('Add', images);
-      console.log('Add');
+      // console.log('Add', images);
+      // console.log('Add');
 
       var p = {
+        name: name,
+        detail: description,
+        location: [checkedGoma?'Goma':'',
+          checkedBukavu?'Bukavu':'', checkedKinshasa?'Kinshasa':'' ],
+        amount: parseInt(amount),
+        images: images,
+        initialAmount: parseInt(initialAmount),
+        type: type,
+        currency: checkedDevise,
+        timeline: [
+          {
+            title: `Creation du ${type} : ${name}`,
+          },
+          {
+            details: `Le ${type} : ${name}- cree par ${username}`
+          }
+        ],
+        startDate: `${range.startDate}`, //formatDateToFrench(range.startDate)
+        endDate: `${range.endDate}`,
+        owner: owner,
+      }
+
+      //console.log(p);
+      dispatch(postProduct({
         name: name,
         detail: description,
         location: [checkedGoma?'Goma':'',
@@ -101,13 +129,10 @@ const AddProduct = ({route, navigation}) => {
             details: `Le ${type} : ${name}- cree par ${username}`
           }
         ],
-        startDate: range.startDate, //formatDateToFrench(range.startDate)
-        endDate: range.endDate,
+        startDate: `${range.startDate}`, //formatDateToFrench(range.startDate)
+        endDate: `${range.endDate}`,
         owner: owner,
-      }
-
-      console.log(p);
-      dispatch(postProduct(p))  
+      }))  
 
 
     } catch (e) {
