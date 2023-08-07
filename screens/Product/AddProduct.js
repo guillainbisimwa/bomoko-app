@@ -88,6 +88,8 @@ const AddProduct = ({route, navigation}) => {
       }
       // console.log('Add', images);
       // console.log('Add');
+      var img_prod = "https://github.com/guillainbisimwa/bomoko-app/blob/master/assets/img/prod.jpg";
+      var img_serv = "https://github.com/guillainbisimwa/bomoko-app/blob/master/assets/img/serv.jpg";
 
       var p = {
         name: name,
@@ -95,7 +97,7 @@ const AddProduct = ({route, navigation}) => {
         location: [checkedGoma?'Goma':'',
           checkedBukavu?'Bukavu':'', checkedKinshasa?'Kinshasa':'' ],
         amount: parseInt(amount),
-        images: images,
+        images: images.length == 0 ? (type == 'produit'? [img_prod]:[img_serv]): images,
         initialAmount: parseInt(initialAmount),
         type: type,
         currency: checkedDevise,

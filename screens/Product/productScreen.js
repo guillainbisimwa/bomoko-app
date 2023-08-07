@@ -26,8 +26,7 @@ console.log("Prod", products);
     // Fetch products lists when component mounts
     dispatch(fetchProducts());
     console.log("Eror ****", error);
-  
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    console.log("produx", products);
   }, [products]);
 
 
@@ -167,7 +166,8 @@ console.log("Prod", products);
                       onPress={() => console.log('Pressed')}
                     />
                   </View>
-                  <Image source={prod.image} style={styles.imgFood} />
+                
+                  <Image source={{uri:  prod.images[0] }} style={styles.imgFood} />
                   <Text numberOfLines={1} grey h2 bold>
                     {prod.name}
                   </Text>

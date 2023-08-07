@@ -3,10 +3,6 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { BASE_URL } from '../constants/utils';
 import axios from 'axios';
 
-const cleaner = require('./../assets/img/cleaner.jpg');
-const soja = require('./../assets/img/soja.jpg');
-const cleaner2 = require('./../assets/img/cleaner2.jpg');
-const soja2 = require('./../assets/img/soja2.jpg');
 
 const product = [
   // {

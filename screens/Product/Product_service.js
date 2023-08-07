@@ -17,7 +17,7 @@ const Product_service = (props) => {
   };
   return (
     <Block m_b={25} row style={styles.container}>
-      <Image source={props.item.image} style={styles.img} />
+      <Image source={{uri:  props.item.images[0] }} style={styles.img} />
       <Block flex m_l={10} style={styles.containerText}>
         <Block>
           <Text numberOfLines={1} grey_one size={22} bold>
