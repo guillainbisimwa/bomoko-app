@@ -23,6 +23,8 @@ import { View } from 'react-native';
 import { VictoryBar, VictoryChart, VictoryTheme } from 'victory-native';
 import Slider from '@react-native-community/slider';
 import Timeline from 'react-native-timeline-flatlist';
+import { format } from 'date-fns';
+import { fr } from 'date-fns/locale';
 
 const Details = ({ route }) => {
   const scrollX = useRef(new Animated.Value(0)).current;
@@ -30,10 +32,29 @@ const Details = ({ route }) => {
   const couts = useSelector((state) => state.couts.couts);
 
   useEffect(()=> {
-    console.log("route", route.params.food.startDate);
-
+    console.log("route", route.params.food.timeline);
   },[])
+
   const dispatch = useDispatch();
+
+  // Date Calculation
+  const targetStartDate = new Date(route.params.food.startDate);
+  const targetEndDate = new Date(route.params.food.endDate);
+  const today = new Date();
+  const timeDifference = targetStartDate - today;
+  const timeTotalExerc = targetEndDate - targetStartDate;
+  const timeDiffExerc = targetEndDate - today;
+
+  // Calculate the number of milliseconds in a day
+  const millisecondsInDay = 24 * 60 * 60 * 1000;
+
+  // Calculate the number of days left
+  const daysLeft = Math.ceil(timeDifference / millisecondsInDay);
+  const daysLeftExc = Math.ceil(timeDiffExerc / millisecondsInDay);
+  const daysTotalExc = Math.ceil(timeTotalExerc / millisecondsInDay);
+
+  console.log(`Days left: ${daysLeft}`);
+
 
   const [visible, setVisible] = useState(false);
   const [editedName, setEditedName] = useState('');
@@ -309,13 +330,13 @@ const Details = ({ route }) => {
                   color: COLORS.darkgray,
                 }}
               >
-                {item.contribution}
+                {item.contribution}  {route.params.food.currency}
               </Text>
             </View>
           </View>
 
           <View style={{ width: '25%', alignItems: 'flex-end' }}>
-            <Text style={{ ...FONTS.h5, color: COLORS.red }}>+4% interret</Text>
+            <Text style={{ ...FONTS.h5, color: COLORS.red }}>+0% interret</Text>
             <View style={{ flexDirection: 'row' }}>
               <Image
                 source={icons.calendar}
@@ -361,7 +382,7 @@ const Details = ({ route }) => {
 
           <Text center>Prix total</Text>
           <Text bold size={30} center color={COLORS.peach}>
-            {route.params.food.amount} $
+            {route.params.food.amount}  {route.params.food.currency} 
           </Text>
 
           <Block>
@@ -373,13 +394,13 @@ const Details = ({ route }) => {
 
               <Block row center style={styles.round}>
                 <Ionicons name="md-time" color={COLORS.peach} size={20} />
-                <Text numberOfLines={1}> 35 Jours restent</Text>
+                <Text numberOfLines={1}> {daysLeft} Jours restent</Text>
               </Block>
             </Block>
 
             <Block center m_t={10}>
               <ProgressBar
-                progress={0.1}
+                progress={0}
                 color={MD3Colors.error50}
                 style={{ width: SIZES.width / 1.4, height: SIZES.base }}
               />
@@ -389,7 +410,7 @@ const Details = ({ route }) => {
                 50% Investisseurs
               </Text>
               <Text numberOfLines={1} semibold size={16}>
-                12 $ restent
+              {route.params.food.initialAmount} {route.params.food.currency}  reuni
               </Text>
             </Block>
             <Block>
@@ -397,14 +418,14 @@ const Details = ({ route }) => {
                 <Text numberOfLines={1} semibold>
                   Le coût total de production:
                 </Text>
-                <Text> {totAmount} FC</Text>
+                <Text> {totAmount} {route.params.food.currency} </Text>
               </Block>
 
               <Block row space="between">
                 <Text numberOfLines={1} semibold>
                   Le coût total de Revient:
                 </Text>
-                <Text> 0 FC</Text>
+                <Text> 0 {route.params.food.currency} </Text>
               </Block>
             </Block>
           </Block>
@@ -431,11 +452,16 @@ const Details = ({ route }) => {
 
         <Block p_l={20} p_r={20}>
           <Text bold numberOfLines={1}>
-            INVESTISSEURS (20)
+            INVESTISSEURS ({route.params.food.membres.length + 1})
           </Text>
 
-          {renderItem({ name: 'Jeanne MASIKA', contribution: '200 USD', date: '22/03/2023' })}
-          {renderItem({ name: 'Joseph KAKULE', contribution: '200 USD', date: '22/03/2023' })}
+          
+
+          {renderItem({ name: route.params.food.owner.name+" (Admin)", contribution: route.params.food.initialAmount, 
+          date: format(new Date(route.params.food.timestamp), 'dd MMMM yyyy', { locale: fr }) })}
+          {/* {renderItem({ name: 'Joseph KAKULE', contribution: '200 USD', date: '22/03/2023' })} */}
+          
+
           <Text bold color={COLORS.blue}>
             {expanded ? 'Voir moins' : 'Voir plus'}
           </Text>
