@@ -119,7 +119,8 @@ const productSlice = createSlice({
     products: [...product],
     isLoading: false,
     error: '',
-    lastSaved: null
+    lastSaved: null,
+    success: false
   },
   reducers: {
     // addProduct: (state, action) => {
@@ -143,6 +144,7 @@ const productSlice = createSlice({
       state.isLoading = false;
       state.lastSaved = action.payload;
       state.error = null;
+      state.success = action.payload.message;
 
     })
     .addCase(postProduct.rejected, (state, action) => {

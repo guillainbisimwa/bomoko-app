@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, View, Image, TouchableOpacity, Platform, Alert } from 'react-native';
-import { TextInput, Button, ActivityIndicator, RadioButton, Checkbox } from 'react-native-paper';
+import { TextInput, Button, ActivityIndicator, RadioButton, Checkbox, Snackbar } from 'react-native-paper';
 import { Block, Text } from './../../components';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Constants from 'expo-constants';
@@ -21,7 +21,7 @@ import { useDispatch, useSelector } from 'react-redux';
 const AddProduct = ({route, navigation}) => {
   const { owner, username } = route.params;
   const dispatch = useDispatch();
-  const { error, isLoading } = useSelector((state) => state.products);
+  const { error, isLoading, success, products } = useSelector((state) => state.products);
 
   const [name, setName] = useState('');
   const [amount, setAmount] = useState(0);
@@ -61,6 +61,12 @@ const AddProduct = ({route, navigation}) => {
   const [checkedBukavu, setCheckedBukavu] = useState(false);
   const [checkedKinshasa, setCheckedKinshasa] = useState(false);
 
+  // Snackbar
+
+  const [visible, setVisible] = useState(false);
+  const onDismissSnackBar = () => setVisible(false);
+  const onToggleSnackBar = () => setVisible(!visible);
+
 
   useEffect(() => {
     (async () => {
@@ -76,22 +82,29 @@ const AddProduct = ({route, navigation}) => {
 
   useEffect(()=>{
     console.log(" error---", error);
-  },[error])
+    console.log(" success---", success);
+    console.log(" products---", products);
+    console.log(" isLoading---", isLoading);
+  },[])
 
   const handleSaveAddProduct = async () => {
     try {
       const netInfo = await NetInfo.fetch();
       // console.log("netInfo.isConnected", netInfo.isConnected);
       if (!netInfo.isConnected) {
-        Alert.alert("No Internet Connection", "Please check your internet connection and try again.");
+        Alert.alert("Pas de connexion Internet", "Veuillez vérifier votre connexion Internet et réessayer.");
         return;
       }
       // console.log('Add', images);
       // console.log('Add');
-      var img_prod = "https://github.com/guillainbisimwa/bomoko-app/blob/master/assets/img/prod.jpg";
-      var img_serv = "https://github.com/guillainbisimwa/bomoko-app/blob/master/assets/img/serv.jpg";
+      // var img_prod = "https://github.com/guillainbisimwa/bomoko-app/blob/master/assets/img/prod.jpg";
+      // var img_serv = "https://github.com/guillainbisimwa/bomoko-app/blob/master/assets/img/serv.jpg";
 
-      var p = {
+      var img_prod = "https://raw.githubusercontent.com/guillainbisimwa/bomoko-app/add-product/assets/img/prod.jpg";
+      var img_serv = "https://raw.githubusercontent.com/guillainbisimwa/bomoko-app/add-product/assets/img/serv.jpg";
+
+      //console.log(p);
+      await dispatch(postProduct({
         name: name,
         detail: description,
         location: [checkedGoma?'Goma':'',
@@ -104,37 +117,21 @@ const AddProduct = ({route, navigation}) => {
         timeline: [
           {
             title: `Creation du ${type} : ${name}`,
-          },
-          {
             details: `Le ${type} : ${name}- cree par ${username}`
           }
         ],
         startDate: `${range.startDate}`, //formatDateToFrench(range.startDate)
         endDate: `${range.endDate}`,
         owner: owner,
-      }
+      }));
 
-      //console.log(p);
-      dispatch(postProduct({
-        name: name,
-        detail: description,
-        location: [checkedGoma?'Goma':'',
-          checkedBukavu?'Bukavu':'', checkedKinshasa?'Kinshasa':'' ],
-        amount: parseInt(amount),
-        images: images,
-        initialAmount: parseInt(initialAmount),
-        type: type,
-        currency: checkedDevise,
-        timeline: [
-          {
-            title: `Creation du ${type} : ${name}`,
-            details: `Le ${type} : ${name}- cree par ${username}`
-          }
-        ],
-        startDate: `${range.startDate}`, //formatDateToFrench(range.startDate)
-        endDate: `${range.endDate}`,
-        owner: owner,
-      }))  
+       // Check if the product was saved successfully
+      if (!error) {
+        // Navigate back to the previous screen
+        navigation.goBack();
+      }else {
+        onToggleSnackBar()
+      }
 
 
     } catch (e) {
@@ -474,6 +471,23 @@ const pickImage = async () => {
         </Block>
 
         {addAddProduct()}
+
+        <Snackbar
+        visible={visible}
+        onDismiss={onDismissSnackBar}
+        style={{ backgroundColor: COLORS.peach}}
+        wrapperStyle={{ bottom: 30 }}
+        action={{
+          label: 'Annuler',
+          onPress: () => {
+            // Do something
+          },
+        }}
+        >
+        {error}
+      
+        
+      </Snackbar>
       </ScrollView>
     </KeyboardAvoidingView>
   );

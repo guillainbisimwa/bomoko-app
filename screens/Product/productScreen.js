@@ -17,7 +17,7 @@ import { fetchProducts } from '../../redux/prodReducer';
 const ProductScreen = ({ navigation }) => {
   const dispatch = useDispatch();
 
-  const { error, isLoading, products } = useSelector((state) => state.products);
+  const { error, isLoading, success, products } = useSelector((state) => state.products);
 console.log("Prod", products);
 
   const [token, setToken] = useState(null);
@@ -27,8 +27,7 @@ console.log("Prod", products);
     dispatch(fetchProducts());
     console.log("Eror ****", error);
     console.log("produx", products);
-  }, [products]);
-
+}, [ dispatch]); // Include "dispatch" and "error" in the dependency array
 
   useEffect(() => {
     const getTokenFromAsyncStorage = async () => {
@@ -146,7 +145,7 @@ console.log("Prod", products);
           {products.map((prod, index) => {
             return (
               <TouchableOpacity
-                key={index}
+                key={prod._id}
                 onPress={() => {
                   navigation.navigate('Details', { food: prod });
                 }}
@@ -272,7 +271,7 @@ console.log("Prod", products);
               return (
                 <TouchableOpacity
                   style={styles.horizontalList}
-                  key={index}
+                  key={food._id}
                   onPress={() => {
                     navigation.navigate('Details', { food });
                   }}

@@ -47,7 +47,7 @@ const handleSignUp = async () => {
     const netInfo = await NetInfo.fetch();
     // console.log("netInfo.isConnected", netInfo.isConnected);
     if (!netInfo.isConnected) {
-      Alert.alert("No Internet Connection", "Please check your internet connection and try again.");
+      Alert.alert("Pas de connexion Internet", "Veuillez vérifier votre connexion Internet et réessayer.");
       return;
     }
 
