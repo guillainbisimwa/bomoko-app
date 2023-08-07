@@ -55,6 +55,32 @@ const Details = ({ route }) => {
 
   console.log(`Days left: ${daysLeft}`);
 
+  // Timeline
+  const outputTimeLine = route.params.food.timeline.map(item => {
+    const date = new Date(item.timestamp);
+    const formattedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear().toString().substr(-2)}`;
+    
+    return {
+      time: formattedDate,
+      title: item.title,
+      description: item.details,
+      
+    };
+  });
+
+  // Pushing the additional object to the output array
+  const dateEnd = new Date(targetEndDate);
+
+  outputTimeLine.unshift({
+    time:`${dateEnd.getDate()}/${dateEnd.getMonth() + 1}/${dateEnd.getFullYear().toString().substr(-2)}`,
+    title: 'Fin probable de la Campagne',
+    description: `Probablelent la campagne prendra fin apres ${daysTotalExc} jours de la date de debut de la collecte`,
+    //lineColor: COLORS.peach,
+    //circleSize: 30,
+    //circleColor: COLORS.peach,
+    //dotColor: COLORS.blue,
+    //innerCircle: 'dot',
+  });
 
   const [visible, setVisible] = useState(false);
   const [editedName, setEditedName] = useState('');
@@ -64,37 +90,6 @@ const Details = ({ route }) => {
       .filter((v, k) => v.prodId == route.params.food.id)
       .reduce((a, b) => a + (b.amount || 0), 0)
   );
-
-  const myData = [
-    {
-      time: '22/05/23',
-      title: 'Fin probable de la Campagne',
-      description:
-        'Probablelent la campagne prendra fin apres 3 mois de la date de debut de la collecte',
-      lineColor: COLORS.peach,
-      //circleSize: 30,
-      //circleColor: COLORS.peach,
-      //dotColor: COLORS.blue,
-      //innerCircle: 'dot',
-    },
-    {
-      time: '22/05/23',
-      title: 'Fin de la recolte',
-      description: 'Le produit/service a reussi a mobiliser 290$ en 2 mois',
-    },
-    { time: '22/05/23', title: 'Debut de la Campagge' },
-    {
-      time: '22/05/23',
-      title: 'Validation du produit ',
-      description: "L'equipe de BOMOKO a autoriser le Produit/service d'exister sur la plateforme",
-      lineColor: '#009688',
-    },
-    {
-      time: '22/05/23',
-      title: 'Creation du produit/service',
-      description: '',
-    },
-  ];
 
   const [expanded, setExpanded] = useState(false);
 
@@ -508,7 +503,7 @@ const Details = ({ route }) => {
           </Text>
           <Timeline
             style={styles.list}
-            data={myData}
+            data={outputTimeLine}
             circleSize={20}
             circleColor="rgb(45,156,219)"
             lineColor="rgb(45,156,219)"
@@ -532,7 +527,7 @@ const Details = ({ route }) => {
           </Text>
         </Block>
 
-        <Timeline
+        {/* <Timeline
           style={styles.list}
           data={this.data}
           circleSize={20}
@@ -550,7 +545,7 @@ const Details = ({ route }) => {
           options={{
             style: { paddingTop: 5 },
           }}
-        />
+        /> */}
 
         <BottomSheet
           visible={visible}
