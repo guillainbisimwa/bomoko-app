@@ -50,9 +50,26 @@ initialState: {
     error: null,
     isLoading: false,
     success: false,
-    userSignUp: null
+    userSignUp: null,
+
+    errorSignUp: null,
+    isLoadingSignUp: false,
+    successSignUp: false,
   },
-  reducers: {},
+  reducers: {
+    // Add a logoutUser action to clear user data
+    logoutUser: (state) => {
+      state.user = null;
+      state.error = null;
+      state.isLoading = false;
+      state.success = false;
+      state.userSignUp = null;
+
+      // Clear user data from AsyncStorage
+      AsyncStorage.removeItem('user');
+      // AsyncStorage.clear();
+    }
+  },
   // In the extraReducers field, we define how the state should change when the asynchronous
   // thunk loginUser is in a pending, fulfilled, or rejected state. 
   extraReducers: (builder) => {
@@ -78,26 +95,28 @@ initialState: {
         state.success = false
       })
       .addCase(signUpUser.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
-        state.success = false
+        state.isLoadingSignUp = true;
+        state.errorSignUp = null;
+        state.successSignUp = false
 
       })
       .addCase(signUpUser.fulfilled, (state, action) => {
-        state.isLoading = false;
+        state.isLoadingSignUp= false;
         state.userSignUp = action.payload;
-        state.error = null;
-        state.success = true
+        state.errorSignUp = null;
+        state.successSignUp = true
 
         // Store user data to LocalStorage
-        AsyncStorage.setItem('user', JSON.stringify({ user: action.payload }));
+        //AsyncStorage.setItem('user', JSON.stringify({ user: action.payload }));
       })
       .addCase(signUpUser.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.error.message;
-        state.success = false
+        console.log("bree *************** ",action.error);
+        state.isLoadingSignUp = false;
+        state.errorSignUp = action.error.message;
+        state.successSignUp = false
       });
   },
 });
+export const { logoutUser } = userSlice.actions;
 
 export default userSlice.reducer;

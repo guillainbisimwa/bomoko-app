@@ -17,8 +17,9 @@ import { Expense, Income } from './screens';
 import { COLORS, icons } from './constants';
 import Details from './screens/Product/Details';
 import AddProduct from './screens/Product/AddProduct';
-import { loginSuccess, logoutUser } from './redux/authReducer';
+import { loginSuccess } from './redux/authReducer';
 import { SignUpScreen } from './screens/SignUpScreen';
+import { logoutUser } from './redux/userSlice';
 
 const theme = {
   ...DefaultTheme,
@@ -166,10 +167,14 @@ const App = () => {
   const checkLoginStatus = async () => {
     try {
       const value = await AsyncStorage.getItem('user');
+      //AsyncStorage.clear();
+
       console.log('value-user', value);
       if (value !== null) {
         dispatch(loginSuccess(value));
+        //AsyncStorage.clear();
         //dispatch(logoutUser());
+
       } else {
         //setLoading(false);
         //dispatch(setUnInstalled());

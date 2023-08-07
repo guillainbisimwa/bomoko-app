@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Alert, View, StyleSheet, ImageBackground, Dimensions } from 'react-native';
+import { Alert, View, StyleSheet, ImageBackground, Dimensions,ScrollView, KeyboardAvoidingView } from 'react-native';
 import { Button, TextInput, Text, ActivityIndicator, Snackbar, } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import NetInfo from "@react-native-community/netinfo";
@@ -13,23 +13,31 @@ const { height, width } = Dimensions.get('window');
 export const LoginForm = ({ navigation }) => {
   const dispatch = useDispatch();
 
-  const { error, isLoading, success } = useSelector((state) => state.user);
+  const { error, isLoading, success, user } = useSelector((state) => state.user);
 
   const [name, setNom] = useState('');
   const [password, setPassword] = useState('');
 
   const [visible, setVisible] = useState(false);
+  const [visibleSuccess, setVisibleSuccess] = useState(false);
 
+  const onToggleSnackBarSuccess = () => setVisibleSuccess(!visibleSuccess);
   const onToggleSnackBar = () => setVisible(!visible);
 
   const onDismissSnackBar = () => setVisible(false);
+  const onDismissSnackBarSuccess = () => setVisibleSuccess(false);
 
   // Use useEffect or any other method to handle the success state and display the alert
     useEffect(() => {
       if (success) {
         //Alert.alert("Success", "Login successful!");
-        navigation.goBack(); // First go back
-        navigation.goBack(); // Second go back
+        onToggleSnackBarSuccess();
+        setTimeout(() => {
+          navigation.goBack(null); // First go back
+          navigation.goBack(null); // Second go back
+        }
+        , 2000);
+       
       }
       if (error) {
         onToggleSnackBar()
@@ -43,7 +51,7 @@ const handleLogin = async () => {
     const netInfo = await NetInfo.fetch();
     // console.log("netInfo.isConnected", netInfo.isConnected);
     if (!netInfo.isConnected) {
-      Alert.alert("No Internet Connection", "Please check your internet connection and try again.");
+      Alert.alert("Pas de connexion Internet", "Veuillez vérifier votre connexion Internet et réessayer.");
       return;
     }
 
@@ -60,7 +68,12 @@ const handleLogin = async () => {
 
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+    style={styles.container}
+    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+  >
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
+    <View style={{}}>
       <ImageBackground
         style={styles.backgroundImage}
         source={require('./../../../assets/login1_bg.png')}
@@ -92,10 +105,14 @@ const handleLogin = async () => {
         <Text style={{ marginVertical: 20, color: COLORS.white, ...FONTS.h2}} 
       onPress={()=> navigation.goBack()} > Retour</Text>
 
-      <Snackbar
+      
+      </View>
+    </View>
+    <Snackbar
         visible={visible}
         onDismiss={onDismissSnackBar}
         style={{ backgroundColor: COLORS.peach}}
+        wrapperStyle={{ bottom: 30 }}
         action={{
           label: 'Annuler',
           onPress: () => {
@@ -104,10 +121,27 @@ const handleLogin = async () => {
         }}
         >
         {error}
+      
         
       </Snackbar>
-      </View>
-    </View>
+      <Snackbar
+        visible={visibleSuccess}
+        onDismiss={onDismissSnackBarSuccess}
+        style={{ backgroundColor: COLORS.darkgreen}}
+        wrapperStyle={{ bottom: 30 }}
+        
+        action={{
+          label: 'Annuler',
+          onPress: () => {
+            // Do something
+          },
+        }}
+        >
+        Login avec success
+        
+      </Snackbar>
+    </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -138,5 +172,8 @@ const styles = StyleSheet.create({
     marginTop: 20,
     padding:10,
     width: '70%',
+  },
+  scrollContainer: {
+    flexGrow: 1,
   },
 });

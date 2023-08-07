@@ -2,7 +2,7 @@
   "expo": {
     "name": "Bomoko Cash",
     "slug": "bomoko-cash",
-    "version": "3.9.0",
+    "version": "4.1.0",
     "privacy": "public",
     "orientation": "portrait",
     "icon": "./assets/app-icon.png",
@@ -27,7 +27,7 @@
         "backgroundColor": "#FFFFFF"
       },
       "package": "com.wezalab.bomoko4",
-      "versionCode": 39,
+      "versionCode": 41,
       "permissions": []
     },
     "web": {
@@ -37,6 +37,14 @@
       "eas": {
         "projectId": "96544713-72ae-499c-944a-481a090080c3"
       }
-    }
+    },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to let you share them with your friends."
+        }
+      ]
+    ]
   }
 }

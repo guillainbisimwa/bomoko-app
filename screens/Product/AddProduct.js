@@ -1,19 +1,72 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, View, Image, TouchableOpacity, Platform, Alert } from 'react-native';
-import { TextInput, Button } from 'react-native-paper';
+import { TextInput, Button, ActivityIndicator, RadioButton, Checkbox, Snackbar } from 'react-native-paper';
 import { Block, Text } from './../../components';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Constants from 'expo-constants';
+import { format } from 'date-fns';
+import { fr } from 'date-fns/locale';
+import NetInfo from "@react-native-community/netinfo";
 
 import { COLORS, FONTS, SIZES, icons } from './../../constants';
 import { KeyboardAvoidingView } from 'react-native';
 import { ScrollView } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 
-const AddProduct = () => {
+import { DatePickerModal } from 'react-native-paper-dates';
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { postProduct } from '../../redux/prodReducer';
+import { useDispatch, useSelector } from 'react-redux';
+
+const AddProduct = ({route, navigation}) => {
+  const { owner, username } = route.params;
+  const dispatch = useDispatch();
+  const { error, isLoading, success, products } = useSelector((state) => state.products);
+
+  const [name, setName] = useState('');
+  const [amount, setAmount] = useState(0);
+  const [initialAmount, setInitialAmount] = useState(0);
+  const [type, setType] = useState('produit');
+
   const [description, setDescription] = useState('');
-  const [total, setTotal] = useState('');
   const [images, setImages] = useState([]);
+
+  const [loadPic, setLoadPic] = useState(false);
+  const [checkedDevise, setCheckedDevise] = useState('USD');
+
+  // DATE RANGE PICKER
+  const [range, setRange] = useState({ startDate: undefined, endDate: undefined });
+
+  const [open, setOpen] = useState(false);
+
+  const onDismiss = useCallback(() => {
+    setOpen(false);
+  }, [setOpen]);
+
+  const onConfirm = useCallback(
+    ({ startDate, endDate }) => {
+      setOpen(false);
+      setRange({ startDate, endDate });
+    },
+    [setOpen, setRange]
+  );
+
+  // Fonction pour convertir la date en format français
+  const formatDateToFrench = (date) => {
+    return format(new Date(date), 'dd MMMM yyyy', { locale: fr });
+  };
+
+  // Location  
+  const [checkedGoma, setCheckedGoma] = useState(true);
+  const [checkedBukavu, setCheckedBukavu] = useState(false);
+  const [checkedKinshasa, setCheckedKinshasa] = useState(false);
+
+  // Snackbar
+
+  const [visible, setVisible] = useState(false);
+  const onDismissSnackBar = () => setVisible(false);
+  const onToggleSnackBar = () => setVisible(!visible);
+
 
   useEffect(() => {
     (async () => {
@@ -27,8 +80,60 @@ const AddProduct = () => {
     })();
   }, []);
 
+  useEffect(()=>{
+    console.log(" error---", error);
+    console.log(" success---", success);
+    console.log(" products---", products);
+    console.log(" isLoading---", isLoading);
+  },[])
+
   const handleSaveAddProduct = async () => {
     try {
+      const netInfo = await NetInfo.fetch();
+      // console.log("netInfo.isConnected", netInfo.isConnected);
+      if (!netInfo.isConnected) {
+        Alert.alert("Pas de connexion Internet", "Veuillez vérifier votre connexion Internet et réessayer.");
+        return;
+      }
+      // console.log('Add', images);
+      // console.log('Add');
+      // var img_prod = "https://github.com/guillainbisimwa/bomoko-app/blob/master/assets/img/prod.jpg";
+      // var img_serv = "https://github.com/guillainbisimwa/bomoko-app/blob/master/assets/img/serv.jpg";
+
+      var img_prod = "https://raw.githubusercontent.com/guillainbisimwa/bomoko-app/add-product/assets/img/prod.jpg";
+      var img_serv = "https://raw.githubusercontent.com/guillainbisimwa/bomoko-app/add-product/assets/img/serv.jpg";
+
+      //console.log(p);
+      await dispatch(postProduct({
+        name: name,
+        detail: description,
+        location: [checkedGoma?'Goma':'',
+          checkedBukavu?'Bukavu':'', checkedKinshasa?'Kinshasa':'' ],
+        amount: parseInt(amount),
+        images: images.length == 0 ? (type == 'produit'? [img_prod]:[img_serv]): images,
+        initialAmount: parseInt(initialAmount),
+        type: type,
+        currency: checkedDevise,
+        timeline: [
+          {
+            title: `Creation du ${type} : ${name}`,
+            details: `Le ${type} : ${name}- cree par ${username}`
+          }
+        ],
+        startDate: `${range.startDate}`, //formatDateToFrench(range.startDate)
+        endDate: `${range.endDate}`,
+        owner: owner,
+      }));
+
+       // Check if the product was saved successfully
+      if (!error) {
+        // Navigate back to the previous screen
+        navigation.goBack();
+      }else {
+        onToggleSnackBar()
+      }
+
+
     } catch (e) {
       console.log('error', e);
     }
@@ -53,60 +158,96 @@ const AddProduct = () => {
     );
   }
 
-  const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
-    //try{
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: 'Images',
-      //mediaTypes: ImagePicker.MediaTypeOptions.All,
+  // const takePhoto = async () => {
+  //   try{
+  //     let result = await ImagePicker.launchCameraAsync({
+  //       mediaTypes: "Images",
+  //       aspect: [4, 3],
+  //       base64: true
+  //     });
 
+  //     if (!result.canceled) {
+  //         let base64Img = `data:image/jpg;base64,${result.assets[0].base64}`;
+
+  //         console.log("------------");
+  //         let imgCb = await onCloudinarySaveCb(base64Img);
+  //         let imgCb2 = [...images];
+
+  //         imgCb2.push(imgCb);
+  //         setImages([...imgCb2]);
+  //         console.log(images);
+  //     }
+  //   }catch(e){
+  //     setLoadPic(false);
+  //     console.log("Error while uploading image", e);
+  //   }
+  // };
+
+const pickImage = async () => {
+  try {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images, // Use proper syntax for mediaTypes
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
       base64: true,
     });
 
-    if (!result.cancelled) {
-      const uri = result.uri;
-      // const type = result.type;
-      // const name = `${Math.floor(Math.random() * 900) + 100}_${Date.now()}`;
-      // let base64Img = `data:image/jpg;base64,${result.base64}`;
+    if (!result.canceled) {
+      let base64Img = `data:image/jpg;base64,${result.assets[0].base64}`; // result.assets[0].base64
 
-      // const source = {
-      //   uri,
-      //   type,
-      //   name,
-      //   base64Img,
-      // };
-      let imgCb2V2 = [...images];
-      imgCb2V2.push(uri);
-      setImages([...imgCb2V2]);
+      console.log("------------");
+      let imgCb = await onCloudinarySaveCb(base64Img);
+      let imgCb2 = [...images];
+
+      imgCb2.push(imgCb);
+      setImages(imgCb2); // Use proper syntax for setting the state
+      console.log(images);
     }
-  };
+  } catch(e) {
+      setLoadPic(false);
+      console.log("Error while picking image", e);
+    }
+};
 
-  const takePhoto = async () => {
-    let result = await ImagePicker.launchCameraAsync({
-      mediaTypes: 'Images',
-      aspect: [4, 3],
-      base64: true,
-    });
 
-    if (!result.cancelled) {
-      const uri = result.uri;
-      // const type = result.type;
-      // const name = `${Math.floor(Math.random() * 900) + 100}_${Date.now()}`;
-      // let base64Img = `data:image/jpg;base64,${result.base64}`;
+  const onCloudinarySaveCb = async (base64Img) => {
+    try{
+    setLoadPic(true)
+    var pic = "";
+        let apiUrl =
+          'https://api.cloudinary.com/v1_1/micity/image/upload';
+        let data = {
+          file: base64Img,
+          upload_preset: 'ml_default'
+        };
 
-      // const source = {
-      //   uri,
-      //   type,
-      //   name,
-      //   base64Img,
-      // };
-
-      let imgCb2V2 = [...images];
-      imgCb2V2.push(uri);
-      setImages([...imgCb2V2]);
+        await fetch(apiUrl, {
+          body: JSON.stringify(data),
+          headers: {
+            'content-type': 'application/json'
+          },
+          method: 'POST'
+        })
+          .then(async response => {
+            let data = await response.json();
+            //console.log(data);
+            if (await data.secure_url) {
+                //console.log('Upload successful');
+                setLoadPic(false);
+                pic = await data.secure_url;
+            }
+          })
+          .catch(err => {
+            console.log('Cannot upload');
+            setLoadPic(false);
+            console.log(err);
+          });
+      return pic;
+    }catch(e){
+      setLoadPic(false);
+      console.log("Error while onCloudinarySave", e);
     }
   };
 
@@ -130,25 +271,132 @@ const AddProduct = () => {
     return (
       <>
         <View style={styles.dropdownContainer}></View>
+
+        <Block style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop:10 }}>
+          <Block>
+            <Text  style={{ ...FONTS.h3, color: COLORS.darkgray }}>TYPE</Text>
+            <RadioButton.Group onValueChange={(value) => setType(value)} value={type}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <RadioButton value="produit" color="red" /> 
+                <Text>Produit</Text>
+              </View>
+
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <RadioButton value="service" color="blue" /> 
+                <Text>Service</Text>
+              </View>
+            </RadioButton.Group>
+          </Block>
+
+          <Block>
+          <Text  style={{ ...FONTS.h3, color: COLORS.darkgray }}>DEVISE</Text>
+            <RadioButton.Group onValueChange={(value) => setCheckedDevise(value)} value={checkedDevise}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <RadioButton value="USD" color="red" /> 
+                <Text>USD</Text>
+              </View>
+
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <RadioButton value="FC" color="blue" /> 
+                <Text>FC</Text>
+              </View>
+            </RadioButton.Group>
+          </Block>
+        </Block>
+   
         <TextInput
-          label="Description"
+          label={`Nom de votre ${type}`}
+          value={name}
+          onChangeText={setName}
+          mode="outlined"
+          style={styles.input}
+          keyboardType='default'
+          required
+        />
+
+        <TextInput
+          label={`Description votre ${type}`}
           value={description}
           onChangeText={setDescription}
           mode="outlined"
           style={styles.input}
           multiline
           numberOfLines={2}
+          keyboardType='default'
           required
         />
+        {/* <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}> */}
+          <TextInput
+            label={`Montant disponible (${checkedDevise})`}
+            value={initialAmount}
+            onChangeText={setInitialAmount}
+            mode="outlined"
+            keyboardType="numeric"
+            style={[styles.input, ]} //styles.input_49
+          />
+
         <TextInput
-          label="Montant"
-          value={total}
-          onChangeText={setTotal}
+          label={`Besoin de financement (${checkedDevise})`}
+          value={amount}
+          onChangeText={setAmount}
           mode="outlined"
           keyboardType="numeric"
-          style={styles.input}
-          required
+          style={[styles.input, ]} //styles.input_49
+          //prefix="USD"
         />
+        {/* </View> */}
+
+        <SafeAreaProvider>
+          <View style={{justifyContent: 'center', flex: 1, alignItems: 'center', 
+          marginVertical:20,}}>
+            <Button onPress={() => setOpen(true)} uppercase={false} mode="outlined" style={{ 
+              padding: 7, width:"100%"}}>
+              Choisir la durée de votre campagne
+            </Button>
+            <DatePickerModal
+              locale="fr"
+              mode="range"
+              visible={open}
+              onDismiss={onDismiss}
+              startDate={range.startDate}
+              endDate={range.endDate}
+              onConfirm={onConfirm}
+            />
+
+        {range.startDate && range.endDate && (
+          <Text style={{ marginTop: 20 }}>
+            Campagne du : {formatDateToFrench(range.startDate)} au {formatDateToFrench(range.endDate)}
+          </Text>
+        )}
+          </View>
+        </SafeAreaProvider>
+
+        <View style={{ flexDirection: 'row' }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 16 }}>
+          <Checkbox value="paris" color="#AF4C50" status={checkedGoma ? 'checked' : 'unchecked'}
+      onPress={() => {
+        setCheckedGoma(!checkedGoma);
+      }}/>
+          <Text>Goma</Text>
+        </View>
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 16 }}>
+          <Checkbox value="newyork" color="#4CAF50" status={checkedBukavu ? 'checked' : 'unchecked'}
+      onPress={() => {
+        setCheckedBukavu(!checkedBukavu);
+      }}/>
+          <Text>Bukavu</Text>
+        </View>
+
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 16 }}>
+          <Checkbox value="newyork" color="#504CAF" status={checkedKinshasa ? 'checked' : 'unchecked'}
+      onPress={() => {
+        setCheckedKinshasa(!checkedKinshasa);
+      }}/>
+          <Text>Kinshasa</Text>
+        </View>
+        
+    </View>
+
         <Button
           elevated
           mode="contained"
@@ -157,8 +405,10 @@ const AddProduct = () => {
           icon={({ size, color }) => (
             <Ionicons name="save-outline" size={20} color={COLORS.white} />
           )}
+
+        loading={isLoading}
         >
-          Ajouter
+          Ajouter 
         </Button>
       </>
     );
@@ -173,20 +423,17 @@ const AddProduct = () => {
             onPress={() => (images.length >= 3 ? info() : pickImage())}
           >
             <Ionicons name="cloud-upload" size={30} color={COLORS.white} style={styles.icon} />
-            {/* {loadPic?
-              <ActivityIndicator size="small" color={Colors.danger} />: <></>} */}
-            <Text style={{ color: COLORS.white }}>Téléverser</Text>
+            <Text style={{ color: COLORS.white }}>Téléverser une image</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={styles.btn}
             onPress={() => (images.length >= 3 ? info() : takePhoto())}
           >
             <Ionicons name="camera" size={30} color={COLORS.white} style={styles.icon} />
-            {/* {loadPic?
-              <ActivityIndicator size="small" color={Colors.danger} />: <></>} */}
-            <Text style={{ color: COLORS.white }}>Capture une photo</Text>
-          </TouchableOpacity>
+           
+            <Text style={{ color: COLORS.white }}>Capturer une photo</Text>
+          </TouchableOpacity> */}
         </Block>
       </Block>
     );
@@ -206,10 +453,10 @@ const AddProduct = () => {
         <Block flex={1}>
           <Block style={styles.imgContainer}>
             {images.map((img, key) => (
-              <Block key={key}>
+              <View key={key}>
                 <Ionicons
                   color={COLORS.red}
-                  size={SIZES.base * 2}
+                  size={SIZES.base * 6}
                   name={'close-circle'}
                   style={styles.cancel}
                   onPress={() => removePic(img)}
@@ -217,12 +464,30 @@ const AddProduct = () => {
                 <Block style={styles.bg}>
                   <Image source={{ uri: img }} style={styles.img} />
                 </Block>
-              </Block>
+              </View>
             ))}
+            <ActivityIndicator animating={loadPic} color={COLORS.peach} />
           </Block>
         </Block>
 
         {addAddProduct()}
+
+        <Snackbar
+        visible={visible}
+        onDismiss={onDismissSnackBar}
+        style={{ backgroundColor: COLORS.peach}}
+        wrapperStyle={{ bottom: 30 }}
+        action={{
+          label: 'Annuler',
+          onPress: () => {
+            // Do something
+          },
+        }}
+        >
+        {error}
+      
+        
+      </Snackbar>
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -252,6 +517,9 @@ const styles = StyleSheet.create({
     borderBottomColor: COLORS.gray,
     borderBottomWidth: StyleSheet.hairlineWidth,
     marginTop: SIZES.padding,
+  },
+  input_49: {
+    width: "49%"
   },
   hasErrors: {
     borderBottomColor: COLORS.purple,
@@ -302,7 +570,7 @@ const styles = StyleSheet.create({
   btn: {
     backgroundColor: COLORS.peach,
     padding: SIZES.base,
-    width: SIZES.width / 2.5,
+   // width: SIZES.width / 2.5,
     borderRadius: SIZES.radius,
     elevation: 2,
     marginTop: SIZES.base * 1.8,
@@ -313,9 +581,27 @@ const styles = StyleSheet.create({
   cancel: {
     position: 'absolute',
     zIndex: 100,
-    padding: 10,
-    elevation: 2,
+    margin: 10,
   },
 });
 
 export default AddProduct;
+
+// {
+//   "name": "Nettoyage de vitres",
+//   "detail": "Nous offrons des s"
+//   "location": ["1","2"],
+//   "amount": 300,
+//   "initialAmount": 250,
+//   "type": "service",
+//   "currency": "USD",
+//   "timeline": [
+//     {
+//       "title": "Creation du Produit/service",
+//       "details": "Le produit- cree par @"
+//     }
+//   ],
+//   "startDate": "2023-10-02T12:00:00Z",
+//   "endDate": "2023-10-05T12:00:00Z",
+//   "owner": "64c80f4e28a8242d951dea1d",
+// }

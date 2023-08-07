@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Alert, View, StyleSheet, ImageBackground, Dimensions } from 'react-native';
+import { Alert, View, StyleSheet, ScrollView, ImageBackground, Dimensions, KeyboardAvoidingView } from 'react-native';
 import { Button, TextInput, Text, ActivityIndicator, Snackbar, } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import NetInfo from "@react-native-community/netinfo";
@@ -13,7 +13,7 @@ const { height, width } = Dimensions.get('window');
 export const SignUpForm = ({ navigation }) => {
   const dispatch = useDispatch();
 
-  const { error, isLoading, success, userSignUp } = useSelector((state) => state.user);
+  const { errorSignUp, isLoadingSignUp, successSignUp, userSignUp } = useSelector((state) => state.user);
 
   const [name, setNom] = useState('');
   const [password, setPassword] = useState('');
@@ -31,15 +31,15 @@ export const SignUpForm = ({ navigation }) => {
   // Use useEffect or any other method to handle the success state and display the alert
     useEffect(() => {
       console.log("userSignUp", userSignUp);
-      if (userSignUp != null) {
+      if (successSignUp) {
         // Alert.alert("Success", "Login successful!");
         navigation.navigate('LoginScreen'); 
       }
-      if (error) {
+      if (errorSignUp) {
         onToggleSnackBar()
       }
       
-    }, [userSignUp, error]);
+    }, [successSignUp, errorSignUp]);
 
 const handleSignUp = async () => {
   try {
@@ -47,7 +47,7 @@ const handleSignUp = async () => {
     const netInfo = await NetInfo.fetch();
     // console.log("netInfo.isConnected", netInfo.isConnected);
     if (!netInfo.isConnected) {
-      Alert.alert("No Internet Connection", "Please check your internet connection and try again.");
+      Alert.alert("Pas de connexion Internet", "Veuillez vérifier votre connexion Internet et réessayer.");
       return;
     }
 
@@ -71,7 +71,12 @@ const handleSignUp = async () => {
 
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+    style={styles.container}
+    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+  >
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
+    <View style={{}}>
       <ImageBackground
         style={styles.backgroundImage}
         source={require('./../../../assets/login1_bg.png')}
@@ -84,25 +89,25 @@ const handleSignUp = async () => {
           autoPlay
           loop
         />
-        <TextInput error={error} keyboardType="default" label="Nom d'utilisateur" value={name} onChangeText={setNom} style={styles.input} />
+        <TextInput error={errorSignUp} keyboardType="default" label="Nom d'utilisateur" value={name} onChangeText={setNom} style={styles.input} />
         <TextInput
           label="Mots de passe"
           value={password}
           onChangeText={setPassword}
           secureTextEntry
           style={styles.input}
-          error={error}
+          error={errorSignUp}
         />
 
-        <TextInput error={error} keyboardType="default" 
+        <TextInput error={errorSignUp} keyboardType="default" 
         label="E-mail" value={email} 
         onChangeText={setEmail} style={styles.input} />
 
-      <TextInput error={error} keyboardType="default" 
+      <TextInput error={errorSignUp} keyboardType="default" 
         label="Téléphone" value={mobile} 
         onChangeText={setMobile} style={styles.input} />
 
-          <ActivityIndicator  animating={isLoading} color={COLORS.red} />
+          <ActivityIndicator  animating={isLoadingSignUp} color={COLORS.red} />
 
         
         <Button mode="contained" onPress={handleSignUp} style={styles.button}>
@@ -123,11 +128,13 @@ const handleSignUp = async () => {
           },
         }}
         >
-        {error}
+        {errorSignUp}
         
       </Snackbar>
       </View>
     </View>
+    </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -145,6 +152,10 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  scrollContainer: {
+    flexGrow: 1,
+    paddingBottom: 20,
   },
   animation: {
     width: 300,
