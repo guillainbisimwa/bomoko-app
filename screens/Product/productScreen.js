@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Image, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import { Image, RefreshControl, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import { COLORS, FONTS, SIZES, icons } from './../../constants';
 import Block from './Block';
 import Text from './Text';
@@ -7,7 +7,7 @@ import Product_service from './Product_service';
 import LottieView from 'lottie-react-native';
 
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { FAB, IconButton, MD3Colors, ProgressBar, Button, Card, Modal, Menu, Divider, Provider } from 'react-native-paper';
+import { FAB, IconButton, MD3Colors, ProgressBar, Button, Card, Modal, Menu, Divider, Provider, ActivityIndicator } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import { ImageBackground } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -18,7 +18,7 @@ const ProductScreen = ({ navigation }) => {
   const dispatch = useDispatch();
 
   const { error, isLoading, success, products } = useSelector((state) => state.products);
-console.log("Prod", products);
+//console.log("Prod", products);
 
   const [token, setToken] = useState(null);
 
@@ -89,6 +89,14 @@ console.log("Prod", products);
     setSearch(text);
   };
 
+  // Refresh Control
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = async () => {
+    dispatch(fetchProducts());
+    setRefreshing(isLoading);
+  };
+
   const stars = (starsNumber) => {
     return (
       <Block row>
@@ -100,11 +108,11 @@ console.log("Prod", products);
     );
   };
 
-  const renderTab = (tab) => {
+  const renderTab = (tab, index) => {
     const isActive = active === tab;
 
     return (
-      <TouchableOpacity key={`tab-${tab}`} onPress={() => handleTab(tab)} style={styles.tab}>
+      <TouchableOpacity key={index} onPress={() => handleTab(tab)} style={styles.tab}>
         <Block center>
           <Text grey style={[styles.current, isActive ? styles.currentActive : null]}>
             {tab}
@@ -143,9 +151,10 @@ console.log("Prod", products);
 
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           {products.map((prod, index) => {
+            const key = `${prod._id}_${index}`;
             return (
               <TouchableOpacity
-                key={prod._id}
+                key={key}
                 onPress={() => {
                   navigation.navigate('Details', { food: prod });
                 }}
@@ -254,8 +263,8 @@ console.log("Prod", products);
       <>
         <Block space="between" p={10} m_b={30} m_t={20} color="white" style={styles.listContainer}>
           <Block row m_t={10} m_b={20}>
-            {['Tous', 'Produits', 'Services'].map((tab) => {
-              return renderTab(tab);
+            {['Tous', 'Produits', 'Services'].map((tab, index) => {
+              return renderTab(tab, index);
             })}
           </Block>
 
@@ -268,10 +277,11 @@ console.log("Prod", products);
               <Text></Text>
             )}
             {product_serviceList.map((food, index) => {
-              return (
-                <TouchableOpacity
+                const key = `${food._id}_${index}`;
+                return (
+                  <TouchableOpacity
+                    key={key}
                   style={styles.horizontalList}
-                  key={food._id}
                   onPress={() => {
                     navigation.navigate('Details', { food });
                   }}
@@ -386,6 +396,7 @@ console.log("Prod", products);
   }
 
   return (
+   
     <Provider>
     <ImageBackground
       style={{ flex: 1, position: 'absolute', height: '100%', width: '100%' }}
@@ -396,10 +407,17 @@ console.log("Prod", products);
       {/* Nav bar section */}
       {renderNavBar()}
 
+     
+      
+
     <Block flex color="grey">
       
       <Block flex color="grey" p={15}>
-        <ScrollView style={{ paddingTop: 5 }} showsVerticalScrollIndicator={false}>
+        <ScrollView style={{ paddingTop: 5 }} showsVerticalScrollIndicator={false}
+         refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+        >
           <Block flex={false}>
             <TextInput
               placeholder="Rechecher un produit/service"
