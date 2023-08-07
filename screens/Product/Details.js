@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   ImageBackground,
   ScrollView,
@@ -29,6 +29,10 @@ const Details = ({ route }) => {
 
   const couts = useSelector((state) => state.couts.couts);
 
+  useEffect(()=> {
+    console.log("route", route.params.food.startDate);
+
+  },[])
   const dispatch = useDispatch();
 
   const [visible, setVisible] = useState(false);
@@ -105,7 +109,7 @@ const Details = ({ route }) => {
         {route.params.food.images.map((image, index) => (
           <ImageBackground
             key={index}
-            source={image}
+            source={{ uri: image}}
             resizeMode="cover"
             style={{ width: SIZES.width, height: 170, justifyContent: 'flex-end' }}
           >
@@ -364,7 +368,7 @@ const Details = ({ route }) => {
             <Block row space="between">
               <Block row center style={styles.round}>
                 <Ionicons name="md-cash" color={COLORS.peach} size={20} />
-                <Text numberOfLines={1}> 20 Investisseurs</Text>
+                <Text numberOfLines={1}> { route.params.food.membres.length} membres</Text>
               </Block>
 
               <Block row center style={styles.round}>
