@@ -406,10 +406,7 @@ const ProductScreen = ({ navigation }) => {
     <View style={{ flex: 1 }}>
       {/* Nav bar section */}
       {renderNavBar()}
-
-     
-      
-
+   
     <Block flex color="grey">
       
       <Block flex color="grey" p={15}>
@@ -426,7 +423,9 @@ const ProductScreen = ({ navigation }) => {
               onChangeText={(text) => onSearch(text)}
             />
           </Block>
-
+          {
+            isLoading?<ActivityIndicator size="large" />: <></>
+            }
           {search.trim().length == 0 ? (
             <>
               {popular()}
