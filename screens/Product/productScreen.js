@@ -98,12 +98,17 @@ const ProductScreen = ({ navigation }) => {
   };
 
   const stars = (starsNumber) => {
+    const totalStars = 5;
+    const filledStars = Math.min(starsNumber, totalStars);
+  
     return (
       <Block row>
-        {[...Array(starsNumber).keys()].map((star, index) => {
-          return <Ionicons color={COLORS.yellow} key={index} size={SIZES.base * 3} name={'star'} />;
-        })}
-        <Ionicons color={COLORS.yellow} size={SIZES.base * 3} name={'star-outline'} />
+        {[...Array(filledStars).keys()].map((star, index) => (
+          <Ionicons color={COLORS.yellow} key={index} size={SIZES.base * 2} name={'star'} />
+        ))}
+        {[...Array(totalStars - filledStars).keys()].map((star, index) => (
+          <Ionicons color={COLORS.yellow} key={index} size={SIZES.base * 2} name={'star-outline'} />
+        ))}
       </Block>
     );
   };
@@ -150,7 +155,7 @@ const ProductScreen = ({ navigation }) => {
         </Block>
 
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {products.map((prod, index) => {
+          {products.slice(0, 2).map((prod, index) => {
             const key = `${prod._id}_${index}`;
             return (
               <TouchableOpacity
@@ -162,14 +167,14 @@ const ProductScreen = ({ navigation }) => {
                 <Block p={10} color="white" style={styles.container} m_t={14}>
                   <View style={styles.price}>
                     <Text white bold>
-                      {prod.amount} FC
+                      {prod.amount} {prod.currency}
                     </Text>
                   </View>
 
                   <View style={styles.like}>
                     <IconButton
                       icon="heart"
-                      iconColor={MD3Colors.error50}
+                      iconColor={MD3Colors.tertiary80} //  iconColor={MD3Colors.error50}
                       size={20}
                       onPress={() => console.log('Pressed')}
                     />
@@ -183,10 +188,8 @@ const ProductScreen = ({ navigation }) => {
                     {prod.detail}
                   </Text>
                   <Block m_t={5} row center space="between">
-                    {stars(prod.stars)}
-                  </Block>
-                  <Block m_t={10} row center space="between">
-                    <Block row center style={{ width: '45%' }}>
+                    {stars(prod.stars.length)}
+                    <Block row center>
                       <IconButton
                         icon="pin"
                         iconColor={MD3Colors.error50}
@@ -194,17 +197,20 @@ const ProductScreen = ({ navigation }) => {
                         onPress={() => console.log('Pressed')}
                       />
                       <Text numberOfLines={1} semibold size={19}>
-                        {prod.location}
+                        {prod.location.join(', ')}
                       </Text>
                     </Block>
+                  </Block>
+                  <Block m_t={2} m_b={10} row center space="between">
+                   
                     <Block row center space="between">
                       <ProgressBar
-                        progress={0.5}
+                        progress={0}
                         color={MD3Colors.error50}
-                        style={{ width: SIZES.width / 4, height: SIZES.base }}
+                        style={{ width: SIZES.width /1.8, height: SIZES.base }}
                       />
                       <Text numberOfLines={1} semibold size={19} style={{ marginLeft: 20 }}>
-                        50%
+                        0%
                       </Text>
                     </Block>
                   </Block>
@@ -215,8 +221,8 @@ const ProductScreen = ({ navigation }) => {
                       key={index}
                       style={[styles.cat, { backgroundColor: COLORS.primary }]}
                     >
-                      <Text white bold size={20}>
-                        9%
+                      <Text white bold size={15}>
+                        0
                       </Text>
                       <Text white bold h2 numberOfLines={1}>
                         Realisation
@@ -228,8 +234,8 @@ const ProductScreen = ({ navigation }) => {
                       key={index}
                       style={[styles.cat, { backgroundColor: COLORS.purple }]}
                     >
-                      <Text white bold size={20}>
-                        10
+                      <Text white bold size={15}>
+                      {prod.membres.length}
                       </Text>
                       <Text white bold h2 numberOfLines={1}>
                         Membres
@@ -241,8 +247,8 @@ const ProductScreen = ({ navigation }) => {
                       key={index}
                       style={[styles.cat, { backgroundColor: COLORS.peach }]}
                     >
-                      <Text white bold size={20}>
-                        {prod.amount} FC
+                      <Text white bold size={15}>
+                        {prod.amount} {prod.currency}
                       </Text>
                       <Text white bold h2 numberOfLines={1}>
                         Budjet
@@ -534,7 +540,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   cat: {
-    width: SIZES.width / 4 - 4,
+    //width: SIZES.width / 4 - 4,
+    width: '33%',
     height: SIZES.width / 5,
     marginRight: 2,
     borderRadius: 10,
