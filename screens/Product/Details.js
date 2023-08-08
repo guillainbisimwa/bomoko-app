@@ -374,7 +374,13 @@ const Details = ({ route }) => {
           <Text center numberOfLines={1} size={20} bold>
             {route.params.food.name}
           </Text>
+          {
+            route.params.food.status == "PENDING"?
+            <Text color={COLORS.red} center>[Bruillon]</Text>:
+          <Text color={COLORS.darkgreen} center>[Valid]</Text>
 
+          }
+          
           <Text center>Prix total</Text>
           <Text bold size={30} center color={COLORS.peach}>
             {route.params.food.amount}  {route.params.food.currency} 

@@ -120,7 +120,7 @@ const product = [
                 "_id": "64d204296c29b6d54ee75023"
             }
         ],
-        "status": "PENDING",
+        "status": "ACCEPETED",
         "startDate": "2023-09-01T00:00:00.000Z",
         "endDate": "2023-09-30T23:59:59.000Z",
         "timestamp": "2023-08-08T09:00:21.457Z",
