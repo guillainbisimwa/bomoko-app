@@ -141,6 +141,11 @@ const Details = ({ route, navigation }) => {
   const showModalSoumetre = () => setVisibleSoumetre(true);
   const hideModalSoumetre= () => setVisibleSoumetre(false);
 
+   // Modal Demande Adhesion
+   const [visibleAdhesion, setVisibleAdhesion] = useState(false);
+   const showModalAdhesion = () => setVisibleAdhesion(true);
+   const hideModalAdhesion = () => setVisibleAdhesion(false);
+
   // Dispaly rating stars
   const stars = (starsNumber) => {
     const totalStars = 5;
@@ -496,10 +501,12 @@ const Details = ({ route, navigation }) => {
               </Button>
             </Block>
             :
-
             <Block row space="between" m_t={10}>
               {/* other */}
-              <Button textColor="#fff" elevated buttonColor={COLORS.purple}>
+              {
+                // route.params.food.membres.contains
+              }
+              <Button textColor="#fff" elevated buttonColor={COLORS.purple} onPress={()=> showModalAdhesion()} >
                 Demande d'Adhesion
               </Button>
 
@@ -673,6 +680,7 @@ const Details = ({ route, navigation }) => {
           </Card.Actions>
         </Card>
       </Modal>
+
       {/* Soumetre */}
       <Modal
         style={{ zIndex: 99 }}
@@ -700,6 +708,38 @@ const Details = ({ route, navigation }) => {
               hideModalDel()
               //navigation.navigate('AuthScreen')
             }} >Soummetre</Button>
+          </Card.Actions>
+        </Card>
+      </Modal>
+
+
+      {/* Adhesion */}
+      <Modal
+        style={{ zIndex: 99 }}
+        visible={visibleAdhesion}
+        onDismiss={hideModalAdhesion}
+        contentContainerStyle={[containerStyle, { zIndex: 999 }]} // Set a higher value for the z-index
+      >
+        <Card style={{ padding: 10 }}>
+          <Card.Title
+            titleStyle={{ fontWeight: 'bold', textTransform: 'uppercase' }}
+            title="ATTENTION!" 
+          />
+          <Card.Content>
+            <Text variant="titleLarge">Voulez-vous vraiment Faire parti des insvesitteurs du {route.params.food.type }
+              {" "}{ route.params.food.name}?</Text>
+
+              <Text color={COLORS.peach} variant="titleLarge">Ceci implique que vous pouvez contribuer une somme
+              d'argent et ganger apres l'exercice! Votre demande d'adhesion sera validee par le proprietaire du {route.params.food.type }
+              {" "}{ route.params.food.name}</Text>
+          </Card.Content>
+          <Card.Actions style={{ marginTop: 15 }}>
+            <Button onPress={hideModalAdhesion}>Annuler</Button>
+            <Button buttonColor={COLORS.purple}
+             onPress={() => {
+              hideModalDel()
+              //navigation.navigate('AuthScreen')
+            }} >Adherer</Button>
           </Card.Actions>
         </Card>
       </Modal>
