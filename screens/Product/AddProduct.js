@@ -15,7 +15,7 @@ import * as ImagePicker from 'expo-image-picker';
 
 import { DatePickerModal } from 'react-native-paper-dates';
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { postProduct } from '../../redux/prodReducer';
+import { fetchProducts, postProduct } from '../../redux/prodReducer';
 import { useDispatch, useSelector } from 'react-redux';
 
 const AddProduct = ({route, navigation}) => {
@@ -104,7 +104,7 @@ const AddProduct = ({route, navigation}) => {
       var img_serv = "https://raw.githubusercontent.com/guillainbisimwa/bomoko-app/add-product/assets/img/serv.jpg";
 
       //console.log(p);
-      await dispatch(postProduct({
+      dispatch(postProduct({
         name: name,
         detail: description,
         location: [checkedGoma?'Goma':'',
@@ -128,6 +128,7 @@ const AddProduct = ({route, navigation}) => {
        // Check if the product was saved successfully
       if (!error) {
         // Navigate back to the previous screen
+        
         navigation.goBack();
       }else {
         onToggleSnackBar()

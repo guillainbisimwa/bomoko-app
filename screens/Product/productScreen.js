@@ -155,7 +155,7 @@ const ProductScreen = ({ navigation }) => {
         </Block>
 
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {products.slice(0, 2).map((prod, index) => {
+          {products.slice(-2).reverse().map((prod, index) => {
             const key = `${prod._id}_${index}`;
             return (
               <TouchableOpacity
