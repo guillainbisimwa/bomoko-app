@@ -25,11 +25,30 @@ import Slider from '@react-native-community/slider';
 import Timeline from 'react-native-timeline-flatlist';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Details = ({ route }) => {
   const scrollX = useRef(new Animated.Value(0)).current;
 
   const couts = useSelector((state) => state.couts.couts);
+
+  // Get token
+  const [token, setToken] = useState(null);
+
+  useEffect(() => {
+    const getTokenFromAsyncStorage = async () => {
+      try {
+        const storedToken = await AsyncStorage.getItem('user');
+        setToken(storedToken);
+       
+      } catch (error) {
+        // Handle AsyncStorage read error if needed
+        console.error('Error reading token from AsyncStorage:', error);
+      }
+    };
+
+    getTokenFromAsyncStorage();
+  }, []);
 
   useEffect(()=> {
     console.log("route", route.params.food.timeline);
@@ -408,7 +427,7 @@ const Details = ({ route }) => {
             </Block>
             <Block m_t={5} row space="between">
               <Text numberOfLines={1} semibold size={16}>
-                50% Investisseurs
+                0% Investisseurs
               </Text>
               <Text numberOfLines={1} semibold size={16}>
               {route.params.food.initialAmount} {route.params.food.currency}  reuni
@@ -429,6 +448,41 @@ const Details = ({ route }) => {
                 <Text> 0 {route.params.food.currency} </Text>
               </Block>
             </Block>
+            {
+              JSON.parse(token).user.user.username === route.params.food.owner.username? 
+              <Block row space="between" m_t={10}>
+              {/* owner */}
+              <Button textColor="#fff" elevated buttonColor={COLORS.lightBlue}>
+                Modifier
+              </Button>
+
+              <Button textColor="#fff" elevated buttonColor={COLORS.peach}>
+                Supprimer
+              </Button>
+
+              <Button textColor="#fff" elevated buttonColor={COLORS.darkgreen}>
+                Soumetre
+              </Button>
+            </Block>
+            :
+
+            <Block row space="between" m_t={10}>
+              {/* other */}
+              <Button textColor="#fff" elevated buttonColor={COLORS.purple}>
+                Demande d'Adhesion
+              </Button>
+
+              <Button textColor="#fff" elevated buttonColor={COLORS.peach}>
+                Quitter
+              </Button>
+
+              <Button textColor="#fff" elevated buttonColor={COLORS.darkgreen}>
+                Contribuer
+              </Button>
+            </Block>
+            }
+            
+
           </Block>
         </Block>
 
