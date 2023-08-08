@@ -13,6 +13,9 @@ import { ImageBackground } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { logoutUser } from '../../redux/userSlice';
 import { fetchProducts } from '../../redux/prodReducer';
+import NetInfo from "@react-native-community/netinfo";
+import { Alert } from 'react-native';
+
 
 const ProductScreen = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -24,11 +27,20 @@ const ProductScreen = ({ navigation }) => {
 
   useEffect(() => {
     // Fetch products lists when component mounts
+    const netInfo = NetInfo.fetch();
+    // console.log("netInfo.isConnected", netInfo.isConnected);
+    if (!netInfo.isConnected) {
+      Alert.alert("Pas de connexion Internet", "Veuillez vérifier votre connexion Internet et réessayer.");
+      return;
+    }
+
     dispatch(fetchProducts());
     console.log("Eror ****", error);
     console.log("produx", products);
     //setActive('Tous');
+    onRefresh();
     setProduct_serviceList([...products]);
+
 
 }, [dispatch, error, product_serviceList]); // Include "dispatch" and "error" in the dependency array
 
@@ -96,6 +108,14 @@ const ProductScreen = ({ navigation }) => {
   const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = async () => {
+
+    const netInfo = await NetInfo.fetch();
+    // console.log("netInfo.isConnected", netInfo.isConnected);
+    if (!netInfo.isConnected) {
+      Alert.alert("Pas de connexion Internet", "Veuillez vérifier votre connexion Internet et réessayer.");
+      return;
+    }
+
     dispatch(fetchProducts());
     setRefreshing(isLoading);
     setActive('Tous')
