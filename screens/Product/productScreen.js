@@ -182,6 +182,14 @@ const ProductScreen = ({ navigation }) => {
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           {products.slice(-2).reverse().map((prod, index) => {
             const key = `${prod._id}_${index}`;
+
+            const startDate = new Date(prod.startDate);
+            const endDate = new Date(prod.endDate);
+            
+            const startDateFinal = `${startDate.getDate()}/${startDate.getMonth() + 1}/${startDate.getFullYear().toString().substr(-2)}`;
+            const endDateFinal = `${endDate.getDate()}/${endDate.getMonth() + 1}/${endDate.getFullYear().toString().substr(-2)}`;
+
+
             return (
               <TouchableOpacity
                 key={key}
@@ -209,6 +217,7 @@ const ProductScreen = ({ navigation }) => {
                   <Text numberOfLines={1} grey h2 bold>
                     {prod.name}
                   </Text>
+                  <Text color={COLORS.darkgreen}>Du {startDateFinal} au {endDateFinal}</Text>
                   <Text numberOfLines={2} grey>
                     {prod.detail}
                   </Text>
@@ -218,10 +227,10 @@ const ProductScreen = ({ navigation }) => {
                       <IconButton
                         icon="pin"
                         iconColor={MD3Colors.error50}
-                        size={20}
+                        size={10}
                         onPress={() => console.log('Pressed')}
                       />
-                      <Text numberOfLines={1} semibold size={19}>
+                      <Text numberOfLines={1} semibold size={12}>
                         {prod.location.join(', ')}
                       </Text>
                     </Block>
@@ -246,10 +255,10 @@ const ProductScreen = ({ navigation }) => {
                       key={index}
                       style={[styles.cat, { backgroundColor: COLORS.primary }]}
                     >
-                      <Text white bold size={15}>
+                      <Text white bold size={12}>
                         0
                       </Text>
-                      <Text white bold h2 numberOfLines={1}>
+                      <Text white bold numberOfLines={1}>
                         Realisation
                       </Text>
                     </Block>
@@ -259,10 +268,10 @@ const ProductScreen = ({ navigation }) => {
                       key={index}
                       style={[styles.cat, { backgroundColor: COLORS.purple }]}
                     >
-                      <Text white bold size={15}>
+                      <Text white bold size={12}>
                       {prod.membres.length}
                       </Text>
-                      <Text white bold h2 numberOfLines={1}>
+                      <Text white bold numberOfLines={1}>
                         Membres
                       </Text>
                     </Block>
@@ -272,10 +281,10 @@ const ProductScreen = ({ navigation }) => {
                       key={index}
                       style={[styles.cat, { backgroundColor: COLORS.peach }]}
                     >
-                      <Text white bold size={15}>
+                      <Text white size={12}>
                         {prod.amount} {prod.currency}
                       </Text>
-                      <Text white bold h2 numberOfLines={1}>
+                      <Text white bold numberOfLines={1}>
                         Budjet
                       </Text>
                     </Block>
@@ -312,11 +321,11 @@ const ProductScreen = ({ navigation }) => {
                 return (
                   <TouchableOpacity
                     key={key}
-                  style={styles.horizontalList}
-                  onPress={() => {
-                    navigation.navigate('Details', { food });
-                  }}
-                >
+                    style={styles.horizontalList}
+                    onPress={() => {
+                      navigation.navigate('Details', { food });
+                    }}
+                  >
                   <Product_service item={food} />
                 </TouchableOpacity>
               );

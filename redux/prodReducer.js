@@ -5,40 +5,187 @@ import axios from 'axios';
 
 
 const product = [
-  // {
-  //   id: 1,
-  //   name: 'Farine de Soja',
-  //   detail:
-  //     'La farine de soja est une poudre fine obtenue à partir de graines de soja dégraissées. Elle est riche en protéines végétales et présente de nombreux avantages nutritionnels. ',
-  //   stars: 3,
-  //   like: true,
-  //   image: soja,
-  //   images: [soja, soja2],
-  //   type: 'produit',
-  //   location: 'Goma',
-  //   membres: [
-  //     { id: 1, name: 'Guy L', contrib: 20 },
-  //     { id: 2, name: 'Eva U', contrib: 20 },
-  //   ],
-  //   amount: 600,
-  // },
-  // {
-  //   id: 2,
-  //   name: 'Nettoyage de vitres',
-  //   detail:
-  //     "Nous offrons des solutions professionnelles pour le nettoyage et l'entretien des vitres de bâtiments résidentiels, commerciaux et industriels.",
-  //   stars: 2,
-  //   like: true,
-  //   image: cleaner,
-  //   images: [cleaner, cleaner2],
-  //   type: 'service',
-  //   location: 'Kinshasa kisangani',
-  //   membres: [
-  //     { id: 1, name: 'Guy L', contrib: 20 },
-  //     { id: 2, name: 'Eva U', contrib: 20 },
-  //   ],
-  //   amount: 300,
-  // },
+    {
+        "_id": "64d140efab709fe55465bfaf",
+        "name": "Guy11",
+        "detail": "Desc11",
+        "images": [
+            "https://raw.githubusercontent.com/guillainbisimwa/bomoko-app/add-product/assets/img/serv.jpg"
+        ],
+        "docs": [],
+        "location": [
+            "Goma",
+            "",
+            ""
+        ],
+        "amount": 222,
+        "initialAmount": 111,
+        "type": "service",
+        "currency": "USD",
+        "timeline": [
+            {
+                "title": "Creation du service : Guy11",
+                "details": "Le service : Guy11- cree par Gb",
+                "timestamp": "2023-08-07T18:12:59.186Z",
+                "_id": "64d140efab709fe55465bfb0"
+            }
+        ],
+        "status": "PENDING",
+        "startDate": "2023-08-13T22:00:00.000Z",
+        "endDate": "2023-08-21T21:59:59.000Z",
+        "timestamp": "2023-08-07T18:12:59.186Z",
+        "owner": {
+            "_id": "64c96038e199bcbfe1e02654",
+            "name": "Gb",
+            "email": "Gb@test.com",
+            "mobile": "0987654321",
+            "username": "Gb",
+            "role": "user",
+            "status": "PENDING"
+        },
+        "couts": [],
+        "likes": [],
+        "stars": [],
+        "membres": [],
+        "__v": 0
+    },
+    {
+        "_id": "64d162366e3d9fbbd6d16309",
+        "name": "Keblack",
+        "detail": "Music prod",
+        "images": [
+            "https://res.cloudinary.com/micity/image/upload/v1691443726/xybwg2wyiptbe1zevipv.jpg"
+        ],
+        "docs": [],
+        "location": [
+            "Goma",
+            "",
+            ""
+        ],
+        "amount": 200,
+        "initialAmount": 10,
+        "type": "produit",
+        "currency": "USD",
+        "timeline": [
+            {
+                "title": "Creation du produit : Keblack",
+                "details": "Le produit : Keblack- cree par Gb",
+                "timestamp": "2023-08-07T21:12:24.376Z",
+                "_id": "64d162366e3d9fbbd6d1630a"
+            }
+        ],
+        "status": "PENDING",
+        "startDate": "2023-08-14T00:00:00.000Z",
+        "endDate": "2023-08-29T23:59:59.000Z",
+        "timestamp": "2023-08-07T21:12:24.376Z",
+        "owner": {
+            "_id": "64c96038e199bcbfe1e02654",
+            "name": "Gb",
+            "email": "Gb@test.com",
+            "mobile": "0987654321",
+            "username": "Gb",
+            "role": "user",
+            "status": "PENDING"
+        },
+        "couts": [],
+        "likes": [],
+        "stars": [],
+        "membres": [],
+        "__v": 0
+    },
+    {
+        "_id": "64d204296c29b6d54ee75022",
+        "name": "Vin de banane",
+        "detail": "Le vin de banane est un vin de fruit fabriqué exclusivement à partir de bananes. Elle est différente de la bière de banane, qui a une longue tradition et une grande importance culturelle en Afrique de l'Est.",
+        "images": [
+            "https://res.cloudinary.com/micity/image/upload/v1691485021/oz5l74dtvftbryroxuen.jpg",
+            "https://res.cloudinary.com/micity/image/upload/v1691485110/bnegx1m5vt46jftsea8o.jpg",
+            "https://res.cloudinary.com/micity/image/upload/v1691485164/fpqljk4lq0jbfdwjmndt.jpg"
+        ],
+        "docs": [],
+        "location": [
+            "Goma",
+            "",
+            ""
+        ],
+        "amount": 2000,
+        "initialAmount": 250,
+        "type": "produit",
+        "currency": "USD",
+        "timeline": [
+            {
+                "title": "Creation du produit : Vin de banane",
+                "details": "Le produit : Vin de banane- cree par Gb",
+                "timestamp": "2023-08-08T09:00:21.457Z",
+                "_id": "64d204296c29b6d54ee75023"
+            }
+        ],
+        "status": "PENDING",
+        "startDate": "2023-09-01T00:00:00.000Z",
+        "endDate": "2023-09-30T23:59:59.000Z",
+        "timestamp": "2023-08-08T09:00:21.457Z",
+        "owner": {
+            "_id": "64c96038e199bcbfe1e02654",
+            "name": "Gb",
+            "email": "Gb@test.com",
+            "mobile": "0987654321",
+            "username": "Gb",
+            "role": "user",
+            "status": "PENDING"
+        },
+        "couts": [],
+        "likes": [],
+        "stars": [],
+        "membres": [],
+        "__v": 0
+    },
+    {
+        "_id": "64d27322622db34d1e0729a5",
+        "name": "Semoule de Maïs",
+        "detail": "Une farine à base de maïs. Une farine à base de maïs. Une farine à base de maïs. Une farine à base de maïs. Une farine à base de maïs. Une farine à base de maïs. ",
+        "images": [
+            "https://res.cloudinary.com/micity/image/upload/v1691513317/tjvirnrgx0xv5pnifa7h.jpg",
+            "https://res.cloudinary.com/micity/image/upload/v1691513366/ljd4wqhatnf4zlp76qbf.jpg",
+            "https://res.cloudinary.com/micity/image/upload/v1691513422/ypdcwcfrmhzvjb6bakvu.jpg"
+        ],
+        "docs": [],
+        "location": [
+            "Goma",
+            "Bukavu",
+            "Kinshasa"
+        ],
+        "amount": 200,
+        "initialAmount": 0,
+        "type": "produit",
+        "currency": "USD",
+        "timeline": [
+            {
+                "title": "Creation du produit : Semoule de Maïs",
+                "details": "Le produit : Semoule de Maïs- cree par Gb",
+                "timestamp": "2023-08-08T16:53:54.035Z",
+                "_id": "64d27322622db34d1e0729a6"
+            }
+        ],
+        "status": "PENDING",
+        "startDate": "2023-08-31T22:00:00.000Z",
+        "endDate": "2023-09-30T21:59:59.000Z",
+        "timestamp": "2023-08-08T16:53:54.035Z",
+        "owner": {
+            "_id": "64c96038e199bcbfe1e02654",
+            "name": "Gb",
+            "email": "Gb@test.com",
+            "mobile": "0987654321",
+            "username": "Gb",
+            "role": "user",
+            "status": "PENDING"
+        },
+        "couts": [],
+        "likes": [],
+        "stars": [],
+        "membres": [],
+        "__v": 0
+    }
+
 ];
 
 export const loadProductsFromStorage = createAsyncThunk('products/loadFromStorage', async () => {
