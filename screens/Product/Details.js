@@ -146,6 +146,17 @@ const Details = ({ route, navigation }) => {
    const showModalAdhesion = () => setVisibleAdhesion(true);
    const hideModalAdhesion = () => setVisibleAdhesion(false);
 
+    // Modal Demande Quit
+    const [visibleQuitter, setVisibleQuitter] = useState(false);
+    const showModalQuitter = () => setVisibleQuitter(true);
+    const hideModalQuitter = () => setVisibleQuitter(false);
+
+    // Modal Demande Quit
+    const [visibleContribuer, setVisibleContribuer] = useState(false);
+    const showModalContribuer = () => setVisibleContribuer(true);
+    const hideModalContribuer = () => setVisibleContribuer(false);
+
+    
   // Dispaly rating stars
   const stars = (starsNumber) => {
     const totalStars = 5;
@@ -510,11 +521,11 @@ const Details = ({ route, navigation }) => {
                 Demande d'Adhesion
               </Button>
 
-              <Button textColor="#fff" elevated buttonColor={COLORS.peach}>
+              <Button textColor="#fff" elevated buttonColor={COLORS.peach} onPress={()=> showModalQuitter()}>
                 Quitter
               </Button>
 
-              <Button textColor="#fff" elevated buttonColor={COLORS.darkgreen}>
+              <Button textColor="#fff" elevated buttonColor={COLORS.darkgreen} onPress={()=> showModalContribuer()}>
                 Contribuer
               </Button>
             </Block>
@@ -743,6 +754,88 @@ const Details = ({ route, navigation }) => {
           </Card.Actions>
         </Card>
       </Modal>
+
+
+      {/* Quitter */}
+      <Modal
+        style={{ zIndex: 99 }}
+        visible={visibleQuitter}
+        onDismiss={hideModalQuitter}
+        contentContainerStyle={[containerStyle, { zIndex: 999 }]} // Set a higher value for the z-index
+      >
+        <Card style={{ padding: 10 }}>
+          <Card.Title
+            titleStyle={{ fontWeight: 'bold', textTransform: 'uppercase' }}
+            title="ATTENTION!" 
+          />
+          <Card.Content>
+            <Text variant="titleLarge">Voulez-vous vraiment quitter le groupe des insvesitteurs du {route.params.food.type }
+              {" "}{ route.params.food.name}?</Text>
+
+             
+          </Card.Content>
+          <Card.Actions style={{ marginTop: 15 }}>
+            <Button onPress={hideModalQuitter}>Annuler</Button>
+            <Button buttonColor={COLORS.peach}
+             onPress={() => {
+              hideModalDel()
+              //navigation.navigate('AuthScreen')
+            }} >Quitter</Button>
+          </Card.Actions>
+        </Card>
+      </Modal>
+
+
+      {/* Contribuer */}
+      <Modal
+        style={{ zIndex: 99 }}
+        visible={visibleContribuer}
+        onDismiss={hideModalContribuer}
+        contentContainerStyle={[containerStyle, { zIndex: 999 }]} // Set a higher value for the z-index
+      >
+        <Card style={{ padding: 10 }}>
+          <Card.Title
+            titleStyle={{ fontWeight: 'bold', textTransform: 'uppercase' }}
+            title="ATTENTION!" 
+          />
+          <Card.Content>
+            <Text variant="titleLarge">Voulez-vous vraiment contribuer une somme d'argent et ganger apres l'exercice du {route.params.food.type }
+              {" "}{ route.params.food.name}?</Text>
+
+              <Block m_t={15} center >
+                <TextInput
+                  label="Somme"
+                  value={0}
+                  //onChangeText={}
+                  mode="outlined"
+                  style={[styles.input, { width: '100%', marginTop: 10 }]}
+                  required
+                  inputMode="numeric"
+                />
+
+                <TextInput
+                  label="Commentaire"
+                  value={''}
+                  //onChangeText={}
+                  mode="outlined"
+                  style={[styles.input, { width: '100%' }]}
+                  required
+                />
+              </Block>
+             
+          </Card.Content>
+          <Card.Actions style={{ marginTop: 15 }}>
+            <Button onPress={hideModalContribuer}>Annuler</Button>
+            <Button buttonColor={COLORS.darkgreen}
+             onPress={() => {
+              hideModalDel()
+              //navigation.navigate('AuthScreen')
+            }} >Contribuer</Button>
+          </Card.Actions>
+        </Card>
+      </Modal>
+
+
     </ScrollView>
   );
 };
