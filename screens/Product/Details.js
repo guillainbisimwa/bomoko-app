@@ -27,7 +27,7 @@ import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Details = ({ route }) => {
+const Details = ({ route, navigation }) => {
   const scrollX = useRef(new Animated.Value(0)).current;
 
   const couts = useSelector((state) => state.couts.couts);
@@ -452,7 +452,10 @@ const Details = ({ route }) => {
               JSON.parse(token).user.user.username === route.params.food.owner.username? 
               <Block row space="between" m_t={10}>
               {/* owner */}
-              <Button textColor="#fff" elevated buttonColor={COLORS.lightBlue}>
+              <Button textColor="#fff" elevated buttonColor={COLORS.lightBlue} onPress={()=>{
+                 navigation.navigate('EditProduct', { owner: JSON.parse(token).user?.user?.userId,
+                  username: JSON.parse(token).user?.user?.username, productService: route.params.food });
+              }}>
                 Modifier
               </Button>
 

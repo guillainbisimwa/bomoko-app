@@ -20,6 +20,7 @@ import AddProduct from './screens/Product/AddProduct';
 import { loginSuccess } from './redux/authReducer';
 import { SignUpScreen } from './screens/SignUpScreen';
 import { logoutUser } from './redux/userSlice';
+import EditProduct from './screens/Product/EditProduct';
 
 const theme = {
   ...DefaultTheme,
@@ -237,6 +238,7 @@ const App = () => {
           <Stack.Screen name="Expense" component={Expense} options={{ title: 'Débit (Sortie)' }} />
           <Stack.Screen name="Details" component={Details} options={{ title: 'Details' }} />
           <Stack.Screen name="AddProduct" component={AddProduct} options={{ title: 'Produit' }} />
+          <Stack.Screen name="EditProduct" component={EditProduct} options={{ title: 'Modifier Produit' }} />
 
           <Stack.Screen name="LoginScreen" component={LoginScreen} options={{
               headerShown: false,
