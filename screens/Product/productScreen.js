@@ -27,7 +27,10 @@ const ProductScreen = ({ navigation }) => {
     dispatch(fetchProducts());
     console.log("Eror ****", error);
     console.log("produx", products);
-}, [ dispatch]); // Include "dispatch" and "error" in the dependency array
+    //setActive('Tous');
+    setProduct_serviceList([...products]);
+
+}, [dispatch, error, product_serviceList]); // Include "dispatch" and "error" in the dependency array
 
   useEffect(() => {
     const getTokenFromAsyncStorage = async () => {
@@ -78,7 +81,7 @@ const ProductScreen = ({ navigation }) => {
 
   const [active, setActive] = useState('Tous');
   const [search, setSearch] = useState('');
-  const [product_serviceList, setProduct_serviceList] = useState([...products]);
+  const [product_serviceList, setProduct_serviceList] = useState([]);
 
   const onSearch = (text) => {
     setProduct_serviceList([
@@ -95,6 +98,8 @@ const ProductScreen = ({ navigation }) => {
   const onRefresh = async () => {
     dispatch(fetchProducts());
     setRefreshing(isLoading);
+    setActive('Tous')
+    setProduct_serviceList([...products]);
   };
 
   const stars = (starsNumber) => {
@@ -132,7 +137,7 @@ const ProductScreen = ({ navigation }) => {
     setActive(tab);
 
     if (tab === 'Tous') {
-      setProduct_serviceList([...products].sort((a, b) => a.stars - b.stars));
+      setProduct_serviceList([...products].sort((a, b) => a.name - b.name));
     } else if (tab == 'Produits') {
       const filteredProducts = [...products].filter((item) => item.type === 'produit');
       setProduct_serviceList([...filteredProducts]);
@@ -140,7 +145,7 @@ const ProductScreen = ({ navigation }) => {
       const filteredProducts = [...products].filter((item) => item.type === 'service');
       setProduct_serviceList([...filteredProducts]);
     } else {
-      setProduct_serviceList([...products].sort((a, b) => a.stars - b.stars));
+      setProduct_serviceList([...products].sort((a, b) => a.name - b.name));
     }
   };
 
@@ -275,7 +280,7 @@ const ProductScreen = ({ navigation }) => {
           </Block>
 
           <Block>
-            {product_serviceList.length == 0 ? (
+            {products.length == 0 ? (
               <Text h2 primary bold center>
                 Aucun produit ou service
               </Text>
@@ -533,6 +538,8 @@ const styles = StyleSheet.create({
     height: (SIZES.width - 100) / 2,
     borderRadius: 16,
     marginBottom: 10,
+    borderWidth:1,
+    borderColor: COLORS.gray
   },
   info: {
     backgroundColor: COLORS.grey,
