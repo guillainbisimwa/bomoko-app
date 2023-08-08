@@ -133,7 +133,7 @@ const Details = ({ route, navigation }) => {
     borderRadius: 10,
     alignSelf: 'center',
     position:"absolute",
-    top:'20%'
+    top:'15%'
   };
 
   // Modal SOUMETRE
@@ -393,23 +393,51 @@ const Details = ({ route, navigation }) => {
             </View>
           </View>
 
-          <View style={{ width: '25%', alignItems: 'flex-end' }}>
-            <Text style={{ ...FONTS.h5, color: COLORS.red }}>+0% interret</Text>
-            <View style={{ flexDirection: 'row' }}>
-              <Image
-                source={icons.calendar}
-                style={{
-                  width: 12,
-                  height: 12,
-                  tintColor: COLORS.darkgray,
-                  marginRight: 7,
-                  marginTop: 3,
-                }}
-              />
-              <Text style={{ marginBottom: SIZES.base, color: COLORS.darkgray, ...FONTS.body5 }}>
-                {item.date}
-              </Text>
-            </View>
+          <View style={{  alignItems: 'flex-end' }}>
+            { !item.admin?
+             <Block  row space="between">
+              <Button
+              elevated
+              mode="outlined"
+              //onPress={handleSaveAddProduct}
+              //style={styles.buttonSuccess}
+              
+              icon={({ size, color }) => (
+                <Ionicons name="close" size={20} color={COLORS.darkgreen} />
+              )}
+
+            //loading={isLoading}
+            ></Button>
+             <Button
+              elevated
+              mode="outlined"
+              
+              //onPress={handleSaveAddProduct}
+              //style={styles.buttonError}
+              icon={({ size, color }) => (
+                <Ionicons name="close" size={20} color={COLORS.peach} />
+              )}
+
+            //loading={isLoading}
+            ></Button></Block>:
+            <>
+              <Text style={{ ...FONTS.h5, color: COLORS.red }}>+0% interret</Text>
+              <View style={{ flexDirection: 'row' }}>
+                <Image
+                  source={icons.calendar}
+                  style={{
+                    width: 12,
+                    height: 12,
+                    tintColor: COLORS.darkgray,
+                    marginRight: 7,
+                    marginTop: 3,
+                  }}
+                />
+                <Text style={{ marginBottom: SIZES.base, color: COLORS.darkgray, ...FONTS.body5 }}>
+                  {item.date}
+                </Text>
+              </View>
+            </>}
           </View>
         </View>
       </View>
@@ -555,7 +583,7 @@ const Details = ({ route, navigation }) => {
           MEMBRES ({route.params.food.membres.length + 1})
           </Text>
 
-          {renderItem({ name: route.params.food.owner.name+" (Admin)", contribution: route.params.food.initialAmount, 
+          {renderItem({ admin: true, name: route.params.food.owner.name+" (Admin)", contribution: route.params.food.initialAmount, 
           date: format(new Date(route.params.food.timestamp), 'dd MMMM yyyy', { locale: fr }) })}
 
           {
@@ -911,6 +939,12 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 20,
   },
+  buttonSuccess:{
+    backgroundColor: COLORS.darkgreen
+  },
+  buttonError:{
+    backgroundColor: COLORS.peach
+  }
 });
 
 export default Details;
