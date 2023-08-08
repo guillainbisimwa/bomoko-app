@@ -141,6 +141,23 @@ const Details = ({ route, navigation }) => {
   const showModalSoumetre = () => setVisibleSoumetre(true);
   const hideModalSoumetre= () => setVisibleSoumetre(false);
 
+  // Dispaly rating stars
+  const stars = (starsNumber) => {
+    const totalStars = 5;
+    const filledStars = Math.min(starsNumber, totalStars);
+  
+    return (
+      <Block row>
+        {[...Array(filledStars).keys()].map((star, index) => (
+          <Ionicons color={COLORS.yellow} key={index} size={SIZES.base * 2} name={'star'} />
+        ))}
+        {[...Array(totalStars - filledStars).keys()].map((star, index) => (
+          <Ionicons color={COLORS.yellow} key={index} size={SIZES.base * 2} name={'star-outline'} />
+        ))}
+      </Block>
+    );
+  };
+
   const renderImages = () => {
     return (
       <ScrollView
@@ -510,12 +527,8 @@ const Details = ({ route, navigation }) => {
             </Text>
           )}
           <Block mt={5}>
-            <Block row>
-              <Ionicons name="star" color={COLORS.yellow} size={20} />
-              <Ionicons name="star" color={COLORS.yellow} size={20} />
-              <Ionicons name="star" color={COLORS.gray} size={20} />
-              <Ionicons name="star" color={COLORS.gray} size={20} />
-            </Block>
+            {stars(route.params.food.stars.length)}
+          
           </Block>
         </Block>
 
