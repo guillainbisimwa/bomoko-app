@@ -13,7 +13,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Block from './Block';
 import Text from './Text';
 import { COLORS, FONTS, icons, SIZES } from '../../constants';
-import { Button, MD3Colors, ProgressBar, TextInput } from 'react-native-paper';
+import { Button, Card, MD3Colors, Modal, ProgressBar, TextInput } from 'react-native-paper';
 import { BottomSheet } from 'react-native-btr';
 import { useDispatch, useSelector } from 'react-redux';
 import CoutScreen from './CoutScreen';
@@ -114,14 +114,6 @@ const Details = ({ route, navigation }) => {
 
   const [sliderValue, setSliderValue] = useState(15);
 
-  const scrollRef = useRef(null);
-
-  const scrollToTop = () => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTo({ y: 0, animated: true });
-    }
-  };
-
   function toggle() {
     setVisible((visible) => !visible);
   }
@@ -129,6 +121,21 @@ const Details = ({ route, navigation }) => {
   const toggleExpanded = () => {
     setExpanded(!expanded);
   };
+
+  // Modal
+  const [visibleDel, setVisibleDel] = useState(false);
+  const showModalDel = () => setVisibleDel(true);
+  const hideModalDel = () => setVisibleDel(false);
+
+  const containerStyle = {
+    backgroundColor: 'white',
+    width: '85%',
+    borderRadius: 10,
+    alignSelf: 'center',
+    position:"absolute",
+    top:'25%'
+  };
+
 
   const renderImages = () => {
     return (
@@ -459,7 +466,7 @@ const Details = ({ route, navigation }) => {
                 Modifier
               </Button>
 
-              <Button textColor="#fff" elevated buttonColor={COLORS.peach}>
+              <Button textColor="#fff" elevated buttonColor={COLORS.peach} onPress={()=> showModalDel()}>
                 Supprimer
               </Button>
 
@@ -638,8 +645,34 @@ const Details = ({ route, navigation }) => {
             {renderFAaddCout()}
           </Block>
         </BottomSheet>
+        
       </Block>
       {renderFloatingBlock()}
+      <Modal
+        style={{ zIndex: 99 }}
+        visible={visibleDel}
+        onDismiss={hideModalDel}
+        contentContainerStyle={[containerStyle, { zIndex: 999 }]} // Set a higher value for the z-index
+      >
+        <Card style={{ padding: 10 }}>
+          <Card.Title
+            titleStyle={{ fontWeight: 'bold', textTransform: 'uppercase' }}
+            title="ATTENTION!" 
+          />
+          <Card.Content>
+            <Text variant="titleLarge">Voulez-vous vraiment supprimer le {route.params.food.type }
+              {" "}{ route.params.food.name}?</Text>
+          </Card.Content>
+          <Card.Actions style={{ marginTop: 15 }}>
+            <Button onPress={hideModalDel}>Annuler</Button>
+            <Button buttonColor={COLORS.red}
+             onPress={() => {
+              hideModalDel()
+              //navigation.navigate('AuthScreen')
+            }} >Supprimer</Button>
+          </Card.Actions>
+        </Card>
+      </Modal>
     </ScrollView>
   );
 };
