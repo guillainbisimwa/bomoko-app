@@ -72,7 +72,7 @@ const EditProduct = ({route, navigation}) => {
 
   useEffect(() => {
     console.log("");
-    console.log("productService", productService);
+    console.log("productService", productService.amount);
 
     (async () => {
       if (Constants.platform.ios) {

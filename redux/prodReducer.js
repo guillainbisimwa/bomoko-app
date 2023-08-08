@@ -259,6 +259,43 @@ export const postProduct = createAsyncThunk(
   }
 );
 
+export const editProduct = createAsyncThunk(
+  "product/edit",
+  async ({  
+    name,
+    detail,
+    location,
+    amount,
+    images,
+    initialAmount,
+    type,
+    currency,
+    timeline,
+    startDate,
+    endDate,
+    owner 
+  }) => {
+    console.log(BASE_URL);
+    const response = await axios.post( BASE_URL +'api/product', {
+      name,
+      detail,
+      location,
+      amount,
+      images,
+      initialAmount,
+      type,
+      currency,
+      timeline,
+      startDate,
+      endDate,
+      owner 
+    });
+    console.log("Add prod---?????? ok==",response.data);
+    
+    return response.data;
+  }
+);
+
 
 const productSlice = createSlice({
   name: 'products',

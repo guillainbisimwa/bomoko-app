@@ -449,7 +449,7 @@ const Details = ({ route, navigation }) => {
               </Block>
             </Block>
             {
-              JSON.parse(token).user.user.username === route.params.food.owner.username? 
+              JSON.parse(token)?.user.user.username === route.params.food.owner.username? 
               <Block row space="between" m_t={10}>
               {/* owner */}
               <Button textColor="#fff" elevated buttonColor={COLORS.lightBlue} onPress={()=>{
