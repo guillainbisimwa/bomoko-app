@@ -122,7 +122,7 @@ const Details = ({ route, navigation }) => {
     setExpanded(!expanded);
   };
 
-  // Modal
+  // Modal Delete P/S
   const [visibleDel, setVisibleDel] = useState(false);
   const showModalDel = () => setVisibleDel(true);
   const hideModalDel = () => setVisibleDel(false);
@@ -133,9 +133,13 @@ const Details = ({ route, navigation }) => {
     borderRadius: 10,
     alignSelf: 'center',
     position:"absolute",
-    top:'25%'
+    top:'20%'
   };
 
+  // Modal SOUMETRE
+  const [visibleSoumetre, setVisibleSoumetre ] = useState(false);
+  const showModalSoumetre = () => setVisibleSoumetre(true);
+  const hideModalSoumetre= () => setVisibleSoumetre(false);
 
   const renderImages = () => {
     return (
@@ -470,7 +474,7 @@ const Details = ({ route, navigation }) => {
                 Supprimer
               </Button>
 
-              <Button textColor="#fff" elevated buttonColor={COLORS.darkgreen}>
+              <Button textColor="#fff" elevated buttonColor={COLORS.darkgreen} onPress={()=> showModalSoumetre()}>
                 Soumetre
               </Button>
             </Block>
@@ -597,26 +601,6 @@ const Details = ({ route, navigation }) => {
           </Text>
         </Block>
 
-        {/* <Timeline
-          style={styles.list}
-          data={this.data}
-          circleSize={20}
-          circleColor="rgb(45,156,219)"
-          lineColor="rgb(45,156,219)"
-          timeContainerStyle={{ minWidth: 52, marginTop: -5 }}
-          timeStyle={{
-            textAlign: 'center',
-            backgroundColor: '#ff9797',
-            color: 'white',
-            padding: 5,
-            borderRadius: 13,
-          }}
-          descriptionStyle={{ color: 'gray' }}
-          options={{
-            style: { paddingTop: 5 },
-          }}
-        /> */}
-
         <BottomSheet
           visible={visible}
           onBackButtonPress={toggle}
@@ -648,6 +632,8 @@ const Details = ({ route, navigation }) => {
         
       </Block>
       {renderFloatingBlock()}
+
+      {/* Delete Prod/Serv */}
       <Modal
         style={{ zIndex: 99 }}
         visible={visibleDel}
@@ -670,6 +656,36 @@ const Details = ({ route, navigation }) => {
               hideModalDel()
               //navigation.navigate('AuthScreen')
             }} >Supprimer</Button>
+          </Card.Actions>
+        </Card>
+      </Modal>
+      {/* Soumetre */}
+      <Modal
+        style={{ zIndex: 99 }}
+        visible={visibleSoumetre}
+        onDismiss={hideModalSoumetre}
+        contentContainerStyle={[containerStyle, { zIndex: 999 }]} // Set a higher value for the z-index
+      >
+        <Card style={{ padding: 10 }}>
+          <Card.Title
+            titleStyle={{ fontWeight: 'bold', textTransform: 'uppercase' }}
+            title="ATTENTION!" 
+          />
+          <Card.Content>
+            <Text variant="titleLarge">Voulez-vous vraiment Soumetre le {route.params.food.type }
+              {" "}{ route.params.food.name}?</Text>
+
+              <Text color={COLORS.peach} variant="titleLarge">Ceci implique que votre {route.params.food.type} {" "} 
+              sera soumis a l'equipe de BOMOKO sera etudier soigneusement pendant deux ou trois jours avant de 
+              de le valider ou le rejeter dans la plateforme!</Text>
+          </Card.Content>
+          <Card.Actions style={{ marginTop: 15 }}>
+            <Button onPress={hideModalSoumetre}>Annuler</Button>
+            <Button buttonColor={COLORS.purple}
+             onPress={() => {
+              hideModalDel()
+              //navigation.navigate('AuthScreen')
+            }} >Soummetre</Button>
           </Card.Actions>
         </Card>
       </Modal>
