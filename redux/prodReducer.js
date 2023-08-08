@@ -125,6 +125,19 @@ const product = [
         "endDate": "2023-09-30T23:59:59.000Z",
         "timestamp": "2023-08-08T09:00:21.457Z",
         "owner": {
+            "_id": "64c96038e199bcbfe1e02650",
+            "name": "Venceslas Josh",
+            "email": "venceslass@test.com",
+            "mobile": "0987654320",
+            "username": "bvenceslass",
+            "role": "user",
+            "status": "PENDING"
+        },
+        "couts": [],
+        "likes": [],
+        "stars": [],
+        "membres": [
+          {
             "_id": "64c96038e199bcbfe1e02654",
             "name": "Gb",
             "email": "Gb@test.com",
@@ -133,10 +146,7 @@ const product = [
             "role": "user",
             "status": "PENDING"
         },
-        "couts": [],
-        "likes": [],
-        "stars": [],
-        "membres": [],
+        ],
         "__v": 0
     },
     {

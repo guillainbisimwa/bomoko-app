@@ -534,15 +534,16 @@ const Details = ({ route, navigation }) => {
 
         <Block p_l={20} p_r={20}>
           <Text bold numberOfLines={1}>
-            INVESTISSEURS ({route.params.food.membres.length + 1})
+          MEMBRES ({route.params.food.membres.length + 1})
           </Text>
-
-          
 
           {renderItem({ name: route.params.food.owner.name+" (Admin)", contribution: route.params.food.initialAmount, 
           date: format(new Date(route.params.food.timestamp), 'dd MMMM yyyy', { locale: fr }) })}
-          {/* {renderItem({ name: 'Joseph KAKULE', contribution: '200 USD', date: '22/03/2023' })} */}
-          
+
+          {
+            route.params.food.membres?.length >=1?
+            route.params.food.membres.map((membre, index)=> renderItem(membre) ):<></>
+          }
 
           <Text bold color={COLORS.blue}>
             {expanded ? 'Voir moins' : 'Voir plus'}
