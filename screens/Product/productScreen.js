@@ -29,10 +29,10 @@ const ProductScreen = ({ navigation }) => {
     // Fetch products lists when component mounts
     const netInfo = NetInfo.fetch();
     // console.log("netInfo.isConnected", netInfo.isConnected);
-    if (!netInfo.isConnected) {
-      Alert.alert("Pas de connexion Internet", "Veuillez vérifier votre connexion Internet et réessayer.");
-      return;
-    }
+    // if (!netInfo.isConnected) {
+    //   Alert.alert("Pas de connexion Internet", "Veuillez vérifier votre connexion Internet et réessayer.");
+    //   return;
+    // }
 
     dispatch(fetchProducts());
     console.log("Eror ****", error);
