@@ -274,8 +274,7 @@ const Details = ({ route, navigation }) => {
     const outputTimeLineSoum = {
       time:`${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear().toString().substr(-2)}`,
       title: 'Soumission',
-      details: `Votre ${route.params.food.type} a été soumis à l'équipe BOMOKO Cash. Et
-      est en attente de validation`
+      details: `Votre ${route.params.food.type} a été soumis à l'équipe BOMOKO Cash et est en attente de validation`
     };
 
     dispatch(soumettreProduct({
