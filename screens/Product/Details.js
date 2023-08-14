@@ -26,7 +26,7 @@ import Timeline from 'react-native-timeline-flatlist';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { delProduct } from '../../redux/prodReducer';
+import { delProduct, soumettreProduct } from '../../redux/prodReducer';
 
 const Details = ({ route, navigation }) => {
   const scrollX = useRef(new Animated.Value(0)).current;
@@ -40,8 +40,8 @@ const Details = ({ route, navigation }) => {
 
 
   const [visibleSnackBar , setVisibleSnackBar ] = useState(false);
-  const onDismissSnackBar = () => setVisible(false);
-  const onToggleSnackBar = () => setVisible(!visibleSnackBar );
+  const onDismissSnackBar = () => setVisibleSnackBar(false);
+  const onToggleSnackBar = () => setVisibleSnackBar(!visibleSnackBar );
 
   useEffect(() => {
     const getTokenFromAsyncStorage = async () => {
@@ -145,9 +145,9 @@ const Details = ({ route, navigation }) => {
   };
 
   // Modal SOUMETRE
-  const [visibleSoumetre, setVisibleSoumetre ] = useState(false);
-  const showModalSoumetre = () => setVisibleSoumetre(true);
-  const hideModalSoumetre= () => setVisibleSoumetre(false);
+  const [visibleSoumettre, setVisibleSoumettre ] = useState(false);
+  const showModalSoumettre = () => setVisibleSoumettre(true);
+  const hideModalSoumettre= () => setVisibleSoumettre(false);
 
    // Modal Demande Adhesion
    const [visibleAdhesion, setVisibleAdhesion] = useState(false);
@@ -257,6 +257,42 @@ const Details = ({ route, navigation }) => {
     if (!error) {
       // Navigate back to the previous screen
       navigation.navigate('Main');
+    }else {
+      onToggleSnackBar()
+    }
+  }
+
+  // Push New LIne into timeline array
+  // Change Status
+  // "PENDING","SUBMITED", "REJECTED", "ACCEPTED", "BANNED"
+  
+  const handleSoumettre = async () => {
+
+    // Pushing the additional object to the output array
+    const today = new Date();
+
+    const outputTimeLineSoum = {
+      time:`${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear().toString().substr(-2)}`,
+      title: 'Soumission',
+      details: `Votre ${route.params.food.type} a été soumis à l'équipe BOMOKO Cash. Et
+      est en attente de validation`
+    };
+
+    dispatch(soumettreProduct({
+      ...route.params.food,
+      id: route.params.food._id,
+      status: "SUBMITED",
+      timeline: [
+        outputTimeLineSoum,
+        ...route.params.food.timeline,
+      ]
+    }));
+
+     // Check if the product was deleted successfully
+    if (!error) {
+      // Navigate back to the previous screen
+      navigation.navigate('Main');
+
     }else {
       onToggleSnackBar()
     }
@@ -488,12 +524,15 @@ const Details = ({ route, navigation }) => {
             {route.params.food.name}
           </Text>
           {
+            // "PENDING","SUBMITED", "REJECTED", "ACCEPTED", "BANNED"
             route.params.food.status == "PENDING"?
-            <Text color={COLORS.red} center>[Bruillon]</Text>:
-          <Text color={COLORS.darkgreen} center>[Valid]</Text>
+              <Text color={COLORS.red} center>[Bruillon]</Text>:
+            route.params.food.status == "SUBMITED"?
+              <Text color={COLORS.red} center>[en attente de validation]</Text>:
+              <Text color={COLORS.darkgreen} center>[Validé]</Text>
 
           }
-          
+
           <Text center>Prix total</Text>
           <Text bold size={30} center color={COLORS.peach}>
             {route.params.food.amount}  {route.params.food.currency} 
@@ -546,7 +585,10 @@ const Details = ({ route, navigation }) => {
               JSON.parse(token)?.user.user.username === route.params.food.owner.username? 
               <Block row space="between" m_t={10}>
               {/* owner */}
-              <Button textColor="#fff" elevated buttonColor={COLORS.lightBlue} onPress={()=>
+             {
+              route.params.food.status == 'PENDING'?
+              <>
+                <Button textColor="#fff" elevated buttonColor={COLORS.lightBlue} onPress={()=>
               {
                 // console.log("route.params.food", route.params.food);
                  navigation.navigate('EditProduct', { owner: JSON.parse(token).user?.user?.userId,
@@ -559,9 +601,12 @@ const Details = ({ route, navigation }) => {
                 Supprimer
               </Button>
 
-              <Button textColor="#fff" elevated buttonColor={COLORS.darkgreen} onPress={()=> showModalSoumetre()}>
-                Soumetre
+              <Button textColor="#fff" elevated buttonColor={COLORS.darkgreen} onPress={()=> showModalSoumettre()}>
+                Soumettre
               </Button>
+              </>:<></>
+             }
+              
             </Block>
             :
             <Block row space="between" m_t={10}>
@@ -744,11 +789,11 @@ const Details = ({ route, navigation }) => {
         </Card>
       </Modal>
 
-      {/* Soumetre */}
+      {/* Soumettre */}
       <Modal
         style={{ zIndex: 99 }}
-        visible={visibleSoumetre}
-        onDismiss={hideModalSoumetre}
+        visible={visibleSoumettre}
+        onDismiss={hideModalSoumettre}
         contentContainerStyle={[containerStyle, { zIndex: 999 }]} // Set a higher value for the z-index
       >
         <Card style={{ padding: 10 }}>
@@ -757,7 +802,7 @@ const Details = ({ route, navigation }) => {
             title="ATTENTION!" 
           />
           <Card.Content>
-            <Text variant="titleLarge">Voulez-vous vraiment Soumetre le {route.params.food.type }
+            <Text variant="titleLarge">Voulez-vous vraiment Soumettre le {route.params.food.type }
               {" "}{ route.params.food.name}?</Text>
 
               <Text color={COLORS.peach} variant="titleLarge">Ceci implique que votre {route.params.food.type} {" "} 
@@ -765,11 +810,11 @@ const Details = ({ route, navigation }) => {
               de le valider ou le rejeter dans la plateforme!</Text>
           </Card.Content>
           <Card.Actions style={{ marginTop: 15 }}>
-            <Button onPress={hideModalSoumetre}>Annuler</Button>
+            <Button onPress={hideModalSoumettre}>Annuler</Button>
             <Button buttonColor={COLORS.purple}
              onPress={() => {
               hideModalDel()
-              //navigation.navigate('AuthScreen')
+              handleSoumettre()
             }} >Soummetre</Button>
           </Card.Actions>
         </Card>
