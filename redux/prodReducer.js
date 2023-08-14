@@ -309,6 +309,47 @@ export const editProduct = createAsyncThunk(
 );
 
 
+
+export const soumettreProduct = createAsyncThunk(
+  "product/soumettre",
+  async ({
+    id,
+    name,
+    detail,
+    location,
+    amount,
+    images,
+    initialAmount,
+    type,
+    currency,
+    timeline,
+    startDate,
+    endDate,
+    owner
+  }) => {
+    const url = `${BASE_URL}api/product/${id}`; // Concatenate ID to the base URL
+    
+    const response = await axios.put(url, { // Use PUT request for updating
+      name,
+      detail,
+      location,
+      amount,
+      images,
+      initialAmount,
+      type,
+      currency,
+      timeline,
+      startDate,
+      endDate,
+      owner
+    });
+
+    console.log("Soummetre prod---?????? ok==", response.data);
+    return response.data;
+  }
+);
+
+
 export const delProduct = createAsyncThunk(
   "product/delete",
   async ({
@@ -399,6 +440,20 @@ const productSlice = createSlice({
 
     })
     .addCase(delProduct.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.error.message;
+    })
+    .addCase(soumettreProduct.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    })
+    .addCase(soumettreProduct.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.lastSaved = action.payload;
+      state.error = null;
+
+    })
+    .addCase(soumettreProduct.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.error.message;
     });
