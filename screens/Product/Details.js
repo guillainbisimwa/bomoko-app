@@ -612,12 +612,8 @@ const Details = ({ route, navigation }) => {
             <Block row space="between" m_t={10}>
               {/* other */}
               {
-                // route.params.food.membres.contains
-              }
-              <Button textColor="#fff" elevated buttonColor={COLORS.purple} onPress={()=> showModalAdhesion()} >
-                Demande d'Adhesion
-              </Button>
-
+              route.params.food.membres.some(member => member._id === "1")?
+              <>
               <Button textColor="#fff" elevated buttonColor={COLORS.peach} onPress={()=> showModalQuitter()}>
                 Quitter
               </Button>
@@ -625,6 +621,12 @@ const Details = ({ route, navigation }) => {
               <Button textColor="#fff" elevated buttonColor={COLORS.darkgreen} onPress={()=> showModalContribuer()}>
                 Contribuer
               </Button>
+              </> :
+               <Button textColor="#fff" elevated buttonColor={COLORS.purple} onPress={()=> showModalAdhesion()} >
+               Demande d'Adhesion
+             </Button>
+              }
+             
             </Block>
             }
             
