@@ -24,7 +24,7 @@ const EditProduct = ({route, navigation}) => {
   const navigationV2 = useNavigation();
   
   const dispatch = useDispatch();
-  const { error, isLoading, successUpdate, products } = useSelector((state) => state.products);
+  const { error, isLoading, successUpdate } = useSelector((state) => state.products);
 
   const [name, setName] = useState(productService.name);
   const [amount, setAmount] = useState(productService.amount+'');

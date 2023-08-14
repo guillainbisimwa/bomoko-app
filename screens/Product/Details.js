@@ -13,7 +13,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Block from './Block';
 import Text from './Text';
 import { COLORS, FONTS, icons, SIZES } from '../../constants';
-import { Button, Card, MD3Colors, Modal, ProgressBar, TextInput } from 'react-native-paper';
+import { Button, Card, MD3Colors, Modal, ProgressBar, Snackbar, TextInput } from 'react-native-paper';
 import { BottomSheet } from 'react-native-btr';
 import { useDispatch, useSelector } from 'react-redux';
 import CoutScreen from './CoutScreen';
@@ -26,14 +26,22 @@ import Timeline from 'react-native-timeline-flatlist';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { delProduct } from '../../redux/prodReducer';
 
 const Details = ({ route, navigation }) => {
   const scrollX = useRef(new Animated.Value(0)).current;
 
   const couts = useSelector((state) => state.couts.couts);
+  const { error } = useSelector((state) => state.products);
+
 
   // Get token
   const [token, setToken] = useState(null);
+
+
+  const [visibleSnackBar , setVisibleSnackBar ] = useState(false);
+  const onDismissSnackBar = () => setVisible(false);
+  const onToggleSnackBar = () => setVisible(!visibleSnackBar );
 
   useEffect(() => {
     const getTokenFromAsyncStorage = async () => {
@@ -106,7 +114,7 @@ const Details = ({ route, navigation }) => {
   const [editedAmount, setEditedAmount] = useState('');
   const [totAmount, setTotAmount] = useState(
     couts
-      .filter((v, k) => v.prodId == route.params.food.id)
+      .filter((v, k) => v.prodId == route.params.food._id)
       .reduce((a, b) => a + (b.amount || 0), 0)
   );
 
@@ -228,7 +236,7 @@ const Details = ({ route, navigation }) => {
       name: editedName,
       amount: parseFloat(editedAmount),
       validate: true,
-      prodId: route.params.food.id,
+      prodId: route.params.food._id,
       date: '',
     };
 
@@ -239,6 +247,20 @@ const Details = ({ route, navigation }) => {
     setEditedName('');
     setEditedAmount('');
   };
+
+  const handleDelete = async () => {
+    dispatch(delProduct({
+      id: route.params.food._id
+    }));
+
+     // Check if the product was deleted successfully
+    if (!error) {
+      // Navigate back to the previous screen
+      navigation.navigate('Main');
+    }else {
+      onToggleSnackBar()
+    }
+  }
 
   const renderScrollIndicator = () => {
     const dotPosition = Animated.divide(scrollX, SIZES.width);
@@ -526,7 +548,7 @@ const Details = ({ route, navigation }) => {
               {/* owner */}
               <Button textColor="#fff" elevated buttonColor={COLORS.lightBlue} onPress={()=>
               {
-                console.log("route.params.food", route.params.food);
+                // console.log("route.params.food", route.params.food);
                  navigation.navigate('EditProduct', { owner: JSON.parse(token).user?.user?.userId,
                   username: JSON.parse(token).user?.user?.username, productService: route.params.food });
               }}>
@@ -682,7 +704,7 @@ const Details = ({ route, navigation }) => {
                 showsVerticalScrollIndicator={false}
               >
                 {couts
-                  .filter((v, k) => v.prodId == route.params.food.id)
+                  .filter((v, k) => v.prodId == route.params.food._id)
                   .map((food, index) => {
                     return <CoutScreen key={index} item={food} count={index + 1} />;
                   })}
@@ -716,7 +738,7 @@ const Details = ({ route, navigation }) => {
             <Button buttonColor={COLORS.red}
              onPress={() => {
               hideModalDel()
-              //navigation.navigate('AuthScreen')
+              handleDelete()
             }} >Supprimer</Button>
           </Card.Actions>
         </Card>
@@ -865,6 +887,20 @@ const Details = ({ route, navigation }) => {
         </Card>
       </Modal>
 
+      <Snackbar
+          visible={visibleSnackBar}
+          onDismiss={onDismissSnackBar}
+          style={{ backgroundColor: COLORS.peach}}
+          wrapperStyle={{ bottom: 30 }}
+          action={{
+            label: 'Annuler',
+            onPress: () => {
+              // Do something
+            },
+          }}
+        >
+          {error}
+        </Snackbar>
 
     </ScrollView>
   );

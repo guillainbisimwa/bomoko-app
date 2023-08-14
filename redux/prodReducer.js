@@ -287,21 +287,7 @@ export const editProduct = createAsyncThunk(
     owner
   }) => {
     const url = `${BASE_URL}api/product/${id}`; // Concatenate ID to the base URL
-    console.log();
-    console.log("URL", { 
-      name,
-      detail,
-      location,
-      amount,
-      images,
-      initialAmount,
-      type,
-      currency,
-      timeline,
-      startDate,
-      endDate,
-      owner
-    });
+    
     const response = await axios.put(url, { // Use PUT request for updating
       name,
       detail,
@@ -318,6 +304,19 @@ export const editProduct = createAsyncThunk(
     });
 
     console.log("Edit prod---?????? ok==", response.data);
+    return response.data;
+  }
+);
+
+
+export const delProduct = createAsyncThunk(
+  "product/delete",
+  async ({
+    id
+  }) => {
+    const url = `${BASE_URL}api/product/${id}`; // Concatenate ID to the base URL
+    const response = await axios.delete(url);
+    console.log("Delete prod---?????? ok==", response.data);
     return response.data;
   }
 );
@@ -384,9 +383,22 @@ const productSlice = createSlice({
       state.lastSaved = action.payload;
       state.error = null;
       state.successUpdate = true;
-
     })
     .addCase(editProduct.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.error.message;
+    })
+    .addCase(delProduct.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    })
+    .addCase(delProduct.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.lastSaved = action.payload;
+      state.error = null;
+
+    })
+    .addCase(delProduct.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.error.message;
     });
