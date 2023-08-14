@@ -296,7 +296,39 @@ const Details = ({ route, navigation }) => {
     }else {
       onToggleSnackBar()
     }
-  }
+  };
+
+  // Add user to prod/serv's memeber array
+  // Display "Quitter" button while waiting for Admin Validation
+  
+  const handleAdhesion = async () => {
+
+    // Push current user to member array
+
+    // Reuse the soumettreProduct function
+    dispatch(soumettreProduct({
+      ...route.params.food,
+      id: route.params.food._id,
+      membres: [
+        ...route.params.food.membres,
+        {
+          user: JSON.parse(token)?.user?.user?.userId,
+          admission_req: 'PENDING', 
+          contribution_amount: 0,
+          contribution_status: 'PENDING', 
+        }
+      ]
+    }));
+
+     // Check if the product was deleted successfully
+    if (!error) {
+      // Navigate back to the previous screen
+      navigation.navigate('Main');
+
+    }else {
+      onToggleSnackBar()
+    }
+  };
 
   const renderScrollIndicator = () => {
     const dotPosition = Animated.divide(scrollX, SIZES.width);
@@ -591,8 +623,8 @@ const Details = ({ route, navigation }) => {
                 <Button textColor="#fff" elevated buttonColor={COLORS.lightBlue} onPress={()=>
               {
                 // console.log("route.params.food", route.params.food);
-                 navigation.navigate('EditProduct', { owner: JSON.parse(token).user?.user?.userId,
-                  username: JSON.parse(token).user?.user?.username, productService: route.params.food });
+                 navigation.navigate('EditProduct', { owner: JSON.parse(token)?.user?.user?.userId,
+                  username: JSON.parse(token)?.user?.user?.username, productService: route.params.food });
               }}>
                 Modifier
               </Button>
@@ -612,7 +644,7 @@ const Details = ({ route, navigation }) => {
             <Block row space="between" m_t={10}>
               {/* other */}
               {
-              route.params.food.membres.some(member => member._id === "1")?
+                route.params.food.membres.some(member => member?.user?._id == JSON.parse(token)?.user?.user?.userId)?
               <>
               <Button textColor="#fff" elevated buttonColor={COLORS.peach} onPress={()=> showModalQuitter()}>
                 Quitter
@@ -866,7 +898,7 @@ const Details = ({ route, navigation }) => {
             <Button buttonColor={COLORS.purple}
              onPress={() => {
               hideModalDel()
-              //navigation.navigate('AuthScreen')
+              handleAdhesion()
             }} >Adherer</Button>
           </Card.Actions>
             </>

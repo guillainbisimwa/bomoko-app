@@ -326,6 +326,7 @@ export const soumettreProduct = createAsyncThunk(
     timeline,
     startDate,
     endDate,
+    membres,
     owner
   }) => {
     const url = `${BASE_URL}api/product/${id}`; // Concatenate ID to the base URL
@@ -343,6 +344,7 @@ export const soumettreProduct = createAsyncThunk(
       timeline,
       startDate,
       endDate,
+      membres,
       owner
     });
 
@@ -443,7 +445,7 @@ const productSlice = createSlice({
     })
     .addCase(delProduct.rejected, (state, action) => {
       state.isLoading = false;
-      state.error = action.error.message;
+      state.error = "action.error.message";
     })
     .addCase(soumettreProduct.pending, (state) => {
       state.isLoading = true;
