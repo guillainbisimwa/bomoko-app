@@ -830,12 +830,30 @@ const Details = ({ route, navigation }) => {
         onDismiss={hideModalAdhesion}
         contentContainerStyle={[containerStyle, { zIndex: 999 }]} // Set a higher value for the z-index
       >
+
         <Card style={{ padding: 10 }}>
           <Card.Title
             titleStyle={{ fontWeight: 'bold', textTransform: 'uppercase' }}
             title="ATTENTION!" 
           />
+          {
+            !token?
+          <>
           <Card.Content>
+            <Text variant="titleLarge">Vous devez d'abord vous connecter</Text>
+          </Card.Content>
+          <Card.Actions style={{ marginTop: 15 }}>
+            <Button onPress={hideModalAdhesion}>Annuler</Button>
+            <Button buttonColor={COLORS.red}
+             onPress={() => {
+              hideModalAdhesion()
+              navigation.navigate('AuthScreen')
+            }} >Connecter</Button>
+          </Card.Actions>
+          </>
+              :
+            <>
+            <Card.Content>
             <Text variant="titleLarge">Voulez-vous vraiment Faire parti des insvesitteurs du {route.params.food.type }
               {" "}{ route.params.food.name}?</Text>
 
@@ -851,6 +869,9 @@ const Details = ({ route, navigation }) => {
               //navigation.navigate('AuthScreen')
             }} >Adherer</Button>
           </Card.Actions>
+            </>
+            }
+         
         </Card>
       </Modal>
 
