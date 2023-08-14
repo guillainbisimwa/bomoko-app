@@ -524,7 +524,9 @@ const Details = ({ route, navigation }) => {
               JSON.parse(token)?.user.user.username === route.params.food.owner.username? 
               <Block row space="between" m_t={10}>
               {/* owner */}
-              <Button textColor="#fff" elevated buttonColor={COLORS.lightBlue} onPress={()=>{
+              <Button textColor="#fff" elevated buttonColor={COLORS.lightBlue} onPress={()=>
+              {
+                console.log("route.params.food", route.params.food);
                  navigation.navigate('EditProduct', { owner: JSON.parse(token).user?.user?.userId,
                   username: JSON.parse(token).user?.user?.username, productService: route.params.food });
               }}>

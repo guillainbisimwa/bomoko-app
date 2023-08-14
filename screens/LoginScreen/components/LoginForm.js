@@ -35,13 +35,14 @@ export const LoginForm = ({ navigation }) => {
       if (success) {
         //Alert.alert("Success", "Login successful!");
         onToggleSnackBarSuccess();
-        setTimeout(() => {
-          // navigation.goBack(null); // First go back
-          // navigation.goBack(null); // Second go back
-          // navigationV2.navigate('Main', { savedUser: JSON.parse(user)?.user});
-          navigationV2.navigate('Main');
-        }
-        , 2000);
+        // setTimeout(() => {
+        //   // navigation.goBack(null); // First go back
+        //   // navigation.goBack(null); // Second go back
+        //   // navigationV2.navigate('Main', { savedUser: JSON.parse(user)?.user});
+          
+        // }
+        // , 2000);
+        navigationV2.navigate('Main');
        
       }
       if (error) {

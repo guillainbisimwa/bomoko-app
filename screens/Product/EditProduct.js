@@ -15,29 +15,31 @@ import * as ImagePicker from 'expo-image-picker';
 
 import { DatePickerModal } from 'react-native-paper-dates';
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { postProduct } from '../../redux/prodReducer';
+import { editProduct } from '../../redux/prodReducer';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
 
 const EditProduct = ({route, navigation}) => {
   const { owner, username, productService } = route.params;
+  const navigationV2 = useNavigation();
   
   const dispatch = useDispatch();
-  const { error, isLoading, success, products } = useSelector((state) => state.products);
+  const { error, isLoading, successUpdate, products } = useSelector((state) => state.products);
 
   const [name, setName] = useState(productService.name);
-  const [amount, setAmount] = useState(parseInt(productService.amount));
-  const [initialAmount, setInitialAmount] = useState(parseInt(productService.initialAmount));
-  const [type, setType] = useState('produit');
+  const [amount, setAmount] = useState(productService.amount+'');
+  const [initialAmount, setInitialAmount] = useState(productService.initialAmount+'');
+  const [type, setType] = useState(productService.type);
 
-  const [description, setDescription] = useState(productService.description);
+  const [description, setDescription] = useState(productService.detail);
   const [images, setImages] = useState([...productService.images]);
 
   const [loadPic, setLoadPic] = useState(false);
   const [checkedDevise, setCheckedDevise] = useState(productService.currency);
 
   // DATE RANGE PICKER
-  const [range, setRange] = useState({ startDate: productService.startDate, endDate: 
-    productService.endDate });
+  const [range, setRange] = useState({ startDate: new Date(productService.startDate), endDate: 
+    new Date(productService.endDate)});
 
   const [open, setOpen] = useState(false);
 
@@ -72,7 +74,7 @@ const EditProduct = ({route, navigation}) => {
 
   useEffect(() => {
     console.log("");
-    console.log("productService", productService.amount);
+    console.log("productService", successUpdate);
 
     (async () => {
       if (Constants.platform.ios) {
@@ -85,13 +87,6 @@ const EditProduct = ({route, navigation}) => {
     })();
   }, []);
 
-  useEffect(()=>{
-    console.log(" error---", error);
-    console.log(" success---", success);
-    console.log(" products---", products);
-    console.log(" isLoading---", isLoading);
-  },[])
-
   const handleSaveEditProduct = async () => {
     try {
       const netInfo = await NetInfo.fetch();
@@ -100,16 +95,14 @@ const EditProduct = ({route, navigation}) => {
         Alert.alert("Pas de connexion Internet", "Veuillez vérifier votre connexion Internet et réessayer.");
         return;
       }
-      // console.log('Add', images);
-      // console.log('Add');
-      // var img_prod = "https://github.com/guillainbisimwa/bomoko-app/blob/master/assets/img/prod.jpg";
-      // var img_serv = "https://github.com/guillainbisimwa/bomoko-app/blob/master/assets/img/serv.jpg";
-
+ 
       var img_prod = "https://raw.githubusercontent.com/guillainbisimwa/bomoko-app/add-product/assets/img/prod.jpg";
       var img_serv = "https://raw.githubusercontent.com/guillainbisimwa/bomoko-app/add-product/assets/img/serv.jpg";
 
       //console.log(p);
-      dispatch(postProduct({
+      dispatch(editProduct({
+        ...productService,
+        id: productService._id,
         name: name,
         detail: description,
         location: [checkedGoma?'Goma':'',
@@ -119,26 +112,19 @@ const EditProduct = ({route, navigation}) => {
         initialAmount: parseInt(initialAmount),
         type: type,
         currency: checkedDevise,
-        timeline: [
-          {
-            title: `Creation du ${type} : ${name}`,
-            details: `Le ${type} : ${name}- cree par ${username}`
-          }
-        ],
-        startDate: `${range.startDate}`, //formatDateToFrench(range.startDate)
+        startDate: `${range.startDate}`,
         endDate: `${range.endDate}`,
-        owner: owner,
       }));
 
        // Check if the product was saved successfully
       if (!error) {
         // Navigate back to the previous screen
+        navigationV2.navigate('Main');
+        //navigation.goBack();
         
-        navigation.goBack();
       }else {
         onToggleSnackBar()
       }
-
 
     } catch (e) {
       console.log('error', e);
@@ -332,7 +318,7 @@ const pickImage = async () => {
           marginVertical:20,}}>
             <Button onPress={() => setOpen(true)} uppercase={false} mode="outlined" style={{ 
               padding: 7, width:"100%"}}>
-              Choisir la durée de votre campagne
+              Modifier la durée de votre campagne
             </Button>
             <DatePickerModal
               locale="fr"
@@ -389,7 +375,7 @@ const pickImage = async () => {
 
         loading={isLoading}
         >
-          Ajouter 
+          Modifier 
         </Button>
       </>
     );
@@ -454,21 +440,19 @@ const pickImage = async () => {
         {addEditProduct()}
 
         <Snackbar
-        visible={visible}
-        onDismiss={onDismissSnackBar}
-        style={{ backgroundColor: COLORS.peach}}
-        wrapperStyle={{ bottom: 30 }}
-        action={{
-          label: 'Annuler',
-          onPress: () => {
-            // Do something
-          },
-        }}
+          visible={visible}
+          onDismiss={onDismissSnackBar}
+          style={{ backgroundColor: COLORS.peach}}
+          wrapperStyle={{ bottom: 30 }}
+          action={{
+            label: 'Annuler',
+            onPress: () => {
+              // Do something
+            },
+          }}
         >
-        {error}
-      
-        
-      </Snackbar>
+          {error}
+        </Snackbar>
       </ScrollView>
     </KeyboardAvoidingView>
   );

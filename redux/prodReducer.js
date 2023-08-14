@@ -226,7 +226,7 @@ export const fetchProducts = createAsyncThunk(
     const response = await axios.get(
       BASE_URL +'api/product',
     );
-    console.log("response.data ------->>", response.data);
+    //console.log("response.data ------->>", response.data);
     return response.data;
   }
 );
@@ -271,7 +271,8 @@ export const postProduct = createAsyncThunk(
 
 export const editProduct = createAsyncThunk(
   "product/edit",
-  async ({  
+  async ({
+    id,
     name,
     detail,
     location,
@@ -283,10 +284,11 @@ export const editProduct = createAsyncThunk(
     timeline,
     startDate,
     endDate,
-    owner 
+    owner
   }) => {
-    console.log(BASE_URL);
-    const response = await axios.post( BASE_URL +'api/product', {
+    const url = `${BASE_URL}api/product/${id}`; // Concatenate ID to the base URL
+    console.log();
+    console.log("URL", { 
       name,
       detail,
       location,
@@ -298,10 +300,24 @@ export const editProduct = createAsyncThunk(
       timeline,
       startDate,
       endDate,
-      owner 
+      owner
     });
-    console.log("Add prod---?????? ok==",response.data);
-    
+    const response = await axios.put(url, { // Use PUT request for updating
+      name,
+      detail,
+      location,
+      amount,
+      images,
+      initialAmount,
+      type,
+      currency,
+      timeline,
+      startDate,
+      endDate,
+      owner
+    });
+
+    console.log("Edit prod---?????? ok==", response.data);
     return response.data;
   }
 );
@@ -314,7 +330,8 @@ const productSlice = createSlice({
     isLoading: false,
     error: '',
     lastSaved: null,
-    success: false
+    success: false,
+    successUpdate: false,
   },
   reducers: {
     // addProduct: (state, action) => {
@@ -355,6 +372,21 @@ const productSlice = createSlice({
       state.error = null;
     })
     .addCase(fetchProducts.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.error.message;
+    })
+    .addCase(editProduct.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    })
+    .addCase(editProduct.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.lastSaved = action.payload;
+      state.error = null;
+      state.successUpdate = true;
+
+    })
+    .addCase(editProduct.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.error.message;
     });
