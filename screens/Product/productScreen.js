@@ -11,45 +11,57 @@ import { FAB, IconButton, MD3Colors, ProgressBar, Button, Card, Modal, Menu, Div
 import { useDispatch, useSelector } from 'react-redux';
 import { ImageBackground } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { logoutUser } from '../../redux/userSlice';
+import { loadInitialUser, logoutUser, setInitialUser } from '../../redux/userSlice';
 import { fetchProducts } from '../../redux/prodReducer';
 import NetInfo from "@react-native-community/netinfo";
 import { Alert } from 'react-native';
 
 
-const ProductScreen = ({ navigation }) => {
+const ProductScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
 
   const { error, isLoading, success, products } = useSelector((state) => state.products);
-//console.log("Prod", products);
+  const { user } = useSelector((state) => state.user);
+
+
+  // Refresh Control
+  const [refreshing, setRefreshing] = useState(false);
+
+  const [visible, setVisible] = useState(false);
+
+  const [visibleMenu, setVisibleMenu] = useState(false);
+
+  const [active, setActive] = useState('Tous');
+  const [search, setSearch] = useState('');
+  const [product_serviceList, setProduct_serviceList] = useState([]);
 
   const [token, setToken] = useState(null);
 
   useEffect(() => {
-    // Fetch products lists when component mounts
-    const netInfo = NetInfo.fetch();
-    // console.log("netInfo.isConnected", netInfo.isConnected);
-    // if (!netInfo.isConnected) {
-    //   Alert.alert("Pas de connexion Internet", "Veuillez vérifier votre connexion Internet et réessayer.");
-    //   return;
-    // }
-
-    dispatch(fetchProducts());
-    console.log("Eror ****", error);
-    console.log("produx", products);
-    //setActive('Tous');
-    onRefresh();
+      // Load initial user data from AsyncStorage
+      const initialUser = loadInitialUser();
+      if (initialUser) {
+        // Dispatch the action using extraReducers
+        console.log("Ok");
+        dispatch(setInitialUser(initialUser));
+      }
+    //setActive(active == null? 'Tous':active);
+    console.log("products-------------------------", products);
     setProduct_serviceList([...products]);
-
-
-}, [dispatch, error, product_serviceList]); // Include "dispatch" and "error" in the dependency array
+  }, []);
 
   useEffect(() => {
+    dispatch(fetchProducts());
+    console.log("Eror ****", error);
+    console.log("produx", products.length);
+    //setActive('Tous');
+    // onRefresh();
+
     const getTokenFromAsyncStorage = async () => {
       try {
         const storedToken = await AsyncStorage.getItem('user');
         setToken(storedToken);
-       
+        
       } catch (error) {
         // Handle AsyncStorage read error if needed
         console.error('Error reading token from AsyncStorage:', error);
@@ -57,26 +69,23 @@ const ProductScreen = ({ navigation }) => {
     };
 
     getTokenFromAsyncStorage();
+    // setProduct_serviceList([...products]);
   }, []);
-
 
   const handleLogout = () => {
     // Dispatch the logoutUser action
     closeMenu();
     dispatch(logoutUser());
 
-    navigation.navigate('AuthScreen')
+    navigation.navigate('AuthScreen');
   };
 
   // Modal
-  const [visible, setVisible] = useState(false);
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
 
 
   // Menu
-  const [visibleMenu, setVisibleMenu] = useState(false);
-
   const openMenu = () => setVisibleMenu(true);
 
   const closeMenu = () => setVisibleMenu(false);
@@ -91,9 +100,6 @@ const ProductScreen = ({ navigation }) => {
   // console.log(products, 'ok---------------------------------------');
   //console.log(JSON.stringify(products), 'ok---------------------------------------');
 
-  const [active, setActive] = useState('Tous');
-  const [search, setSearch] = useState('');
-  const [product_serviceList, setProduct_serviceList] = useState([]);
 
   const onSearch = (text) => {
     setProduct_serviceList([
@@ -103,9 +109,6 @@ const ProductScreen = ({ navigation }) => {
     ]);
     setSearch(text);
   };
-
-  // Refresh Control
-  const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = async () => {
 
@@ -386,7 +389,13 @@ const ProductScreen = ({ navigation }) => {
         <View style={{ flexDirection: 'row' }}>
         <TouchableOpacity
           style={{ justifyContent: 'center', alignItems: 'flex-end', width: 50 }}
-          onPress={() => console.log('shopping')}
+          onPress={() => {
+            console.log('shopping');
+            //console.log("Token --",JSON.parse(token).user.user.username);
+            console.log('UserJ --', user?._j?.user?.user?.username);
+            console.log('User --', user?._j);
+
+          }}
         >
           <Image
             source={icons.shopping}
@@ -398,7 +407,7 @@ const ProductScreen = ({ navigation }) => {
           />
         </TouchableOpacity>
         { 
-      token?  
+      user?._j?  
       <View
         style={{
           justifyContent: 'center', alignItems: 'flex-end', width: 50
@@ -422,9 +431,12 @@ const ProductScreen = ({ navigation }) => {
           </TouchableOpacity>
           }>
           <Menu.Item leadingIcon="account" onPress={() => {
-            console.log(JSON.parse(token).user.user.username);
+            console.log("Token --",JSON.parse(token).user.user.username);
+            //console.log('User --', user.user.username);
+            console.log('User --', user['_j']?.user?.user?.username);
+
           }}
-           title={JSON.parse(token).user.user.username} />
+           title={user['_j']?.user?.user?.username} />
           <Divider />
           <Menu.Item leadingIcon="logout" onPress={handleLogout} title="Deconnexion" />
         </Menu>
@@ -468,7 +480,7 @@ const ProductScreen = ({ navigation }) => {
             }
           {search.trim().length == 0 ? (
             <>
-              {popular()}
+              {/* {popular()} */}
               {list()}
             </>
           ) : (

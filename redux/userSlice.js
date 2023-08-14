@@ -14,7 +14,7 @@ export const loginUser = createAsyncThunk(
       username,
       password,
     });
-    console.log("loginnnnnnn---?????? ",response.data?.user);
+    // console.log("loginnnnnnn---?????? ",response.data?.user);
     
     return response.data?.user;
   }
@@ -43,10 +43,26 @@ export const signUpUser = createAsyncThunk(
   }
 );
 
+export const loadInitialUser = async () => {
+  try {
+    const storedUser = await AsyncStorage.getItem('user');
+    console.log("------------------------------------------------------");
+    console.log("");
+    console.log("storedUser-?", storedUser);
+    console.log("");
+
+    return storedUser ? JSON.parse(storedUser) : null;
+  } catch (error) {
+    console.error('Error reading user data from AsyncStorage:', error);
+    return null;
+  }
+};
+
+
 const userSlice = createSlice({
   name: "users",
-initialState: {
-    user: null, // Use user data from AsyncStorage or set to null
+  initialState: {
+    user: null,//loadInitialUser(), // Use user data from AsyncStorage or set to null
     error: null,
     isLoading: false,
     success: false,
@@ -68,7 +84,11 @@ initialState: {
       // Clear user data from AsyncStorage
       AsyncStorage.removeItem('user');
       // AsyncStorage.clear();
-    }
+    },
+    // Set initial user data from AsyncStorage
+    setInitialUser: (state, action) => {
+      state.user = action.payload;
+    },
   },
   // In the extraReducers field, we define how the state should change when the asynchronous
   // thunk loginUser is in a pending, fulfilled, or rejected state. 
@@ -117,6 +137,6 @@ initialState: {
       });
   },
 });
-export const { logoutUser } = userSlice.actions;
+export const { logoutUser, setInitialUser } = userSlice.actions;
 
 export default userSlice.reducer;
