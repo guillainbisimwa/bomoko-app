@@ -315,6 +315,41 @@ const Details = ({ route, navigation }) => {
     }
   };
 
+  const handleAcceptReq = async (user) => {
+
+    console.log({
+      membres: [
+        ...route.params.food.membres,
+        {
+          ...user,
+          _id: user._id,
+          admission_req: 'ACCEPTED', 
+        }
+      ]  
+    });
+
+    // dispatch(soumettreProduct({
+    //   ...route.params.food,
+    //   id: route.params.food._id,
+    //   membres: [
+    //     ...route.params.food.membres,
+    //     {
+    //       ...user,
+    //       admission_req: 'ACCEPTED', 
+    //     }
+    //   ]      
+    // }));
+
+     // Check if the member was updated successfully
+    if (!error) {
+      // Navigate back to the previous screen
+      navigation.navigate('Main');
+
+    }else {
+      onToggleSnackBar()
+    }
+  };
+
   // Add user to prod/serv's memeber array
   // Display "Quitter" button while waiting for Admin Validation
   
@@ -509,10 +544,18 @@ const Details = ({ route, navigation }) => {
             }
             { (!item.admin && route.params.food.owner._id == JSON.parse(token)?.user?.user?.userId)?
               <Block  row space="between">
-                <TouchableOpacity onPress={()=> console.log('close')}>
+                <TouchableOpacity onPress={()=> {
+                  //handleAcceptReq(item)
+                  console.log('close')
+                }
+                  }>
                   <Ionicons name="close-circle" size={40} color={COLORS.peach} />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={()=> console.log('accepted')}>
+                <TouchableOpacity onPress={()=> {
+                  handleAcceptReq(item)
+                  console.log('Accepted')
+                }
+                  }>
                   <Ionicons name="checkmark-circle" size={40} color={COLORS.darkgreen} />
                 </TouchableOpacity>
               </Block>:
