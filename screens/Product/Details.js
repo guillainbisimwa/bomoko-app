@@ -44,13 +44,6 @@ const Details = ({ route, navigation }) => {
   const onToggleSnackBar = () => setVisibleSnackBar(!visibleSnackBar );
   const [expandedMembre, setExpandedMembre] = useState(false);
 
-  const renderMembreItem = (membre) => {
-    return ( renderItem(membre)
-      // <Text key={membre.user._id} numberOfLines={1}>
-      //   {membre.user.name} - {membre.contribution_amount} - {format(new Date(membre.timestamp), 'dd MMMM yyyy')}
-      // </Text>
-    );
-  };
   const toggleExpansion = () => {
     setExpandedMembre(!expandedMembre);
   };
@@ -664,7 +657,11 @@ const Details = ({ route, navigation }) => {
 
           <Block>
             <Block row space="between">
-              <TouchableOpacity onPress={()=> console.log('Images')}>
+              <TouchableOpacity onPress={()=> 
+                {
+                  console.log('Images');
+                  navigation.navigate('ShowImages', { images: route.params.food.images})
+                }}>
                 <Block row center style={styles.round}>
                     <Ionicons name="md-image" color={COLORS.peach} size={20} />
                     {/* <Text numberOfLines={1}> { route.params.food.membres.length} membres</Text> */}
