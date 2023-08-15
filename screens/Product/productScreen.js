@@ -480,7 +480,7 @@ const ProductScreen = ({ navigation, route }) => {
             }
           {search.trim().length == 0 ? (
             <>
-              {popular()}
+              {/* {popular()} */}
               {list()}
             </>
           ) : (

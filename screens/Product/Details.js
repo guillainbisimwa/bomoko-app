@@ -42,6 +42,23 @@ const Details = ({ route, navigation }) => {
   const [visibleSnackBar , setVisibleSnackBar ] = useState(false);
   const onDismissSnackBar = () => setVisibleSnackBar(false);
   const onToggleSnackBar = () => setVisibleSnackBar(!visibleSnackBar );
+  const [expandedMembre, setExpandedMembre] = useState(false);
+
+  const renderMembreItem = (membre) => {
+    return ( renderItem(membre)
+      // <Text key={membre.user._id} numberOfLines={1}>
+      //   {membre.user.name} - {membre.contribution_amount} - {format(new Date(membre.timestamp), 'dd MMMM yyyy')}
+      // </Text>
+    );
+  };
+  const toggleExpansion = () => {
+    setExpandedMembre(!expandedMembre);
+  };
+
+  const membresToShow = expandedMembre
+  ? route.params.food.membres
+  : route.params.food.membres.slice(0, 1); // Show the first two users if not expanded
+
 
   useEffect(() => {
     const getTokenFromAsyncStorage = async () => {
@@ -685,17 +702,35 @@ const Details = ({ route, navigation }) => {
           MEMBRES ({route.params.food.membres.length + 1})
           </Text>
 
-          {renderItem({ admin: true, name: route.params.food.owner.name+" (Admin)", contribution: route.params.food.initialAmount, 
-          date: format(new Date(route.params.food.timestamp), 'dd MMMM yyyy', { locale: fr }) })}
-
           {
-            route.params.food.membres?.length >=1?
-            route.params.food.membres.map((membre, index)=> renderItem(membre) ):<></>
+            renderItem({ admin: true, name: route.params.food.owner.name+" (Admin)", 
+            contribution: route.params.food.initialAmount, 
+            date: format(new Date(route.params.food.timestamp), 'dd MMMM yyyy', { locale: fr }) })
           }
 
-          <Text bold color={COLORS.blue}>
+          {
+            membresToShow.map((membre, index) => renderItem(membre))
+
+          }
+
+          {/* {
+            route.params.food.membres?.length >=1?
+            //route.params.food.membres.map((membre, index)=> renderItem(membre) )
+            membresToShow.map((membre, index) => renderItem(membre))
+
+            :<></>
+          } */}
+
+          {/* <Text bold color={COLORS.blue}>
             {expanded ? 'Voir moins' : 'Voir plus'}
-          </Text>
+          </Text> */}
+          {route.params.food.membres?.length > 1 && ( // Show "Voir plus" only if there are more than 2 users
+            <TouchableOpacity onPress={toggleExpansion}>
+              <Text bold color={COLORS.blue}>
+                {expandedMembre ? 'Voir moins' : 'Voir plus'}
+              </Text>
+            </TouchableOpacity>
+          )}
         </Block>
 
         <Block p={20}>
