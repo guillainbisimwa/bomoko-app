@@ -34,10 +34,8 @@ const Details = ({ route, navigation }) => {
   const couts = useSelector((state) => state.couts.couts);
   const { error } = useSelector((state) => state.products);
 
-
   // Get token
   const [token, setToken] = useState(null);
-
 
   const [visibleSnackBar , setVisibleSnackBar ] = useState(false);
   const onDismissSnackBar = () => setVisibleSnackBar(false);
@@ -52,6 +50,8 @@ const Details = ({ route, navigation }) => {
   ? route.params.food.membres
   : route.params.food.membres.slice(0, 1); // Show the first two users if not expanded
 
+  const [dateStart, setDateStart] = useState(new Date(route.params.food.startDate));
+  const [dateEnd, setDateEnd] = useState(new Date(route.params.food.endDate));
 
   useEffect(() => {
     const getTokenFromAsyncStorage = async () => {
@@ -107,10 +107,10 @@ const Details = ({ route, navigation }) => {
   });
 
   // Pushing the additional object to the output array
-  const dateEnd = new Date(targetEndDate);
+  const mydateEnd = new Date(targetEndDate);
 
   outputTimeLine.unshift({
-    time:`${dateEnd.getDate()}/${dateEnd.getMonth() + 1}/${dateEnd.getFullYear().toString().substr(-2)}`,
+    time:`${mydateEnd.getDate()}/${mydateEnd.getMonth() + 1}/${mydateEnd.getFullYear().toString().substr(-2)}`,
     title: 'Fin probable de la Campagne',
     description: `Probablelent la campagne prendra fin apres ${daysTotalExc} jours de la date de debut de la collecte`,
     //lineColor: COLORS.peach,
@@ -649,7 +649,9 @@ const Details = ({ route, navigation }) => {
               <Text color={COLORS.darkgreen} center>[Validé]</Text>
 
           }
-
+    
+          <Text bold center>Du {dateStart.getDate()}/{dateStart.getMonth() + 1}/{dateStart.getFullYear().toString().substr(-2) } 
+          {`  au `} {dateEnd.getDate()}/{dateEnd.getMonth() + 1}/{dateEnd.getFullYear().toString().substr(-2)} </Text>
           <Text center>Prix total</Text>
           <Text bold size={30} center color={COLORS.peach}>
             {route.params.food.amount}  {route.params.food.currency} 
@@ -818,18 +820,22 @@ const Details = ({ route, navigation }) => {
           <Text bold numberOfLines={1}>
             CALCUL D'INVESTISSEMENT
           </Text>
-          <Text>Projection du retour sur investissement de 600$ en 3 mois</Text>
+          <Text>Projection du retour sur investissement</Text>
 
           <Svg style={{ width: '100%' }}>
             <VictoryChart domainPadding={50} theme={VictoryTheme.material}>
               <VictoryBar
                 style={{ data: { fill: COLORS.purple } }}
                 categories={{
-                  x: ['Coût Total', 'Interet'],
+                  x: [`Coût Total ${route.params.food.currency}`, 
+                  `Interet c ${route.params.food.currency}`,
+                  `Interet ${route.params.food.currency}`
+                ],
                 }}
                 data={[
-                  { x: 'Coût Total', y: 600 },
-                  { x: 'Interet', y: sliderValue },
+                  { x: `Coût Total ${route.params.food.currency}`, y: route.params.food.amount },
+                  { x:  `Interet c ${route.params.food.currency}`, y: 220 },
+                  { x: `Interet ${route.params.food.currency}`, y: sliderValue },
                 ]}
               />
             </VictoryChart>
