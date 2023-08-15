@@ -59,7 +59,8 @@ const Details = ({ route, navigation }) => {
   }, []);
 
   useEffect(()=> {
-    console.log("route", route.params.food.timeline);
+    console.log("owner", route.params.food.membres);
+    console.log("token", JSON.parse(token)?.user?.user?.userId,);
   },[])
 
   const dispatch = useDispatch();
@@ -467,7 +468,10 @@ const Details = ({ route, navigation }) => {
               />
             </View>
             <View>
-              <Text style={{ ...FONTS.h3, color: COLORS.black }}>{item.name}</Text>
+              <Text numberOfLines={1} style={{ ...FONTS.h3, color: COLORS.black }}>{
+                item.admin? item?.name: item?.user?.name 
+              } 
+              </Text>
               <Text
                 numberOfLines={1}
                 style={{
@@ -477,38 +481,30 @@ const Details = ({ route, navigation }) => {
                   color: COLORS.darkgray,
                 }}
               >
-                {item.contribution}  {route.params.food.currency}
+                {  item.admin? item?.contribution: item?.contribution_amount }  {route.params.food.currency} 
               </Text>
             </View>
           </View>
 
           <View style={{  alignItems: 'flex-end' }}>
-            { !item.admin?
-             <Block  row space="between">
-              <Button
-              elevated
-              mode="outlined"
-              //onPress={handleSaveAddProduct}
-              //style={styles.buttonSuccess}
-              
-              icon={({ size, color }) => (
-                <Ionicons name="close" size={20} color={COLORS.darkgreen} />
-              )}
-
-            //loading={isLoading}
-            ></Button>
-             <Button
-              elevated
-              mode="outlined"
-              
-              //onPress={handleSaveAddProduct}
-              //style={styles.buttonError}
-              icon={({ size, color }) => (
-                <Ionicons name="close" size={20} color={COLORS.peach} />
-              )}
-
-            //loading={isLoading}
-            ></Button></Block>:
+            {
+              // if OWNER id == token user id
+            }
+            { (!item.admin && route.params.food.owner._id == JSON.parse(token)?.user?.user?.userId)?
+              <Block  row space="between">
+                <TouchableOpacity onPress={()=> console.log('close')}>
+                  <Ionicons name="close-circle" size={40} color={COLORS.peach} />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={()=> console.log('accepted')}>
+                  <Ionicons name="checkmark-circle" size={40} color={COLORS.darkgreen} />
+                </TouchableOpacity>
+              </Block>:
+            // if PENDING
+              item.admission_req == 'PENDING'?
+              <>
+               <Text style={{ ...FONTS.h5, color: COLORS.red }}>En attente</Text>
+              </>
+            :
             <>
               <Text style={{ ...FONTS.h5, color: COLORS.red }}>+0% interret</Text>
               <View style={{ flexDirection: 'row' }}>
@@ -649,9 +645,13 @@ const Details = ({ route, navigation }) => {
                 Quitter
               </Button>
 
-              <Button textColor="#fff" elevated buttonColor={COLORS.darkgreen} onPress={()=> showModalContribuer()}>
-                Contribuer
-              </Button>
+              {
+                 route.params.food.membres.find(member => member?.admission_req == 'ACCEPTED')? <Button textColor="#fff" elevated buttonColor={COLORS.darkgreen} onPress={()=> showModalContribuer()}>
+                  Contribuer
+                </Button>:
+                <></>
+              }
+
               </> :
                <Button textColor="#fff" elevated buttonColor={COLORS.purple} onPress={()=> showModalAdhesion()} >
                Demande d'Adhesion
