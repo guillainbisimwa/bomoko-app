@@ -315,14 +315,14 @@ const Details = ({ route, navigation }) => {
     }
   };
 
-  const handleAcceptReq = async (user) => {
+  const handleAcceptReq = async (myUser) => {
 
     console.log({
       membres: [
         ...route.params.food.membres,
         {
-          ...user,
-          _id: user._id,
+          ...myUser,
+          _id: myUser._id,
           admission_req: 'ACCEPTED', 
         }
       ]  
@@ -334,8 +334,45 @@ const Details = ({ route, navigation }) => {
     //   membres: [
     //     ...route.params.food.membres,
     //     {
-    //       ...user,
+    //       ...myUser,
+    //        _id: myUser._id,
     //       admission_req: 'ACCEPTED', 
+    //     }
+    //   ]      
+    // }));
+
+     // Check if the member was updated successfully
+    if (!error) {
+      // Navigate back to the previous screen
+      navigation.navigate('Main');
+
+    }else {
+      onToggleSnackBar()
+    }
+  };
+
+  const handleAcceptReject = async (myUser) => {
+
+    console.log({
+      membres: [
+        ...route.params.food.membres,
+        {
+          ...myUser,
+          _id: myUser._id,
+          admission_req: 'REJECTED', 
+        }
+      ]  
+    });
+
+    // dispatch(soumettreProduct({
+    //   ...route.params.food,
+    //   id: route.params.food._id,
+    //   membres: [
+    //     ...route.params.food.membres,
+    //     {
+    //       ...myUser,
+    //        _id: myUser._id,
+    //       admission_req: 'REJECTED', 
     //     }
     //   ]      
     // }));
@@ -545,7 +582,7 @@ const Details = ({ route, navigation }) => {
             { (!item.admin && route.params.food.owner._id == JSON.parse(token)?.user?.user?.userId)?
               <Block  row space="between">
                 <TouchableOpacity onPress={()=> {
-                  //handleAcceptReq(item)
+                  handleAcceptReject(item)
                   console.log('close')
                 }
                   }>
