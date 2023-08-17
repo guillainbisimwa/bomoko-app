@@ -348,7 +348,10 @@ export const soumettreProduct = createAsyncThunk(
       owner
     });
 
-    console.log("Soummetre prod---?????? ok==", response.data);
+    console.log("Soummetre prod---?????? ok==", { // Use PUT request for updating
+      membres,
+    });
+
     return response.data;
   }
 );

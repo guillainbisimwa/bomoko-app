@@ -6,6 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
+  ToastAndroid,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Svg } from 'react-native-svg';
@@ -32,7 +33,7 @@ const Details = ({ route, navigation }) => {
   const scrollX = useRef(new Animated.Value(0)).current;
 
   const couts = useSelector((state) => state.couts.couts);
-  const { error } = useSelector((state) => state.products);
+  const { error, isLoading } = useSelector((state) => state.products);
 
   // Get token
   const [token, setToken] = useState(null);
@@ -92,6 +93,10 @@ const Details = ({ route, navigation }) => {
   const daysTotalExc = Math.ceil(timeTotalExerc / millisecondsInDay);
 
   console.log(`Days left: ${daysLeft}`);
+
+  const showToast = () => {
+    ToastAndroid.show("Une erreur s'est produite", ToastAndroid.LONG);
+  }
 
   // Timeline
   const outputTimeLine = route.params.food.timeline.map(item => {
@@ -309,37 +314,37 @@ const Details = ({ route, navigation }) => {
   };
 
   const handleAcceptReq = async (myUser) => {
+    try{
+  
+      const updatedMembres = route.params.food.membres.map((membre) => {
+        if (membre.user._id === myUser.user._id) {
+          return {
+            ...membre,
+            admission_req: 'ACCEPTED',
+          };
+        }
+        return membre;
+      });
 
-    // console.log({
-    //   membres: [
-    //     ...route.params.food.membres,
-    //     {
-    //       ...myUser,
-    //       _id: myUser._id,
-    //       admission_req: 'ACCEPTED', 
-    //     }
-    //   ]  
-    // });
-    dispatch(soumettreProduct({
-      ...route.params.food,
-      id: route.params.food._id,
-      membres: route.params.food.membres.map((membre) =>
-        membre.user._id === myUser._id
-          ? {
-              ...membre,
-              admission_req: 'ACCEPTED', 
-            }
-          : membre
-      )
-    }));
-
-     // Check if the member was updated successfully
-    if (!error) {
-      // Navigate back to the previous screen
-      navigation.navigate('Main');
-
-    }else {
+      dispatch(soumettreProduct({
+        ...route.params.food,
+        id: route.params.food._id,
+        membres: updatedMembres,
+      }));
+  
+       // Check if the member was updated successfully
+      if (!error && !isLoading) {
+        // Navigate back to the previous screen
+        await navigation.navigate('Main');
+  
+      }else {
+        console.log('Error ++++++')
+        onToggleSnackBar()
+      }
+    } catch(e){
+      console.log('Error //////////', e)
       onToggleSnackBar()
+      showToast()
     }
   };
 
@@ -572,20 +577,47 @@ const Details = ({ route, navigation }) => {
               // if OWNER id == token user id
             }
             { (!item.admin && route.params.food.owner._id == JSON.parse(token)?.user?.user?.userId)?
+              item.admission_req == 'ACCEPTED'?
+
+              <>
+              <Text style={{ ...FONTS.h5, color: COLORS.red }}>+0% interret</Text>
+              <View style={{ flexDirection: 'row' }}>
+                <Image
+                  source={icons.calendar}
+                  style={{
+                    width: 12,
+                    height: 12,
+                    tintColor: COLORS.darkgray,
+                    marginRight: 7,
+                    marginTop: 3,
+                  }}
+                />
+                <Text style={{ marginBottom: SIZES.base, color: COLORS.darkgray, ...FONTS.body5 }}>
+                  {item.date}
+                </Text>
+              </View>
+            </>:
+              
               <Block  row space="between">
                 <TouchableOpacity onPress={()=> {
                   handleAcceptReject(item)
                   console.log('close')
-                }
-                  }>
-                  <Ionicons name="close-circle" size={40} color={COLORS.peach} />
+                }}>
+                  {
+                    isLoading? <></>:
+                    <Ionicons name="close-circle" size={40} color={COLORS.peach} />
+                  }
                 </TouchableOpacity>
+
                 <TouchableOpacity onPress={()=> {
                   handleAcceptReq(item)
                   console.log('Accepted')
                 }
                   }>
-                  <Ionicons name="checkmark-circle" size={40} color={COLORS.darkgreen} />
+                    {
+                      isLoading? <></>: 
+                    <Ionicons name="checkmark-circle" size={40} color={COLORS.darkgreen} />
+                  }
                 </TouchableOpacity>
               </Block>:
             // if PENDING
