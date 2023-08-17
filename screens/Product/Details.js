@@ -349,40 +349,38 @@ const Details = ({ route, navigation }) => {
   };
 
   const handleAcceptReject = async (myUser) => {
-
-    console.log({
-      membres: [
-        ...route.params.food.membres,
-        {
-          ...myUser,
-          _id: myUser._id,
-          admission_req: 'REJECTED', 
+    try{
+      const updatedMembres = route.params.food.membres.map((membre) => {
+        if (membre.user._id === myUser.user._id) {
+          return {
+            ...membre,
+            admission_req: 'REJECTED',
+          };
         }
-      ]  
-    });
+        return membre;
+      });
 
-    // dispatch(soumettreProduct({
-    //   ...route.params.food,
-    //   id: route.params.food._id,
-    //   membres: [
-    //     ...route.params.food.membres,
-    //     {
-    //       ...myUser,
-    //        _id: myUser._id,
-    //       admission_req: 'REJECTED', 
-    //     }
-    //   ]      
-    // }));
-
-     // Check if the member was updated successfully
-    if (!error) {
-      // Navigate back to the previous screen
-      navigation.navigate('Main');
-
-    }else {
+      dispatch(soumettreProduct({
+        ...route.params.food,
+        id: route.params.food._id,
+        membres: updatedMembres,
+      }));
+  
+       // Check if the member was updated successfully
+      if (!error && !isLoading) {
+        // Navigate back to the previous screen
+        await navigation.navigate('Main');
+  
+      }else {
+        console.log('Error ++++++')
+        onToggleSnackBar()
+      }
+    } catch(e){
+      console.log('Error //////////', e)
       onToggleSnackBar()
+      showToast()
     }
-  };
+  }
 
   // Add user to prod/serv's memeber array
   // Display "Quitter" button while waiting for Admin Validation
@@ -571,80 +569,75 @@ const Details = ({ route, navigation }) => {
               </Text>
             </View>
           </View>
+          <View style={{ alignItems: 'flex-end' }}>
+  {(!item.admin && route.params.food.owner._id == JSON.parse(token)?.user?.user?.userId) ? (
+    item.admission_req == 'ACCEPTED' ? (
+      <>
+        <Text style={{ ...FONTS.h5, color: COLORS.red }}>+0% interret</Text>
+        <View style={{ flexDirection: 'row' }}>
+          <Image
+            source={icons.calendar}
+            style={{
+              width: 12,
+              height: 12,
+              tintColor: COLORS.darkgray,
+              marginRight: 7,
+              marginTop: 3,
+            }}
+          />
+          <Text style={{ marginBottom: SIZES.base, color: COLORS.darkgray, ...FONTS.body5 }}>
+            {item.date}
+          </Text>
+        </View>
+      </>
+    ) : item.admission_req == 'REJECTED' ? (
+      <Text style={{ ...FONTS.h5, color: COLORS.red }}>Reject</Text>
+    ) : (
+      <Block row space="between">
+        <TouchableOpacity onPress={() => handleAcceptReject(item)}>
+          {isLoading ? (
+            <></>
+          ) : (
+            <Ionicons name="close-circle" size={40} color={COLORS.peach} />
+          )}
+        </TouchableOpacity>
 
-          <View style={{  alignItems: 'flex-end' }}>
-            {
-              // if OWNER id == token user id
-            }
-            { (!item.admin && route.params.food.owner._id == JSON.parse(token)?.user?.user?.userId)?
-              item.admission_req == 'ACCEPTED'?
+        <TouchableOpacity onPress={() => handleAcceptReq(item)}>
+          {isLoading ? (
+            <></>
+          ) : (
+            <Ionicons name="checkmark-circle" size={40} color={COLORS.darkgreen} />
+          )}
+        </TouchableOpacity>
+      </Block>
+    )
+  ) : item.admission_req == 'PENDING' ? (
+    <>
+      <Text style={{ ...FONTS.h5, color: COLORS.red }}>En attente</Text>
+    </>
+  ) : (
+    <>
+      <Text style={{ ...FONTS.h5, color: COLORS.red }}>+0% interret</Text>
+      <View style={{ flexDirection: 'row' }}>
+        <Image
+          source={icons.calendar}
+          style={{
+            width: 12,
+            height: 12,
+            tintColor: COLORS.darkgray,
+            marginRight: 7,
+            marginTop: 3,
+          }}
+        />
+        <Text style={{ marginBottom: SIZES.base, color: COLORS.darkgray, ...FONTS.body5 }}>
+          {item.date}
+        </Text>
+      </View>
+    </>
+  )}
+</View>
 
-              <>
-              <Text style={{ ...FONTS.h5, color: COLORS.red }}>+0% interret</Text>
-              <View style={{ flexDirection: 'row' }}>
-                <Image
-                  source={icons.calendar}
-                  style={{
-                    width: 12,
-                    height: 12,
-                    tintColor: COLORS.darkgray,
-                    marginRight: 7,
-                    marginTop: 3,
-                  }}
-                />
-                <Text style={{ marginBottom: SIZES.base, color: COLORS.darkgray, ...FONTS.body5 }}>
-                  {item.date}
-                </Text>
-              </View>
-            </>:
-              
-              <Block  row space="between">
-                <TouchableOpacity onPress={()=> {
-                  handleAcceptReject(item)
-                  console.log('close')
-                }}>
-                  {
-                    isLoading? <></>:
-                    <Ionicons name="close-circle" size={40} color={COLORS.peach} />
-                  }
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={()=> {
-                  handleAcceptReq(item)
-                  console.log('Accepted')
-                }
-                  }>
-                    {
-                      isLoading? <></>: 
-                    <Ionicons name="checkmark-circle" size={40} color={COLORS.darkgreen} />
-                  }
-                </TouchableOpacity>
-              </Block>:
-            // if PENDING
-              item.admission_req == 'PENDING'?
-              <>
-               <Text style={{ ...FONTS.h5, color: COLORS.red }}>En attente</Text>
-              </>
-            :
-            <>
-              <Text style={{ ...FONTS.h5, color: COLORS.red }}>+0% interret</Text>
-              <View style={{ flexDirection: 'row' }}>
-                <Image
-                  source={icons.calendar}
-                  style={{
-                    width: 12,
-                    height: 12,
-                    tintColor: COLORS.darkgray,
-                    marginRight: 7,
-                    marginTop: 3,
-                  }}
-                />
-                <Text style={{ marginBottom: SIZES.base, color: COLORS.darkgray, ...FONTS.body5 }}>
-                  {item.date}
-                </Text>
-              </View>
-            </>}
-          </View>
+          
         </View>
       </View>
     </TouchableOpacity>
