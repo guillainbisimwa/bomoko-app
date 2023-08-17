@@ -310,29 +310,28 @@ const Details = ({ route, navigation }) => {
 
   const handleAcceptReq = async (myUser) => {
 
-    console.log({
-      membres: [
-        ...route.params.food.membres,
-        {
-          ...myUser,
-          _id: myUser._id,
-          admission_req: 'ACCEPTED', 
-        }
-      ]  
-    });
-
-    // dispatch(soumettreProduct({
-    //   ...route.params.food,
-    //   id: route.params.food._id,
+    // console.log({
     //   membres: [
     //     ...route.params.food.membres,
     //     {
     //       ...myUser,
-    //        _id: myUser._id,
+    //       _id: myUser._id,
     //       admission_req: 'ACCEPTED', 
     //     }
-    //   ]      
-    // }));
+    //   ]  
+    // });
+    dispatch(soumettreProduct({
+      ...route.params.food,
+      id: route.params.food._id,
+      membres: route.params.food.membres.map((membre) =>
+        membre.user._id === myUser._id
+          ? {
+              ...membre,
+              admission_req: 'ACCEPTED', 
+            }
+          : membre
+      )
+    }));
 
      // Check if the member was updated successfully
     if (!error) {
@@ -647,7 +646,6 @@ const Details = ({ route, navigation }) => {
             route.params.food.status == "SUBMITED"?
               <Text color={COLORS.red} center>[en attente de validation]</Text>:
               <Text color={COLORS.darkgreen} center>[Validé]</Text>
-
           }
     
           <Text bold center>Du {dateStart.getDate()}/{dateStart.getMonth() + 1}/{dateStart.getFullYear().toString().substr(-2) } 
@@ -760,7 +758,6 @@ const Details = ({ route, navigation }) => {
              
             </Block>
             }
-            
 
           </Block>
         </Block>
@@ -827,14 +824,16 @@ const Details = ({ route, navigation }) => {
               <VictoryBar
                 style={{ data: { fill: COLORS.purple } }}
                 categories={{
-                  x: [`Coût Total ${route.params.food.currency}`, 
-                  `Interet c ${route.params.food.currency}`,
+                  x: [`Coût ${route.params.food.currency}`, 
+                  `${route.params.food.currency} Dispo`,
+                  `${route.params.food.currency} Interet`,
                   `Interet ${route.params.food.currency}`
                 ],
                 }}
                 data={[
-                  { x: `Coût Total ${route.params.food.currency}`, y: route.params.food.amount },
-                  { x:  `Interet c ${route.params.food.currency}`, y: 220 },
+                  { x: `Coût ${route.params.food.currency}`, y: route.params.food.amount },
+                  { x:  `${route.params.food.currency} Dispo`, y: route.params.food.initialAmount },
+                  { x:  `${route.params.food.currency} Interet`, y: route.params.food.initialAmount },
                   { x: `Interet ${route.params.food.currency}`, y: sliderValue },
                 ]}
               />
@@ -843,16 +842,16 @@ const Details = ({ route, navigation }) => {
 
           {/*Slider with max, min, step and initial value*/}
           <Slider
-            maximumValue={600}
+            maximumValue={route.params.food.amount}
             minimumValue={0}
             minimumTrackTintColor="#307ecc"
             maximumTrackTintColor="#000000"
-            step={1}
+            step={50}
             value={sliderValue}
             onValueChange={(sliderValue) => setSliderValue(sliderValue)}
           />
 
-          <Text style={{ color: 'black' }}>Vous investissez la somme de : {sliderValue} $</Text>
+          <Text bold numberOfLines={2} style={{ color: 'black' }}>Vous investissez la somme de : {sliderValue} {route.params.food.currency}</Text>
         </Block>
 
         <Block p_l={20} p_r={20}>
@@ -880,8 +879,14 @@ const Details = ({ route, navigation }) => {
             columnFormat="single-column-left"
           />
 
-          <Text bold color={COLORS.blue}>
+          {/* <Text bold color={COLORS.blue}>
             {expanded ? 'Voir moins' : 'Voir plus'}
+          </Text> */}
+        </Block>
+
+        <Block p_l={20} p_r={20}>
+          <Text bold numberOfLines={1}>
+            BESOIN D'AIDE?
           </Text>
         </Block>
 
