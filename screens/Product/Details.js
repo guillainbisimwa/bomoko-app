@@ -591,7 +591,7 @@ const Details = ({ route, navigation }) => {
         </View>
       </>
     ) : item.admission_req == 'REJECTED' ? (
-      <Text style={{ ...FONTS.h5, color: COLORS.red }}>Reject</Text>
+      <Text style={{ ...FONTS.h5, color: COLORS.red }}>Rejeté</Text>
     ) : (
       <Block row space="between">
         <TouchableOpacity onPress={() => handleAcceptReject(item)}>
