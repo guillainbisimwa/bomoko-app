@@ -52,7 +52,10 @@ const ProductScreen = ({ navigation, route }) => {
     setProduct_serviceList([...products]);
     setBadgePanding(products.filter(product => 
       product.status === "PENDING" && 
-      (product.owner._id === JSON.parse(token)?.user?.user?.userId || product.membres.some(member => member.user._id === JSON.parse(token)?.user?.user?.userId ))
+      (
+          product.owner._id === JSON.parse(token)?.user?.user?.userId || 
+          product.membres.some(member => member.user._id === JSON.parse(token)?.user?.user?.userId && member.admission_req === "PENDING")
+      )
   ).length)
   }, []);
 
