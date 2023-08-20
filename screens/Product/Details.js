@@ -735,7 +735,9 @@ const Details = ({ route, navigation }) => {
             </Block>
             <Block m_t={5} row space="between">
               <Text numberOfLines={1} semibold size={16}>
-                0% Investisseurs
+                {((route.params.food.initialAmount+route.params.food.membres
+  .filter(member => member.contribution_status === "ACCEPTED")
+  .reduce((sum, member) => sum + member.contribution_amount, 0))*100)/route.params.food.amount}% d'investissement
               </Text>
               <Text numberOfLines={1} semibold size={16}>
               {route.params.food.initialAmount} {route.params.food.currency}  reuni
@@ -975,7 +977,7 @@ const Details = ({ route, navigation }) => {
                 {
                   route.params.food.couts
                   .map((food, index) => {
-                    return <CoutScreen key={index} item={food} count={index + 1} />;
+                    return <CoutScreen currency={route.params.food.currency} key={index} item={food} count={index + 1} />;
                   })}
               </ScrollView>
             </Block>

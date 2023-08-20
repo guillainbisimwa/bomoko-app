@@ -92,7 +92,7 @@ const CoutScreen = (props) => {
                 />
               ) : (
                 <Text numberOfLines={1} color={COLORS.peach}>
-                  {props.item.amount} FC
+                  {props.item.amount} {props.currency}
                 </Text>
               )}
             </Block>
