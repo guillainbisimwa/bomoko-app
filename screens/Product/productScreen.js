@@ -355,7 +355,6 @@ const ProductScreen = ({ navigation, route }) => {
           flexDirection: 'row',
           paddingTop: SIZES.base * 3,
           justifyContent: 'space-between',
-          //alignItems: 'flex-end',
           paddingHorizontal: SIZES.padding,
         }}
       >
@@ -366,15 +365,10 @@ const ProductScreen = ({ navigation, route }) => {
         >
           <TouchableOpacity
             style={{
-              //width: 80,
-              //justifyContent: 'center',
-              //backgroundColor: COLORS.white,
-              //borderRadius: 30,
               paddingRight: SIZES.base * 2,
             }}
             onPress={() => {
               console.log('Menu');
-              //navigation.navigate(AuthScreen);
               navigation.openDrawer();
             }}
           >
@@ -387,11 +381,10 @@ const ProductScreen = ({ navigation, route }) => {
               }}
             />
           </TouchableOpacity>
-
           
-          <View >
-          <Text style={{ color: COLORS.white, ...FONTS.h2 }}>BOMOKO Cash</Text>
-          <Text style={{ ...FONTS.h3, color: COLORS.gray }}>(Produits et Services)</Text>
+          <View>
+            <Text style={{ color: COLORS.white, ...FONTS.h2 }}>BOMOKO Cash</Text>
+            <Text style={{ ...FONTS.h3, color: COLORS.gray }}>(Produits et Services)</Text>
         </View>
         </View>
         
@@ -407,8 +400,8 @@ const ProductScreen = ({ navigation, route }) => {
               prodServ : products.filter(product => 
                 product.status === "PENDING" && 
                 (
-                    product.owner._id === JSON.parse(token)?.user?.user?.userId || 
-                    product.membres.some(member => member.user._id === JSON.parse(token)?.user?.user?.userId && member.admission_req === "PENDING")
+                  product.owner._id === JSON.parse(token)?.user?.user?.userId || 
+                  product.membres.some(member => member.user._id === JSON.parse(token)?.user?.user?.userId && member.admission_req === "PENDING")
                 )
             )
             });
