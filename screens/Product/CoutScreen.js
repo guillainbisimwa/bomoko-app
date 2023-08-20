@@ -14,12 +14,12 @@ const CoutScreen = (props) => {
 
   const handleEdit = () => {
     setIsEditing(true);
+    setEditBtn(false)
   };
 
   const showEditBtn = (val) => {
     setEditBtn(!val);
   };
-
 
   const handleCancel = () => {
     // Handle trash icon click event
@@ -86,19 +86,25 @@ const CoutScreen = (props) => {
                 </Text>
               )}
             </Block>
-            <Block row>
+            <Block row >
               {isEditing ? (
                 <>
                   <TouchableOpacity onPress={handleCancel}>
-                    <Ionicons name="close" size={30} color={COLORS.blue} />
+                    <Ionicons name="close" size={30} color={COLORS.peach} />
                   </TouchableOpacity>
-                  <TouchableOpacity>
-                    <Ionicons name="close" size={30} color={COLORS.darkgreen} />
+                  <TouchableOpacity onPress={()=>{
+                      setEditBtn(false);
+                      handleCancel();
+                      props.handleUpdateItem(props.item, editedAmount, editedName)
+                    }}>
+                    <Ionicons name="checkmark-outline" size={30} color={COLORS.darkgreen}  />
                   </TouchableOpacity>
                 </>
               ) : editBtn ? (
                 <>
-                  <TouchableOpacity onPress={handleEdit}>
+                  <TouchableOpacity onPress={()=>{
+                    handleEdit();
+                    }}>
                     <Ionicons
                       name="create"
                       size={30}
@@ -106,7 +112,11 @@ const CoutScreen = (props) => {
                       style={{ marginRight: 12 }}
                     />
                   </TouchableOpacity>
-                  <TouchableOpacity onPress={()=>props.handleTrash(props.item)}>
+                  <TouchableOpacity onPress={()=>{
+                      setEditBtn(false)
+                      props.handleTrash(props.item)
+                    }
+                    }>
                     <Ionicons name="trash" size={30} color={COLORS.peach} />
                   </TouchableOpacity>
                 </>

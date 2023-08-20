@@ -432,7 +432,63 @@ const Details = ({ route, navigation }) => {
     }
   };
 
+  const handleUpdateItem = (item,  editedAmount1, editedName1) => {
+    // Handle update item event
+    try {
+      // Throw UI alert for updating an item
+      Alert.alert(
+        'Attention',
+        `Êtes-vous sûr de vouloir mettre à jour ${item.name} ?`,
+        [
+          {
+            text: 'Annuler',
+            style: 'cancel',
+          },
+          {
+            text: 'Mettre à jour',
+            style: 'default',
+            onPress: async () => {
+              // Function to execute when the user presses the "Mettre à jour" button
+              console.log('Élément mis à jour', item);
 
+              const updatedCouts = route.params.food.couts.map((cout) => {
+                if (cout._id === item._id) {
+                  return {
+                    ...cout,
+                    name: editedName1,
+                    amount: editedAmount1,
+                  };
+                }
+                return cout;
+              });
+
+              dispatch(soumettreProduct({
+                ...route.params.food,
+                id: route.params.food._id,
+                couts: updatedCouts,
+              }));
+              
+              // Check if the item was updated successfully
+              if (!error && !isLoading) {
+                console.log('Élément mis à jour avec succès');
+                setTotAmount(totAmount + parseFloat(editedAmount1) - parseFloat(route.params.food.couts.find(cout => cout._id === item._id).amount));
+
+                route.params.food.couts = updatedCouts;
+              } else {
+                console.log('Erreur de mise à jour');
+                onToggleSnackBar();
+              }
+            },
+          },
+        ]
+      );
+    } catch (e) {
+      console.log('Erreur //////////', e);
+      onToggleSnackBar();
+      showToast();
+    }
+  };
+  
   const handleTrash = (item) => {
     // Handle trash icon click event
     try{
@@ -1030,7 +1086,7 @@ const Details = ({ route, navigation }) => {
                 {
                   route.params.food.couts
                   .map((food, index) => {
-                    return <CoutScreen handleTrash={handleTrash} currency={route.params.food.currency} key={index} item={food} count={index + 1} />;
+                    return <CoutScreen handleUpdateItem={handleUpdateItem} handleTrash={handleTrash} currency={route.params.food.currency} key={index} item={food} count={index + 1} />;
                   })}
               </ScrollView>
             </Block>
@@ -1299,6 +1355,7 @@ const styles = StyleSheet.create({
     height: '70%',
     justifyContent: 'center',
     alignItems: 'center',
+    paddingBottom: 60
   },
   bottomSheetContainer: {
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
