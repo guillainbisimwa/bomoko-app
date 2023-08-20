@@ -613,7 +613,7 @@ const Details = ({ route, navigation }) => {
     )
   ) : item.admission_req == 'PENDING' ? (
     <>
-      <Text style={{ ...FONTS.h5, color: COLORS.red }}>En attente</Text>
+      <Text style={{ ...FONTS.h5, color: COLORS.gray}}>En attente</Text>
     </>
   ) : (
     <>
@@ -840,14 +840,28 @@ const Details = ({ route, navigation }) => {
 
         <Block p={20}>
           <Text bold numberOfLines={1}>
-            CALCUL D'INVESTISSEMENT
+            CALCUL D'INVESTISSEMENT ({route.params.food.currency})
           </Text>
           <Text>Projection du retour sur investissement</Text>
 
           <Svg style={{ width: '100%' }}>
-            <VictoryChart domainPadding={50} theme={VictoryTheme.material}>
+            <VictoryChart domainPadding={50} theme={VictoryTheme.material} >
               <VictoryBar
-                style={{ data: { fill: COLORS.purple } }}
+                style={{ 
+                  data: {
+                    fill: ({ datum }) => {
+                      if (datum.x === `${route.params.food.currency} Interet`) {
+                        return COLORS.peach;
+                      } else if (datum.y >= route.params.food.amount) {
+                        return COLORS.primary;
+                      } else {
+                        return COLORS.black;
+                      }
+                    }
+                  }
+                 }}
+                labels={({ datum }) => datum.y}
+
                 categories={{
                   x: [`Coût ${route.params.food.currency}`, 
                   `${route.params.food.currency} Dispo`,
