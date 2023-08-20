@@ -709,7 +709,7 @@ const Details = ({ route, navigation }) => {
   {(!item.admin && route.params.food.owner._id == JSON.parse(token)?.user?.user?.userId) ? (
     item.admission_req == 'ACCEPTED' ? (
       <>
-        <Text style={{ ...FONTS.h5, color: COLORS.red }}>+0% interret</Text>
+        <Text style={{ ...FONTS.h5, color: COLORS.red }}>+4% intérêt</Text>
         <View style={{ flexDirection: 'row' }}>
           <Image
             source={icons.calendar}
@@ -753,7 +753,7 @@ const Details = ({ route, navigation }) => {
     </>
   ) : (
     <>
-      <Text style={{ ...FONTS.h5, color: COLORS.red }}>+0% interret</Text>
+      <Text style={{ ...FONTS.h5, color: COLORS.red }}>+5% intérêt</Text>
       <View style={{ flexDirection: 'row' }}>
         <Image
           source={icons.calendar}
