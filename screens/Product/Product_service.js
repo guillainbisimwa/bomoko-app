@@ -54,6 +54,8 @@ const Product_service = (props) => {
 const styles = StyleSheet.create({
   container: {
     width: SIZES.width,
+    backgroundColor: COLORS.white,
+    borderRadius: 10,
   },
   img: {
     height: SIZES.width / 5,

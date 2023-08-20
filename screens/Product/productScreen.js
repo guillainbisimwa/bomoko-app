@@ -7,7 +7,7 @@ import Product_service from './Product_service';
 import LottieView from 'lottie-react-native';
 
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { FAB, IconButton, MD3Colors, ProgressBar, Button, Card, Modal, Menu, Divider, Provider, ActivityIndicator } from 'react-native-paper';
+import { FAB, IconButton, MD3Colors, ProgressBar, Button, Card, Modal, Menu, Divider, Provider, ActivityIndicator, Badge } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import { ImageBackground } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -37,6 +37,8 @@ const ProductScreen = ({ navigation, route }) => {
 
   const [token, setToken] = useState(null);
 
+  const [ badgePanding, setBadgePanding ] = useState(0)
+
   useEffect(() => {
       // Load initial user data from AsyncStorage
       const initialUser = loadInitialUser();
@@ -48,6 +50,14 @@ const ProductScreen = ({ navigation, route }) => {
     //setActive(active == null? 'Tous':active);
     console.log("products-------------------------", products);
     setProduct_serviceList([...products]);
+    setProduct_serviceList([...products].sort((a, b) => a.name - b.name));
+    setBadgePanding(products.filter(product => 
+      product.status === "PENDING" && 
+      (
+          product.owner._id === JSON.parse(token)?.user?.user?.userId || 
+          product.membres.some(member => member.user._id === JSON.parse(token)?.user?.user?.userId && member.admission_req === "PENDING")
+      )
+  ).length)
   }, []);
 
   useEffect(() => {
@@ -324,7 +334,6 @@ const ProductScreen = ({ navigation, route }) => {
                 return (
                   <TouchableOpacity
                     key={key}
-                    style={styles.horizontalList}
                     onPress={() => {
                       navigation.navigate('Details', { food });
                     }}
@@ -346,7 +355,6 @@ const ProductScreen = ({ navigation, route }) => {
           flexDirection: 'row',
           paddingTop: SIZES.base * 3,
           justifyContent: 'space-between',
-          //alignItems: 'flex-end',
           paddingHorizontal: SIZES.padding,
         }}
       >
@@ -357,15 +365,10 @@ const ProductScreen = ({ navigation, route }) => {
         >
           <TouchableOpacity
             style={{
-              //width: 80,
-              //justifyContent: 'center',
-              //backgroundColor: COLORS.white,
-              //borderRadius: 30,
               paddingRight: SIZES.base * 2,
             }}
             onPress={() => {
               console.log('Menu');
-              //navigation.navigate(AuthScreen);
               navigation.openDrawer();
             }}
           >
@@ -378,11 +381,10 @@ const ProductScreen = ({ navigation, route }) => {
               }}
             />
           </TouchableOpacity>
-
           
-          <View >
-          <Text style={{ color: COLORS.white, ...FONTS.h2 }}>BOMOKO Cash</Text>
-          <Text style={{ ...FONTS.h3, color: COLORS.gray }}>(Produits et Services)</Text>
+          <View>
+            <Text style={{ color: COLORS.white, ...FONTS.h2 }}>BOMOKO Cash</Text>
+            <Text style={{ ...FONTS.h3, color: COLORS.gray }}>(Produits et Services)</Text>
         </View>
         </View>
         
@@ -394,7 +396,15 @@ const ProductScreen = ({ navigation, route }) => {
             //console.log("Token --",JSON.parse(token).user.user.username);
             console.log('UserJ --', user?._j?.user?.user?.username);
             console.log('User --', user?._j);
-
+            navigation.navigate('ShoppingCard', {
+              prodServ : products.filter(product => 
+                product.status === "PENDING" && 
+                (
+                  product.owner._id === JSON.parse(token)?.user?.user?.userId || 
+                  product.membres.some(member => member.user._id === JSON.parse(token)?.user?.user?.userId && member.admission_req === "PENDING")
+                )
+            )
+            });
           }}
         >
           <Image
@@ -405,6 +415,8 @@ const ProductScreen = ({ navigation, route }) => {
               tintColor: COLORS.white,
             }}
           />
+            <Badge style={{ position:"absolute", top:2, right:-8 }}>{badgePanding}</Badge>
+
         </TouchableOpacity>
         { 
       user?._j?  
@@ -480,7 +492,7 @@ const ProductScreen = ({ navigation, route }) => {
             }
           {search.trim().length == 0 ? (
             <>
-              {/* {popular()} */}
+              {popular()}
               {list()}
             </>
           ) : (
