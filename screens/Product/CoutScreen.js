@@ -36,7 +36,8 @@ const CoutScreen = (props) => {
 
   return (
     <TouchableOpacity
-      onLongPress={() => showEditBtn(editBtn)}
+      onLongPress={() => props.admin?showEditBtn(editBtn):''}
+    
       style={{
         width: '90%',
         borderRadius: 15,

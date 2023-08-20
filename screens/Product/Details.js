@@ -602,11 +602,11 @@ const Details = ({ route, navigation }) => {
           onChangeText={handleAmountChange}
           mode="outlined"
           keyboardType='decimal-pad'
-          style={[styles.input, { width: '30%' }]}
+          style={[styles.input, { width: '35%' }]}
           required
         />
         <Button
-          style={{ width: '30%' }}
+          style={{ width: '25%' }}
           textColor="#fff"
           elevated
           buttonColor={COLORS.peach}
@@ -627,7 +627,7 @@ const Details = ({ route, navigation }) => {
       <Block row space="between" style={styles.floatBlock}>
         <Text bold>Les coûts directs et indirects</Text>
         <Button textColor="#fff" elevated buttonColor={COLORS.purple} onPress={toggle}>
-          Mes coûts
+          Les coûts
         </Button>
       </Block>
     );
@@ -1086,11 +1086,15 @@ const Details = ({ route, navigation }) => {
                 {
                   route.params.food.couts
                   .map((food, index) => {
-                    return <CoutScreen handleUpdateItem={handleUpdateItem} handleTrash={handleTrash} currency={route.params.food.currency} key={index} item={food} count={index + 1} />;
+                    return <CoutScreen admin={route.params.food.owner._id == JSON.parse(token)?.user?.user?.userId}
+                     handleUpdateItem={handleUpdateItem} handleTrash={handleTrash} currency={route.params.food.currency} key={index} item={food} count={index + 1} />;
                   })}
               </ScrollView>
             </Block>
-            {renderFAaddCout()}
+            {
+              route.params.food.owner._id == JSON.parse(token)?.user?.user?.userId?
+              renderFAaddCout(): <></>
+            }
           </Block>
         </BottomSheet>
         
