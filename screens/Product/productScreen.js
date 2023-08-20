@@ -7,7 +7,7 @@ import Product_service from './Product_service';
 import LottieView from 'lottie-react-native';
 
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { FAB, IconButton, MD3Colors, ProgressBar, Button, Card, Modal, Menu, Divider, Provider, ActivityIndicator } from 'react-native-paper';
+import { FAB, IconButton, MD3Colors, ProgressBar, Button, Card, Modal, Menu, Divider, Provider, ActivityIndicator, Badge } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import { ImageBackground } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -37,6 +37,8 @@ const ProductScreen = ({ navigation, route }) => {
 
   const [token, setToken] = useState(null);
 
+  const [ badgePanding, setBadgePanding ] = useState(0)
+
   useEffect(() => {
       // Load initial user data from AsyncStorage
       const initialUser = loadInitialUser();
@@ -48,6 +50,10 @@ const ProductScreen = ({ navigation, route }) => {
     //setActive(active == null? 'Tous':active);
     console.log("products-------------------------", products);
     setProduct_serviceList([...products]);
+    setBadgePanding(products.filter(product => 
+      product.status === "PENDING" && 
+      (product.owner._id === JSON.parse(token)?.user?.user?.userId || product.membres.some(member => member.user._id === JSON.parse(token)?.user?.user?.userId ))
+  ).length)
   }, []);
 
   useEffect(() => {
@@ -405,6 +411,8 @@ const ProductScreen = ({ navigation, route }) => {
               tintColor: COLORS.white,
             }}
           />
+            <Badge style={{ position:"absolute", top:2, right:-8 }}>{badgePanding}</Badge>
+
         </TouchableOpacity>
         { 
       user?._j?  
