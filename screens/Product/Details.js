@@ -135,7 +135,9 @@ const Details = ({ route, navigation }) => {
 
   const [expanded, setExpanded] = useState(false);
 
-  const [sliderValue, setSliderValue] = useState(15);
+  const [sliderValue, setSliderValue] = useState(route.params.food.amount/100);
+  // slider * 100 / interet
+  const [interet, setInteret] = useState((sliderValue *5 )/100);
 
   function toggle() {
     setVisible((visible) => !visible);
@@ -1000,30 +1002,36 @@ const Details = ({ route, navigation }) => {
                 style={{ 
                   data: {
                     fill: ({ datum }) => {
-                      if (datum.x === `${route.params.food.currency} Interet`) {
+                      if (datum.x === `Intérêt (5%)`) {
+                        return COLORS.primary;
+                      } else if (datum.x === `Invest`) {
                         return COLORS.peach;
                       } else if (datum.y > route.params.food.initialAmount) {
-                        return COLORS.primary;
+                        return COLORS.purple;
                       } else {
                         return COLORS.black;
                       }
                     }
                   }
                  }}
-                labels={({ datum }) => datum.y}
+                labels={({ datum }) => `${datum.y} ${route.params.food.currency}`}
 
                 categories={{
-                  x: [`Coût ${route.params.food.currency}`, 
-                  `${route.params.food.currency} Dispo`,
-                  `${route.params.food.currency} Interet`,
-                  `Interet ${route.params.food.currency}`
+                  x: [`Total`, 
+                  `Disponible`,
+                  `Intérêt (5%)`,
+                  `Invest`
                 ],
                 }}
                 data={[
-                  { x: `Coût ${route.params.food.currency}`, y: route.params.food.amount },
-                  { x:  `${route.params.food.currency} Dispo`, y: route.params.food.initialAmount },
-                  { x:  `${route.params.food.currency} Interet`, y: route.params.food.initialAmount },
-                  { x: `Interet ${route.params.food.currency}`, y: sliderValue },
+                  { x: `Total`, y: route.params.food.amount },
+                  { x:  `Disponible`, y: 
+                  (route.params.food.initialAmount+route.params.food.membres
+                    .filter(member => member.contribution_status === "ACCEPTED")
+                    .reduce((sum, member) => sum + member.contribution_amount, 0))
+                  },
+                  { x:  `Intérêt (5%)`, y: interet },
+                  { x: `Invest`, y: sliderValue },
                 ]}
               />
             </VictoryChart>
@@ -1031,16 +1039,24 @@ const Details = ({ route, navigation }) => {
 
           {/*Slider with max, min, step and initial value*/}
           <Slider
-            maximumValue={route.params.food.amount}
-            minimumValue={0}
+            maximumValue={(route.params.food.amount-(route.params.food.initialAmount+route.params.food.membres
+              .filter(member => member.contribution_status === "ACCEPTED")
+              .reduce((sum, member) => sum + member.contribution_amount, 0)))}
+            minimumValue={route.params.food.amount/100}
             minimumTrackTintColor="#307ecc"
             maximumTrackTintColor="#000000"
-            step={50}
+            step={route.params.food.amount/100}
             value={sliderValue}
-            onValueChange={(sliderValue) => setSliderValue(sliderValue)}
+            onValueChange={(sliderValue) => {
+              setInteret((sliderValue *5 )/100)
+              setSliderValue(sliderValue)}
+            }
           />
 
-          <Text bold numberOfLines={2} style={{ color: 'black' }}>Vous investissez la somme de : {sliderValue} {route.params.food.currency}</Text>
+        <Text bold numberOfLines={2} style={{ color: 'black' }}>
+          Vous investissez la somme de : {sliderValue} {route.params.food.currency}.
+           Ceci équivaut à {sliderValue/(route.params.food.amount/100)} parts de {route.params.food.amount/100} {route.params.food.currency} chacun.</Text>
+          
         </Block>
 
         <Block p_l={20} p_r={20}>
