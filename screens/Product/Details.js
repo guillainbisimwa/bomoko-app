@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Image,
   ToastAndroid,
+  Keyboard,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Svg } from 'react-native-svg';
@@ -28,12 +29,19 @@ import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { delProduct, soumettreProduct } from '../../redux/prodReducer';
+import { TouchableWithoutFeedback } from 'react-native';
 
 const Details = ({ route, navigation }) => {
   const scrollX = useRef(new Animated.Value(0)).current;
 
-  const couts = useSelector((state) => state.couts.couts);
   const { error, isLoading } = useSelector((state) => state.products);
+
+  const [visible, setVisible] = useState(false);
+  const [editedName, setEditedName] = useState('');
+  const [editedAmount, setEditedAmount] = useState('');
+  const [totAmount, setTotAmount] = useState(
+    route.params.food.couts.reduce((sum, cout) => sum + cout.amount, 0)
+  );
 
   // Get token
   const [token, setToken] = useState(null);
@@ -124,15 +132,6 @@ const Details = ({ route, navigation }) => {
     //dotColor: COLORS.blue,
     //innerCircle: 'dot',
   });
-
-  const [visible, setVisible] = useState(false);
-  const [editedName, setEditedName] = useState('');
-  const [editedAmount, setEditedAmount] = useState('');
-  const [totAmount, setTotAmount] = useState(
-    couts
-      .filter((v, k) => v.prodId == route.params.food._id)
-      .reduce((a, b) => a + (b.amount || 0), 0)
-  );
 
   const [expanded, setExpanded] = useState(false);
 
@@ -240,28 +239,47 @@ const Details = ({ route, navigation }) => {
     setEditedName(text);
   };
 
-  const handleAddCout = () => {
-    if (!editedName || !editedAmount) {
-      // Throw UI error if any field is missing
-      Alert.alert('Erreur', 'Veuillez remplir tous les champs obligatoires');
-      return;
+  const handleAddCout = async () => {
+    try{
+      if (!editedName || !editedAmount) {
+        // Throw UI error if any field is missing
+        Alert.alert('Erreur', 'Veuillez remplir tous les champs obligatoires');
+        return;
+      }
+
+      const coutObj = {
+        name: editedName,
+        amount: editedAmount,
+      };
+
+      dispatch(soumettreProduct({
+        ...route.params.food,
+        id: route.params.food._id,
+        couts: [
+          coutObj,
+          ...route.params.food.couts,
+        ]
+      }));
+
+      route.params.food.couts = [
+        coutObj,
+        ...route.params.food.couts,
+      ]
+
+      setEditedName('');
+      setEditedAmount('');
+      // Check if the member was updated successfully
+      if (!error && !isLoading) {
+        setTotAmount(totAmount + parseFloat(editedAmount));
+      }else {
+        console.log('Error ++++++')
+        onToggleSnackBar()
+      }
+    } catch(e){
+      console.log('Error //////////', e)
+      onToggleSnackBar()
+      showToast()
     }
-
-    const coutObj = {
-      id: 1,
-      name: editedName,
-      amount: parseFloat(editedAmount),
-      validate: true,
-      prodId: route.params.food._id,
-      date: '',
-    };
-
-    dispatch(addCout(coutObj));
-
-    setTotAmount(totAmount + parseFloat(editedAmount));
-
-    setEditedName('');
-    setEditedAmount('');
   };
 
   const handleDelete = async () => {
@@ -457,6 +475,8 @@ const Details = ({ route, navigation }) => {
 
   const renderFAaddCout = () => {
     return (
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+
       <Block row center style={styles.floatBlockFA}>
         <TextInput
           label="Description"
@@ -468,10 +488,11 @@ const Details = ({ route, navigation }) => {
         />
 
         <TextInput
-          label="Somme"
+          label={`Somme (${route.params.food.currency})`}
           value={`${editedAmount}`}
           onChangeText={handleAmountChange}
           mode="outlined"
+          keyboardType='decimal-pad'
           style={[styles.input, { width: '30%' }]}
           required
         />
@@ -480,11 +501,15 @@ const Details = ({ route, navigation }) => {
           textColor="#fff"
           elevated
           buttonColor={COLORS.peach}
-          onPress={() => handleAddCout()}
+          onPress={() => {
+            Keyboard.dismiss();
+            handleAddCout();
+          }}
         >
           AJOUTER
         </Button>
       </Block>
+      </TouchableWithoutFeedback>
     );
   };
 
@@ -852,7 +877,7 @@ const Details = ({ route, navigation }) => {
                     fill: ({ datum }) => {
                       if (datum.x === `${route.params.food.currency} Interet`) {
                         return COLORS.peach;
-                      } else if (datum.y >= route.params.food.amount) {
+                      } else if (datum.y > route.params.food.initialAmount) {
                         return COLORS.primary;
                       } else {
                         return COLORS.black;
@@ -947,8 +972,8 @@ const Details = ({ route, navigation }) => {
                 contentContainerStyle={styles.scrollContentContainer}
                 showsVerticalScrollIndicator={false}
               >
-                {couts
-                  .filter((v, k) => v.prodId == route.params.food._id)
+                {
+                  route.params.food.couts
                   .map((food, index) => {
                     return <CoutScreen key={index} item={food} count={index + 1} />;
                   })}

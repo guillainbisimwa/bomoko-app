@@ -322,6 +322,7 @@ export const soumettreProduct = createAsyncThunk(
     images,
     initialAmount,
     type,
+    couts,
     currency,
     timeline,
     startDate,
@@ -344,12 +345,13 @@ export const soumettreProduct = createAsyncThunk(
       timeline,
       startDate,
       endDate,
+      couts,
       membres,
       owner
     });
 
     console.log("Soummetre prod---?????? ok==", { // Use PUT request for updating
-      membres,
+      couts,
     });
 
     return response.data;
