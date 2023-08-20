@@ -862,6 +862,20 @@ const Details = ({ route, navigation }) => {
 
               <Block row space="between">
                 <Text numberOfLines={1} semibold>
+                  Le prix d'une part:
+                </Text>
+                <Text> {route.params.food.amount/100} {route.params.food.currency}</Text>
+              </Block>
+
+              <Block row space="between">
+                <Text numberOfLines={1} semibold>
+                  Les parts disponibles:
+                </Text>
+                <Text> {100-(route.params.food.initialAmount/(route.params.food.amount/100))} parts</Text>
+              </Block>
+
+              <Block row space="between">
+                <Text numberOfLines={1} semibold>
                   Le coût total de Revient:
                 </Text>
                 <Text> 0 {route.params.food.currency} </Text>
