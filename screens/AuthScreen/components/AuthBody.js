@@ -11,12 +11,13 @@ import {
 //Icon
 import LottieView from 'lottie-react-native';
 //PropTypes check
-import PropTypes from 'prop-types';
 import { COLORS, FONTS } from '../../../constants';
+import { useNavigation } from '@react-navigation/native';
 
 const { height, width } = Dimensions.get('window');
 
 export const AuthBody = ({navigation}) => {
+  const navigationV2 = useNavigation();
   return (
     <>
       <ImageBackground
@@ -62,7 +63,7 @@ export const AuthBody = ({navigation}) => {
         </View>
       </TouchableOpacity>
       <Text style={{ marginVertical: 20, color: COLORS.white, ...FONTS.h2}} 
-      onPress={()=> navigation.goBack()} > Retour</Text>
+      onPress={()=> navigationV2.navigate('Main')} > Retour</Text>
     </>
   );
 };

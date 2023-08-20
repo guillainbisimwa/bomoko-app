@@ -11,3 +11,5 @@ yarn.lock
 *.pem
 SecondEss*
 web-build/
+.env
+dist/

@@ -19,7 +19,9 @@ import Details from './screens/Product/Details';
 import AddProduct from './screens/Product/AddProduct';
 import { loginSuccess } from './redux/authReducer';
 import { SignUpScreen } from './screens/SignUpScreen';
-import { logoutUser } from './redux/userSlice';
+import { loadInitialUser, logoutUser, setInitialUser } from './redux/userSlice';
+import EditProduct from './screens/Product/EditProduct';
+import ShowImages from './screens/Product/ShowImages';
 
 const theme = {
   ...DefaultTheme,
@@ -148,6 +150,15 @@ const App = () => {
     checkCategories();
   }, []);
 
+  useEffect(() => {
+    // Load initial user data from AsyncStorage
+    const initialUser = loadInitialUser();
+    if (initialUser) {
+      // Dispatch the action using extraReducers
+      dispatch(setInitialUser(initialUser));
+    }
+  }, []);
+
   const checkInstallationStatus = async () => {
     try {
       const value = await AsyncStorage.getItem('isInstalled');
@@ -205,7 +216,7 @@ const App = () => {
 
   const isInstalled = useSelector((state) => state.app.isInstalled);
   const u = useSelector((state) => state?.user);
-  console.log("user -->",u)
+  // console.log("user -->",u)
 
   const [loaded] = useFonts({
     'Roboto-Black': require('./assets/fonts/Roboto-Black.ttf'),
@@ -231,12 +242,16 @@ const App = () => {
             component={MyDrawer}
             options={{
               headerShown: false,
+              initialParams: { guy: "l" }, // Pass the value as initialParams
+              
             }}
           />
           <Stack.Screen name="Income" component={Income} options={{ title: 'Crédit (Entrée)' }} />
           <Stack.Screen name="Expense" component={Expense} options={{ title: 'Débit (Sortie)' }} />
           <Stack.Screen name="Details" component={Details} options={{ title: 'Details' }} />
           <Stack.Screen name="AddProduct" component={AddProduct} options={{ title: 'Produit' }} />
+          <Stack.Screen name="EditProduct" component={EditProduct} options={{ title: 'Modifier Produit' }} />
+          <Stack.Screen name="ShowImages" component={ShowImages} options={{ title: 'Images' }} />
 
           <Stack.Screen name="LoginScreen" component={LoginScreen} options={{
               headerShown: false,

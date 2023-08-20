@@ -11,30 +11,57 @@ import { FAB, IconButton, MD3Colors, ProgressBar, Button, Card, Modal, Menu, Div
 import { useDispatch, useSelector } from 'react-redux';
 import { ImageBackground } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { logoutUser } from '../../redux/userSlice';
+import { loadInitialUser, logoutUser, setInitialUser } from '../../redux/userSlice';
 import { fetchProducts } from '../../redux/prodReducer';
+import NetInfo from "@react-native-community/netinfo";
+import { Alert } from 'react-native';
 
-const ProductScreen = ({ navigation }) => {
+
+const ProductScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
 
   const { error, isLoading, success, products } = useSelector((state) => state.products);
-//console.log("Prod", products);
+  const { user } = useSelector((state) => state.user);
+
+
+  // Refresh Control
+  const [refreshing, setRefreshing] = useState(false);
+
+  const [visible, setVisible] = useState(false);
+
+  const [visibleMenu, setVisibleMenu] = useState(false);
+
+  const [active, setActive] = useState('Tous');
+  const [search, setSearch] = useState('');
+  const [product_serviceList, setProduct_serviceList] = useState([]);
 
   const [token, setToken] = useState(null);
 
   useEffect(() => {
-    // Fetch products lists when component mounts
-    dispatch(fetchProducts());
-    console.log("Eror ****", error);
-    console.log("produx", products);
-}, [ dispatch]); // Include "dispatch" and "error" in the dependency array
+      // Load initial user data from AsyncStorage
+      const initialUser = loadInitialUser();
+      if (initialUser) {
+        // Dispatch the action using extraReducers
+        console.log("Ok");
+        dispatch(setInitialUser(initialUser));
+      }
+    //setActive(active == null? 'Tous':active);
+    console.log("products-------------------------", products);
+    setProduct_serviceList([...products]);
+  }, []);
 
   useEffect(() => {
+    dispatch(fetchProducts());
+    console.log("Eror ****", error);
+    console.log("produx", products.length);
+    //setActive('Tous');
+    // onRefresh();
+
     const getTokenFromAsyncStorage = async () => {
       try {
         const storedToken = await AsyncStorage.getItem('user');
         setToken(storedToken);
-       
+        
       } catch (error) {
         // Handle AsyncStorage read error if needed
         console.error('Error reading token from AsyncStorage:', error);
@@ -42,26 +69,23 @@ const ProductScreen = ({ navigation }) => {
     };
 
     getTokenFromAsyncStorage();
+    // setProduct_serviceList([...products]);
   }, []);
-
 
   const handleLogout = () => {
     // Dispatch the logoutUser action
     closeMenu();
     dispatch(logoutUser());
 
-    navigation.navigate('AuthScreen')
+    navigation.navigate('AuthScreen');
   };
 
   // Modal
-  const [visible, setVisible] = useState(false);
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
 
 
   // Menu
-  const [visibleMenu, setVisibleMenu] = useState(false);
-
   const openMenu = () => setVisibleMenu(true);
 
   const closeMenu = () => setVisibleMenu(false);
@@ -76,9 +100,6 @@ const ProductScreen = ({ navigation }) => {
   // console.log(products, 'ok---------------------------------------');
   //console.log(JSON.stringify(products), 'ok---------------------------------------');
 
-  const [active, setActive] = useState('Tous');
-  const [search, setSearch] = useState('');
-  const [product_serviceList, setProduct_serviceList] = useState([...products]);
 
   const onSearch = (text) => {
     setProduct_serviceList([
@@ -89,21 +110,33 @@ const ProductScreen = ({ navigation }) => {
     setSearch(text);
   };
 
-  // Refresh Control
-  const [refreshing, setRefreshing] = useState(false);
-
   const onRefresh = async () => {
+
+    const netInfo = await NetInfo.fetch();
+    // console.log("netInfo.isConnected", netInfo.isConnected);
+    if (!netInfo.isConnected) {
+      Alert.alert("Pas de connexion Internet", "Veuillez vérifier votre connexion Internet et réessayer.");
+      return;
+    }
+
     dispatch(fetchProducts());
     setRefreshing(isLoading);
+    setActive('Tous')
+    setProduct_serviceList([...products]);
   };
 
   const stars = (starsNumber) => {
+    const totalStars = 5;
+    const filledStars = Math.min(starsNumber, totalStars);
+  
     return (
       <Block row>
-        {[...Array(starsNumber).keys()].map((star, index) => {
-          return <Ionicons color={COLORS.yellow} key={index} size={SIZES.base * 3} name={'star'} />;
-        })}
-        <Ionicons color={COLORS.yellow} size={SIZES.base * 3} name={'star-outline'} />
+        {[...Array(filledStars).keys()].map((star, index) => (
+          <Ionicons color={COLORS.yellow} key={index} size={SIZES.base * 2} name={'star'} />
+        ))}
+        {[...Array(totalStars - filledStars).keys()].map((star, index) => (
+          <Ionicons color={COLORS.yellow} key={index} size={SIZES.base * 2} name={'star-outline'} />
+        ))}
       </Block>
     );
   };
@@ -127,7 +160,7 @@ const ProductScreen = ({ navigation }) => {
     setActive(tab);
 
     if (tab === 'Tous') {
-      setProduct_serviceList([...products].sort((a, b) => a.stars - b.stars));
+      setProduct_serviceList([...products].sort((a, b) => a.name - b.name));
     } else if (tab == 'Produits') {
       const filteredProducts = [...products].filter((item) => item.type === 'produit');
       setProduct_serviceList([...filteredProducts]);
@@ -135,7 +168,7 @@ const ProductScreen = ({ navigation }) => {
       const filteredProducts = [...products].filter((item) => item.type === 'service');
       setProduct_serviceList([...filteredProducts]);
     } else {
-      setProduct_serviceList([...products].sort((a, b) => a.stars - b.stars));
+      setProduct_serviceList([...products].sort((a, b) => a.name - b.name));
     }
   };
 
@@ -150,8 +183,16 @@ const ProductScreen = ({ navigation }) => {
         </Block>
 
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {products.map((prod, index) => {
+          {products.slice(-2).reverse().map((prod, index) => {
             const key = `${prod._id}_${index}`;
+
+            const startDate = new Date(prod.startDate);
+            const endDate = new Date(prod.endDate);
+            
+            const startDateFinal = `${startDate.getDate()}/${startDate.getMonth() + 1}/${startDate.getFullYear().toString().substr(-2)}`;
+            const endDateFinal = `${endDate.getDate()}/${endDate.getMonth() + 1}/${endDate.getFullYear().toString().substr(-2)}`;
+
+
             return (
               <TouchableOpacity
                 key={key}
@@ -162,14 +203,14 @@ const ProductScreen = ({ navigation }) => {
                 <Block p={10} color="white" style={styles.container} m_t={14}>
                   <View style={styles.price}>
                     <Text white bold>
-                      {prod.amount} FC
+                      {prod.amount} {prod.currency}
                     </Text>
                   </View>
 
                   <View style={styles.like}>
                     <IconButton
                       icon="heart"
-                      iconColor={MD3Colors.error50}
+                      iconColor={MD3Colors.tertiary80} //  iconColor={MD3Colors.error50}
                       size={20}
                       onPress={() => console.log('Pressed')}
                     />
@@ -179,32 +220,34 @@ const ProductScreen = ({ navigation }) => {
                   <Text numberOfLines={1} grey h2 bold>
                     {prod.name}
                   </Text>
+                  <Text color={COLORS.darkgreen}>Du {startDateFinal} au {endDateFinal}</Text>
                   <Text numberOfLines={2} grey>
                     {prod.detail}
                   </Text>
                   <Block m_t={5} row center space="between">
-                    {stars(prod.stars)}
-                  </Block>
-                  <Block m_t={10} row center space="between">
-                    <Block row center style={{ width: '45%' }}>
+                    {stars(prod.stars.length)}
+                    <Block row center>
                       <IconButton
                         icon="pin"
                         iconColor={MD3Colors.error50}
-                        size={20}
+                        size={10}
                         onPress={() => console.log('Pressed')}
                       />
-                      <Text numberOfLines={1} semibold size={19}>
-                        {prod.location}
+                      <Text numberOfLines={1} semibold size={12}>
+                        {prod.location.join(', ')}
                       </Text>
                     </Block>
+                  </Block>
+                  <Block m_t={2} m_b={10} row center space="between">
+                   
                     <Block row center space="between">
                       <ProgressBar
-                        progress={0.5}
+                        progress={0}
                         color={MD3Colors.error50}
-                        style={{ width: SIZES.width / 4, height: SIZES.base }}
+                        style={{ width: SIZES.width /1.8, height: SIZES.base }}
                       />
                       <Text numberOfLines={1} semibold size={19} style={{ marginLeft: 20 }}>
-                        50%
+                        0%
                       </Text>
                     </Block>
                   </Block>
@@ -215,10 +258,10 @@ const ProductScreen = ({ navigation }) => {
                       key={index}
                       style={[styles.cat, { backgroundColor: COLORS.primary }]}
                     >
-                      <Text white bold size={20}>
-                        9%
+                      <Text white bold size={12}>
+                        0
                       </Text>
-                      <Text white bold h2 numberOfLines={1}>
+                      <Text white bold numberOfLines={1}>
                         Realisation
                       </Text>
                     </Block>
@@ -228,10 +271,10 @@ const ProductScreen = ({ navigation }) => {
                       key={index}
                       style={[styles.cat, { backgroundColor: COLORS.purple }]}
                     >
-                      <Text white bold size={20}>
-                        10
+                      <Text white bold size={12}>
+                      {prod.membres.length}
                       </Text>
-                      <Text white bold h2 numberOfLines={1}>
+                      <Text white bold numberOfLines={1}>
                         Membres
                       </Text>
                     </Block>
@@ -241,10 +284,10 @@ const ProductScreen = ({ navigation }) => {
                       key={index}
                       style={[styles.cat, { backgroundColor: COLORS.peach }]}
                     >
-                      <Text white bold size={20}>
-                        {prod.amount} FC
+                      <Text white size={12}>
+                        {prod.amount} {prod.currency}
                       </Text>
-                      <Text white bold h2 numberOfLines={1}>
+                      <Text white bold numberOfLines={1}>
                         Budjet
                       </Text>
                     </Block>
@@ -269,7 +312,7 @@ const ProductScreen = ({ navigation }) => {
           </Block>
 
           <Block>
-            {product_serviceList.length == 0 ? (
+            {products.length == 0 ? (
               <Text h2 primary bold center>
                 Aucun produit ou service
               </Text>
@@ -281,11 +324,11 @@ const ProductScreen = ({ navigation }) => {
                 return (
                   <TouchableOpacity
                     key={key}
-                  style={styles.horizontalList}
-                  onPress={() => {
-                    navigation.navigate('Details', { food });
-                  }}
-                >
+                    style={styles.horizontalList}
+                    onPress={() => {
+                      navigation.navigate('Details', { food });
+                    }}
+                  >
                   <Product_service item={food} />
                 </TouchableOpacity>
               );
@@ -346,7 +389,13 @@ const ProductScreen = ({ navigation }) => {
         <View style={{ flexDirection: 'row' }}>
         <TouchableOpacity
           style={{ justifyContent: 'center', alignItems: 'flex-end', width: 50 }}
-          onPress={() => console.log('shopping')}
+          onPress={() => {
+            console.log('shopping');
+            //console.log("Token --",JSON.parse(token).user.user.username);
+            console.log('UserJ --', user?._j?.user?.user?.username);
+            console.log('User --', user?._j);
+
+          }}
         >
           <Image
             source={icons.shopping}
@@ -358,7 +407,7 @@ const ProductScreen = ({ navigation }) => {
           />
         </TouchableOpacity>
         { 
-      token?  
+      user?._j?  
       <View
         style={{
           justifyContent: 'center', alignItems: 'flex-end', width: 50
@@ -382,9 +431,12 @@ const ProductScreen = ({ navigation }) => {
           </TouchableOpacity>
           }>
           <Menu.Item leadingIcon="account" onPress={() => {
-            console.log(JSON.parse(token).user.user.username);
+            console.log("Token --",JSON.parse(token).user.user.username);
+            //console.log('User --', user.user.username);
+            console.log('User --', user['_j']?.user?.user?.username);
+
           }}
-           title={JSON.parse(token).user.user.username} />
+           title={user['_j']?.user?.user?.username} />
           <Divider />
           <Menu.Item leadingIcon="logout" onPress={handleLogout} title="Deconnexion" />
         </Menu>
@@ -406,10 +458,7 @@ const ProductScreen = ({ navigation }) => {
     <View style={{ flex: 1 }}>
       {/* Nav bar section */}
       {renderNavBar()}
-
-     
-      
-
+   
     <Block flex color="grey">
       
       <Block flex color="grey" p={15}>
@@ -426,10 +475,12 @@ const ProductScreen = ({ navigation }) => {
               onChangeText={(text) => onSearch(text)}
             />
           </Block>
-
+          {
+            isLoading?<ActivityIndicator size="large" />: <></>
+            }
           {search.trim().length == 0 ? (
             <>
-              {popular()}
+              {/* {popular()} */}
               {list()}
             </>
           ) : (
@@ -528,6 +579,8 @@ const styles = StyleSheet.create({
     height: (SIZES.width - 100) / 2,
     borderRadius: 16,
     marginBottom: 10,
+    borderWidth:1,
+    borderColor: COLORS.gray
   },
   info: {
     backgroundColor: COLORS.grey,
@@ -535,7 +588,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   cat: {
-    width: SIZES.width / 4 - 4,
+    //width: SIZES.width / 4 - 4,
+    width: '33%',
     height: SIZES.width / 5,
     marginRight: 2,
     borderRadius: 10,

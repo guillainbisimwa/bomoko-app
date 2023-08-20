@@ -14,21 +14,11 @@ const CoutScreen = (props) => {
 
   const handleEdit = () => {
     setIsEditing(true);
+    setEditBtn(false)
   };
 
   const showEditBtn = (val) => {
     setEditBtn(!val);
-  };
-
-  const handleTrash = () => {
-    // Handle trash icon click event
-
-    // Throw UI alert if user want de delete an item
-    Alert.alert('Attention', 'Etes-vous sure de vouloir supprimer cet element?');
-  };
-
-  const handleValidate = () => {
-    // Handle trash icon click event
   };
 
   const handleCancel = () => {
@@ -46,7 +36,8 @@ const CoutScreen = (props) => {
 
   return (
     <TouchableOpacity
-      onLongPress={() => showEditBtn(editBtn)}
+      onLongPress={() => props.admin?showEditBtn(editBtn):''}
+    
       style={{
         width: '90%',
         borderRadius: 15,
@@ -92,23 +83,29 @@ const CoutScreen = (props) => {
                 />
               ) : (
                 <Text numberOfLines={1} color={COLORS.peach}>
-                  {props.item.amount} FC
+                  {props.item.amount} {props.currency}
                 </Text>
               )}
             </Block>
-            <Block row>
+            <Block row >
               {isEditing ? (
                 <>
                   <TouchableOpacity onPress={handleCancel}>
-                    <Ionicons name="close" size={30} color={COLORS.blue} />
+                    <Ionicons name="close" size={30} color={COLORS.peach} />
                   </TouchableOpacity>
-                  <TouchableOpacity>
-                    <Ionicons name="close" size={30} color={COLORS.darkgreen} />
+                  <TouchableOpacity onPress={()=>{
+                      setEditBtn(false);
+                      handleCancel();
+                      props.handleUpdateItem(props.item, editedAmount, editedName)
+                    }}>
+                    <Ionicons name="checkmark-outline" size={30} color={COLORS.darkgreen}  />
                   </TouchableOpacity>
                 </>
               ) : editBtn ? (
                 <>
-                  <TouchableOpacity onPress={handleEdit}>
+                  <TouchableOpacity onPress={()=>{
+                    handleEdit();
+                    }}>
                     <Ionicons
                       name="create"
                       size={30}
@@ -116,7 +113,11 @@ const CoutScreen = (props) => {
                       style={{ marginRight: 12 }}
                     />
                   </TouchableOpacity>
-                  <TouchableOpacity onPress={handleTrash}>
+                  <TouchableOpacity onPress={()=>{
+                      setEditBtn(false)
+                      props.handleTrash(props.item)
+                    }
+                    }>
                     <Ionicons name="trash" size={30} color={COLORS.peach} />
                   </TouchableOpacity>
                 </>

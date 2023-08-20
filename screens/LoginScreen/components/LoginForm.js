@@ -7,6 +7,7 @@ import NetInfo from "@react-native-community/netinfo";
 import LottieView from 'lottie-react-native';
 import { COLORS, FONTS } from '../../../constants';
 import { loginUser } from '../../../redux/userSlice';
+import { useNavigation } from '@react-navigation/native';
 
 const { height, width } = Dimensions.get('window');
 
@@ -15,11 +16,13 @@ export const LoginForm = ({ navigation }) => {
 
   const { error, isLoading, success, user } = useSelector((state) => state.user);
 
-  const [name, setNom] = useState('');
-  const [password, setPassword] = useState('');
+  const [name, setNom] = useState('Gb');
+  const [password, setPassword] = useState('Gb');
 
   const [visible, setVisible] = useState(false);
   const [visibleSuccess, setVisibleSuccess] = useState(false);
+  
+  const navigationV2 = useNavigation();
 
   const onToggleSnackBarSuccess = () => setVisibleSuccess(!visibleSuccess);
   const onToggleSnackBar = () => setVisible(!visible);
@@ -32,11 +35,14 @@ export const LoginForm = ({ navigation }) => {
       if (success) {
         //Alert.alert("Success", "Login successful!");
         onToggleSnackBarSuccess();
-        setTimeout(() => {
-          navigation.goBack(null); // First go back
-          navigation.goBack(null); // Second go back
-        }
-        , 2000);
+        // setTimeout(() => {
+        //   // navigation.goBack(null); // First go back
+        //   // navigation.goBack(null); // Second go back
+        //   // navigationV2.navigate('Main', { savedUser: JSON.parse(user)?.user});
+          
+        // }
+        // , 2000);
+        navigationV2.navigate('Main');
        
       }
       if (error) {
