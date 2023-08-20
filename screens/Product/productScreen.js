@@ -50,6 +50,7 @@ const ProductScreen = ({ navigation, route }) => {
     //setActive(active == null? 'Tous':active);
     console.log("products-------------------------", products);
     setProduct_serviceList([...products]);
+    setProduct_serviceList([...products].sort((a, b) => a.name - b.name));
     setBadgePanding(products.filter(product => 
       product.status === "PENDING" && 
       (
@@ -333,7 +334,6 @@ const ProductScreen = ({ navigation, route }) => {
                 return (
                   <TouchableOpacity
                     key={key}
-                    style={styles.horizontalList}
                     onPress={() => {
                       navigation.navigate('Details', { food });
                     }}
@@ -403,7 +403,15 @@ const ProductScreen = ({ navigation, route }) => {
             //console.log("Token --",JSON.parse(token).user.user.username);
             console.log('UserJ --', user?._j?.user?.user?.username);
             console.log('User --', user?._j);
-
+            navigation.navigate('ShoppingCard', {
+              prodServ : products.filter(product => 
+                product.status === "PENDING" && 
+                (
+                    product.owner._id === JSON.parse(token)?.user?.user?.userId || 
+                    product.membres.some(member => member.user._id === JSON.parse(token)?.user?.user?.userId && member.admission_req === "PENDING")
+                )
+            )
+            });
           }}
         >
           <Image
@@ -491,7 +499,7 @@ const ProductScreen = ({ navigation, route }) => {
             }
           {search.trim().length == 0 ? (
             <>
-              {/* {popular()} */}
+              {popular()}
               {list()}
             </>
           ) : (
