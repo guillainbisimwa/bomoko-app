@@ -432,6 +432,59 @@ const Details = ({ route, navigation }) => {
     }
   };
 
+
+  const handleTrash = (item) => {
+    // Handle trash icon click event
+    try{
+      // Throw UI alert if user want de delete an item
+      // Afficher l'alerte avec des boutons de confirmation et d'annulation
+      Alert.alert(
+        'Attention',
+        `Êtes-vous sûr de vouloir supprimer ${item.name} ?`,
+        [
+          {
+            text: 'Annuler',
+            style: 'cancel',
+          },
+          {
+            text: 'Supprimer',
+            style: 'destructive',
+            onPress: async () => {
+              // Fonction à exécuter lorsque l'utilisateur appuie sur le bouton "Supprimer"
+              console.log('Élément supprimé', item);
+
+                const updatedCouts = route.params.food.couts.filter(cout => cout._id !== item._id);
+
+                dispatch(soumettreProduct({
+                  ...route.params.food,
+                  id: route.params.food._id,
+                  couts: updatedCouts,
+                }));
+            
+                // Check if the couts was updated successfully
+                if (!error && !isLoading) {
+                  setTotAmount(totAmount - parseFloat(item.amount));
+
+                  route.params.food.couts = updatedCouts;
+            
+                }else {
+                  console.log('Error ++++++')
+                  onToggleSnackBar()
+                }
+              
+            },
+          },
+        ]
+      );
+
+    } catch(e){
+      console.log('Error //////////', e)
+      onToggleSnackBar()
+      showToast()
+    }
+  };
+
+
   const renderScrollIndicator = () => {
     const dotPosition = Animated.divide(scrollX, SIZES.width);
 
@@ -977,7 +1030,7 @@ const Details = ({ route, navigation }) => {
                 {
                   route.params.food.couts
                   .map((food, index) => {
-                    return <CoutScreen currency={route.params.food.currency} key={index} item={food} count={index + 1} />;
+                    return <CoutScreen handleTrash={handleTrash} currency={route.params.food.currency} key={index} item={food} count={index + 1} />;
                   })}
               </ScrollView>
             </Block>

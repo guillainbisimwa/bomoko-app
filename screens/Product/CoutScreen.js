@@ -20,16 +20,6 @@ const CoutScreen = (props) => {
     setEditBtn(!val);
   };
 
-  const handleTrash = () => {
-    // Handle trash icon click event
-
-    // Throw UI alert if user want de delete an item
-    Alert.alert('Attention', 'Etes-vous sure de vouloir supprimer cet element?');
-  };
-
-  const handleValidate = () => {
-    // Handle trash icon click event
-  };
 
   const handleCancel = () => {
     // Handle trash icon click event
@@ -116,7 +106,7 @@ const CoutScreen = (props) => {
                       style={{ marginRight: 12 }}
                     />
                   </TouchableOpacity>
-                  <TouchableOpacity onPress={handleTrash}>
+                  <TouchableOpacity onPress={()=>props.handleTrash(props.item)}>
                     <Ionicons name="trash" size={30} color={COLORS.peach} />
                   </TouchableOpacity>
                 </>
