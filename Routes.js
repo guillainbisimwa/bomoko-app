@@ -23,6 +23,7 @@ import { loadInitialUser, logoutUser, setInitialUser } from './redux/userSlice';
 import EditProduct from './screens/Product/EditProduct';
 import ShowImages from './screens/Product/ShowImages';
 import ShoppingCard from './screens/ShoppingCard/ShoppingCard';
+import { Privacy } from './screens/Settings';
 
 const theme = {
   ...DefaultTheme,
@@ -254,6 +255,7 @@ const App = () => {
           <Stack.Screen name="EditProduct" component={EditProduct} options={{ title: 'Modifier Produit' }} />
           <Stack.Screen name="ShowImages" component={ShowImages} options={{ title: 'Images' }} />
           <Stack.Screen name="ShoppingCard" component={ShoppingCard} options={{ title: 'Panier' }} />
+          <Stack.Screen name="Privacy" component={Privacy} options={{ title: 'Politique de Confidentialité' }} />
 
           <Stack.Screen name="LoginScreen" component={LoginScreen} options={{
               headerShown: false,

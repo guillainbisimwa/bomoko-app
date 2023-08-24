@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { COLORS, FONTS } from "../constants";
+import { COLORS, FONTS } from "../../constants";
 import { MaterialIcons } from "@expo/vector-icons";
 
 const Settings = ({ navigation }) => {
@@ -14,6 +14,7 @@ const Settings = ({ navigation }) => {
   };
 
   const navigateToPrivacy = () => {
+    navigation.navigate('Privacy')
     console.log("Privacy function");
   };
 
@@ -47,10 +48,6 @@ const Settings = ({ navigation }) => {
 
   const navigateToReportProblem = () => {
     console.log("Report a problem");
-  };
-
-  const addAccount = () => {
-    console.log("Aadd account ");
   };
 
   const logout = () => {
@@ -140,13 +137,13 @@ const Settings = ({ navigation }) => {
           }}
         >
           <MaterialIcons
-            name="keyboard-arrow-left"
+            name="keyboard-backspace"
             size={28}
             color={COLORS.black}
           />
         </TouchableOpacity>
 
-        <Text style={{ ...FONTS.h2 }}>Parametres</Text>
+        <Text style={{ ...FONTS.h2 }}>  Parametres</Text>
       </View>
 
       <ScrollView style={{ marginHorizontal: 12 }}>
