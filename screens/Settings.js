@@ -13,10 +13,6 @@ const Settings = ({ navigation }) => {
     console.log("Security function");
   };
 
-  const navigateToNotifications = () => {
-    console.log("Notifications function");
-  };
-
   const navigateToPrivacy = () => {
     console.log("Privacy function");
   };
@@ -29,16 +25,24 @@ const Settings = ({ navigation }) => {
     console.log("Support function");
   };
 
+  const navigateToCategory = () => {
+    console.log("Cat");
+  };
+
+  const navigateToLanguage = () => {
+    console.log("Language");
+  };
+
+  const navigateToMoney = () => {
+    console.log("Money");
+  };
+
+  const navigateToSave = () => {
+    console.log("Save");
+  };
+
   const navigateToTermsAndPolicies = () => {
     console.log("Terms and Policies function");
-  };
-
-  const navigateToFreeSpace = () => {
-    console.log("Free Space function");
-  };
-
-  const navigateToDateSaver = () => {
-    console.log("Date saver");
   };
 
   const navigateToReportProblem = () => {
@@ -56,49 +60,39 @@ const Settings = ({ navigation }) => {
   const accountItems = [
     {
       icon: "person-outline",
-      text: "Edit Profile",
+      text: "Modifier votre Profile",
       action: navigateToEditProfile,
     },
-    { icon: "security", text: "Security", action: navigateToSecurity },
-    {
-      icon: "notifications-none",
-      text: "Notifications",
-      action: navigateToNotifications,
-    },
-    { icon: "lock-outline", text: "Privacy", action: navigateToPrivacy },
+    { icon: "security", text: "Sécurité", action: navigateToSecurity },
+
+    { icon: "lock-outline", text: "politique de confidentialité", action: navigateToPrivacy },
+    { icon: "attach-money", text: "Monnaie principale", action: navigateToMoney },
+    { icon: "category", text: "Mes catégories", action: navigateToCategory },
   ];
 
   const supportItems = [
     {
       icon: "credit-card",
-      text: "My Subscription",
+      text: "Mon porte-monnaie électronique",
       action: navigateToSubscription,
     },
-    { icon: "help-outline", text: "Help & Support", action: navigateToSupport },
+    { icon: "help-outline", text: "Aide & Support", action: navigateToSupport },
     {
       icon: "info-outline",
-      text: "Terms and Policies",
+      text: "Condition d'utilisation",
       action: navigateToTermsAndPolicies,
     },
-  ];
-
-  const cacheAndCellularItems = [
-    {
-      icon: "delete-outline",
-      text: "Free up space",
-      action: navigateToFreeSpace,
-    },
-    { icon: "save-alt", text: "Date Saver", action: navigateToDateSaver },
   ];
 
   const actionsItems = [
     {
       icon: "outlined-flag",
-      text: "Report a problem",
+      text: "Signaler un problème",
       action: navigateToReportProblem,
     },
-    { icon: "people-outline", text: "Add Account", action: addAccount },
-    { icon: "logout", text: "Log out", action: logout },
+    { icon: "save", text: "Exporter les données", action: navigateToSave },
+    { icon: "language", text: "Langues", action: navigateToLanguage },
+    { icon: "logout", text: "Déconnexion", action: logout },
   ];
 
   const renderSettingsItem = ({ icon, text, action }) => (
@@ -138,14 +132,11 @@ const Settings = ({ navigation }) => {
           marginHorizontal: 12,
           marginVertical:15,
           flexDirection: "row",
-          //justifyContent: "center",
         }}
       >
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={{
-            // position: "absolute",
-            // left: 0,
           }}
         >
           <MaterialIcons
@@ -161,7 +152,7 @@ const Settings = ({ navigation }) => {
       <ScrollView style={{ marginHorizontal: 12 }}>
         {/* Account Settings */}
         <View style={{ marginBottom: 12 }}>
-          <Text style={{ ...FONTS.h4, marginVertical: 10 }}>Account</Text>
+          <Text style={{ ...FONTS.h4, marginVertical: 10 }}>Compte</Text>
           <View
             style={{
               borderRadius: 12,
@@ -180,7 +171,7 @@ const Settings = ({ navigation }) => {
 
         <View style={{ marginBottom: 12 }}>
           <Text style={{ ...FONTS.h4, marginVertical: 10 }}>
-            Support & About{" "}
+            A propos{" "}
           </Text>
           <View
             style={{
@@ -196,24 +187,6 @@ const Settings = ({ navigation }) => {
           </View>
         </View>
 
-        {/* Cache & Cellular */}
-        <View style={{ marginBottom: 12 }}>
-          <Text style={{ ...FONTS.h4, marginVertical: 10 }}>
-            Cache & Cellular{" "}
-          </Text>
-          <View
-            style={{
-              borderRadius: 12,
-              backgrounColor: COLORS.lightGray,
-            }}
-          >
-            {cacheAndCellularItems.map((item, index) => (
-              <React.Fragment key={index}>
-                {renderSettingsItem(item)}
-              </React.Fragment>
-            ))}
-          </View>
-        </View>
 
         {/* Actions Settings */}
 
