@@ -23,7 +23,7 @@ import { loadInitialUser, logoutUser, setInitialUser } from './redux/userSlice';
 import EditProduct from './screens/Product/EditProduct';
 import ShowImages from './screens/Product/ShowImages';
 import ShoppingCard from './screens/ShoppingCard/ShoppingCard';
-import { AideEtSupport, DataSecurityScreen, Privacy, UseCondition } from './screens/Settings';
+import { AideEtSupport, DataSecurityScreen, Privacy, ReportProblemScreen, UseCondition } from './screens/Settings';
 
 const theme = {
   ...DefaultTheme,
@@ -259,6 +259,8 @@ const App = () => {
           <Stack.Screen name="DataSecurityScreen" component={DataSecurityScreen} options={{ title: 'Sécurité des Données' }} />
           <Stack.Screen name="AideEtSupport" component={AideEtSupport} options={{ title: 'Aide et Support' }} />
           <Stack.Screen name="UseCondition" component={UseCondition} options={{ title: "Condition d'utilisation" }} />
+          <Stack.Screen name="ReportProblemScreen" component={ReportProblemScreen} options={{ title: "Signaler un problème" }} />
+          
           
           <Stack.Screen name="LoginScreen" component={LoginScreen} options={{
               headerShown: false,

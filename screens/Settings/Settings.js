@@ -50,6 +50,7 @@ const Settings = ({ navigation }) => {
   };
 
   const navigateToReportProblem = () => {
+    navigation.navigate('ReportProblemScreen')
     console.log("Report a problem");
   };
 
