@@ -45,6 +45,7 @@ const Settings = ({ navigation }) => {
   };
 
   const navigateToTermsAndPolicies = () => {
+    navigation.navigate('UseCondition')
     console.log("Terms and Policies function");
   };
 
