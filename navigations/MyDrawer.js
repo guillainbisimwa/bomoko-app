@@ -63,7 +63,7 @@ export default function MyDrawer() {
         name="Parametres"
         component={Settings}
         options={{
-          headerShown: true,
+          headerShown: false,
           drawerIcon: ({ color }) => <Ionicons color={color} size={SIZES.base * 2} name={'cog'} />,
         }}
       />
