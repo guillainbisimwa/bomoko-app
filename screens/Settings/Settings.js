@@ -33,6 +33,7 @@ const Settings = ({ navigation }) => {
   };
 
   const navigateToLanguage = () => {
+    navigation.navigate('LanguageSelectionScreen')
     console.log("Language");
   };
 
