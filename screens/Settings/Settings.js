@@ -10,6 +10,7 @@ const Settings = ({ navigation }) => {
   };
 
   const navigateToSecurity = () => {
+    navigation.navigate('DataSecurityScreen');
     console.log("Security function");
   };
 
@@ -62,7 +63,7 @@ const Settings = ({ navigation }) => {
     },
     { icon: "security", text: "Sécurité", action: navigateToSecurity },
 
-    { icon: "lock-outline", text: "politique de confidentialité", action: navigateToPrivacy },
+    { icon: "lock-outline", text: "Politique de confidentialité", action: navigateToPrivacy },
     { icon: "attach-money", text: "Monnaie principale", action: navigateToMoney },
     { icon: "category", text: "Mes catégories", action: navigateToCategory },
   ];
