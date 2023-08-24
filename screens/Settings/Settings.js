@@ -24,6 +24,7 @@ const Settings = ({ navigation }) => {
   };
 
   const navigateToSupport = () => {
+    navigation.navigate('AideEtSupport')
     console.log("Support function");
   };
 
