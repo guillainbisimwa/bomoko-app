@@ -13,7 +13,7 @@ import { Block } from '../../components';
 const Profile = ({ route, navigation }) => {
   const scrollX = useRef(new Animated.Value(0)).current;
   console.log();
-  console.log("route.params.food", route.params.user);
+  console.log("params", route.params.userId);
   console.log();
   const renderCover = () => {
     return (

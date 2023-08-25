@@ -638,7 +638,11 @@ const Details = ({ route, navigation }) => {
   const renderItem = (item) => (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate('Profile', { user: item})
+        // console.log(item._id);
+        // navigation.navigate('Profile', { user: item})
+        navigation.navigate('Profile', {
+          userId: item.user._id
+        })
         // console.log(item);
         // setSelectedItem(item);
         // showModal(true);
@@ -962,6 +966,8 @@ const Details = ({ route, navigation }) => {
 
           {
             renderItem({ admin: true, name: route.params.food.owner.name+" (Admin)", 
+            //name: route.params.food.owner._id
+            user: {_id: route.params.food.owner._id},
             contribution: route.params.food.initialAmount, 
             date: format(new Date(route.params.food.timestamp), 'dd MMMM yyyy', { locale: fr }) })
           }

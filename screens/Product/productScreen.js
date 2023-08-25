@@ -443,9 +443,12 @@ const ProductScreen = ({ navigation, route }) => {
           </TouchableOpacity>
           }>
           <Menu.Item leadingIcon="account" onPress={() => {
-            console.log("Token --",JSON.parse(token).user.user.username);
+            console.log("Token --",JSON.parse(token).user.user);
             //console.log('User --', user.user.username);
             console.log('User --', user['_j']?.user?.user?.username);
+            navigation.navigate('Profile', {
+              userId: JSON.parse(token)?.user?.user?.userId
+            })
 
           }}
            title={user['_j']?.user?.user?.username} />
