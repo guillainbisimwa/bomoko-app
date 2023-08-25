@@ -23,7 +23,7 @@ import { loadInitialUser, logoutUser, setInitialUser } from './redux/userSlice';
 import EditProduct from './screens/Product/EditProduct';
 import ShowImages from './screens/Product/ShowImages';
 import ShoppingCard from './screens/ShoppingCard/ShoppingCard';
-import { AideEtSupport, DataSecurityScreen, LanguageSelectionScreen, Privacy, Profile, ReportProblemScreen, UseCondition } from './screens/Settings';
+import { AideEtSupport, DataSecurityScreen, DetailsByUser, LanguageSelectionScreen, Privacy, Profile, ReportProblemScreen, UseCondition } from './screens/Settings';
 
 const theme = {
   ...DefaultTheme,
@@ -260,6 +260,7 @@ const App = () => {
           <Stack.Screen name="UseCondition" component={UseCondition} options={{ title: "Condition d'utilisation" }} />
           <Stack.Screen name="ReportProblemScreen" component={ReportProblemScreen} options={{ title: "Signaler un problème" }} />
           <Stack.Screen name="LanguageSelectionScreen" component={LanguageSelectionScreen} options={{ title: "Choisissez une Langue" }} />
+          <Stack.Screen name="DetailsByUser" component={DetailsByUser}  options={{headerShown: false}}/>
           
           <Stack.Screen name="Profile" component={Profile} options={{ title: "Profile" }} />
           

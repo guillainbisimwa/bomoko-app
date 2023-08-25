@@ -4,7 +4,8 @@ import AideEtSupport from './AideEtSupport'
 import UseCondition from './UseCondition'
 import ReportProblemScreen from './ReportProblemScreen'
 import LanguageSelectionScreen from './LanguageSelectionScreen'
-import Profile from './Profile'
+import Profile from './Profile';
+import DetailsByUser from './DetailsByUser'
 
 export {
     Privacy,
@@ -13,5 +14,6 @@ export {
     UseCondition,
     ReportProblemScreen,
     LanguageSelectionScreen,
-    Profile
+    Profile,
+    DetailsByUser
 };
