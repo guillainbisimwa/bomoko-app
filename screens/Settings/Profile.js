@@ -7,7 +7,8 @@ import {
   Image,
   ActivityIndicator,
   Text,
-  View
+  View,
+  TouchableOpacity
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { COLORS, FONTS, icons, SIZES } from '../../constants';
@@ -166,80 +167,99 @@ const Profile = ({ route, navigation }) => {
             flexDirection: "row",
           }}
         >
-          <View
-            style={{
-              flexDirection: "column",
-              alignItems: "center",
-              marginHorizontal: SIZES.padding,
+          
+          <TouchableOpacity
+            onPress={() => {
+              // Add your onPress function here
             }}
           >
-            <Text
+            <View
               style={{
-                ...FONTS.h2,
-                color: COLORS.primary,
+                flexDirection: 'column',
+                alignItems: 'center',
+                marginHorizontal: SIZES.padding,
               }}
             >
-              {countProductsForUser(products)}
-            </Text>
-            <Text
-              style={{
-                ...FONTS.body4,
-                color: COLORS.primary,
-              }}
-            >
-              Groupes
-            </Text>
-          </View>
+              <Text
+                style={{
+                  ...FONTS.h2,
+                  color: COLORS.primary,
+                }}
+              >
+                {countProductsForUser(products)}
+              </Text>
+              <Text
+                style={{
+                  ...FONTS.body4,
+                  color: COLORS.primary,
+                }}
+              >
+                Groupes
+              </Text>
+            </View>
+          </TouchableOpacity>
 
-          <View
-            style={{
-              flexDirection: "column",
-              alignItems: "center",
-              marginHorizontal: SIZES.padding,
+          <TouchableOpacity
+            onPress={() => {
+              // Add your onPress function here
             }}
           >
-            <Text
+            <View
               style={{
-                ...FONTS.h2,
-                color: COLORS.primary,
+                flexDirection: 'column',
+                alignItems: 'center',
+                marginHorizontal: SIZES.padding,
               }}
             >
-              {countByOwner(products, 'produit')}
-            </Text>
-            <Text
-              style={{
-                ...FONTS.body4,
-                color: COLORS.primary,
-              }}
-            >
-              Mes Produits
-            </Text>
-          </View>
+              <Text
+                style={{
+                  ...FONTS.h2,
+                  color: COLORS.primary,
+                }}
+              >
+                {countByOwner(products, 'produit')}
+              </Text>
+              <Text
+                style={{
+                  ...FONTS.body4,
+                  color: COLORS.primary,
+                }}
+              >
+                Mes Produits
+              </Text>
+            </View>
+          </TouchableOpacity>
 
-          <View
-            style={{
-              flexDirection: "column",
-              alignItems: "center",
-              marginHorizontal: SIZES.padding,
+          <TouchableOpacity
+            onPress={() => {
+              // Add your onPress function here
             }}
           >
-            <Text
+            <View
               style={{
-                ...FONTS.h2,
-                color: COLORS.primary,
+                flexDirection: 'column',
+                alignItems: 'center',
+                marginHorizontal: SIZES.padding,
               }}
             >
-              {countByOwner(products, 'service')}
-            </Text>
-            <Text
-              style={{
-                ...FONTS.body4,
-                color: COLORS.primary,
-              }}
-            >
-              Mes Services
-            </Text>
-          </View>
+              <Text
+                style={{
+                  ...FONTS.h2,
+                  color: COLORS.primary,
+                }}
+              >
+                {countByOwner(products, 'service')}
+              </Text>
+              <Text
+                style={{
+                  ...FONTS.body4,
+                  color: COLORS.primary,
+                }}
+              >
+                Mes Services
+              </Text>
+            </View>
+          </TouchableOpacity>
         </View>
         </View>
         
