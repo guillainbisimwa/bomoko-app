@@ -10,6 +10,7 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import { COLORS, FONTS, icons, SIZES } from '../../constants';
 import { Block } from '../../components';
+import { StatusBar } from "expo-status-bar";
 
 const Profile = ({ route, navigation }) => {
   const scrollX = useRef(new Animated.Value(0)).current;
@@ -74,6 +75,7 @@ const Profile = ({ route, navigation }) => {
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
+      <StatusBar backgroundColor={COLORS.gray} />
       <Block flex={1}>
         <Block style={{ height: 180 }}>
           {renderCover()}
