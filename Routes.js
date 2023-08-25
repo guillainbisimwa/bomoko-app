@@ -245,7 +245,6 @@ const App = () => {
             options={{
               headerShown: false,
               initialParams: { guy: "l" }, // Pass the value as initialParams
-              
             }}
           />
           <Stack.Screen name="Income" component={Income} options={{ title: 'Crédit (Entrée)' }} />
@@ -264,14 +263,14 @@ const App = () => {
           
           <Stack.Screen name="Profile" component={Profile} options={{ title: "Profile" }} />
           
-          
           <Stack.Screen name="LoginScreen" component={LoginScreen} options={{
               headerShown: false,
             }}/>
 
-            <Stack.Screen name="SignUpScreen" component={SignUpScreen} options={{
-              headerShown: false,
-            }}/>
+          <Stack.Screen name="SignUpScreen" component={SignUpScreen} options={{
+            headerShown: false,
+          }}/>
+
           <Stack.Screen name="AuthScreen" component={AuthScreen} options={{
               headerShown: false,
             }}/>

@@ -1,10 +1,11 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import {
   ImageBackground,
   ScrollView,
   Animated,
   StyleSheet,
   Image,
+  ActivityIndicator,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { COLORS, FONTS, icons, SIZES } from '../../constants';
@@ -12,9 +13,22 @@ import { Block } from '../../components';
 
 const Profile = ({ route, navigation }) => {
   const scrollX = useRef(new Animated.Value(0)).current;
-  console.log();
-  console.log("params", route.params.userId);
-  console.log();
+  const [userDetails, setUserDetails] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Fetch user details from API
+    fetch(`https://bomoko-backend.onrender.com/auth/${route.params.userId}`)
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        console.log(route.params.userId);
+        setUserDetails(data);
+        setLoading(false);
+      })
+      .catch(error => console.error('Error fetching user details:', error));
+  }, []);
+
   const renderCover = () => {
     return (
       <ScrollView
@@ -46,13 +60,17 @@ const Profile = ({ route, navigation }) => {
     );
   };
 
-
-
   const renderProfilePic = () => {
     return (
-      <Image />
+      <Image source={{ uri: userDetails?.profile_pic }} style={styles.profilePic} />
     );
   };
+
+  if (loading) {
+    return (
+      <ActivityIndicator size="large" color={COLORS.peach} style={styles.loadingIndicator} />
+    );
+  }
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
@@ -62,22 +80,30 @@ const Profile = ({ route, navigation }) => {
         </Block>
         {renderProfilePic()}
 
-      
+        {/* Other profile details */}
         
       </Block>
-
-
-
-      
-
-     
 
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  
+  loadingIndicator: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  profilePic: {
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+    alignSelf: 'center',
+    marginTop: -75,
+    borderWidth: 5,
+    borderColor: COLORS.white,
+    backgroundColor: COLORS.white
+  },
 });
 
 export default Profile;
