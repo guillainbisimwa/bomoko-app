@@ -7,6 +7,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { Home, Settings } from '../screens';
 import Product from '../screens/Product';
 import ProductScreen from '../screens/Product/productScreen';
+import { CreanceDette } from '../screens/CreanceDette';
 
 const Drawer = createDrawerNavigator();
 
@@ -52,9 +53,9 @@ export default function MyDrawer() {
 
       <Drawer.Screen
         name="Creances et dettes"
-        component={Settings}
+        component={CreanceDette}
         options={{
-          headerShown: true,
+          headerShown: false,
           drawerIcon: ({ color }) => <Ionicons color={color} size={SIZES.base * 2} name={'cash'} />,
         }}
       />
@@ -63,7 +64,7 @@ export default function MyDrawer() {
         name="Parametres"
         component={Settings}
         options={{
-          headerShown: true,
+          headerShown: false,
           drawerIcon: ({ color }) => <Ionicons color={color} size={SIZES.base * 2} name={'cog'} />,
         }}
       />
