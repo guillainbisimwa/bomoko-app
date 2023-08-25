@@ -91,11 +91,26 @@ const Profile = ({ route, navigation }) => {
     const filteredServices = products.filter(product => product.owner._id === route.params.userId && product.type === type);
     const count = filteredServices.length;
     return count;
-  }
+  };
 
-  function listByOwner(products, type) {
+  const listByOwner = (products, type) => {
     const filteredServices = products.filter(product => product.owner._id === route.params.userId && product.type === type);
     return filteredServices;
+  };
+
+  const listProductsForUser = (products) =>{
+    return products.filter(product =>
+      product.membres.some(member => member.user._id === route.params.userId)
+    );
+  };
+
+  const  countProductsForUser = (products) =>{
+    return products.reduce((count, product) => {
+      if (product.membres.some(member => member.user._id === route.params.userId)) {
+        return count + 1;
+      }
+      return count;
+    }, 0);
   }
 
   return (
@@ -164,7 +179,7 @@ const Profile = ({ route, navigation }) => {
                 color: COLORS.primary,
               }}
             >
-              0
+              {countProductsForUser(products)}
             </Text>
             <Text
               style={{
