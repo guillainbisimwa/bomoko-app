@@ -6,10 +6,13 @@ import {
   StyleSheet,
   Image,
   ActivityIndicator,
+  Text,
+  View
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { COLORS, FONTS, icons, SIZES } from '../../constants';
 import { Block } from '../../components';
+import { MaterialIcons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
 
 const Profile = ({ route, navigation }) => {
@@ -80,9 +83,46 @@ const Profile = ({ route, navigation }) => {
         <Block style={{ height: 180 }}>
           {renderCover()}
         </Block>
+        <View style={{ flex: 1, alignItems: "center" }}>
         {renderProfilePic()}
 
         {/* Other profile details */}
+        <Text
+          style={{
+            ...FONTS.h2,
+            color: COLORS.primary,
+            marginVertical: 8,
+          }}
+        >
+          {userDetails?.name}
+        </Text>
+        <Text
+          style={{
+            color: COLORS.black,
+            ...FONTS.body4,
+          }}
+        >
+          {userDetails?.email}
+        </Text>
+
+        <View
+          style={{
+            flexDirection: "row",
+            marginVertical: 6,
+            alignItems: "center",
+          }}
+        >
+          <MaterialIcons name="phone" size={24} color="black" />
+          <Text
+            style={{
+              ...FONTS.body4,
+              marginLeft: 4,
+            }}
+          >
+            {userDetails?.mobile}
+          </Text>
+        </View>
+        </View>
         
       </Block>
 
