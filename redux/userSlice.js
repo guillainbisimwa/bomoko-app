@@ -28,13 +28,18 @@ export const signUpUser = createAsyncThunk(
     mobile,
     username,
     password,
-    role}) => {
+    cover_url, 
+    profile_pic,
+    role
+  }) => {
     const response = await axios.post( BASE_URL +'auth/signup', {
       name,
       email,
       mobile,
       username,
       password,
+      cover_url, 
+      profile_pic,
       role
     });
     console.log("Signup---?????? ",response.data);

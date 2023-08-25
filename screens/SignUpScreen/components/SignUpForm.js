@@ -64,7 +64,9 @@ const handleSignUp = async () => {
       password,
       email,
       mobile,
-      role
+      role,
+      cover_url:'', 
+      profile_pic: selectedImage
     }))
     //dispatch(loginUser({username:"bvenceslas", password: "1234567890"}))
  
