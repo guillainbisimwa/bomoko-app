@@ -1,10 +1,23 @@
-import React from 'react';
+import React, { useLayoutEffect, useState } from 'react';
 import { ImageBackground, TouchableOpacity, View, Text } from 'react-native';
 import { ScrollView } from 'react-native';
 import { COLORS, SIZES } from '../../constants';
 import Product_service from '../Product/Product_service';
 
 const DetailsByUser = ({ navigation, route }) => {
+  console.log();
+  console.log("{route.params.prodServ.length", route.params.prodServ);
+  console.log();
+
+  const [pageTitle, setPageTitle] = useState(route.params.title);
+
+  // Use useLayoutEffect to set options before rendering
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: pageTitle,
+    });
+  }, [navigation, pageTitle]);
+
   return (
     <>
       <ImageBackground
@@ -22,7 +35,7 @@ const DetailsByUser = ({ navigation, route }) => {
         }}
         showsVerticalScrollIndicator={false}
       >
-        {route.params.prodServ.length >= 0 ? (
+        {route.params.prodServ.length <= 0 ? (
           <View style={{ alignItems: 'center', marginTop: 20 }}>
             <Text>Aucun produit ou service disponible.</Text>
           </View>

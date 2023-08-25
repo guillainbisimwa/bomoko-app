@@ -27,8 +27,8 @@ const Profile = ({ route, navigation }) => {
     fetch(`https://bomoko-backend.onrender.com/auth/${route.params.userId}`)
       .then(response => response.json())
       .then(data => {
-        console.log(data);
-        console.log(route.params.userId);
+       // console.log(data);
+       // console.log(route.params.userId);
         setUserDetails(data);
         setLoading(false);
       })
@@ -38,7 +38,7 @@ const Profile = ({ route, navigation }) => {
     fetch(`https://bomoko-backend.onrender.com/api/product`)
       .then(response => response.json())
       .then(data => {
-        console.log(data);
+       // console.log(data);
         setProducts(data); // Assuming the data structure is an array of products
       })
       .catch(error => console.error('Error fetching products:', error));
@@ -171,6 +171,7 @@ const Profile = ({ route, navigation }) => {
           <TouchableOpacity
             onPress={() => {
               // Add your onPress function here
+              navigation.navigate('DetailsByUser', {  prodServ: listProductsForUser(products), title: "Mes participations" })
             }}
           >
             <View
@@ -194,7 +195,7 @@ const Profile = ({ route, navigation }) => {
                   color: COLORS.primary,
                 }}
               >
-                Groupes
+                Participations
               </Text>
             </View>
           </TouchableOpacity>
@@ -202,6 +203,8 @@ const Profile = ({ route, navigation }) => {
           <TouchableOpacity
             onPress={() => {
               // Add your onPress function here
+              navigation.navigate('DetailsByUser', {  prodServ: listByOwner(products,'produit'), title: "Mes Produits" })
+              
             }}
           >
             <View
@@ -233,6 +236,8 @@ const Profile = ({ route, navigation }) => {
           <TouchableOpacity
             onPress={() => {
               // Add your onPress function here
+              navigation.navigate('DetailsByUser', {  prodServ: listByOwner(products,'service'), title: "Mes Services" })
+
             }}
           >
             <View

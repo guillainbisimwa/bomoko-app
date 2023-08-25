@@ -260,7 +260,8 @@ const App = () => {
           <Stack.Screen name="UseCondition" component={UseCondition} options={{ title: "Condition d'utilisation" }} />
           <Stack.Screen name="ReportProblemScreen" component={ReportProblemScreen} options={{ title: "Signaler un problème" }} />
           <Stack.Screen name="LanguageSelectionScreen" component={LanguageSelectionScreen} options={{ title: "Choisissez une Langue" }} />
-          <Stack.Screen name="DetailsByUser" component={DetailsByUser}  options={{headerShown: false}}/>
+          <Stack.Screen name="DetailsByUser" component={DetailsByUser}
+           options={{ title: '' , headerShown: true}}/>
           
           <Stack.Screen name="Profile" component={Profile} options={{ title: "Profile" }} />
           
