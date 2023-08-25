@@ -15,6 +15,7 @@ import { COLORS, FONTS, icons, SIZES } from '../../constants';
 import { Block } from '../../components';
 import { MaterialIcons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
+import { Button } from 'react-native-paper';
 
 const Profile = ({ route, navigation }) => {
   const scrollX = useRef(new Animated.Value(0)).current;
@@ -171,7 +172,7 @@ const Profile = ({ route, navigation }) => {
           <TouchableOpacity
             onPress={() => {
               // Add your onPress function here
-              navigation.navigate('DetailsByUser', {  prodServ: listProductsForUser(products), title: "Mes participations" })
+              navigation.navigate('DetailsByUser', {  prodServ: listProductsForUser(products), title: "Participations" })
             }}
           >
             <View
@@ -203,7 +204,7 @@ const Profile = ({ route, navigation }) => {
           <TouchableOpacity
             onPress={() => {
               // Add your onPress function here
-              navigation.navigate('DetailsByUser', {  prodServ: listByOwner(products,'produit'), title: "Mes Produits" })
+              navigation.navigate('DetailsByUser', {  prodServ: listByOwner(products,'produit'), title: "Produits" })
               
             }}
           >
@@ -236,7 +237,7 @@ const Profile = ({ route, navigation }) => {
           <TouchableOpacity
             onPress={() => {
               // Add your onPress function here
-              navigation.navigate('DetailsByUser', {  prodServ: listByOwner(products,'service'), title: "Mes Services" })
+              navigation.navigate('DetailsByUser', {  prodServ: listByOwner(products,'service'), title: "Services" })
 
             }}
           >
@@ -265,6 +266,14 @@ const Profile = ({ route, navigation }) => {
               </Text>
             </View>
           </TouchableOpacity>
+        </View>
+
+        <View style={{ flexDirection: "row", gap:10, justifyContent:"space-between"  }}>
+         
+          <Button mode="contained" onPress={()=> console.log("ok")} >   Modifier le Profile </Button>
+          <Button  mode="contained" buttonColor={COLORS.peach} >   Finance  </Button>
+
+         
         </View>
         </View>
         
