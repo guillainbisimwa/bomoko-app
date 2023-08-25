@@ -19,7 +19,8 @@ const Profile = ({ route, navigation }) => {
   const scrollX = useRef(new Animated.Value(0)).current;
   const [userDetails, setUserDetails] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  const [products, setProducts] = useState([]);
+ 
   useEffect(() => {
     // Fetch user details from API
     fetch(`https://bomoko-backend.onrender.com/auth/${route.params.userId}`)
@@ -31,7 +32,17 @@ const Profile = ({ route, navigation }) => {
         setLoading(false);
       })
       .catch(error => console.error('Error fetching user details:', error));
+    
+    // Fetch all products from API
+    fetch(`https://bomoko-backend.onrender.com/api/product`)
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        setProducts(data); // Assuming the data structure is an array of products
+      })
+      .catch(error => console.error('Error fetching products:', error));
   }, []);
+
 
   const renderCover = () => {
     return (
@@ -76,11 +87,22 @@ const Profile = ({ route, navigation }) => {
     );
   }
 
+  const countByOwner = (products, type) => {
+    const filteredServices = products.filter(product => product.owner._id === route.params.userId && product.type === type);
+    const count = filteredServices.length;
+    return count;
+  }
+
+  function listByOwner(products, type) {
+    const filteredServices = products.filter(product => product.owner._id === route.params.userId && product.type === type);
+    return filteredServices;
+  }
+
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <StatusBar backgroundColor={COLORS.gray} />
       <Block flex={1}>
-        <Block style={{ height: 180 }}>
+        <Block style={{ height: 140 }}>
           {renderCover()}
         </Block>
         <View style={{ flex: 1, alignItems: "center" }}>
@@ -121,6 +143,88 @@ const Profile = ({ route, navigation }) => {
           >
             {userDetails?.mobile}
           </Text>
+        </View>
+
+        <View
+          style={{
+            paddingVertical: 8,
+            flexDirection: "row",
+          }}
+        >
+          <View
+            style={{
+              flexDirection: "column",
+              alignItems: "center",
+              marginHorizontal: SIZES.padding,
+            }}
+          >
+            <Text
+              style={{
+                ...FONTS.h2,
+                color: COLORS.primary,
+              }}
+            >
+              0
+            </Text>
+            <Text
+              style={{
+                ...FONTS.body4,
+                color: COLORS.primary,
+              }}
+            >
+              Groupes
+            </Text>
+          </View>
+
+          <View
+            style={{
+              flexDirection: "column",
+              alignItems: "center",
+              marginHorizontal: SIZES.padding,
+            }}
+          >
+            <Text
+              style={{
+                ...FONTS.h2,
+                color: COLORS.primary,
+              }}
+            >
+              {countByOwner(products, 'produit')}
+            </Text>
+            <Text
+              style={{
+                ...FONTS.body4,
+                color: COLORS.primary,
+              }}
+            >
+              Mes Produits
+            </Text>
+          </View>
+
+          <View
+            style={{
+              flexDirection: "column",
+              alignItems: "center",
+              marginHorizontal: SIZES.padding,
+            }}
+          >
+            <Text
+              style={{
+                ...FONTS.h2,
+                color: COLORS.primary,
+              }}
+            >
+              {countByOwner(products, 'service')}
+            </Text>
+            <Text
+              style={{
+                ...FONTS.body4,
+                color: COLORS.primary,
+              }}
+            >
+              Mes Services
+            </Text>
+          </View>
         </View>
         </View>
         
