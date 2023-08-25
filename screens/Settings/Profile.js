@@ -12,9 +12,10 @@ import { Block } from '../../components';
 
 const Profile = ({ route, navigation }) => {
   const scrollX = useRef(new Animated.Value(0)).current;
-
-
-  const renderImages = () => {
+  console.log();
+  console.log("route.params.food", route.params.user);
+  console.log();
+  const renderCover = () => {
     return (
       <ScrollView
         horizontal
@@ -45,12 +46,21 @@ const Profile = ({ route, navigation }) => {
     );
   };
 
+
+
+  const renderProfilePic = () => {
+    return (
+      <Image />
+    );
+  };
+
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <Block flex={1}>
         <Block style={{ height: 180 }}>
-          {renderImages()}
+          {renderCover()}
         </Block>
+        {renderProfilePic()}
 
       
         

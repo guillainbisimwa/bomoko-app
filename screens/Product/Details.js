@@ -638,7 +638,7 @@ const Details = ({ route, navigation }) => {
   const renderItem = (item) => (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate('Profile')
+        navigation.navigate('Profile', { user: item})
         // console.log(item);
         // setSelectedItem(item);
         // showModal(true);
