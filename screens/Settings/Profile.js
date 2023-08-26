@@ -19,7 +19,6 @@ import { Button } from 'react-native-paper';
 import { SceneMap, TabBar, TabView } from "react-native-tab-view";
 import Product_service from '../Product/Product_service';
 
-
 const countByOwner = (products, type, id) => {
   const filteredServices = products.filter(product => product.owner._id === id && product.type === type);
   const count = filteredServices.length;
@@ -109,8 +108,11 @@ const Profile = ({ route, navigation }) => {
   );
 
 const ParticipationRoutes = () => (
-  <ScrollView style={{ flex: 1 , padding: 20, backgroundColor: COLORS.lightGray}}>
+  <ScrollView style={{ flex: 1 , paddingHorizontal:5, paddingVertical:10, backgroundColor: COLORS.white}}>
     {
+       listProductsForUser(products, route.params.userId).length === 0 ? (
+        <Text style={{ textAlign: 'center', fontSize: 16 }}>Aucune donnée disponible.</Text>
+      ) : (
       listProductsForUser(products, route.params.userId).map((food, index) => {
         const key = `${food._id}_${index}`;
         return (
@@ -118,56 +120,62 @@ const ParticipationRoutes = () => (
           <TouchableOpacity
             key={key}
             onPress={() => {
-              //navigation.navigate('Details', { food });
+              navigation.navigate('Details', { food });
             }}
           >
             <Product_service item={food} />
           </TouchableOpacity>
         );
       })
-    }
+    )}
   </ScrollView>
 );
 
 const ProduitRoutes = () => (
-  <ScrollView style={{ flex: 1 , padding: 20, backgroundColor: COLORS.lightGray}}>
-    {
+  <ScrollView style={{flex: 1 , paddingHorizontal:5, paddingVertical:10, backgroundColor: COLORS.white}}>
+     {
+      listByOwner(products, 'produit', route.params.userId).length === 0 ? (
+        <Text style={{ textAlign: 'center', fontSize: 16 }}>Aucune donnée disponible.</Text>
+      ) : (
       listByOwner(products, 'produit', route.params.userId ).map((food, index) => {
         const key = `${food._id}_${index}`;
         return (
           <TouchableOpacity
             key={key}
             onPress={() => {
-              //navigation.navigate('Details', { food });
+              navigation.navigate('Details', { food });
             }}
           >
             <Product_service item={food} />
           </TouchableOpacity>
         );
       })
-    }
+    )}
   </ScrollView>
 );
 
 
 
 const ServiceRoutes = () => (
-  <ScrollView style={{ flex: 1 , padding: 20, backgroundColor: COLORS.lightGray}}>
+  <ScrollView style={{ flex: 1 , paddingHorizontal:5, paddingVertical:10, backgroundColor: COLORS.white}}>
     {
+      listByOwner(products, 'service', route.params.userId).length === 0 ? (
+        <Text style={{ textAlign: 'center', fontSize: 16 }}>Aucune donnée disponible.</Text>
+      ) : (
       listByOwner(products, 'service', route.params.userId).map((food, index) => {
         const key = `${food._id}_${index}`;
         return (
           <TouchableOpacity
             key={key}
             onPress={() => {
-              //navigation.navigate('Details', { food });
+              navigation.navigate('Details', { food });
             }}
           >
             <Product_service item={food} />
           </TouchableOpacity>
         );
       })
-    }
+)}
   </ScrollView>
 );
 
