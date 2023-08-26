@@ -18,7 +18,7 @@ import { COLORS, icons } from './constants';
 import Details from './screens/Product/Details';
 import AddProduct from './screens/Product/AddProduct';
 import { loginSuccess } from './redux/authReducer';
-import { SignUpScreen } from './screens/SignUpScreen';
+import { EditProfile, SignUpScreen } from './screens/SignUpScreen';
 import { loadInitialUser, logoutUser, setInitialUser } from './redux/userSlice';
 import EditProduct from './screens/Product/EditProduct';
 import ShowImages from './screens/Product/ShowImages';
@@ -262,6 +262,11 @@ const App = () => {
           <Stack.Screen name="LanguageSelectionScreen" component={LanguageSelectionScreen} options={{ title: "Choisissez une Langue" }} />
           <Stack.Screen name="DetailsByUser" component={DetailsByUser}
            options={{ title: '' , headerShown: true}}/>
+
+
+          <Stack.Screen name="EditProfile" component={EditProfile} options={{
+            headerShown: false,
+          }}/>
           
           <Stack.Screen name="Profile" component={Profile} options={{ title: "Profile" }} />
           
