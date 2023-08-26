@@ -51,6 +51,7 @@ const Profile = ({ route, navigation }) => {
   const [userDetails, setUserDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [products, setProducts] = useState([]);
+  const [loadingProd, setLoadingProd] = useState(true);
 
   const layout = useWindowDimensions();
   const [index, setIndex] = useState(0);
@@ -78,6 +79,7 @@ const Profile = ({ route, navigation }) => {
       .then(response => response.json())
       .then(data => {
        // console.log(data);
+       setLoadingProd(false)
         setProducts(data); // Assuming the data structure is an array of products
         SetRoutes(prevRoutes => [
           { ...prevRoutes[0], title: `Participations (${countProductsForUser(data, route.params.userId)})` },
@@ -112,6 +114,7 @@ const ParticipationRoutes = () => (
       listProductsForUser(products, route.params.userId).map((food, index) => {
         const key = `${food._id}_${index}`;
         return (
+          
           <TouchableOpacity
             key={key}
             onPress={() => {
@@ -248,7 +251,7 @@ const ServiceRoutes = () => (
           </Text>
         </View>
       
-        <View
+        {/* <View
           style={{
             paddingVertical: 4,
             flexDirection: "row",
@@ -355,7 +358,7 @@ const ServiceRoutes = () => (
               </Text>
             </View>
           </TouchableOpacity>
-        </View> 
+        </View>  */}
 
         <View style={{ paddingVertical:20, flexDirection: "row", gap:10, justifyContent:"space-between"  }}>
          
