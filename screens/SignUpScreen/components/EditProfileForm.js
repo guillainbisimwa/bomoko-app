@@ -8,7 +8,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 
 import { COLORS, FONTS } from '../../../constants';
-import { signUpUser } from '../../../redux/userSlice';
+import { editUser } from '../../../redux/userSlice';
 
 const { height, width } = Dimensions.get('window');
 
@@ -65,17 +65,17 @@ const handleSignUp = async () => {
     }
 
     // Handle login functionality
-    // dispatch(signUpUser({
-    //   username:name,
-    //   name,
-    //   password,
-    //   email,
-    //   mobile,
-    //   role,
-    //   cover_url:'', 
-    //   profile_pic: selectedImage
-    // }))
-    //dispatch(loginUser({username:"bvenceslas", password: "1234567890"}))
+    dispatch(editUser({
+      id: route?.params?.user._id,
+      username:name,
+      name,
+      password,
+      email,
+      mobile,
+      role,
+      cover_url:'', 
+      profile_pic: selectedImage
+    }))
  
   } catch (error) {
     Alert.alert("Attention", "Une erreur est survenue.");
