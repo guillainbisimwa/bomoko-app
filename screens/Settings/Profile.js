@@ -370,7 +370,8 @@ const ServiceRoutes = () => (
 
         <View style={{ paddingVertical:20, flexDirection: "row", gap:10, justifyContent:"space-between"  }}>
          
-          <Button mode="contained" onPress={()=> console.log("ok")} >   Modifier le Profile </Button>
+          <Button mode="contained" onPress={()=> 
+            navigation.navigate('EditProfile', { user: userDetails})} >   Modifier le Profile </Button>
           <Button  mode="contained" buttonColor={COLORS.peach} >   Finance  </Button>
         </View>
         </View>

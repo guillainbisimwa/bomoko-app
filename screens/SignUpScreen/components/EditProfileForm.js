@@ -12,22 +12,30 @@ import { signUpUser } from '../../../redux/userSlice';
 
 const { height, width } = Dimensions.get('window');
 
-export const EditProfileForm = ({ navigation }) => {
+export const EditProfileForm = ({ navigation, route }) => {
   const dispatch = useDispatch();
+
+  console.log("");
+  console.log("", route?.params?.user);
+  console.log("");
+  // {"__v": 0, "_id": "64c96038e199bcbfe1e02654",
+  //  "email": "Gb@test.com", "mobile": "0987654321", 
+  //  "name": "Gb", "password": ", "role": "user", "status": "PENDING", "username": "Gb"}
+
 
   const { errorSignUp, isLoadingSignUp, successSignUp, userSignUp } = useSelector((state) => state.user);
   const [loadPic, setLoadPic] = useState(false);
 
-  const [name, setNom] = useState('');
+  const [name, setNom] = useState(route?.params?.user.name);
   const [password, setPassword] = useState('');
 
-  const [email, setEmail] = useState('');
-  const [mobile, setMobile] = useState('');
+  const [email, setEmail] = useState( route?.params?.user.email);
+  const [mobile, setMobile] = useState( route?.params?.user.mobile);
   const [role, setRole] = useState('user');
 
   const [visible, setVisible] = useState(false);
 
-  const [selectedImage, setSelectedImage] = useState('');
+  const [selectedImage, setSelectedImage] = useState( route?.params?.user?.profile_pic);
 
   const onToggleSnackBar = () => setVisible(!visible);
 
@@ -57,20 +65,20 @@ const handleSignUp = async () => {
     }
 
     // Handle login functionality
-    dispatch(signUpUser({
-      username:name,
-      name,
-      password,
-      email,
-      mobile,
-      role,
-      cover_url:'', 
-      profile_pic: selectedImage
-    }))
+    // dispatch(signUpUser({
+    //   username:name,
+    //   name,
+    //   password,
+    //   email,
+    //   mobile,
+    //   role,
+    //   cover_url:'', 
+    //   profile_pic: selectedImage
+    // }))
     //dispatch(loginUser({username:"bvenceslas", password: "1234567890"}))
  
   } catch (error) {
-    Alert.alert("Attention", "Error occurred during login.");
+    Alert.alert("Attention", "Une erreur est survenue.");
 
     console.error("Error occurred during login:", error);
   }
@@ -149,12 +157,7 @@ const onCloudinarySaveCb = async (base64Img) => {
         blurRadius={10}
       ></ImageBackground>
       <View style={styles.contentContainer}>
-        {/* <LottieView
-          style={styles.animation}
-          source={require('../../../assets/json/animation_lks5mkix.json')}
-          autoPlay
-          loop
-        /> */}
+     
         <View
           style={{
             alignItems: "center",
@@ -258,6 +261,7 @@ const styles = StyleSheet.create({
   scrollContainer: {
     flexGrow: 1,
     paddingBottom: 20,
+    paddingTop: 20,
   },
   animation: {
     width: 300,

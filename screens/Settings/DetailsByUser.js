@@ -5,9 +5,6 @@ import { COLORS, SIZES } from '../../constants';
 import Product_service from '../Product/Product_service';
 
 const DetailsByUser = ({ navigation, route }) => {
-  console.log();
-  console.log("{route.params.prodServ.length", route.params.prodServ);
-  console.log();
 
   const [pageTitle, setPageTitle] = useState(route.params.title);
 
