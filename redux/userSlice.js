@@ -62,7 +62,8 @@ export const editUser = createAsyncThunk(
     profile_pic,
     role
   }) => {
-    const response = await axios.put( BASE_URL +'auth/'+id, {
+    const url = `${BASE_URL}auth/${id}`; // Concatenate ID to the base URL
+    const response = await axios.put(url, { // Use PUT request for updating
       name,
       email,
       mobile,
