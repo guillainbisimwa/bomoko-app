@@ -48,6 +48,36 @@ export const signUpUser = createAsyncThunk(
   }
 );
 
+
+export const editUser = createAsyncThunk(
+  "user/edit",
+  async ({
+    id,
+    name,
+    email,
+    mobile,
+    username,
+    password,
+    cover_url, 
+    profile_pic,
+    role
+  }) => {
+    const response = await axios.put( BASE_URL +'auth/'+id, {
+      name,
+      email,
+      mobile,
+      username,
+      password,
+      cover_url, 
+      profile_pic,
+      role
+    });
+    console.log("Edit---?????? ",response.data);
+    
+    return response.data;
+  }
+);
+
 export const loadInitialUser = async () => {
   try {
     const storedUser = await AsyncStorage.getItem('user');
@@ -135,6 +165,27 @@ const userSlice = createSlice({
         //AsyncStorage.setItem('user', JSON.stringify({ user: action.payload }));
       })
       .addCase(signUpUser.rejected, (state, action) => {
+        console.log("bree *************** ",action.error);
+        state.isLoadingSignUp = false;
+        state.errorSignUp = action.error.message;
+        state.successSignUp = false
+      })
+      .addCase(editUser.pending, (state) => {
+        state.isLoadingSignUp = true;
+        state.errorSignUp = null;
+        state.successSignUp = false
+
+      })
+      .addCase(editUser.fulfilled, (state, action) => {
+        state.isLoadingSignUp= false;
+        state.userSignUp = action.payload;
+        state.errorSignUp = null;
+        state.successSignUp = true
+
+        // Store user data to LocalStorage
+        //AsyncStorage.setItem('user', JSON.stringify({ user: action.payload }));
+      })
+      .addCase(editUser.rejected, (state, action) => {
         console.log("bree *************** ",action.error);
         state.isLoadingSignUp = false;
         state.errorSignUp = action.error.message;
