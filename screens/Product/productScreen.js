@@ -396,15 +396,15 @@ const ProductScreen = ({ navigation, route }) => {
             //console.log("Token --",JSON.parse(token).user.user.username);
             console.log('UserJ --', user?._j?.user?.user?.username);
             console.log('User --', user?._j);
-            navigation.navigate('ShoppingCard', {
-              prodServ : products.filter(product => 
-                product.status === "PENDING" && 
-                (
-                  product.owner._id === JSON.parse(token)?.user?.user?.userId || 
-                  product.membres.some(member => member.user._id === JSON.parse(token)?.user?.user?.userId && member.admission_req === "PENDING")
-                )
-            )
-            });
+            // navigation.navigate('ShoppingCard', {
+            //   prodServ : products.filter(product => 
+            //     product.status === "PENDING" && 
+            //     (
+            //       product.owner._id === JSON.parse(token)?.user?.user?.userId || 
+            //       product.membres.some(member => member.user._id === JSON.parse(token)?.user?.user?.userId && member.admission_req === "PENDING")
+            //     )
+            // )
+            // });
           }}
         >
           <Image
@@ -433,13 +433,23 @@ const ProductScreen = ({ navigation, route }) => {
             style={{  justifyContent: 'center', width: 40 }}
             onPress={openMenu}
           >
-            <LottieView
-            style={{width: 40, marginTop: 0, 
-              }}
-            source={require('./../../assets/json/animation_lksuvej7.json')}
-            autoPlay
-            loop
-          />
+            {user?._j?.user?.user?.profile_pic ? (
+        <Image
+          source={{ uri: user?._j?.user?.user?.profile_pic }}
+          style={{ width: 40, height: 40, borderRadius:20, borderWidth:1,
+             elevation:3, borderColor: COLORS.white}}
+        />
+      ) : (
+        <LottieView
+          style={{
+            width: 40,
+            marginTop: 0,
+          }}
+          source={require('./../../assets/json/animation_lksuvej7.json')}
+          autoPlay
+          loop
+        />
+      )}
           </TouchableOpacity>
           }>
           <Menu.Item leadingIcon="account" onPress={() => {
