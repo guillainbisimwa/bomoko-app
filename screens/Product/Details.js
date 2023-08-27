@@ -683,14 +683,25 @@ const Details = ({ route, navigation }) => {
                 marginRight: SIZES.base,
               }}
             >
-              <Image
-                source={icons.investment}
-                style={{
-                  width: 30,
-                  height: 30,
-                  tintColor: COLORS.black,
-                }}
-              />
+              
+
+              { item.user.profile_pic  ? (
+                <Image
+                  source={{ uri: item.user.profile_pic  }}
+                  style={{ width: 40, height: 40, borderRadius:20, borderWidth:1,
+                    elevation:3, borderColor: COLORS.white}}
+                />
+              ) : (
+                <Image
+                  source={icons.investment}
+                  style={{
+                    width: 30,
+                    height: 30,
+                    tintColor: COLORS.black,
+                  }}
+                />
+              )}
+
             </View>
             <View>
               <Text numberOfLines={1} style={{ ...FONTS.h3, color: COLORS.black }}>{
