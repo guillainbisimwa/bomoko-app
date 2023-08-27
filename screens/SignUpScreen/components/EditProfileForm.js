@@ -25,6 +25,7 @@ export const EditProfileForm = ({ navigation, route }) => {
 
   const { errorSignUp, isLoadingSignUp, successSignUp, userSignUp } = useSelector((state) => state.user);
   const [loadPic, setLoadPic] = useState(false);
+  const [onSuccess, setOnSuccess] = useState(false);
 
   const [name, setNom] = useState(route?.params?.user.name);
   const [password, setPassword] = useState('');
@@ -44,7 +45,7 @@ export const EditProfileForm = ({ navigation, route }) => {
   // Use useEffect or any other method to handle the success state and display the alert
     useEffect(() => {
       console.log("userSignUp", userSignUp);
-      if (successSignUp) {
+      if (onSuccess) {
         // Alert.alert("Success", "Login successful!");
         navigation.navigate('LoginScreen'); 
       }
@@ -75,7 +76,9 @@ const handleSignUp = async () => {
       role,
       cover_url:'', 
       profile_pic: selectedImage
-    }))
+    }));
+
+    setOnSuccess(true);
  
   } catch (error) {
     Alert.alert("Attention", "Une erreur est survenue.");
