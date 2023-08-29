@@ -594,31 +594,27 @@ const Details = ({ route, navigation }) => {
           value={editedName}
           onChangeText={handleNameChange}
           mode="outlined"
-          style={[styles.input, { width: '40%' }]}
+          style={[styles.input, { width: '45%' }]}
           required
         />
 
         <TextInput
-          label={`Somme (${route.params.food.currency})`}
+          label={`Prix tot (${route.params.food.currency})`}
           value={`${editedAmount}`}
           onChangeText={handleAmountChange}
           mode="outlined"
           keyboardType='decimal-pad'
-          style={[styles.input, { width: '35%' }]}
+          style={[styles.input, { width: '40%' }]}
           required
         />
-        <Button
-          style={{ width: '25%' }}
-          textColor="#fff"
-          elevated
-          buttonColor={COLORS.peach}
-          onPress={() => {
+
+      <TouchableOpacity  onPress={() => {
             Keyboard.dismiss();
             handleAddCout();
-          }}
-        >
-          AJOUTER
-        </Button>
+          }}>
+          <Ionicons name="add-circle" size={50} color={COLORS.darkgreen} />
+        </TouchableOpacity>
+       
       </Block>
       </TouchableWithoutFeedback>
     );
@@ -988,17 +984,6 @@ const Details = ({ route, navigation }) => {
 
           }
 
-          {/* {
-            route.params.food.membres?.length >=1?
-            //route.params.food.membres.map((membre, index)=> renderItem(membre) )
-            membresToShow.map((membre, index) => renderItem(membre))
-
-            :<></>
-          } */}
-
-          {/* <Text bold color={COLORS.blue}>
-            {expanded ? 'Voir moins' : 'Voir plus'}
-          </Text> */}
           {route.params.food.membres?.length > 1 && ( // Show "Voir plus" only if there are more than 2 users
             <TouchableOpacity onPress={toggleExpansion}>
               <Text bold color={COLORS.blue}>
@@ -1142,6 +1127,9 @@ const Details = ({ route, navigation }) => {
             {
               route.params.food.owner._id == JSON.parse(token)?.user?.user?.userId?
               renderFAaddCout(): <></>
+            }
+            {
+              renderFAaddCout()
             }
           </Block>
         </BottomSheet>
