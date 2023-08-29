@@ -248,6 +248,9 @@ const ProductScreen = ({ navigation, route }) => {
                         progress={invest/100}
                         color={MD3Colors.error50}
                         style={{ width: SIZES.width /1.8, height: SIZES.base }}
+                        animatedValue={invest/100}
+                        visible
+                        
                       />
                       <Text numberOfLines={1} semibold size={19} style={{ marginLeft: 20 }}>
                       {invest}%
