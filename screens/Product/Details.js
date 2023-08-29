@@ -641,7 +641,8 @@ const Details = ({ route, navigation }) => {
         // console.log(item._id);
         // navigation.navigate('Profile', { user: item})
         navigation.navigate('Profile', {
-          userId: item.user._id
+          userId: item.user._id,
+          user: item.user
         })
         // console.log(item);
         // setSelectedItem(item);

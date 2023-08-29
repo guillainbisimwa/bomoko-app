@@ -9,12 +9,11 @@ import LottieView from 'lottie-react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { FAB, IconButton, MD3Colors, ProgressBar, Button, Card, Modal, Menu, Divider, Provider, ActivityIndicator, Badge } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
-import { ImageBackground } from 'react-native';
+import { ImageBackground, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { loadInitialUser, logoutUser, setInitialUser } from '../../redux/userSlice';
 import { fetchProducts } from '../../redux/prodReducer';
 import NetInfo from "@react-native-community/netinfo";
-import { Alert } from 'react-native';
 
 
 const ProductScreen = ({ navigation, route }) => {

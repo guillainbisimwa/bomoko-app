@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import {
+  Alert,
   ImageBackground,
   ScrollView,
   StyleSheet,
@@ -18,6 +19,8 @@ import { StatusBar } from "expo-status-bar";
 import { Button } from 'react-native-paper';
 import { SceneMap, TabBar, TabView } from "react-native-tab-view";
 import Product_service from '../Product/Product_service';
+import NetInfo from "@react-native-community/netinfo";
+
 
 const countByOwner = (products, type, id) => {
   const filteredServices = products.filter(product => product.owner._id === id && product.type === type);
@@ -63,6 +66,15 @@ const Profile = ({ route, navigation }) => {
 
   useEffect(() => {
     // Fetch user details from API
+    const netInfo = NetInfo.fetch();
+    // console.log("netInfo.isConnected", netInfo.isConnected);
+    if (!netInfo.isConnected) {
+      setUserDetails(route.params.user);
+      setLoading(false);
+      Alert.alert("Pas de connexion Internet", "Veuillez vérifier votre connexion Internet et réessayer.");
+      return;
+    }
+  
     fetch(`https://bomoko-backend.onrender.com/auth/${route.params.userId}`)
       .then(response => response.json())
       .then(data => {
