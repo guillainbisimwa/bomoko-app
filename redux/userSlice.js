@@ -82,10 +82,6 @@ export const editUser = createAsyncThunk(
 export const loadInitialUser = async () => {
   try {
     const storedUser = await AsyncStorage.getItem('user');
-    console.log("------------------------------------------------------");
-    console.log("");
-    console.log("storedUser-?", storedUser);
-    console.log("");
 
     return storedUser ? JSON.parse(storedUser) : null;
   } catch (error) {

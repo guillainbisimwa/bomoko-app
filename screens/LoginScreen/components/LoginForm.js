@@ -33,15 +33,8 @@ export const LoginForm = ({ navigation }) => {
   // Use useEffect or any other method to handle the success state and display the alert
     useEffect(() => {
       if (success) {
-        //Alert.alert("Success", "Login successful!");
         onToggleSnackBarSuccess();
-        // setTimeout(() => {
-        //   // navigation.goBack(null); // First go back
-        //   // navigation.goBack(null); // Second go back
-        //   // navigationV2.navigate('Main', { savedUser: JSON.parse(user)?.user});
-          
-        // }
-        // , 2000);
+      
         navigationV2.navigate('Main');
        
       }
