@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Alert, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { Alert, Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { COLORS, SIZES } from '../../constants';
 import Block from './Block';
@@ -82,9 +82,18 @@ const CoutScreen = (props) => {
                   required
                 />
               ) : (
+                <View style={{ flex:1, flexDirection:'row', justifyContent:"space-between", width:'80%' }}>
+
                 <Text numberOfLines={1} color={COLORS.peach}>
                   {props.item.amount} {props.currency}
                 </Text>
+                
+                <Text numberOfLines={1} bold color={COLORS.peach}>
+              {(props.item.amount/props.totAmount).toFixed(2)} % SUR CR 
+                </Text>
+
+                </View>
+              
               )}
             </Block>
             <Block row >

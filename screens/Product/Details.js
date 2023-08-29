@@ -640,9 +640,6 @@ const Details = ({ route, navigation }) => {
           userId: item.user._id,
           user: item.user
         })
-        // console.log(item);
-        // setSelectedItem(item);
-        // showModal(true);
       }}
     >
       <View
@@ -1120,7 +1117,7 @@ const Details = ({ route, navigation }) => {
                   route.params.food.couts
                   .map((food, index) => {
                     return <CoutScreen admin={route.params.food.owner._id == JSON.parse(token)?.user?.user?.userId}
-                     handleUpdateItem={handleUpdateItem} handleTrash={handleTrash} currency={route.params.food.currency} key={index} item={food} count={index + 1} />;
+                    totAmount={totAmount} handleUpdateItem={handleUpdateItem} handleTrash={handleTrash} currency={route.params.food.currency} key={index} item={food} count={index + 1} />;
                   })}
               </ScrollView>
             </Block>
