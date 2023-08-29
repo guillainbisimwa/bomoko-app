@@ -20,6 +20,7 @@ import { Button } from 'react-native-paper';
 import { SceneMap, TabBar, TabView } from "react-native-tab-view";
 import Product_service from '../Product/Product_service';
 import NetInfo from "@react-native-community/netinfo";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const countByOwner = (products, type, id) => {
@@ -55,6 +56,9 @@ const Profile = ({ route, navigation }) => {
   const [products, setProducts] = useState([]);
   const [loadingProd, setLoadingProd] = useState(true);
 
+  const [token, setToken] = useState(null);
+
+
   const layout = useWindowDimensions();
   const [index, setIndex] = useState(0);
 
@@ -65,6 +69,19 @@ const Profile = ({ route, navigation }) => {
   ]);
 
   useEffect(() => {
+    const getTokenFromAsyncStorage = async () => {
+      try {
+        const storedToken = await AsyncStorage.getItem('user');
+        setToken(storedToken);
+        
+      } catch (error) {
+        // Handle AsyncStorage read error if needed
+        console.error('Error reading token from AsyncStorage:', error);
+      }
+    };
+
+    getTokenFromAsyncStorage();
+
     // Fetch user details from API
     const netInfo = NetInfo.fetch();
     // console.log("netInfo.isConnected", netInfo.isConnected);
@@ -381,9 +398,18 @@ const ServiceRoutes = () => (
         </View>  */}
 
         <View style={{ paddingVertical:20, flexDirection: "row", gap:10, justifyContent:"space-between"  }}>
-         
+         {
+          JSON.parse(token)?.user?.user?.userId == route.params.userId?
           <Button mode="contained" onPress={()=> 
-            navigation.navigate('EditProfile', { user: userDetails})} >   Modifier le Profile </Button>
+            navigation.navigate('EditProfile', { user: userDetails})} >   
+              Modifier le Profile 
+          </Button>:
+           <Button mode="contained">   
+              Contacter 
+          </Button>
+         }
+         
+
           <Button  mode="contained" buttonColor={COLORS.peach} >   Finance  </Button>
         </View>
         </View>

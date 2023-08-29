@@ -638,7 +638,7 @@ const Details = ({ route, navigation }) => {
   const renderItem = (item) => (
     <TouchableOpacity
       onPress={() => {
-        // console.log(item._id);
+        console.log(item.user);
         // navigation.navigate('Profile', { user: item})
         navigation.navigate('Profile', {
           userId: item.user._id,
@@ -979,7 +979,7 @@ const Details = ({ route, navigation }) => {
           {
             renderItem({ admin: true, name: route.params.food.owner.name+" (Admin)", 
             //name: route.params.food.owner._id
-            user: {_id: route.params.food.owner._id,  profile_pic: route.params.food.owner.profile_pic},
+            user: {_id: route.params.food.owner._id,  ...route.params.food.owner},
             contribution: route.params.food.initialAmount, 
             date: format(new Date(route.params.food.timestamp), 'dd MMMM yyyy', { locale: fr }) })
           }

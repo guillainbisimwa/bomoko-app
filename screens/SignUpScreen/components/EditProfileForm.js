@@ -45,6 +45,13 @@ export const EditProfileForm = ({ navigation, route }) => {
   // Use useEffect or any other method to handle the success state and display the alert
     useEffect(() => {
       console.log("userSignUp", userSignUp);
+        // Fetch user details from API
+        const netInfo = NetInfo.fetch();
+        // console.log("netInfo.isConnected", netInfo.isConnected);
+        if (!netInfo.isConnected) {
+          Alert.alert("Pas de connexion Internet", "Veuillez vérifier votre connexion Internet et réessayer.");
+          return;
+        }
       if (onSuccess) {
         // Alert.alert("Success", "Login successful!");
         navigation.navigate('LoginScreen'); 
