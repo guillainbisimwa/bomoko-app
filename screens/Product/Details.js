@@ -842,15 +842,14 @@ const Details = ({ route, navigation }) => {
                 }}>
                 <Block row center style={styles.round}>
                     <Ionicons name="md-image" color={COLORS.peach} size={20} />
-                    {/* <Text numberOfLines={1}> { route.params.food.membres.length} membres</Text> */}
                     <Text style={{marginLeft: 5}} numberOfLines={1}>Voir images</Text>
                 </Block>
               </TouchableOpacity>
 
-
               <Block row center style={styles.round}>
                 <Ionicons name="md-time" color={COLORS.peach} size={20} />
-                <Text numberOfLines={1}> {daysLeft} Jours restent</Text>
+                <Text numberOfLines={1}> 
+                {daysLeft > 0? `${daysLeft} Jours restent`:`${-daysLeft} jours de retard`}</Text>
               </Block>
             </Block>
 
