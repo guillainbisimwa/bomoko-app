@@ -43,11 +43,9 @@ const ProductScreen = ({ navigation, route }) => {
       const initialUser = loadInitialUser();
       if (initialUser) {
         // Dispatch the action using extraReducers
-        console.log("Ok");
         dispatch(setInitialUser(initialUser));
       }
     //setActive(active == null? 'Tous':active);
-    console.log("products-------------------------", products);
     setProduct_serviceList([...products]);
     setProduct_serviceList([...products].sort((a, b) => a.name - b.name));
     setBadgePanding(products.filter(product => 
@@ -61,10 +59,6 @@ const ProductScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     dispatch(fetchProducts());
-    console.log("Eror ****", error);
-    console.log("produx", products.length);
-    //setActive('Tous');
-    // onRefresh();
 
     const getTokenFromAsyncStorage = async () => {
       try {
@@ -105,10 +99,6 @@ const ProductScreen = ({ navigation, route }) => {
     borderRadius: 10,
     alignSelf: 'center',
   };
-
-  // console.log(products, 'ok---------------------------------------');
-  //console.log(JSON.stringify(products), 'ok---------------------------------------');
-
 
   const onSearch = (text) => {
     setProduct_serviceList([
@@ -192,7 +182,7 @@ const ProductScreen = ({ navigation, route }) => {
         </Block>
 
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {products.slice(-2).reverse().map((prod, index) => {
+          {products.slice(-8).reverse().map((prod, index) => {
             const key = `${prod._id}_${index}`;
 
             const startDate = new Date(prod.startDate);
@@ -201,7 +191,11 @@ const ProductScreen = ({ navigation, route }) => {
             const startDateFinal = `${startDate.getDate()}/${startDate.getMonth() + 1}/${startDate.getFullYear().toString().substr(-2)}`;
             const endDateFinal = `${endDate.getDate()}/${endDate.getMonth() + 1}/${endDate.getFullYear().toString().substr(-2)}`;
 
+             const invest = ((prod.initialAmount + prod.membres
+            .filter(member => member.contribution_status === "ACCEPTED")
+            .reduce((sum, member) => sum + member.contribution_amount, 0)) * 100 / prod.amount).toFixed(0);
 
+            console.log(invest);
             return (
               <TouchableOpacity
                 key={key}
@@ -251,12 +245,12 @@ const ProductScreen = ({ navigation, route }) => {
                    
                     <Block row center space="between">
                       <ProgressBar
-                        progress={0}
+                        progress={invest/100}
                         color={MD3Colors.error50}
                         style={{ width: SIZES.width /1.8, height: SIZES.base }}
                       />
                       <Text numberOfLines={1} semibold size={19} style={{ marginLeft: 20 }}>
-                        0%
+                      {invest}%
                       </Text>
                     </Block>
                   </Block>
@@ -268,7 +262,7 @@ const ProductScreen = ({ navigation, route }) => {
                       style={[styles.cat, { backgroundColor: COLORS.primary }]}
                     >
                       <Text white bold size={12}>
-                        0
+                        {invest}%
                       </Text>
                       <Text white bold numberOfLines={1}>
                         Realisation
@@ -281,7 +275,7 @@ const ProductScreen = ({ navigation, route }) => {
                       style={[styles.cat, { backgroundColor: COLORS.purple }]}
                     >
                       <Text white bold size={12}>
-                      {prod.membres.length}
+                      {prod.membres.length + 1}
                       </Text>
                       <Text white bold numberOfLines={1}>
                         Membres
