@@ -74,7 +74,7 @@ const CoutScreen = (props) => {
             <Block>
               {isEditing ? (
                 <TextInput
-                  label="Somme"
+                  label={`Prix tot (${props.currency})`}
                   value={`${editedAmount}`}
                   onChangeText={handleAmountChange}
                   mode="outlined"

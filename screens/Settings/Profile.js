@@ -73,49 +73,53 @@ const Profile = ({ route, navigation }) => {
       try {
         const storedToken = await AsyncStorage.getItem('user');
         setToken(storedToken);
-        
       } catch (error) {
-        // Handle AsyncStorage read error if needed
         console.error('Error reading token from AsyncStorage:', error);
       }
     };
 
     getTokenFromAsyncStorage();
 
-    // Fetch user details from API
-    const netInfo = NetInfo.fetch();
-    // console.log("netInfo.isConnected", netInfo.isConnected);
-    if (!netInfo.isConnected) {
-      setUserDetails(route.params.user);
-      setLoading(false);
-      Alert.alert("Pas de connexion Internet", "Veuillez vérifier votre connexion Internet et réessayer.");
-      return;
-    }
-  
-    fetch(`https://bomoko-backend.onrender.com/auth/${route.params.userId}`)
-      .then(response => response.json())
-      .then(data => {
-       // console.log(data);
-       // console.log(route.params.userId);
-        setUserDetails(data);
+    const fetchUserData = async () => {
+      const netInfo = await NetInfo.fetch();
+      
+      if (!netInfo.isConnected) {
+        setUserDetails(route.params.user);
         setLoading(false);
-      })
-      .catch(error => console.error('Error fetching user details:', error));
-    
-    // Fetch all products from API
-    fetch(`https://bomoko-backend.onrender.com/api/product`)
-      .then(response => response.json())
-      .then(data => {
-       // console.log(data);
-       setLoadingProd(false)
-        setProducts(data); // Assuming the data structure is an array of products
-        SetRoutes(prevRoutes => [
-          { ...prevRoutes[0], title: `Participations (${countProductsForUser(data, route.params.userId)})` },
-          { ...prevRoutes[1], title: `Produits (${countByOwner(data, 'produit', route.params.userId)})` },
-          { ...prevRoutes[2], title: `Services (${countByOwner(data, 'service', route.params.userId)})` },
-        ]);
-      })
-      .catch(error => console.error('Error fetching products:', error));
+        Alert.alert(
+          'Pas de connexion Internet',
+          'Veuillez vérifier votre connexion Internet et réessayer.'
+        );
+        return;
+      }
+
+      fetch(`https://bomoko-backend.onrender.com/auth/${route.params.userId}`)
+        .then(response => response.json())
+        .then(data => {
+          setUserDetails(data);
+          setLoading(false);
+        })
+        .catch(error => console.error('Error fetching user details:', error));
+    };
+
+    const fetchProducts = () => {
+      fetch(`https://bomoko-backend.onrender.com/api/product`)
+        .then(response => response.json())
+        .then(data => {
+          setLoadingProd(false);
+          setProducts(data);
+          
+          SetRoutes(prevRoutes => [
+            { ...prevRoutes[0], title: `Participations (${countProductsForUser(data, route.params.userId)})` },
+            { ...prevRoutes[1], title: `Produits (${countByOwner(data, 'produit', route.params.userId)})` },
+            { ...prevRoutes[2], title: `Services (${countByOwner(data, 'service', route.params.userId)})` },
+          ]);
+        })
+        .catch(error => console.error('Error fetching products:', error));
+    };
+
+    fetchUserData();
+    fetchProducts();
   }, []);
 
   const renderTabBar = (props) => (
