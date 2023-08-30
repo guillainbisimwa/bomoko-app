@@ -594,31 +594,27 @@ const Details = ({ route, navigation }) => {
           value={editedName}
           onChangeText={handleNameChange}
           mode="outlined"
-          style={[styles.input, { width: '40%' }]}
+          style={[styles.input, { width: '45%' }]}
           required
         />
 
         <TextInput
-          label={`Somme (${route.params.food.currency})`}
+          label={`Prix tot (${route.params.food.currency})`}
           value={`${editedAmount}`}
           onChangeText={handleAmountChange}
           mode="outlined"
           keyboardType='decimal-pad'
-          style={[styles.input, { width: '35%' }]}
+          style={[styles.input, { width: '40%' }]}
           required
         />
-        <Button
-          style={{ width: '25%' }}
-          textColor="#fff"
-          elevated
-          buttonColor={COLORS.peach}
-          onPress={() => {
+
+      <TouchableOpacity  onPress={() => {
             Keyboard.dismiss();
             handleAddCout();
-          }}
-        >
-          AJOUTER
-        </Button>
+          }}>
+          <Ionicons name="add-circle" size={50} color={COLORS.darkgreen} />
+        </TouchableOpacity>
+       
       </Block>
       </TouchableWithoutFeedback>
     );
@@ -638,9 +634,12 @@ const Details = ({ route, navigation }) => {
   const renderItem = (item) => (
     <TouchableOpacity
       onPress={() => {
-        // console.log(item);
-        // setSelectedItem(item);
-        // showModal(true);
+        console.log(item.user);
+        // navigation.navigate('Profile', { user: item})
+        navigation.navigate('Profile', {
+          userId: item.user._id,
+          user: item.user
+        })
       }}
     >
       <View
@@ -678,14 +677,25 @@ const Details = ({ route, navigation }) => {
                 marginRight: SIZES.base,
               }}
             >
-              <Image
-                source={icons.investment}
-                style={{
-                  width: 30,
-                  height: 30,
-                  tintColor: COLORS.black,
-                }}
-              />
+              
+
+              { item.user.profile_pic  ? (
+                <Image
+                  source={{ uri: item.user.profile_pic  }}
+                  style={{ width: 40, height: 40, borderRadius:20, borderWidth:1,
+                    elevation:3, borderColor: COLORS.white}}
+                />
+              ) : (
+                <Image
+                  source={icons.investment}
+                  style={{
+                    width: 30,
+                    height: 30,
+                    tintColor: COLORS.black,
+                  }}
+                />
+              )}
+
             </View>
             <View>
               <Text numberOfLines={1} style={{ ...FONTS.h3, color: COLORS.black }}>{
@@ -825,15 +835,14 @@ const Details = ({ route, navigation }) => {
                 }}>
                 <Block row center style={styles.round}>
                     <Ionicons name="md-image" color={COLORS.peach} size={20} />
-                    {/* <Text numberOfLines={1}> { route.params.food.membres.length} membres</Text> */}
                     <Text style={{marginLeft: 5}} numberOfLines={1}>Voir images</Text>
                 </Block>
               </TouchableOpacity>
 
-
               <Block row center style={styles.round}>
                 <Ionicons name="md-time" color={COLORS.peach} size={20} />
-                <Text numberOfLines={1}> {daysLeft} Jours restent</Text>
+                <Text numberOfLines={1}> 
+                {daysLeft > 0? `${daysLeft} Jours restent`:`${-daysLeft} jours de retard`}</Text>
               </Block>
             </Block>
 
@@ -846,9 +855,9 @@ const Details = ({ route, navigation }) => {
             </Block>
             <Block m_t={5} row space="between">
               <Text numberOfLines={1} semibold size={16}>
-                {((route.params.food.initialAmount+route.params.food.membres
-  .filter(member => member.contribution_status === "ACCEPTED")
-  .reduce((sum, member) => sum + member.contribution_amount, 0))*100)/route.params.food.amount}% d'investissement
+              {((route.params.food.initialAmount + route.params.food.membres
+.filter(member => member.contribution_status === "ACCEPTED")
+.reduce((sum, member) => sum + member.contribution_amount, 0)) * 100 / route.params.food.amount).toFixed(1)}% d'investissement
               </Text>
               <Text numberOfLines={1} semibold size={16}>
               {route.params.food.initialAmount} {route.params.food.currency}  reuni
@@ -873,7 +882,7 @@ const Details = ({ route, navigation }) => {
                 <Text numberOfLines={1} semibold>
                   Les parts disponibles:
                 </Text>
-                <Text> {100-(route.params.food.initialAmount/(route.params.food.amount/100))} parts</Text>
+                <Text>{(100 - (route.params.food.initialAmount / (route.params.food.amount / 100))).toFixed(1)} parts</Text>
               </Block>
 
               <Block row space="between">
@@ -961,6 +970,8 @@ const Details = ({ route, navigation }) => {
 
           {
             renderItem({ admin: true, name: route.params.food.owner.name+" (Admin)", 
+            //name: route.params.food.owner._id
+            user: {_id: route.params.food.owner._id,  ...route.params.food.owner},
             contribution: route.params.food.initialAmount, 
             date: format(new Date(route.params.food.timestamp), 'dd MMMM yyyy', { locale: fr }) })
           }
@@ -970,17 +981,6 @@ const Details = ({ route, navigation }) => {
 
           }
 
-          {/* {
-            route.params.food.membres?.length >=1?
-            //route.params.food.membres.map((membre, index)=> renderItem(membre) )
-            membresToShow.map((membre, index) => renderItem(membre))
-
-            :<></>
-          } */}
-
-          {/* <Text bold color={COLORS.blue}>
-            {expanded ? 'Voir moins' : 'Voir plus'}
-          </Text> */}
           {route.params.food.membres?.length > 1 && ( // Show "Voir plus" only if there are more than 2 users
             <TouchableOpacity onPress={toggleExpansion}>
               <Text bold color={COLORS.blue}>
@@ -1117,7 +1117,7 @@ const Details = ({ route, navigation }) => {
                   route.params.food.couts
                   .map((food, index) => {
                     return <CoutScreen admin={route.params.food.owner._id == JSON.parse(token)?.user?.user?.userId}
-                     handleUpdateItem={handleUpdateItem} handleTrash={handleTrash} currency={route.params.food.currency} key={index} item={food} count={index + 1} />;
+                    totAmount={totAmount} handleUpdateItem={handleUpdateItem} handleTrash={handleTrash} currency={route.params.food.currency} key={index} item={food} count={index + 1} />;
                   })}
               </ScrollView>
             </Block>

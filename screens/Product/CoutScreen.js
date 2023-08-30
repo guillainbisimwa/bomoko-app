@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Alert, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { Alert, Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { COLORS, SIZES } from '../../constants';
 import Block from './Block';
@@ -74,31 +74,44 @@ const CoutScreen = (props) => {
             <Block>
               {isEditing ? (
                 <TextInput
-                  label="Somme"
+                  label={`Prix tot (${props.currency})`}
                   value={`${editedAmount}`}
                   onChangeText={handleAmountChange}
                   mode="outlined"
-                  style={[styles.input, { width: 200 }]}
+                  style={[styles.input, { width: 170 }]}
                   required
                 />
               ) : (
+                <View style={{ flex:1, flexDirection:'row', justifyContent:"space-between", width:!editBtn?'80%':'100%' }}>
+
                 <Text numberOfLines={1} color={COLORS.peach}>
                   {props.item.amount} {props.currency}
                 </Text>
+                
+                {
+                  !editBtn?  <Text numberOfLines={1} bold color={COLORS.peach}>
+                  {((props.item.amount/props.totAmount)*100).toFixed(0)} % SUR CR 
+                    </Text>:<></>
+                }
+
+                </View>
+              
               )}
             </Block>
             <Block row >
               {isEditing ? (
                 <>
-                  <TouchableOpacity onPress={handleCancel}>
-                    <Ionicons name="close" size={30} color={COLORS.peach} />
+                  <TouchableOpacity style={{ backgroundColor:COLORS.peach, borderRadius:20,padding:3,
+                  margin: 3 }} onPress={handleCancel}>
+                    <Ionicons name="close" size={35} color={COLORS.white} />
                   </TouchableOpacity>
-                  <TouchableOpacity onPress={()=>{
+                  <TouchableOpacity style={{ backgroundColor:COLORS.darkgreen, borderRadius:20,padding:3,
+                  margin: 3 }} onPress={()=>{
                       setEditBtn(false);
                       handleCancel();
                       props.handleUpdateItem(props.item, editedAmount, editedName)
                     }}>
-                    <Ionicons name="checkmark-outline" size={30} color={COLORS.darkgreen}  />
+                    <Ionicons name="checkmark-outline" size={35} color={COLORS.white}  />
                   </TouchableOpacity>
                 </>
               ) : editBtn ? (

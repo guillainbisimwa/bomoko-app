@@ -1,12 +1,31 @@
+import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, ScrollView } from "react-native";
-import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS, FONTS } from "../../constants";
 import { MaterialIcons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Settings = ({ navigation }) => {
+  const [token, setToken] = useState(null);
+
+  useEffect(() => {
+    const getTokenFromAsyncStorage = async () => {
+      try {
+        const storedToken = await AsyncStorage.getItem('user');
+        setToken(storedToken);
+        
+      } catch (error) {
+        // Handle AsyncStorage read error if needed
+        console.error('Error reading token from AsyncStorage:', error);
+      }
+    };
+
+    getTokenFromAsyncStorage();
+    console.log("ok", JSON.parse(token)?.user?.user != undefined);
+  },[]);
+
   const navigateToEditProfile = () => {
-    navigation.navigate("EditProfile");
+    navigation.navigate("EditProfile");//  JSON.parse(token)?.user?.user?.userId == route.params.userId?
   };
 
   const navigateToSecurity = () => {
@@ -64,6 +83,7 @@ const Settings = ({ navigation }) => {
       icon: "person-outline",
       text: "Modifier votre Profile",
       action: navigateToEditProfile,
+      conected: JSON.parse(token)?.user?.user != undefined
     },
     { icon: "security", text: "Sécurité", action: navigateToSecurity },
 
@@ -97,7 +117,11 @@ const Settings = ({ navigation }) => {
     { icon: "logout", text: "Déconnexion", action: logout },
   ];
 
-  const renderSettingsItem = ({ icon, text, action }) => (
+  const renderSettingsItem = ({ icon, text, action, conected=true}) => {
+  if (!conected) {
+    return
+  }
+  return (
     <TouchableOpacity
       onPress={action}
       style={{
@@ -119,8 +143,8 @@ const Settings = ({ navigation }) => {
       >
         {text}{" "}
       </Text>
-    </TouchableOpacity>
-  );
+    </TouchableOpacity>)
+  };
 
   return (
     <SafeAreaView

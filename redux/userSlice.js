@@ -28,13 +28,18 @@ export const signUpUser = createAsyncThunk(
     mobile,
     username,
     password,
-    role}) => {
+    cover_url, 
+    profile_pic,
+    role
+  }) => {
     const response = await axios.post( BASE_URL +'auth/signup', {
       name,
       email,
       mobile,
       username,
       password,
+      cover_url, 
+      profile_pic,
       role
     });
     console.log("Signup---?????? ",response.data);
@@ -43,13 +48,40 @@ export const signUpUser = createAsyncThunk(
   }
 );
 
+
+export const editUser = createAsyncThunk(
+  "user/edit",
+  async ({
+    id,
+    name,
+    email,
+    mobile,
+    username,
+    password,
+    cover_url, 
+    profile_pic,
+    role
+  }) => {
+    const url = `${BASE_URL}auth/${id}`; // Concatenate ID to the base URL
+    const response = await axios.put(url, { // Use PUT request for updating
+      name,
+      email,
+      mobile,
+      username,
+      password,
+      cover_url, 
+      profile_pic,
+      role
+    });
+    console.log("Edit---?????? ",response.data);
+    
+    return response.data;
+  }
+);
+
 export const loadInitialUser = async () => {
   try {
     const storedUser = await AsyncStorage.getItem('user');
-    console.log("------------------------------------------------------");
-    console.log("");
-    console.log("storedUser-?", storedUser);
-    console.log("");
 
     return storedUser ? JSON.parse(storedUser) : null;
   } catch (error) {
@@ -130,6 +162,27 @@ const userSlice = createSlice({
         //AsyncStorage.setItem('user', JSON.stringify({ user: action.payload }));
       })
       .addCase(signUpUser.rejected, (state, action) => {
+        console.log("bree *************** ",action.error);
+        state.isLoadingSignUp = false;
+        state.errorSignUp = action.error.message;
+        state.successSignUp = false
+      })
+      .addCase(editUser.pending, (state) => {
+        state.isLoadingSignUp = true;
+        state.errorSignUp = null;
+        state.successSignUp = false
+
+      })
+      .addCase(editUser.fulfilled, (state, action) => {
+        state.isLoadingSignUp= false;
+        state.userSignUp = action.payload;
+        state.errorSignUp = null;
+        state.successSignUp = true
+
+        // Store user data to LocalStorage
+        //AsyncStorage.setItem('user', JSON.stringify({ user: action.payload }));
+      })
+      .addCase(editUser.rejected, (state, action) => {
         console.log("bree *************** ",action.error);
         state.isLoadingSignUp = false;
         state.errorSignUp = action.error.message;

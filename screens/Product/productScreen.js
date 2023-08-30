@@ -9,12 +9,11 @@ import LottieView from 'lottie-react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { FAB, IconButton, MD3Colors, ProgressBar, Button, Card, Modal, Menu, Divider, Provider, ActivityIndicator, Badge } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
-import { ImageBackground } from 'react-native';
+import { ImageBackground, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { loadInitialUser, logoutUser, setInitialUser } from '../../redux/userSlice';
 import { fetchProducts } from '../../redux/prodReducer';
 import NetInfo from "@react-native-community/netinfo";
-import { Alert } from 'react-native';
 
 
 const ProductScreen = ({ navigation, route }) => {
@@ -44,11 +43,9 @@ const ProductScreen = ({ navigation, route }) => {
       const initialUser = loadInitialUser();
       if (initialUser) {
         // Dispatch the action using extraReducers
-        console.log("Ok");
         dispatch(setInitialUser(initialUser));
       }
     //setActive(active == null? 'Tous':active);
-    console.log("products-------------------------", products);
     setProduct_serviceList([...products]);
     setProduct_serviceList([...products].sort((a, b) => a.name - b.name));
     setBadgePanding(products.filter(product => 
@@ -62,10 +59,6 @@ const ProductScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     dispatch(fetchProducts());
-    console.log("Eror ****", error);
-    console.log("produx", products.length);
-    //setActive('Tous');
-    // onRefresh();
 
     const getTokenFromAsyncStorage = async () => {
       try {
@@ -106,10 +99,6 @@ const ProductScreen = ({ navigation, route }) => {
     borderRadius: 10,
     alignSelf: 'center',
   };
-
-  // console.log(products, 'ok---------------------------------------');
-  //console.log(JSON.stringify(products), 'ok---------------------------------------');
-
 
   const onSearch = (text) => {
     setProduct_serviceList([
@@ -193,7 +182,7 @@ const ProductScreen = ({ navigation, route }) => {
         </Block>
 
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {products.slice(-2).reverse().map((prod, index) => {
+          {products.slice(-8).reverse().map((prod, index) => {
             const key = `${prod._id}_${index}`;
 
             const startDate = new Date(prod.startDate);
@@ -202,7 +191,11 @@ const ProductScreen = ({ navigation, route }) => {
             const startDateFinal = `${startDate.getDate()}/${startDate.getMonth() + 1}/${startDate.getFullYear().toString().substr(-2)}`;
             const endDateFinal = `${endDate.getDate()}/${endDate.getMonth() + 1}/${endDate.getFullYear().toString().substr(-2)}`;
 
+             const invest = ((prod.initialAmount + prod.membres
+            .filter(member => member.contribution_status === "ACCEPTED")
+            .reduce((sum, member) => sum + member.contribution_amount, 0)) * 100 / prod.amount).toFixed(0);
 
+            console.log(invest);
             return (
               <TouchableOpacity
                 key={key}
@@ -252,12 +245,15 @@ const ProductScreen = ({ navigation, route }) => {
                    
                     <Block row center space="between">
                       <ProgressBar
-                        progress={0}
+                        progress={invest/100}
                         color={MD3Colors.error50}
                         style={{ width: SIZES.width /1.8, height: SIZES.base }}
+                        animatedValue={invest/100}
+                        visible
+                        
                       />
                       <Text numberOfLines={1} semibold size={19} style={{ marginLeft: 20 }}>
-                        0%
+                      {invest}%
                       </Text>
                     </Block>
                   </Block>
@@ -269,7 +265,7 @@ const ProductScreen = ({ navigation, route }) => {
                       style={[styles.cat, { backgroundColor: COLORS.primary }]}
                     >
                       <Text white bold size={12}>
-                        0
+                        {invest}%
                       </Text>
                       <Text white bold numberOfLines={1}>
                         Realisation
@@ -282,7 +278,7 @@ const ProductScreen = ({ navigation, route }) => {
                       style={[styles.cat, { backgroundColor: COLORS.purple }]}
                     >
                       <Text white bold size={12}>
-                      {prod.membres.length}
+                      {prod.membres.length + 1}
                       </Text>
                       <Text white bold numberOfLines={1}>
                         Membres
@@ -396,15 +392,15 @@ const ProductScreen = ({ navigation, route }) => {
             //console.log("Token --",JSON.parse(token).user.user.username);
             console.log('UserJ --', user?._j?.user?.user?.username);
             console.log('User --', user?._j);
-            navigation.navigate('ShoppingCard', {
-              prodServ : products.filter(product => 
-                product.status === "PENDING" && 
-                (
-                  product.owner._id === JSON.parse(token)?.user?.user?.userId || 
-                  product.membres.some(member => member.user._id === JSON.parse(token)?.user?.user?.userId && member.admission_req === "PENDING")
-                )
-            )
-            });
+            // navigation.navigate('ShoppingCard', {
+            //   prodServ : products.filter(product => 
+            //     product.status === "PENDING" && 
+            //     (
+            //       product.owner._id === JSON.parse(token)?.user?.user?.userId || 
+            //       product.membres.some(member => member.user._id === JSON.parse(token)?.user?.user?.userId && member.admission_req === "PENDING")
+            //     )
+            // )
+            // });
           }}
         >
           <Image
@@ -433,19 +429,32 @@ const ProductScreen = ({ navigation, route }) => {
             style={{  justifyContent: 'center', width: 40 }}
             onPress={openMenu}
           >
-            <LottieView
-            style={{width: 40, marginTop: 0, 
-              }}
-            source={require('./../../assets/json/animation_lksuvej7.json')}
-            autoPlay
-            loop
-          />
+            {user?._j?.user?.user?.profile_pic ? (
+        <Image
+          source={{ uri: user?._j?.user?.user?.profile_pic }}
+          style={{ width: 40, height: 40, borderRadius:20, borderWidth:1,
+             elevation:3, borderColor: COLORS.white}}
+        />
+      ) : (
+        <LottieView
+          style={{
+            width: 40,
+            marginTop: 0,
+          }}
+          source={require('./../../assets/json/animation_lksuvej7.json')}
+          autoPlay
+          loop
+        />
+      )}
           </TouchableOpacity>
           }>
           <Menu.Item leadingIcon="account" onPress={() => {
-            console.log("Token --",JSON.parse(token).user.user.username);
+            console.log("Token --",JSON.parse(token).user.user);
             //console.log('User --', user.user.username);
             console.log('User --', user['_j']?.user?.user?.username);
+            navigation.navigate('Profile', {
+              userId: JSON.parse(token)?.user?.user?.userId
+            })
 
           }}
            title={user['_j']?.user?.user?.username} />

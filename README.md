@@ -21,7 +21,7 @@ Additional description about the project and its features.
 
 ## Links
 
-[Play store](https://play.google.com/store/apps/details?id=com.wezalab.bomoko), 
+[Play store](https://play.google.com/store/apps/details?id=com.wezalab.bomoko4), 
 [Official website](http://bomoko-app.com/)
 
 ## Getting Started

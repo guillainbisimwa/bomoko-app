@@ -7,28 +7,36 @@ import NetInfo from "@react-native-community/netinfo";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 
-import LottieView from 'lottie-react-native';
 import { COLORS, FONTS } from '../../../constants';
-import { signUpUser } from '../../../redux/userSlice';
+import { editUser } from '../../../redux/userSlice';
 
 const { height, width } = Dimensions.get('window');
 
-export const SignUpForm = ({ navigation }) => {
+export const EditProfileForm = ({ navigation, route }) => {
   const dispatch = useDispatch();
+
+  console.log("");
+  console.log("", route?.params?.user);
+  console.log("");
+  // {"__v": 0, "_id": "64c96038e199bcbfe1e02654",
+  //  "email": "Gb@test.com", "mobile": "0987654321", 
+  //  "name": "Gb", "password": ", "role": "user", "status": "PENDING", "username": "Gb"}
+
 
   const { errorSignUp, isLoadingSignUp, successSignUp, userSignUp } = useSelector((state) => state.user);
   const [loadPic, setLoadPic] = useState(false);
+  const [onSuccess, setOnSuccess] = useState(false);
 
-  const [name, setNom] = useState('');
+  const [name, setNom] = useState(route?.params?.user.name);
   const [password, setPassword] = useState('');
 
-  const [email, setEmail] = useState('');
-  const [mobile, setMobile] = useState('');
+  const [email, setEmail] = useState( route?.params?.user.email);
+  const [mobile, setMobile] = useState( route?.params?.user.mobile);
   const [role, setRole] = useState('user');
 
   const [visible, setVisible] = useState(false);
 
-  const [selectedImage, setSelectedImage] = useState('');
+  const [selectedImage, setSelectedImage] = useState( route?.params?.user?.profile_pic);
 
   const onToggleSnackBar = () => setVisible(!visible);
 
@@ -37,7 +45,14 @@ export const SignUpForm = ({ navigation }) => {
   // Use useEffect or any other method to handle the success state and display the alert
     useEffect(() => {
       console.log("userSignUp", userSignUp);
-      if (successSignUp) {
+        // Fetch user details from API
+        const netInfo = NetInfo.fetch();
+        // console.log("netInfo.isConnected", netInfo.isConnected);
+        if (!netInfo.isConnected) {
+          Alert.alert("Pas de connexion Internet", "Veuillez vérifier votre connexion Internet et réessayer.");
+          return;
+        }
+      if (onSuccess) {
         // Alert.alert("Success", "Login successful!");
         navigation.navigate('LoginScreen'); 
       }
@@ -58,7 +73,8 @@ const handleSignUp = async () => {
     }
 
     // Handle login functionality
-    dispatch(signUpUser({
+    dispatch(editUser({
+      id: route?.params?.user._id,
       username:name,
       name,
       password,
@@ -67,11 +83,12 @@ const handleSignUp = async () => {
       role,
       cover_url:'', 
       profile_pic: selectedImage
-    }))
-    //dispatch(loginUser({username:"bvenceslas", password: "1234567890"}))
+    }));
+
+    setOnSuccess(true);
  
   } catch (error) {
-    Alert.alert("Attention", "Error occurred during login.");
+    Alert.alert("Attention", "Une erreur est survenue.");
 
     console.error("Error occurred during login:", error);
   }
@@ -150,12 +167,7 @@ const onCloudinarySaveCb = async (base64Img) => {
         blurRadius={10}
       ></ImageBackground>
       <View style={styles.contentContainer}>
-        {/* <LottieView
-          style={styles.animation}
-          source={require('../../../assets/json/animation_lks5mkix.json')}
-          autoPlay
-          loop
-        /> */}
+     
         <View
           style={{
             alignItems: "center",
@@ -259,6 +271,7 @@ const styles = StyleSheet.create({
   scrollContainer: {
     flexGrow: 1,
     paddingBottom: 20,
+    paddingTop: 20,
   },
   animation: {
     width: 300,

@@ -14,7 +14,7 @@ export const sports_icon = require('../assets/icons/sports_icon.png');
 export const up_arrow = require('../assets/icons/up_arrow.png');
 export const search = require('../assets/icons/search.png');
 export const app_icon = require('../assets/app-icon.png');
-export const expense = require('../assets/icons/expense.png'); // d
+export const expense = require('../assets/icons/expense.png'); 
 export const income = require('../assets/icons/income.png');
 
 export const grant = require('../assets/icons/icons8-grant-50.png');

@@ -18,12 +18,12 @@ import { COLORS, icons } from './constants';
 import Details from './screens/Product/Details';
 import AddProduct from './screens/Product/AddProduct';
 import { loginSuccess } from './redux/authReducer';
-import { SignUpScreen } from './screens/SignUpScreen';
+import { EditProfile, SignUpScreen } from './screens/SignUpScreen';
 import { loadInitialUser, logoutUser, setInitialUser } from './redux/userSlice';
 import EditProduct from './screens/Product/EditProduct';
 import ShowImages from './screens/Product/ShowImages';
 import ShoppingCard from './screens/ShoppingCard/ShoppingCard';
-import { AideEtSupport, DataSecurityScreen, LanguageSelectionScreen, Privacy, ReportProblemScreen, UseCondition } from './screens/Settings';
+import { AideEtSupport, DataSecurityScreen, DetailsByUser, LanguageSelectionScreen, Privacy, Profile, ReportProblemScreen, UseCondition } from './screens/Settings';
 
 const theme = {
   ...DefaultTheme,
@@ -245,7 +245,6 @@ const App = () => {
             options={{
               headerShown: false,
               initialParams: { guy: "l" }, // Pass the value as initialParams
-              
             }}
           />
           <Stack.Screen name="Income" component={Income} options={{ title: 'Crédit (Entrée)' }} />
@@ -261,15 +260,24 @@ const App = () => {
           <Stack.Screen name="UseCondition" component={UseCondition} options={{ title: "Condition d'utilisation" }} />
           <Stack.Screen name="ReportProblemScreen" component={ReportProblemScreen} options={{ title: "Signaler un problème" }} />
           <Stack.Screen name="LanguageSelectionScreen" component={LanguageSelectionScreen} options={{ title: "Choisissez une Langue" }} />
+          <Stack.Screen name="DetailsByUser" component={DetailsByUser}
+           options={{ title: '' , headerShown: true}}/>
+
+
+          <Stack.Screen name="EditProfile" component={EditProfile} options={{
+            headerShown: false,
+          }}/>
           
+          <Stack.Screen name="Profile" component={Profile} options={{ title: "Profile" }} />
           
           <Stack.Screen name="LoginScreen" component={LoginScreen} options={{
               headerShown: false,
             }}/>
 
-            <Stack.Screen name="SignUpScreen" component={SignUpScreen} options={{
-              headerShown: false,
-            }}/>
+          <Stack.Screen name="SignUpScreen" component={SignUpScreen} options={{
+            headerShown: false,
+          }}/>
+
           <Stack.Screen name="AuthScreen" component={AuthScreen} options={{
               headerShown: false,
             }}/>
