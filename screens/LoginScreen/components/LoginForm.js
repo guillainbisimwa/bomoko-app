@@ -16,8 +16,8 @@ export const LoginForm = ({ navigation }) => {
 
   const { error, isLoading, success, user } = useSelector((state) => state.user);
 
-  const [name, setNom] = useState('Gb');
-  const [password, setPassword] = useState('Gb');
+  const [name, setNom] = useState('');
+  const [password, setPassword] = useState('');
 
   const [visible, setVisible] = useState(false);
   const [visibleSuccess, setVisibleSuccess] = useState(false);

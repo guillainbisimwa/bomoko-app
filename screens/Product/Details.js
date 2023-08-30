@@ -1125,9 +1125,6 @@ const Details = ({ route, navigation }) => {
               route.params.food.owner._id == JSON.parse(token)?.user?.user?.userId?
               renderFAaddCout(): <></>
             }
-            {
-              renderFAaddCout()
-            }
           </Block>
         </BottomSheet>
         
