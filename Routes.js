@@ -254,6 +254,7 @@ const App = () => {
           <Stack.Screen name="EditProduct" component={EditProduct} options={{ title: 'Modifier Produit' }} />
           <Stack.Screen name="ShowImages" component={ShowImages} options={{ title: 'Images' }} />
           <Stack.Screen name="ShoppingCard" component={ShoppingCard} options={{ title: 'Panier' }} />
+          
           <Stack.Screen name="Privacy" component={Privacy} options={{ title: 'Politique de Confidentialité' }} />
           <Stack.Screen name="DataSecurityScreen" component={DataSecurityScreen} options={{ title: 'Sécurité des Données' }} />
           <Stack.Screen name="AideEtSupport" component={AideEtSupport} options={{ title: 'Aide et Support' }} />
