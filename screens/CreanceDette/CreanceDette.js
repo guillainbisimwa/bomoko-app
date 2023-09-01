@@ -119,16 +119,16 @@ const Route1 = () => (
   <ScrollView style={{ flex: 1 , paddingHorizontal:5, paddingVertical:10,
    backgroundColor: 'transparent'}}>
     <View style={styles.card}>
-      <Text>Grpupe des vendeuses Marche ALANINE</Text>
-      <Text>2 membres</Text>
-      <Text>Un groupe solidaire pour aider les revendeurs des habits d'ocasion 
+      <Text style={styles.bold}>Groupe des vendeuses Marche ALANINE</Text>
+      <Text style={styles.small}>Debute le 20 janv 2024</Text>
+      <Text numberOfLines={2}>Un groupe solidaire pour aider les revendeurs des habits d'ocasion 
         d'acheter directement en Europe et en Asie
       </Text>
       <Divider style={styles.div} />
 
-      <Text>Membres</Text>
+      <Text style={styles.boldGrey}>Membres</Text>
       <View style={styles.imgs}>
-        {[icons.shopping, icons.calendar, icons.shopping, icons.calendar, icons.shopping, icons.calendar].map((value, key) => (
+        {[icons.shopping, icons.calendar, icons.shopping, icons.calendar, icons.shopping, icons.calendar].slice(1,5).map((value, key) => (
           <Image
             key={key}
             source={value}
@@ -138,8 +138,9 @@ const Route1 = () => (
             ]}
           />
         ))}
-        {[icons.shopping, icons.calendar, icons.shopping, icons.calendar, icons.shopping, icons.calendar].length > 5 && (
-          <Text style={styles.moreImagesText}>+ {[icons.shopping, icons.calendar, icons.shopping, icons.calendar, icons.shopping, icons.calendar].length - 5} plus</Text>
+        {[icons.shopping, icons.calendar, icons.shopping, icons.calendar, icons.shopping, icons.calendar].length >= 5 && (
+          <Text style={styles.moreImagesText}>+ 
+          {[icons.shopping, icons.calendar, icons.shopping, icons.calendar, icons.shopping, icons.calendar].length - 4} plus</Text>
         )}
       </View>
 
@@ -149,10 +150,13 @@ const Route1 = () => (
         <Chip icon="information" elevated >status</Chip>
 
       </Block>
-      <Divider style={styles.div} />
-      <Block>
-        <Text>
-          
+      <Divider />
+        <Block row space="between" m_t={5} m_b={5}>
+        <Text style={styles.bold}>
+          200 $
+        </Text>
+        <Text style={styles.bold}>
+          Mensuel
         </Text>
       </Block>
 
@@ -179,7 +183,7 @@ const Route3 = () => (
 
     return <Block  style={styles.topMenu} >
       <View style={styles.myTopCard}>
-        <Text variant="titleMedium">Les associations villageoises d’épargne et de crédit (AVEC)</Text>
+        <Text variant="titleMedium">Associations villageoises d’épargne et de crédit (AVEC)</Text>
         <Text style={styles.text}>
         Gérez 
         vos épargnes, demandes des crédits et promouvoir la solidarité financière.
@@ -249,7 +253,6 @@ const styles = StyleSheet.create({
     marginVertical:10
   },
   img: {
-
     borderRadius: SIZES.base * 3,
     backgroundColor:COLORS.red,
     borderWidth:2,
@@ -259,14 +262,25 @@ const styles = StyleSheet.create({
     tintColor: COLORS.black,
   },
   card: {
-    backgroundColor: COLORS.white,
+    backgroundColor: COLORS.lightGray,
     padding:10,
     borderRadius:10,
     elevation:5
   },
   moreImagesText: {
-    justifyContent:'center',
-    alignContent: 'center'
+    flex:1,
+    alignSelf:'center', 
+    marginLeft:10
+  },
+  bold:{
+    fontWeight:'bold'
+  },
+  boldGrey:{
+    fontWeight:'bold',
+    color:COLORS.gray
+  },
+  small:{
+    fontSize:16
   }
 });
 
