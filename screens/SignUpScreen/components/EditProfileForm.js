@@ -205,14 +205,14 @@ const onCloudinarySaveCb = async (base64Img) => {
           </TouchableOpacity>
         </View>
         <TextInput error={errorSignUp} keyboardType="default" label="Nom d'utilisateur" value={name} onChangeText={setNom} style={styles.input} />
-        <TextInput
+        {/* <TextInput
           label="Mots de passe"
           value={password}
           onChangeText={setPassword}
           secureTextEntry
           style={styles.input}
           error={errorSignUp}
-        />
+        /> */}
 
         <TextInput error={errorSignUp} keyboardType="default" 
         label="E-mail" value={email} 

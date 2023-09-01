@@ -128,11 +128,10 @@ const Route1 = () => (
       <Block row center space="between">
       <ProgressBar
         progress={10}
-        color={MD3Colors.error50}
+        color={COLORS.purple}
         style={{ width: SIZES.width /1.8, height: SIZES.base }}
-        animatedValue={10}
+        animatedValue={0.1}
         visible
-        
       />
       <Text numberOfLines={1} semibold size={19} style={{ marginLeft: 20 }}>
       {10}%
@@ -236,8 +235,6 @@ const Route3 = () => (
 
       {topMenu()}
       
-    
-    
     </View>
     </Provider>
   );
