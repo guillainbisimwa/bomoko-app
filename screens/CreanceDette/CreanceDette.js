@@ -2,7 +2,7 @@ import React, {  useState } from 'react';
 import { Image, ScrollView, StyleSheet, TouchableOpacity, View, useWindowDimensions } from 'react-native';
 import { COLORS, FONTS, SIZES, icons } from '../../constants';
 
-import {Text, Provider, Badge, Divider } from 'react-native-paper';
+import {Text, Provider, Badge, Divider, Chip } from 'react-native-paper';
 import { ImageBackground } from 'react-native';
 import Block from '../Product/Block';
 import { SceneMap, TabBar, TabView } from 'react-native-tab-view';
@@ -24,6 +24,7 @@ const CreanceDette = ({ navigation, route }) => {
       {...props}
       indicatorStyle={{
         backgroundColor: COLORS.peach,
+        padding:3,
       }}
       style={{
         backgroundColor: COLORS.white,
@@ -117,7 +118,37 @@ const CreanceDette = ({ navigation, route }) => {
 const Route1 = () => (
   <ScrollView style={{ flex: 1 , paddingHorizontal:5, paddingVertical:10,
    backgroundColor: 'transparent'}}>
-    <Text>Test transparent</Text>
+    <View style={styles.card}>
+      <Text>Grpupe des vendeuses Marche ALANINE</Text>
+      <Text>2 membres</Text>
+      <Text>Un groupe solidaire pour aider les revendeurs des habits d'ocasion 
+        d'acheter directement en Europe et en Asie
+      </Text>
+      <Divider style={styles.div} />
+
+
+      <View style={styles.imgs}>
+        {[icons.shopping, icons.calendar].map((value, key) => (
+          <Image
+            key={key}
+            source={value}
+            style={[
+              styles.img,
+              { marginLeft: key > 0 ? -15 : 0 } 
+            ]}
+          />
+        ))}
+      </View>
+
+
+      <Block row p={10} space="between" >
+        <Chip icon="information" style={{backgroundColor: 'red', color: 'white'}}  elevated >status</Chip>
+        <Chip icon="information" elevated >status</Chip>
+
+      </Block>
+
+
+    </View>
   </ScrollView>
 );
 
@@ -139,7 +170,7 @@ const Route3 = () => (
 
     return <Block  style={styles.topMenu} >
       <View style={styles.myTopCard}>
-        <Text variant="headlineMedium">AVEC</Text>
+        <Text variant="titleMedium">Les associations villageoises d’épargne et de crédit (AVEC)</Text>
         <Text style={styles.text}>
         Gérez 
         vos épargnes, demandes des crédits et promouvoir la solidarité financière.
@@ -147,6 +178,7 @@ const Route3 = () => (
       </View>
       
       <Divider bold />
+
       <TabView
           navigationState={{ index, routes }}
           renderScene={SceneMap({
@@ -200,6 +232,29 @@ const styles = StyleSheet.create({
     borderTopEndRadius: 10,
     borderTopStartRadius: 10
   },
+  imgs: {
+    flexDirection: 'row',
+    marginVertical:10,
+  },
+  div:{
+    marginVertical:10
+  },
+  img: {
+
+    borderRadius: SIZES.base * 3,
+    backgroundColor:COLORS.red,
+    borderWidth:2,
+    borderColor: COLORS.purple,
+    width: SIZES.base * 5,
+    height: SIZES.base * 5,
+    tintColor: COLORS.black,
+  },
+  card: {
+    backgroundColor: COLORS.white,
+    padding:10,
+    borderRadius:10,
+    elevation:5
+  }
 });
 
 export default CreanceDette;
