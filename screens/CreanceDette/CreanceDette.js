@@ -126,18 +126,21 @@ const Route1 = () => (
       </Text>
       <Divider style={styles.div} />
 
-
+      <Text>Membres</Text>
       <View style={styles.imgs}>
-        {[icons.shopping, icons.calendar].map((value, key) => (
+        {[icons.shopping, icons.calendar, icons.shopping, icons.calendar, icons.shopping, icons.calendar].map((value, key) => (
           <Image
             key={key}
             source={value}
             style={[
               styles.img,
-              { marginLeft: key > 0 ? -15 : 0 } 
+              key > 0 && { marginLeft: -15 }, // Apply negative margin for images after the first one
             ]}
           />
         ))}
+        {[icons.shopping, icons.calendar, icons.shopping, icons.calendar, icons.shopping, icons.calendar].length > 5 && (
+          <Text style={styles.moreImagesText}>+ {[icons.shopping, icons.calendar, icons.shopping, icons.calendar, icons.shopping, icons.calendar].length - 5} plus</Text>
+        )}
       </View>
 
 
@@ -145,6 +148,12 @@ const Route1 = () => (
         <Chip icon="information" style={{backgroundColor: 'red', color: 'white'}}  elevated >status</Chip>
         <Chip icon="information" elevated >status</Chip>
 
+      </Block>
+      <Divider style={styles.div} />
+      <Block>
+        <Text>
+          
+        </Text>
       </Block>
 
 
@@ -254,6 +263,10 @@ const styles = StyleSheet.create({
     padding:10,
     borderRadius:10,
     elevation:5
+  },
+  moreImagesText: {
+    justifyContent:'center',
+    alignContent: 'center'
   }
 });
 
