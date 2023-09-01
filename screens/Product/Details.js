@@ -1107,7 +1107,7 @@ const Details = ({ route, navigation }) => {
               Il permet de prendre en compte tous les éléments de coût associés à la fabrication,
               l'achat ou la prestation d'un bien ou d'un service.
             </Text>
-            <Block style={styles.card}>
+            <View style={[styles.card,{ marginBottom: route.params.food.owner._id == JSON.parse(token)?.user?.user?.userId? 190 : 100} ]}>
               <ScrollView
                 //ref={scrollRef}
                 contentContainerStyle={styles.scrollContentContainer}
@@ -1120,11 +1120,12 @@ const Details = ({ route, navigation }) => {
                     totAmount={totAmount} handleUpdateItem={handleUpdateItem} handleTrash={handleTrash} currency={route.params.food.currency} key={index} item={food} count={index + 1} />;
                   })}
               </ScrollView>
-            </Block>
+            </View>
             {
               route.params.food.owner._id == JSON.parse(token)?.user?.user?.userId?
               renderFAaddCout(): <></>
             }
+           
           </Block>
         </BottomSheet>
         
@@ -1359,7 +1360,6 @@ const styles = StyleSheet.create({
     padding: 10,
     elevation: 5,
     position: 'relative',
-    //top: SIZES.height - 120,
     margin: SIZES.base * 2,
     borderRadius: 10,
     width: '90%',
@@ -1385,11 +1385,9 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   card: {
-    backgroundColor: '#fff',
-    height: '70%',
+    backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingBottom: 60
   },
   bottomSheetContainer: {
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
@@ -1398,7 +1396,8 @@ const styles = StyleSheet.create({
   bottomSheetContent: {
     backgroundColor: 'white',
     padding: 16,
-    //height: 250,
+    height: '88%',
+    
   },
   bottomSheetTitle: {
     fontSize: 20,
