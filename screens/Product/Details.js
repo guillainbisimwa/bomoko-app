@@ -1391,7 +1391,6 @@ const styles = StyleSheet.create({
   },
   bottomSheetContainer: {
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    //height: 200,
   },
   bottomSheetContent: {
     backgroundColor: 'white',
