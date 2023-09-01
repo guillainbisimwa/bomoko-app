@@ -1,15 +1,44 @@
 import React, {  useState } from 'react';
-import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, TouchableOpacity, View, useWindowDimensions } from 'react-native';
 import { COLORS, FONTS, SIZES, icons } from '../../constants';
 
 import {Text, Provider, Badge, Divider } from 'react-native-paper';
 import { ImageBackground } from 'react-native';
 import Block from '../Product/Block';
-
+import { SceneMap, TabBar, TabView } from 'react-native-tab-view';
 
 
 const CreanceDette = ({ navigation, route }) => {
   const [ badgePanding, setBadgePanding ] = useState(0);
+  const layout = useWindowDimensions();
+  const [index, setIndex] = useState(0);
+
+  const [routes, SetRoutes] = useState([
+    { key: "first", title: `Route1`},
+    { key: "second", title: `Route2` },
+    { key: "third", title: "Route3" },
+  ]);
+
+  const renderTabBar = (props) => (
+    <TabBar
+      {...props}
+      indicatorStyle={{
+        backgroundColor: COLORS.peach,
+      }}
+      style={{
+        backgroundColor: COLORS.white,
+        padding: 10,
+        borderRadius:10,
+        marginTop: -5
+      }}
+      renderLabel={({ focused, route }) => (
+        <Text  style={[{ color: focused ? COLORS.black : COLORS.gray }]}>
+          {route.title}
+        </Text>
+      )}
+    />
+  );
+
  
   function renderNavBar() {
     return (
@@ -84,18 +113,51 @@ const CreanceDette = ({ navigation, route }) => {
     );
   }
 
+
+const Route1 = () => (
+  <ScrollView style={{ flex: 1 , paddingHorizontal:5, paddingVertical:10,
+   backgroundColor: 'transparent'}}>
+    <Text>Test transparent</Text>
+  </ScrollView>
+);
+
+const Route2 = () => (
+  <ScrollView style={{ flex: 1 , paddingHorizontal:5, paddingVertical:10, 
+  backgroundColor: 'transparent'}}>
+    <Text>Test</Text>
+  </ScrollView>
+);
+
+const Route3 = () => (
+  <ScrollView style={{ flex: 1 , paddingHorizontal:5, paddingVertical:10, 
+  backgroundColor: 'transparent'}}>
+    <Text>Test</Text>
+  </ScrollView>
+);
+
   const topMenu = () => {
 
-    return <Block card style={styles.topMenu} >
-      <Text variant="headlineMedium">AVEC</Text>
-
-      <Text style={styles.text}>
-        Ici le contenue et la definiotion d'Un AVEC
-        Ici le contenue et la definiotion d'Un AVEC
-        Ici le contenue et la definiotion d'Un AVEC
-      </Text>
-      <Divider/>
-
+    return <Block  style={styles.topMenu} >
+      <View style={styles.myTopCard}>
+        <Text variant="headlineMedium">AVEC</Text>
+        <Text style={styles.text}>
+        Gérez 
+        vos épargnes, demandes des crédits et promouvoir la solidarité financière.
+        </Text>
+      </View>
+      
+      <Divider bold />
+      <TabView
+          navigationState={{ index, routes }}
+          renderScene={SceneMap({
+            first: Route1,
+            second: Route2,
+            third: Route3,
+          })}
+          onIndexChange={setIndex}
+          initialLayout={{ width: layout.width }}
+          renderTabBar={renderTabBar}
+        />
     </Block>
   }
 
@@ -113,6 +175,7 @@ const CreanceDette = ({ navigation, route }) => {
       {renderNavBar()}
 
       {topMenu()}
+      
     
     
     </View>
@@ -125,12 +188,18 @@ const styles = StyleSheet.create({
   topMenu: {
     margin: 20,
     padding: 10,
-    elevation: 5,
+    //elevation: 5,
+    flex: 1
   },
   text: {
     marginBottom:10
-  }
-
+  },
+  myTopCard:{
+    backgroundColor: COLORS.white,
+    padding: 10,
+    borderTopEndRadius: 10,
+    borderTopStartRadius: 10
+  },
 });
 
 export default CreanceDette;
