@@ -2,7 +2,7 @@ import React, {  useState } from 'react';
 import { Image, ScrollView, StyleSheet, TouchableOpacity, View, useWindowDimensions } from 'react-native';
 import { COLORS, FONTS, SIZES, icons } from '../../constants';
 
-import {Text, Provider, Badge, Divider, Chip } from 'react-native-paper';
+import {Text, Provider, Badge, Divider, Chip, MD3Colors, ProgressBar } from 'react-native-paper';
 import { ImageBackground } from 'react-native';
 import Block from '../Product/Block';
 import { SceneMap, TabBar, TabView } from 'react-native-tab-view';
@@ -118,13 +118,26 @@ const CreanceDette = ({ navigation, route }) => {
 const Route1 = () => (
   <ScrollView style={{ flex: 1 , paddingHorizontal:5, paddingVertical:10,
    backgroundColor: 'transparent'}}>
-    <View style={styles.card}>
-      <Text style={styles.bold}>Groupe des vendeuses Marche ALANINE</Text>
+    <TouchableOpacity style={styles.card}>
+      <Text numberOfLines={1} style={styles.bold}>Groupe des vendeuses Marche ALANINE</Text>
       <Text style={styles.small}>Debute le 20 janv 2024</Text>
-      <Text numberOfLines={2}>Un groupe solidaire pour aider les revendeurs des habits d'ocasion 
+      <Text numberOfLines={2} style={styles.normal}>Un groupe solidaire pour aider les revendeurs des habits d'ocasion 
         d'acheter directement en Europe et en Asie
       </Text>
       <Divider style={styles.div} />
+      <Block row center space="between">
+      <ProgressBar
+        progress={10}
+        color={MD3Colors.error50}
+        style={{ width: SIZES.width /1.8, height: SIZES.base }}
+        animatedValue={10}
+        visible
+        
+      />
+      <Text numberOfLines={1} semibold size={19} style={{ marginLeft: 20 }}>
+      {10}%
+      </Text>
+    </Block>
 
       <Text style={styles.boldGrey}>Membres</Text>
       <View style={styles.imgs}>
@@ -159,23 +172,25 @@ const Route1 = () => (
           Mensuel
         </Text>
       </Block>
-
-
-    </View>
+    </TouchableOpacity>
   </ScrollView>
 );
 
 const Route2 = () => (
   <ScrollView style={{ flex: 1 , paddingHorizontal:5, paddingVertical:10, 
   backgroundColor: 'transparent'}}>
-    <Text>Test</Text>
+   <Route1/>
   </ScrollView>
 );
 
 const Route3 = () => (
   <ScrollView style={{ flex: 1 , paddingHorizontal:5, paddingVertical:10, 
   backgroundColor: 'transparent'}}>
-    <Text>Test</Text>
+       <Route1/>
+       <Route1/>
+       <Route1/>
+       <Route1/>
+
   </ScrollView>
 );
 
@@ -277,10 +292,16 @@ const styles = StyleSheet.create({
   },
   boldGrey:{
     fontWeight:'bold',
-    color:COLORS.gray
+    color:COLORS.gray,
+    textTransform: 'uppercase'
   },
   small:{
-    fontSize:16
+    fontSize:13,
+    color:COLORS.peach
+  },
+  normal:{
+    color:COLORS.gray,
+    marginTop: 10
   }
 });
 
