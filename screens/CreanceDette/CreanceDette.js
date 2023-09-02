@@ -1,14 +1,58 @@
-import React, {  useState } from 'react';
-import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
+import React, {  useEffect, useState } from 'react';
+import { Image, ScrollView, StyleSheet, TouchableOpacity, View, useWindowDimensions } from 'react-native';
 import { COLORS, FONTS, SIZES, icons } from '../../constants';
 
-import {Text, Provider, Badge } from 'react-native-paper';
+import {Text, Provider, Badge, Divider, Chip, MD3Colors, ProgressBar, ActivityIndicator } from 'react-native-paper';
 import { ImageBackground } from 'react-native';
-
+import Block from '../Product/Block';
+import { SceneMap, TabBar, TabView } from 'react-native-tab-view';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchAvecs } from '../../redux/avecReducer';
 
 
 const CreanceDette = ({ navigation, route }) => {
   const [ badgePanding, setBadgePanding ] = useState(0);
+  const layout = useWindowDimensions();
+  const [index, setIndex] = useState(0);
+
+  const [routes, SetRoutes] = useState([
+    { key: "first", title: `Route1`},
+    { key: "second", title: `Route2` },
+    { key: "third", title: "Route3" },
+  ]);
+
+  const dispatch = useDispatch();
+  const avecs = useSelector((state) => state.avecs); // Replace 'avecs' with your slice name
+
+  useEffect(() => {
+    // Dispatch the fetchAvecs async thunk when the component mounts
+    dispatch(fetchAvecs());
+    console.log();
+    console.log("avecmpi ", avecs);
+  }, [dispatch]); // Make sure to include dispatch in the dependency array
+
+
+  const renderTabBar = (props) => (
+    <TabBar
+      {...props}
+      indicatorStyle={{
+        backgroundColor: COLORS.peach,
+        padding:3,
+      }}
+      style={{
+        backgroundColor: COLORS.white,
+        padding: 10,
+        borderRadius:10,
+        marginTop: -5
+      }}
+      renderLabel={({ focused, route }) => (
+        <Text  style={[{ color: focused ? COLORS.black : COLORS.gray }]}>
+          {route.title}
+        </Text>
+      )}
+    />
+  );
+
  
   function renderNavBar() {
     return (
@@ -82,6 +126,146 @@ const CreanceDette = ({ navigation, route }) => {
       </View>
     );
   }
+
+
+  const Route1 = () => {
+    // Check if status is loading
+    if (avecs.status === 'loading') {
+      return (
+        // Render a loading indicator here
+        <ScrollView style={{ flex: 1 , paddingHorizontal:5, paddingVertical:10,
+          backgroundColor: 'transparent'}}>
+          <ActivityIndicator style={styles.activity} size="large" color='white'/>
+          </ScrollView>
+      );
+    }
+
+    return (
+  <ScrollView style={{ flex: 1 ,  paddingVertical:10,
+   backgroundColor: 'transparent'}}>
+    {
+      avecs?.avecs?.map((avec, key) => {
+
+        const date = new Date(avec.startDate);
+
+        // Create an options object for formatting the date
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        
+        // Format the date in French
+        const frenchDate = date.toLocaleDateString('fr-FR', options);
+        
+        // Calculate the number of days left to reach today's date
+        const today = new Date();
+        const timeDifference = date.getTime() - today.getTime();
+        const daysLeft = Math.ceil(timeDifference / (1000 * 3600 * 24));
+        
+        console.log('French Date:', frenchDate);
+        console.log('Days Left:', daysLeft);
+
+      return(
+        <TouchableOpacity style={styles.card} key={avec._id}>
+          <Text numberOfLines={1} style={styles.bold}>{avec.name}</Text>
+          <Text style={styles.small}>Debute {frenchDate}</Text>
+          <Text numberOfLines={2} style={styles.normal}>{avec.detail}</Text>
+          <Divider style={styles.div} />
+          <Block row center space="between">
+          <ProgressBar
+            progress={10}
+            color={COLORS.purple}
+            style={{ width: SIZES.width /1.8, height: SIZES.base }}
+            animatedValue={0.1}
+            visible
+          />
+          <Text numberOfLines={1} semibold size={19} style={{ marginLeft: 20 }}>
+          {10}%
+          </Text>
+        </Block>
+
+          <Text style={styles.boldGrey}>Membres</Text>
+          <View style={styles.imgs}>
+            {[avec?.membres].slice(0,4).map((value, key) => (
+              <Image
+                key={key}
+                source={{uri: 'https://images.pexels.com/photos/18165273/pexels-photo-18165273.jpeg'}} //value.profile_pic
+                style={[
+                  styles.img,
+                  key > 0 && { marginLeft: -15 }, // Apply negative margin for images after the first one
+                ]}
+              />
+            ))}
+            {[avec?.membres].length >= 5 && (
+              <Text style={styles.moreImagesText}>+ 
+              {[avec?.membres].length - 4} plus</Text>
+            )}
+          </View>
+
+
+          <Block row p={10} space="between" >
+            <Chip icon="information" style={{backgroundColor: 'red', color: 'white'}}  elevated >{avec?.status}</Chip>
+            <Chip icon="information" elevated >Dans {daysLeft} jours</Chip>
+
+          </Block>
+          <Divider />
+             <Block row space="between" m_t={5} m_b={5}>
+            <Text style={styles.bold}>
+              {avec?.amount} {avec?.currency} 
+            </Text>
+            <Text style={styles.bold}>
+              
+              Par {avec?.cycle.name} 
+            </Text>
+          </Block>
+        </TouchableOpacity>
+    )})}
+    
+  </ScrollView>
+  )};
+
+const Route2 = () => (
+  <ScrollView style={{ flex: 1 , paddingHorizontal:5, paddingVertical:10, 
+  backgroundColor: 'transparent'}}>
+   <Route1/>
+  </ScrollView>
+);
+
+const Route3 = () => (
+  <ScrollView style={{ flex: 1 , paddingHorizontal:5, paddingVertical:10, 
+  backgroundColor: 'transparent'}}>
+       <Route1/>
+       <Route1/>
+       <Route1/>
+       <Route1/>
+
+  </ScrollView>
+);
+
+  const topMenu = () => {
+
+    return <Block  style={styles.topMenu} >
+      <View style={styles.myTopCard}>
+        <Text variant="titleMedium">Associations villageoises d’épargne et de crédit (AVEC)</Text>
+        <Text style={styles.text}>
+        Gérez 
+        vos épargnes, demandes des crédits et promouvoir la solidarité financière.
+        </Text>
+      </View>
+      
+      <Divider bold />
+
+      <TabView
+          navigationState={{ index, routes }}
+          renderScene={SceneMap({
+            first: Route1,
+            second: Route2,
+            third: Route3,
+          })}
+          onIndexChange={setIndex}
+          initialLayout={{ width: layout.width }}
+          renderTabBar={renderTabBar}
+        />
+    </Block>
+  }
+
   
   return (
    
@@ -94,126 +278,75 @@ const CreanceDette = ({ navigation, route }) => {
     <View style={{ flex: 1 }}>
       {/* Nav bar section */}
       {renderNavBar()}
-   
-    
+
+      {topMenu()}
+      
     </View>
     </Provider>
   );
 };
 
 const styles = StyleSheet.create({
+
+  topMenu: {
+    margin: 20,
+    padding: 10,
+    //elevation: 5,
+    flex: 1
+  },
+  text: {
+    marginBottom:10
+  },
+  myTopCard:{
+    backgroundColor: COLORS.white,
+    padding: 10,
+    borderTopEndRadius: 10,
+    borderTopStartRadius: 10
+  },
+  imgs: {
+    flexDirection: 'row',
+    marginVertical:10,
+  },
+  div:{
+    marginVertical:10
+  },
   img: {
-    width: 50,
-    height: 50,
-    borderRadius: 50,
-    borderWidth: 4,
-    borderColor: COLORS.white,
+    borderRadius: SIZES.base * 3,
+    backgroundColor:COLORS.red,
+    borderWidth:2,
+    borderColor: COLORS.purple,
+    width: SIZES.base * 5,
+    height: SIZES.base * 5,
+    tintColor: COLORS.black,
   },
-  marginRight: {
-    marginRight: 5,
+  card: {
+    backgroundColor: COLORS.lightGray,
+    padding:15,
+    borderRadius:10,
+    elevation:5,
+    marginVertical:10
   },
-  input: {
-    width: '100%',
-    height: 55,
-    backgroundColor: COLORS.white,
-    borderRadius: 16,
-    paddingHorizontal: 44,
-    fontSize: 20,
+  moreImagesText: {
+    flex:1,
+    alignSelf:'center', 
+    marginLeft:10
   },
-  toggle: {
-    position: 'absolute',
-    top: 19,
-    left: 15,
+  bold:{
+    fontWeight:'bold'
   },
-  container: {
-    borderRadius: 16,
-    marginRight: 15,
-    width: SIZES.width - 100,
+  boldGrey:{
+    fontWeight:'bold',
+    color:COLORS.gray,
+    textTransform: 'uppercase'
   },
-  imgFood: {
-    width: '100%',
-    height: (SIZES.width - 100) / 2,
-    borderRadius: 16,
-    marginBottom: 10,
-    borderWidth:1,
-    borderColor: COLORS.gray
+  small:{
+    fontSize:13,
+    color:COLORS.peach
   },
-  info: {
-    backgroundColor: COLORS.grey,
-    padding: 7,
-    borderRadius: 10,
-  },
-  cat: {
-    //width: SIZES.width / 4 - 4,
-    width: '33%',
-    height: SIZES.width / 5,
-    marginRight: 2,
-    borderRadius: 10,
-    //backgroundColor: COLORS.purple,
-    elevation: 4,
-    padding: 5,
-  },
-  recommended: {
-    width: SIZES.width / 2.5,
-    marginRight: 15,
-    borderRadius: 10,
-    elevation: 2,
-    padding: 10,
-  },
-  imgRecommended: {
-    width: '100%',
-    height: SIZES.width / 4,
-    borderRadius: 10,
-    marginBottom: 5,
-  },
-  listContainer: {
-    borderRadius: 20,
-  },
-  tab: {
-    marginRight: 20,
-    paddingBottom: 5,
-  },
-  active: {
-    borderBottomColor: COLORS.peach,
-    borderBottomWidth: 5,
-    width: 30,
-    paddingBottom: 5,
-  },
-  current: {
-    color: COLORS.grey,
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  currentActive: {
-    color: COLORS.primary,
-  },
-  price: {
-    position: 'absolute',
-    zIndex: 100,
-    backgroundColor: COLORS.peach,
-    padding: 10,
-    borderRadius: 20,
-    elevation: 5,
-  },
-  like: {
-    position: 'absolute',
-    zIndex: 100,
-    backgroundColor: COLORS.white,
-    borderRadius: 25,
-    right: 0,
-    margin: SIZES.base * 2,
-  },
-  fab: {
-    position: 'absolute',
-    margin: 16,
-    //backgroundColor: '#ff0000',
-    right: 0,
-    bottom: 0,
-  },
-  animation: {
-    width: 50,
-    height: 50,
-  },
+  normal:{
+    color:COLORS.gray,
+    marginTop: 10
+  }
 });
 
 export default CreanceDette;

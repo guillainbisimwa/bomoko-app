@@ -5,6 +5,7 @@ import coutReducer from './coutReducer';
 import prodReducer from './prodReducer';
 import userSlice from './userSlice';
 import authReducer from './authReducer';
+import avecReducer from './avecReducer';
 
 export const store = configureStore({
   reducer: {
@@ -13,7 +14,8 @@ export const store = configureStore({
     app: appReducer,
     products: prodReducer,
     couts: coutReducer,
-    auth: authReducer
+    auth: authReducer,
+    avecs: avecReducer
   },
 });
 
