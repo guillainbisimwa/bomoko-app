@@ -139,15 +139,33 @@ const CreanceDette = ({ navigation, route }) => {
           </ScrollView>
       );
     }
-    
+
     return (
-  <ScrollView style={{ flex: 1 , paddingHorizontal:5, paddingVertical:10,
+  <ScrollView style={{ flex: 1 ,  paddingVertical:10,
    backgroundColor: 'transparent'}}>
     {
-      avecs?.avecs?.map((avec) => (
+      avecs?.avecs?.map((avec, key) => {
+
+        const date = new Date(avec.startDate);
+
+        // Create an options object for formatting the date
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        
+        // Format the date in French
+        const frenchDate = date.toLocaleDateString('fr-FR', options);
+        
+        // Calculate the number of days left to reach today's date
+        const today = new Date();
+        const timeDifference = date.getTime() - today.getTime();
+        const daysLeft = Math.ceil(timeDifference / (1000 * 3600 * 24));
+        
+        console.log('French Date:', frenchDate);
+        console.log('Days Left:', daysLeft);
+
+      return(
         <TouchableOpacity style={styles.card} key={avec._id}>
           <Text numberOfLines={1} style={styles.bold}>{avec.name}</Text>
-          <Text style={styles.small}>Debute {avec.startDate}</Text>
+          <Text style={styles.small}>Debute {frenchDate}</Text>
           <Text numberOfLines={2} style={styles.normal}>{avec.detail}</Text>
           <Divider style={styles.div} />
           <Block row center space="between">
@@ -184,7 +202,7 @@ const CreanceDette = ({ navigation, route }) => {
 
           <Block row p={10} space="between" >
             <Chip icon="information" style={{backgroundColor: 'red', color: 'white'}}  elevated >{avec?.status}</Chip>
-            <Chip icon="information" elevated >Dans 2 jours</Chip>
+            <Chip icon="information" elevated >Dans {daysLeft} jours</Chip>
 
           </Block>
           <Divider />
@@ -198,7 +216,7 @@ const CreanceDette = ({ navigation, route }) => {
             </Text>
           </Block>
         </TouchableOpacity>
-    ))}
+    )})}
     
   </ScrollView>
   )};
@@ -303,7 +321,7 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: COLORS.lightGray,
-    padding:10,
+    padding:15,
     borderRadius:10,
     elevation:5,
     marginVertical:10
