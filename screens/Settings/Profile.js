@@ -409,7 +409,7 @@ const ServiceRoutes = () => (
               Modifier le Profile 
           </Button>:
            <Button mode="contained">   
-              Contacter 
+              Suivre + 
           </Button>
          }
          

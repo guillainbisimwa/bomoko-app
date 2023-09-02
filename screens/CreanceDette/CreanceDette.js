@@ -183,7 +183,10 @@ const CreanceDette = ({ navigation, route }) => {
 
               <Text style={styles.boldGrey}>Membres</Text>
               <View style={styles.imgs}>
-                {avec?.membres.slice(0,3).map((value, key) => (
+                {avec?.membres.slice(0,5).map((value, key) =>{
+                  console.log();
+                  console.log(value.user);
+                  return(
                   <Image
                     key={key}
                     source={{uri: value?.user?.profile_pic}}
@@ -192,17 +195,18 @@ const CreanceDette = ({ navigation, route }) => {
                       key > 0 && { marginLeft: -15 }, // Apply negative margin for images after the first one
                     ]}
                   />
-                ))}
-                {avec?.membres.length >= 3 && (
+                )})}
+                {avec?.membres.length >= 5 && (
                   <Text style={styles.moreImagesText}>+ 
-                  {avec?.membres.length - 3} plus</Text>
+                  {avec?.membres.length - 5} plus</Text>
                 )}
               </View>
 
 
               <Block row p={10} space="between" >
-                <Chip icon="information" style={{backgroundColor: 'red', color: 'white'}}  elevated >{avec?.status}</Chip>
-                <Chip icon="information" elevated >Dans {daysLeft} jours</Chip>
+                <Chip icon="information"style={{backgroundColor: `${avec?.status=='PENDING'? '#ebebeb':'#5dbb63'}`}}
+                 elevated >{`${avec?.status=='PENDING'? 'En attente':'Validé'}`}</Chip>
+                <Chip  style={{backgroundColor: `${daysLeft<0? '#e3242b':'#ebebeb'}`}} icon="information" elevated >{daysLeft>0? `Dans ${daysLeft} jours`:`Retard`}</Chip>
 
               </Block>
               <Divider />
@@ -211,8 +215,7 @@ const CreanceDette = ({ navigation, route }) => {
                   {avec?.amount} {avec?.currency} 
                 </Text>
                 <Text style={styles.bold}>
-                  
-                  Par {avec?.cycle.name} 
+                  {avec?.cycle.name} 
                 </Text>
               </Block>
             </TouchableOpacity>
@@ -312,12 +315,12 @@ const styles = StyleSheet.create({
   },
   img: {
     borderRadius: SIZES.base * 3,
-    backgroundColor:COLORS.red,
+    backgroundColor:COLORS.white,
     borderWidth:2,
-    borderColor: COLORS.purple,
+    borderColor: COLORS.black,
     width: SIZES.base * 5,
     height: SIZES.base * 5,
-    tintColor: COLORS.black,
+    //tintColor: COLORS.black,
   },
   card: {
     backgroundColor: COLORS.lightGray,
@@ -336,7 +339,7 @@ const styles = StyleSheet.create({
   },
   boldGrey:{
     fontWeight:'bold',
-    color:COLORS.gray,
+    color: 'gray',
     textTransform: 'uppercase'
   },
   small:{
@@ -344,7 +347,7 @@ const styles = StyleSheet.create({
     color:COLORS.peach
   },
   normal:{
-    color:COLORS.gray,
+    color: 'gray',
     marginTop: 10
   }
 });
