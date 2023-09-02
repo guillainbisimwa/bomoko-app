@@ -186,7 +186,7 @@ const CreanceDette = ({ navigation, route }) => {
                 {avec?.membres.slice(0,3).map((value, key) => (
                   <Image
                     key={key}
-                    source={{uri: value.profile_pic}}
+                    source={{uri: value?.user?.profile_pic}}
                     style={[
                       styles.img,
                       key > 0 && { marginLeft: -15 }, // Apply negative margin for images after the first one

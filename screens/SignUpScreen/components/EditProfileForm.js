@@ -71,6 +71,32 @@ const handleSignUp = async () => {
       Alert.alert("Pas de connexion Internet", "Veuillez vérifier votre connexion Internet et réessayer.");
       return;
     }
+console.log("--------------------");
+console.log();
+console.log();
+console.log();
+console.log();
+console.log();
+console.log();
+    console.log({
+      id: route?.params?.user._id,
+      username:name,
+      name,
+      password,
+      email,
+      mobile,
+      role,
+      cover_url:'', 
+      profile_pic: selectedImage
+    });
+console.log();
+console.log();
+console.log();
+console.log();
+console.log();
+console.log();
+console.log("--------------------");
+
 
     // Handle login functionality
     dispatch(editUser({

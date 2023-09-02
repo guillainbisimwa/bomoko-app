@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, ScrollView } from 'react-native';
 
-const addAvec = ({ onAddAvec }) => {
+const AddAvec = ({ onAddAvec }) => {
   const [name, setName] = useState('Your AVEC Name');
   const [detail, setDetail] = useState('Details about your AVEC');
   const [amount, setAmount] = useState('1000');
@@ -187,4 +187,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default addAvec;
+export default AddAvec;

@@ -24,7 +24,7 @@ import EditProduct from './screens/Product/EditProduct';
 import ShowImages from './screens/Product/ShowImages';
 import ShoppingCard from './screens/ShoppingCard/ShoppingCard';
 import { AideEtSupport, DataSecurityScreen, DetailsByUser, LanguageSelectionScreen, Privacy, Profile, ReportProblemScreen, UseCondition } from './screens/Settings';
-import { DetailsAvec, addAvec } from './screens/CreanceDette';
+import { AddAvec, DetailsAvec } from './screens/CreanceDette';
 
 const theme = {
   ...DefaultTheme,
@@ -265,7 +265,7 @@ const App = () => {
           <Stack.Screen name="DetailsByUser" component={DetailsByUser}
            options={{ title: '' , headerShown: true}}/>
 
-          <Stack.Screen name="addAvec" component={addAvec}
+          <Stack.Screen name="addAvec" component={AddAvec}
            options={{ title: '' , headerShown: true}}/>
 
           <Stack.Screen name="DetailsAvec" component={DetailsAvec}
