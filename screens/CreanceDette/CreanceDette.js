@@ -163,7 +163,7 @@ const CreanceDette = ({ navigation, route }) => {
         console.log('Days Left:', daysLeft);
 
       return(
-        <TouchableOpacity style={styles.card} key={avec._id}>
+        <TouchableOpacity style={styles.card} key={avec._id} onPress={()=> navigation.navigate("addAvec")}>
           <Text numberOfLines={1} style={styles.bold}>{avec.name}</Text>
           <Text style={styles.small}>Debute {frenchDate}</Text>
           <Text numberOfLines={2} style={styles.normal}>{avec.detail}</Text>
@@ -183,7 +183,7 @@ const CreanceDette = ({ navigation, route }) => {
 
           <Text style={styles.boldGrey}>Membres</Text>
           <View style={styles.imgs}>
-            {[avec?.membres].slice(0,4).map((value, key) => (
+            {avec?.membres.slice(0,3).map((value, key) => (
               <Image
                 key={key}
                 source={{uri: 'https://images.pexels.com/photos/18165273/pexels-photo-18165273.jpeg'}} //value.profile_pic
@@ -193,9 +193,9 @@ const CreanceDette = ({ navigation, route }) => {
                 ]}
               />
             ))}
-            {[avec?.membres].length >= 5 && (
+            {avec?.membres.length >= 3 && (
               <Text style={styles.moreImagesText}>+ 
-              {[avec?.membres].length - 4} plus</Text>
+              {avec?.membres.length - 3} plus</Text>
             )}
           </View>
 
@@ -243,7 +243,7 @@ const Route3 = () => (
 
     return <Block  style={styles.topMenu} >
       <View style={styles.myTopCard}>
-        <Text variant="titleMedium">Associations villageoises d’épargne et de crédit (AVEC)</Text>
+        {/* <Text variant="titleMedium">Associations villageoises d’épargne et de crédit (AVEC)</Text> */}
         <Text style={styles.text}>
         Gérez 
         vos épargnes, demandes des crédits et promouvoir la solidarité financière.

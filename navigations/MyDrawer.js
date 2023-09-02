@@ -15,7 +15,7 @@ export default function MyDrawer() {
   return (
     <Drawer.Navigator
       useLegacyImplementation={true}
-      initialRouteName="CreanceDette"
+      initialRouteName="ProductScreen"
       drawerContent={(props) => <CustomDrawer {...props} />}
       screenOptions={{
         //headerShown: false,
@@ -31,7 +31,7 @@ export default function MyDrawer() {
         },
       }}
     >
-      {/* <Drawer.Screen
+      <Drawer.Screen
         name="Produits / services"
         component={ProductScreen}
         options={{
@@ -49,7 +49,7 @@ export default function MyDrawer() {
           headerShown: false,
           drawerIcon: ({ color }) => <Ionicons color={color} size={SIZES.base * 2} name={'home'} />,
         }}
-      /> */}
+      />
 
       <Drawer.Screen
         name="Creances et dettes"

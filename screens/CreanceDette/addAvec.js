@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, ScrollView } from 'react-native';
 
 const addAvec = ({ onAddAvec }) => {
   const [name, setName] = useState('Your AVEC Name');
@@ -45,7 +45,7 @@ const addAvec = ({ onAddAvec }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Text style={styles.label}>Name:</Text>
       <TextInput
         style={styles.input}
@@ -165,13 +165,14 @@ const addAvec = ({ onAddAvec }) => {
       />
 
       <Button title="Add AVEC" onPress={handleAddAvec} />
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
+    //padding: 20,
+    margin:20
   },
   label: {
     fontSize: 16,
