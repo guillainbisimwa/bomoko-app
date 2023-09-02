@@ -1,14 +1,18 @@
-import React, { useRef, useState } from 'react';
-import {Animated, ImageBackground, View, Text, TextInput, Button, StyleSheet, ScrollView } from 'react-native';
+import React, { useEffect } from 'react';
+import {ImageBackground, View, TextInput, Button, StyleSheet, ScrollView } from 'react-native';
 import Block from '../Product/Block';
-import { SIZES } from '../../constants';
+import { COLORS, FONTS, SIZES } from '../../constants';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Text } from '../../components';
+import { Divider } from 'react-native-paper';
 
-const DetailsAvec = ({ onDetailsAvec }) => {
-  const scrollX = useRef(new Animated.Value(0)).current;
+const DetailsAvec = ({ route }) => {
   
+  useEffect(()=>{
+    console.log(route.params.avec);
+  },[])
 
-  const renderImages = () => {
+  const renderImage = () => {
     return (
       <ImageBackground
         source={require('./../../assets/img/debt.png')}
@@ -29,24 +33,53 @@ const DetailsAvec = ({ onDetailsAvec }) => {
     );
   };
 
+  const renderTopDetails = () => {
+    return (
+      <Block card style={styles.topdetails} >
+        <Text h3 >{route.params.avec.name}</Text>
+        <Divider />
+        <View style={styles.containerTop}>
+
+          {/* Column 1 */}
+          <View style={styles.column}>
+            <Text style={styles.title}>DEVISE</Text>
+            <Text style={styles.content}>{route.params.avec.currency}</Text>
+
+          </View>
+
+          {/* Column 2 */}
+          <View style={styles.column}>
+            <Text style={styles.title}>SOMME</Text>
+            <Text style={styles.content}>{route.params.avec.amount}</Text>
+          </View>
+
+          {/* Column 3 */}
+          <View style={styles.column}>
+            <Text style={styles.title}>CYCLE</Text>
+            <Text style={styles.content}>{route.params.avec.cycle.name}/{route.params.avec.cycle.number}</Text>
+          </View>
+        </View>
+
+      </Block>
+    );
+  };
+
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <Block flex={1}>
-        <Block style={{ height: 180 }}>
-          {renderImages()}
+        <Block >
+          {renderImage()}
+
+          <View style={{ alignItems: "center" }}>
+        {renderTopDetails()}
+
+       
+          </View>
+          
+
+
         </Block>
-        <Block
-          p={20}
-          style={{
-            backgroundColor: 'white',
-            marginHorizontal: '5%',
-            width: '90%',
-            borderRadius: 10,
-            elevation: 2,
-            marginTop: -20,
-          }}
-        >
-          </Block>
+        
           </Block>
       
     </ScrollView>
@@ -62,7 +95,27 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 5,
   },
-  
+  topdetails:{
+    width: '90%',
+    marginTop:-20,
+    padding:10,
+  },
+  containerTop: {
+    flexDirection: 'row', // Horizontal layout
+    justifyContent:'space-around'
+  },
+  column: {
+    flex: 1, // Equal width for each column
+    paddingVertical: 16,
+  },
+  title: {
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  content: {
+    fontSize: 16,
+    color:'grey'
+  },
 });
 
 export default DetailsAvec;

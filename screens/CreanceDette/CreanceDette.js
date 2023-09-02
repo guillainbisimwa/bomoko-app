@@ -163,7 +163,7 @@ const CreanceDette = ({ navigation, route }) => {
             console.log('Days Left:', daysLeft);
 
           return(
-            <TouchableOpacity style={styles.card} key={avec._id} onPress={()=> navigation.navigate("DetailsAvec")}>
+            <TouchableOpacity style={styles.card} key={avec._id} onPress={()=> navigation.navigate("DetailsAvec", {avec})}>
               <Text numberOfLines={1} style={styles.bold}>{avec.name}</Text>
               <Text style={styles.small}>Debute {frenchDate}</Text>
               <Text numberOfLines={2} style={styles.normal}>{avec.detail}</Text>
