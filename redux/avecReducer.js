@@ -16,7 +16,7 @@ const initialState = {
 export const fetchAvecs = createAsyncThunk('avecs/fetchAll', async () => {
   try {
     const response = await axios.get(`${BASE_URL}api/avec/`);
-    console.log("=========??????", response.data);
+    // console.log("=========??????", response.data);
     return response.data;
   } catch (error) {
     console.log("Error =========??????", `${BASE_URL}api/avec/`);
@@ -57,7 +57,7 @@ export const deleteAvec = createAsyncThunk('avecs/delete', async (id) => {
 
 // Create a slice for AVEC objects
 const avecsSlice = createSlice({
-  name: 'avecs',
+  name: 'loading',
   initialState,
   reducers: {},
   extraReducers: (builder) => {

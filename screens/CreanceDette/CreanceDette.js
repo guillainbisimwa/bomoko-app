@@ -2,7 +2,7 @@ import React, {  useEffect, useState } from 'react';
 import { Image, ScrollView, StyleSheet, TouchableOpacity, View, useWindowDimensions } from 'react-native';
 import { COLORS, FONTS, SIZES, icons } from '../../constants';
 
-import {Text, Provider, Badge, Divider, Chip, MD3Colors, ProgressBar } from 'react-native-paper';
+import {Text, Provider, Badge, Divider, Chip, MD3Colors, ProgressBar, ActivityIndicator } from 'react-native-paper';
 import { ImageBackground } from 'react-native';
 import Block from '../Product/Block';
 import { SceneMap, TabBar, TabView } from 'react-native-tab-view';
@@ -22,13 +22,13 @@ const CreanceDette = ({ navigation, route }) => {
   ]);
 
   const dispatch = useDispatch();
-  const avecs = useSelector((state) => state.avecs.avecs); // Replace 'avecs' with your slice name
+  const avecs = useSelector((state) => state.avecs); // Replace 'avecs' with your slice name
 
   useEffect(() => {
     // Dispatch the fetchAvecs async thunk when the component mounts
     dispatch(fetchAvecs());
     console.log();
-    console.log("avec", avecs);
+    console.log("avecmpi ", avecs);
   }, [dispatch]); // Make sure to include dispatch in the dependency array
 
 
@@ -128,69 +128,80 @@ const CreanceDette = ({ navigation, route }) => {
   }
 
 
-const Route1 = () => (
+  const Route1 = () => {
+    // Check if status is loading
+    if (avecs.status === 'loading') {
+      return (
+        // Render a loading indicator here
+        <ScrollView style={{ flex: 1 , paddingHorizontal:5, paddingVertical:10,
+          backgroundColor: 'transparent'}}>
+          <ActivityIndicator style={styles.activity} size="large" color='white'/>
+          </ScrollView>
+      );
+    }
+    
+    return (
   <ScrollView style={{ flex: 1 , paddingHorizontal:5, paddingVertical:10,
    backgroundColor: 'transparent'}}>
     {
-      avecs.map((avec) => (
+      avecs?.avecs?.map((avec) => (
         <TouchableOpacity style={styles.card} key={avec._id}>
-      <Text numberOfLines={1} style={styles.bold}>{avec.name}</Text>
-      <Text style={styles.small}>Debute le 20 janv 2024</Text>
-      <Text numberOfLines={2} style={styles.normal}>Un groupe solidaire pour aider les revendeurs des habits d'ocasion 
-        d'acheter directement en Europe et en Asie
-      </Text>
-      <Divider style={styles.div} />
-      <Block row center space="between">
-      <ProgressBar
-        progress={10}
-        color={COLORS.purple}
-        style={{ width: SIZES.width /1.8, height: SIZES.base }}
-        animatedValue={0.1}
-        visible
-      />
-      <Text numberOfLines={1} semibold size={19} style={{ marginLeft: 20 }}>
-      {10}%
-      </Text>
-    </Block>
-
-      <Text style={styles.boldGrey}>Membres</Text>
-      <View style={styles.imgs}>
-        {[icons.shopping, icons.calendar, icons.shopping, icons.calendar, icons.shopping, icons.calendar].slice(1,5).map((value, key) => (
-          <Image
-            key={key}
-            source={value}
-            style={[
-              styles.img,
-              key > 0 && { marginLeft: -15 }, // Apply negative margin for images after the first one
-            ]}
+          <Text numberOfLines={1} style={styles.bold}>{avec.name}</Text>
+          <Text style={styles.small}>Debute {avec.startDate}</Text>
+          <Text numberOfLines={2} style={styles.normal}>{avec.detail}</Text>
+          <Divider style={styles.div} />
+          <Block row center space="between">
+          <ProgressBar
+            progress={10}
+            color={COLORS.purple}
+            style={{ width: SIZES.width /1.8, height: SIZES.base }}
+            animatedValue={0.1}
+            visible
           />
-        ))}
-        {[icons.shopping, icons.calendar, icons.shopping, icons.calendar, icons.shopping, icons.calendar].length >= 5 && (
-          <Text style={styles.moreImagesText}>+ 
-          {[icons.shopping, icons.calendar, icons.shopping, icons.calendar, icons.shopping, icons.calendar].length - 4} plus</Text>
-        )}
-      </View>
+          <Text numberOfLines={1} semibold size={19} style={{ marginLeft: 20 }}>
+          {10}%
+          </Text>
+        </Block>
+
+          <Text style={styles.boldGrey}>Membres</Text>
+          <View style={styles.imgs}>
+            {[avec?.membres].slice(0,4).map((value, key) => (
+              <Image
+                key={key}
+                source={{uri: 'https://images.pexels.com/photos/18165273/pexels-photo-18165273.jpeg'}} //value.profile_pic
+                style={[
+                  styles.img,
+                  key > 0 && { marginLeft: -15 }, // Apply negative margin for images after the first one
+                ]}
+              />
+            ))}
+            {[avec?.membres].length >= 5 && (
+              <Text style={styles.moreImagesText}>+ 
+              {[avec?.membres].length - 4} plus</Text>
+            )}
+          </View>
 
 
-      <Block row p={10} space="between" >
-        <Chip icon="information" style={{backgroundColor: 'red', color: 'white'}}  elevated >status</Chip>
-        <Chip icon="information" elevated >status</Chip>
+          <Block row p={10} space="between" >
+            <Chip icon="information" style={{backgroundColor: 'red', color: 'white'}}  elevated >{avec?.status}</Chip>
+            <Chip icon="information" elevated >Dans 2 jours</Chip>
 
-      </Block>
-      <Divider />
-        <Block row space="between" m_t={5} m_b={5}>
-        <Text style={styles.bold}>
-          200 $
-        </Text>
-        <Text style={styles.bold}>
-          Mensuel
-        </Text>
-      </Block>
-    </TouchableOpacity>
+          </Block>
+          <Divider />
+             <Block row space="between" m_t={5} m_b={5}>
+            <Text style={styles.bold}>
+              {avec?.amount} {avec?.currency} 
+            </Text>
+            <Text style={styles.bold}>
+              
+              Par {avec?.cycle.name} 
+            </Text>
+          </Block>
+        </TouchableOpacity>
     ))}
     
   </ScrollView>
-);
+  )};
 
 const Route2 = () => (
   <ScrollView style={{ flex: 1 , paddingHorizontal:5, paddingVertical:10, 
@@ -294,7 +305,8 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.lightGray,
     padding:10,
     borderRadius:10,
-    elevation:5
+    elevation:5,
+    marginVertical:10
   },
   moreImagesText: {
     flex:1,
