@@ -109,9 +109,11 @@ const AddProduct = ({route, navigation}) => {
         detail: description,
         location: [checkedGoma?'Goma':'',
           checkedBukavu?'Bukavu':'', checkedKinshasa?'Kinshasa':'' ],
-        amount: parseInt(amount),
+       // amount: parseInt(amount),
+        amount: amount !== null ? parseInt(amount) : 0,
         images: images.length == 0 ? (type == 'produit'? [img_prod]:[img_serv]): images,
-        initialAmount: parseInt(initialAmount),
+        //initialAmount: parseInt(initialAmount),
+        initialAmount: initialAmount !== null ? parseInt(initialAmount) : 0,
         type: type,
         currency: checkedDevise,
         timeline: [
