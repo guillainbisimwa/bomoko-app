@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {ImageBackground, View, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import {ImageBackground, View, TouchableOpacity, StyleSheet, ScrollView, Image } from 'react-native';
 import Block from '../Product/Block';
 import { COLORS, FONTS, SIZES } from '../../constants';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -15,7 +15,7 @@ const DetailsAvec = ({ route }) => {
   };
   
   useEffect(()=>{
-    console.log(route.params.avec);
+    console.log(route.params.avec.owner);
   },[])
 
   const renderImage = () => {
@@ -47,16 +47,16 @@ const DetailsAvec = ({ route }) => {
           {/* First Column */}
           <View style={styles.columnTitle1}>
             <Text  numberOfLines={2} style={styles.titleTitle}>{route.params.avec.name}</Text>
-            <Text style={styles.contentTitle}>{route.params.avec.name}</Text>
+            <Text  numberOfLines={1} style={styles.contentTitle}>{route.params.avec.timestamp}</Text>
           </View>
 
           {/* Second Column */}
           <View style={styles.columnTitle2}>
-            <Button mode="contained" >
-              Demande
+            <Button compact mode="contained">
+              + 99000 CDF
             </Button>
           </View>
-    </View>
+        </View>
 
         <Divider />
         <Divider />
@@ -95,6 +95,48 @@ const DetailsAvec = ({ route }) => {
             </TouchableOpacity>
           </View>
         </View>
+
+
+        <View style={styles.containerTitle}>
+          {/* First Column */}
+          <View style={styles.columnMembre1}>
+            <Image
+              source={{uri: route.params.avec.owner?.profile_pic}}
+              style={styles.imgOwner}
+            />
+            <Text numberOfLines={2} bold >{route.params.avec.owner?.name}</Text>
+            <Text numberOfLines={1} style={styles.contentTitle}>Président</Text>
+          </View>
+
+          {/* Second Column */}
+          <View style={styles.columnMembre2}>
+          <Text numberOfLines={1} bold >MEMBRE DU GROUPE</Text>
+
+          <View style={styles.imgs}>
+                {route.params.avec?.membres.slice(0,4).map((value, key) =>{
+                  console.log();
+                 // console.log(value.user);
+                  return(
+                  <Image
+                    key={key}
+                    source={{uri: value?.user?.profile_pic}}
+                    style={[
+                      styles.img,
+                      key > 0 && { marginLeft: -15 }, // Apply negative margin for images after the first one
+                    ]}
+                  />
+                )})}
+                {route.params.avec?.membres.length >= 4 && (
+                  <Text style={styles.moreImagesText}>+ 
+                  {route.params.avec?.membres.length - 4} plus</Text>
+                )}
+              </View>
+          </View>
+        </View>
+
+        <Button buttonColor={COLORS.darkgreen} mode="contained">
+              Demande d'Adhesion
+            </Button>
 
       </Block>
     );
@@ -146,13 +188,14 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   content: {
-    fontSize: 16,
+    fontSize: 13,
     color:'grey'
   },
 
+
   containerTitle: {
     flexDirection: 'row',
-    //alignItems: 'center'
+    marginBottom:10
   },
   columnTitle1: {
     flex: 2, // Takes 50% width
@@ -167,11 +210,53 @@ const styles = StyleSheet.create({
   titleTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 8,
   },
   contentTitle: {
-    fontSize: 12,
+    fontSize: 13,
+    color: COLORS.peach
   },
+
+
+  imgs: {
+    flexDirection: 'row',
+    marginVertical:10,
+    // alignContent:'center',
+    //alignItems: 'flex-end'
+    // alignSelf:'flex-end'
+  },
+  img: {
+    borderRadius: SIZES.base * 3,
+    backgroundColor:COLORS.white,
+    borderWidth:2,
+    borderColor: COLORS.black,
+    width: SIZES.base * 5,
+    height: SIZES.base * 5,
+    //tintColor: COLORS.black,
+  },
+  columnMembre1: {
+    flex: 1, // Takes 50% width
+    marginRight: 8, // Adjust the margin as needed
+    paddingVertical:8,
+    alignItems:'center'
+  },
+  columnMembre2: {
+    flex: 2, // Takes 50% width
+    marginLeft: 12, // Adjust the margin as needed
+    paddingVertical:8,
+    justifyContent:'center',
+  },
+  moreImagesText: {
+    flex:1,
+    alignSelf:'center', 
+    marginLeft:10
+  },
+  imgOwner:{
+    width: 100,
+    height: 100,
+    borderRadius:50,
+  }
+
+
 });
 
 export default DetailsAvec;
