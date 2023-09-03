@@ -24,8 +24,8 @@ const AddProduct = ({route, navigation}) => {
   const { error, isLoading, success, products } = useSelector((state) => state.products);
 
   const [name, setName] = useState('');
-  const [amount, setAmount] = useState(0);
-  const [initialAmount, setInitialAmount] = useState(0);
+  const [amount, setAmount] = useState(null);
+  const [initialAmount, setInitialAmount] = useState(null);
   const [type, setType] = useState('produit');
 
   const [description, setDescription] = useState('');

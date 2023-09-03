@@ -17,9 +17,9 @@ const CreanceDette = ({ navigation, route }) => {
   const [index, setIndex] = useState(0);
 
   const [routes, SetRoutes] = useState([
-    { key: "first", title: `Route1`},
-    { key: "second", title: `Route2` },
-    { key: "third", title: "Route3" },
+    { key: "first", title: `AVEC`},
+    // { key: "second", title: `Route2` },
+    // { key: "third", title: "Route3" },
   ]);
   const [visible, setVisible] = useState(false);
   const [token, setToken] = useState(null);
@@ -311,8 +311,8 @@ const Route3 = () => (
           navigationState={{ index, routes }}
           renderScene={SceneMap({
             first: Route1,
-            second: Route2,
-            third: Route3,
+            // second: Route2,
+            // third: Route3,
           })}
           onIndexChange={setIndex}
           initialLayout={{ width: layout.width }}
