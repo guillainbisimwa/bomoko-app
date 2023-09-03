@@ -2,12 +2,13 @@ import React, {  useEffect, useState } from 'react';
 import { Image, ScrollView, StyleSheet, TouchableOpacity, View, useWindowDimensions } from 'react-native';
 import { COLORS, FONTS, SIZES, icons } from '../../constants';
 
-import {Text, Provider, Badge, Divider, Chip, MD3Colors, ProgressBar, ActivityIndicator } from 'react-native-paper';
+import {Text, Provider, Badge, Divider, Chip, MD3Colors, ProgressBar, ActivityIndicator, FAB, Modal, Card, Button } from 'react-native-paper';
 import { ImageBackground } from 'react-native';
 import Block from '../Product/Block';
 import { SceneMap, TabBar, TabView } from 'react-native-tab-view';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAvecs } from '../../redux/avecReducer';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const CreanceDette = ({ navigation, route }) => {
@@ -20,6 +21,8 @@ const CreanceDette = ({ navigation, route }) => {
     { key: "second", title: `Route2` },
     { key: "third", title: "Route3" },
   ]);
+  const [visible, setVisible] = useState(false);
+  const [token, setToken] = useState(null);
 
   const dispatch = useDispatch();
   const avecs = useSelector((state) => state.avecs); // Replace 'avecs' with your slice name
@@ -29,7 +32,34 @@ const CreanceDette = ({ navigation, route }) => {
     dispatch(fetchAvecs());
     console.log();
     console.log("avecmpi ", avecs);
+
+    const getTokenFromAsyncStorage = async () => {
+      try {
+        const storedToken = await AsyncStorage.getItem('user');
+        setToken(storedToken);
+        
+      } catch (error) {
+        // Handle AsyncStorage read error if needed
+        console.error('Error reading token from AsyncStorage:', error);
+      }
+    };
+
+    getTokenFromAsyncStorage();
+
   }, [dispatch]); // Make sure to include dispatch in the dependency array
+
+
+
+  // Modal
+  const showModal = () => setVisible(true);
+  const hideModal = () => setVisible(false);
+
+  const containerStyle = {
+    backgroundColor: 'white',
+    width: '85%',
+    borderRadius: 10,
+    alignSelf: 'center',
+  };
 
 
   const renderTabBar = (props) => (
@@ -285,6 +315,45 @@ const Route3 = () => (
       {topMenu()}
       
     </View>
+
+    <Modal
+        style={{ zIndex: 99 }}
+        visible={visible}
+        onDismiss={hideModal}
+        contentContainerStyle={[containerStyle, { zIndex: 999 }]} // Set a higher value for the z-index
+      >
+        <Card style={{ padding: 10 }}>
+          <Card.Title
+            titleStyle={{ fontWeight: 'bold', textTransform: 'uppercase' }}
+            title="ATTENTION!" 
+          />
+          <Card.Content>
+            <Text variant="titleLarge">Vous devez d'abord vous connecter</Text>
+          </Card.Content>
+          <Card.Actions style={{ marginTop: 15 }}>
+            <Button onPress={hideModal}>Annuler</Button>
+            <Button buttonColor={COLORS.red}
+             onPress={() => {
+              hideModal()
+              navigation.navigate('AuthScreen')
+            }} >Connecter</Button>
+          </Card.Actions>
+        </Card>
+      </Modal>
+
+    <FAB icon="plus" variant="tertiary" style={styles.fab} 
+        onPress={() => {
+          console.log()
+         
+          if(!token) {
+            showModal(true);
+          }
+          else {
+            navigation.navigate('AddAvec', { owner: JSON.parse(token).user?.user?.userId,
+              username: JSON.parse(token).user?.user?.username });
+          }
+
+        }} />
     </Provider>
   );
 };
@@ -349,7 +418,14 @@ const styles = StyleSheet.create({
   normal:{
     color: 'gray',
     marginTop: 10
-  }
+  },
+
+  fab: {
+    position: 'absolute',
+    margin: 16,
+    right: 0,
+    bottom: 0,
+  },
 });
 
 export default CreanceDette;
