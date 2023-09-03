@@ -15,14 +15,6 @@ const { height, width } = Dimensions.get('window');
 export const EditProfileForm = ({ navigation, route }) => {
   const dispatch = useDispatch();
 
-  console.log("");
-  //console.log("", route?.params?.user);
-  console.log("");
-  // {"__v": 0, "_id": "64c96038e199bcbfe1e02654",
-  //  "email": "Gb@test.com", "mobile": "0987654321", 
-  //  "name": "Gb", "password": ", "role": "user", "status": "PENDING", "username": "Gb"}
-
-
   const { errorSignUp, isLoadingSignUp, successSignUp, userSignUp } = useSelector((state) => state.user);
   const [loadPic, setLoadPic] = useState(false);
   const [onSuccess, setOnSuccess] = useState(false);

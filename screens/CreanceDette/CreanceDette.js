@@ -25,19 +25,14 @@ const CreanceDette = ({ navigation, route }) => {
   const [token, setToken] = useState(null);
 
   const dispatch = useDispatch();
-  const avecs = useSelector((state) => state.avecs); // Replace 'avecs' with your slice name
+  const avecs = useSelector((state) => state.avecs); 
+  const [isFetchingComplete, setIsFetchingComplete] = useState(false);
 
   useEffect(() => {
-    // Dispatch the fetchAvecs async thunk when the component mounts
-    dispatch(fetchAvecs());
-    console.log();
-    console.log("avecmpi ", avecs);
-
     const getTokenFromAsyncStorage = async () => {
       try {
         const storedToken = await AsyncStorage.getItem('user');
         setToken(storedToken);
-        
       } catch (error) {
         // Handle AsyncStorage read error if needed
         console.error('Error reading token from AsyncStorage:', error);
@@ -46,9 +41,36 @@ const CreanceDette = ({ navigation, route }) => {
 
     getTokenFromAsyncStorage();
 
-  }, [dispatch]); // Make sure to include dispatch in the dependency array
+    // Fetch data when the component mounts
+    fetchData();
 
+    // Add a navigation listener to refetch data when the screen comes into focus
+    const focusListener = navigation.addListener('focus', () => {
+      fetchData();
+    });
 
+    return () => {
+      // Clean up the navigation listener
+      focusListener.remove();
+    };
+
+  }, [dispatch, navigation]);
+
+  const fetchData = () => {
+    // Only dispatch the fetchAvecs action if fetching is not already complete
+    if (!isFetchingComplete) {
+      dispatch(fetchAvecs())
+        .then(() => {
+          setIsFetchingComplete(true); // Mark fetching as complete
+        })
+        .catch((error) => {
+          // Handle error if needed
+          console.error('Error fetching avecs:', error);
+        });
+    }
+  };
+
+//Added error handling and validation to the handleAddAvec function 
 
   // Modal
   const showModal = () => setVisible(true);
@@ -213,7 +235,7 @@ const CreanceDette = ({ navigation, route }) => {
 
               <Text style={styles.boldGrey}>Membres</Text>
               <View style={styles.imgs}>
-                {avec?.membres.slice(0,5).map((value, key) =>{
+                {avec?.membres?.slice(0,5).map((value, key) =>{
                   console.log();
                   console.log(value.user);
                   return(
@@ -226,9 +248,9 @@ const CreanceDette = ({ navigation, route }) => {
                     ]}
                   />
                 )})}
-                {avec?.membres.length >= 5 && (
+                {avec?.membres?.length >= 5 && (
                   <Text style={styles.moreImagesText}>+ 
-                  {avec?.membres.length - 5} plus</Text>
+                  {avec?.membres?.length - 5} plus</Text>
                 )}
               </View>
 
@@ -245,7 +267,7 @@ const CreanceDette = ({ navigation, route }) => {
                   {avec?.amount} {avec?.currency} 
                 </Text>
                 <Text style={styles.bold}>
-                  {avec?.cycle.name} 
+                  {avec?.cycle?.name} 
                 </Text>
               </Block>
             </TouchableOpacity>
@@ -349,7 +371,7 @@ const Route3 = () => (
             showModal(true);
           }
           else {
-            navigation.navigate('AddAvec', { owner: JSON.parse(token).user?.user?.userId,
+            navigation.navigate('addAvec', { owner: JSON.parse(token).user?.user?.userId,
               username: JSON.parse(token).user?.user?.username });
           }
 

@@ -1,12 +1,19 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, ScrollView } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, TextInput, StyleSheet, ScrollView } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import { createAvec } from '../../redux/avecReducer';
+import { Button } from 'react-native-paper';
 
-const AddAvec = ({ onAddAvec }) => {
+const AddAvec = ({ navigation, route }) => {
+  const { owner, username } = route.params;
+  const dispatch = useDispatch();
+  const { avecs, status, error }= useSelector((state) => state.avecs); 
+
   const [name, setName] = useState('Your AVEC Name');
   const [detail, setDetail] = useState('Details about your AVEC');
   const [amount, setAmount] = useState('1000');
   const [currency, setCurrency] = useState('USD');
-  const [cycleName, setCycleName] = useState('moi');
+  const [cycleName, setCycleName] = useState('Mensuel');
   const [cycleNumber, setCycleNumber] = useState('9');
   const [nbrPartMax, setNbrPartMax] = useState('5');
   const [nbrPartMin, setNbrPartMin] = useState('1');
@@ -17,32 +24,62 @@ const AddAvec = ({ onAddAvec }) => {
   const [startDate, setStartDate] = useState('2023-05-01');
   const [endDate, setEndDate] = useState('2023-12-01');
 
-  const handleAddAvec = () => {
-    // Create an AVEC object with the form data
-    const avec = {
-      name,
-      detail,
-      amount: Number(amount),
-      currency,
-      cycle: {
-        name: cycleName,
-        number: Number(cycleNumber),
-      },
-      nbrPart: {
-        max: Number(nbrPartMax),
-        min: Number(nbrPartMin),
-      },
-      interest,
-      frais_Adhesion: Number(fraisAdhesion),
-      debut_octroi_credit: debutOctroiCredit,
-      fin_octroi_credit: finOctroiCredit,
-      startDate,
-      endDate,
-    };
+  const [statusLocal, setStatusLocal] = useState(false)
 
-    // Pass the new AVEC object to a parent component or Redux action
-    onAddAvec(avec);
+  useEffect(()=>{
+    console.log('===>', status,);
+    console.log('===>',  error);
+    console.log('===>', owner);
+    if (status === "succeeded" &&  statusLocal  ) {
+      // Navigate to the Home screen
+      navigation.navigate('Main');
+    }
+  }, [status, error, owner]);
+
+  const handleAddAvec = () => {
+    try {
+      // Validation: Check if required fields are empty
+      if (!name || !amount || !currency || !cycleName || !cycleNumber || !nbrPartMax || !nbrPartMin) {
+        setStatusLocal(false);
+        throw new Error('Please fill in all required fields.');
+      }
+  
+      // Create an AVEC object with the form data
+      const avec = {
+        name,
+        detail,
+        amount: Number(amount),
+        currency,
+        cycle: {
+          name: cycleName,
+          number: Number(cycleNumber),
+        },
+        nbrPart: {
+          max: Number(nbrPartMax),
+          min: Number(nbrPartMin),
+        },
+        owner,
+        interest,
+        frais_Adhesion: Number(fraisAdhesion),
+        debut_octroi_credit: debutOctroiCredit,
+        fin_octroi_credit: finOctroiCredit,
+        startDate,
+        endDate,
+      };
+  
+      // Dispatch the action
+      dispatch(createAvec(avec));
+  
+      // Set statusLocal (if needed)
+      setStatusLocal(true);
+    } catch (error) {
+      // Handle validation or dispatch errors
+      console.error('Error adding AVEC:', error);
+      setStatusLocal(false);
+      // You can also display an error message to the user here
+    }
   };
+  
 
   return (
     <ScrollView style={styles.container}>
@@ -164,7 +201,7 @@ const AddAvec = ({ onAddAvec }) => {
         placeholder="Enter end date"
       />
 
-      <Button title="Add AVEC" onPress={handleAddAvec} />
+      <Button mode='contained' textColor='white'  title="Creer un AVEC" onPress={handleAddAvec}  loading={status === 'loading'} disabled={status === 'loading'} />
     </ScrollView>
   );
 };
