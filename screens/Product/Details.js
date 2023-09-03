@@ -764,7 +764,7 @@ const Details = ({ route, navigation }) => {
   ) : (
     <>
       <Text style={{ ...FONTS.h5, color: COLORS.red }}>+5% intérêt</Text>
-      <View style={{ flexDirection: 'row' }}>
+      <View style={{ flexDirection: 'row', marginTop:20 }}>
         <Image
           source={icons.calendar}
           style={{

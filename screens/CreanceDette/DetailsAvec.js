@@ -142,21 +142,23 @@ const DetailsAvec = ({ route }) => {
     );
   };
 
+  
+
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
-      <Block flex={1}>
-        <Block >
-          {renderImage()}
+    <Block flex={1}>
+      {/* Fixed content */}
+      <View>
+        {renderImage()}
+      </View>
 
-          <View style={{ alignItems: "center" }}>
+      {/* Scrollable content */}
+      <View style={{ alignItems: "center" }}>
         {renderTopDetails()}
-       
-          </View>
-        </Block>
-        
-          </Block>
-      
-    </ScrollView>
+      </View>
+    </Block>
+  </ScrollView>
+
   );
 };
 
