@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import {ImageBackground, View, TextInput, StyleSheet, ScrollView } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import {ImageBackground, View, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import Block from '../Product/Block';
 import { COLORS, FONTS, SIZES } from '../../constants';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -7,6 +7,12 @@ import { Text } from '../../components';
 import { Divider, Button } from 'react-native-paper';
 
 const DetailsAvec = ({ route }) => {
+
+  const [showFullContent, setShowFullContent] = useState(false);
+
+  const toggleContent = () => {
+    setShowFullContent(!showFullContent);
+  };
   
   useEffect(()=>{
     console.log(route.params.avec);
@@ -77,6 +83,19 @@ const DetailsAvec = ({ route }) => {
           </View>
         </View>
 
+
+        <View>
+          <View>
+            <Text h3>Description</Text>
+          </View>
+          <View>
+            <Text numberOfLines={showFullContent ? undefined : 3}>{route.params.avec.detail}</Text>
+            <TouchableOpacity onPress={toggleContent}>
+              <Text bold color={COLORS.blue} >{showFullContent ? 'Voir moins' : 'Voir plus'}</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
       </Block>
     );
   };
@@ -89,12 +108,8 @@ const DetailsAvec = ({ route }) => {
 
           <View style={{ alignItems: "center" }}>
         {renderTopDetails()}
-
        
           </View>
-          
-
-
         </Block>
         
           </Block>
@@ -119,7 +134,8 @@ const styles = StyleSheet.create({
   },
   containerTop: {
     flexDirection: 'row', // Horizontal layout
-    justifyContent:'space-around'
+    justifyContent:'space-around',
+    marginBottom:20
   },
   column: {
     flex: 1, // Equal width for each column
