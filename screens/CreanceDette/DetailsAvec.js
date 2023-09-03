@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
-import {ImageBackground, View, TextInput, Button, StyleSheet, ScrollView } from 'react-native';
+import {ImageBackground, View, TextInput, StyleSheet, ScrollView } from 'react-native';
 import Block from '../Product/Block';
 import { COLORS, FONTS, SIZES } from '../../constants';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Text } from '../../components';
-import { Divider } from 'react-native-paper';
+import { Divider, Button } from 'react-native-paper';
 
 const DetailsAvec = ({ route }) => {
   
@@ -36,8 +36,25 @@ const DetailsAvec = ({ route }) => {
   const renderTopDetails = () => {
     return (
       <Block card style={styles.topdetails} >
-        <Text h3 >{route.params.avec.name}</Text>
+        
+        <View style={styles.containerTitle}>
+          {/* First Column */}
+          <View style={styles.columnTitle1}>
+            <Text  numberOfLines={2} style={styles.titleTitle}>{route.params.avec.name}</Text>
+            <Text style={styles.contentTitle}>{route.params.avec.name}</Text>
+          </View>
+
+          {/* Second Column */}
+          <View style={styles.columnTitle2}>
+            <Button mode="contained" >
+              Demande
+            </Button>
+          </View>
+    </View>
+
         <Divider />
+        <Divider />
+
         <View style={styles.containerTop}>
 
           {/* Column 1 */}
@@ -98,7 +115,7 @@ const styles = StyleSheet.create({
   topdetails:{
     width: '90%',
     marginTop:-20,
-    padding:10,
+    padding:15,
   },
   containerTop: {
     flexDirection: 'row', // Horizontal layout
@@ -115,6 +132,29 @@ const styles = StyleSheet.create({
   content: {
     fontSize: 16,
     color:'grey'
+  },
+
+  containerTitle: {
+    flexDirection: 'row',
+    //alignItems: 'center'
+  },
+  columnTitle1: {
+    flex: 2, // Takes 50% width
+    marginRight: 8, // Adjust the margin as needed
+    paddingVertical:8,
+  },
+  columnTitle2: {
+    flex: 1, // Takes 50% width
+    marginLeft: 4, // Adjust the margin as needed
+    paddingVertical:8,
+  },
+  titleTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  contentTitle: {
+    fontSize: 12,
   },
 });
 
