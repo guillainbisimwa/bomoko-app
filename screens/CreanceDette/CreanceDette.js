@@ -50,8 +50,12 @@ const CreanceDette = ({ navigation, route }) => {
     });
 
     return () => {
-      // Clean up the navigation listener
-      focusListener.remove();
+      // Check if remove() is defined before calling it
+      if (typeof focusListener.remove === 'function') {
+        focusListener.remove();
+      } else {
+        throw new Error("focusListener.remove is not a function");
+      }
     };
 
   }, [dispatch, navigation]);

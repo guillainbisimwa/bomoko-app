@@ -50,12 +50,16 @@ const ProductScreen = ({ navigation, route }) => {
     });
 
     return () => {
-      // Clean up the navigation listener
-      focusListener.remove();
+      // Check if remove() is defined before calling it
+      if (typeof focusListener.remove === 'function') {
+        focusListener.remove();
+      } else {
+        throw new Error("focusListener.remove is not a function");
+      }
     };
-
+  
   }, [dispatch, navigation]);
-
+  
   const fetchData = () => {
     // Only dispatch the fetchAvecs action if fetching is not already complete
     if (!isFetchingComplete) {
@@ -220,11 +224,10 @@ const ProductScreen = ({ navigation, route }) => {
             const startDateFinal = `${startDate.getDate()}/${startDate.getMonth() + 1}/${startDate.getFullYear().toString().substr(-2)}`;
             const endDateFinal = `${endDate.getDate()}/${endDate.getMonth() + 1}/${endDate.getFullYear().toString().substr(-2)}`;
 
-             const invest = ((prod.initialAmount + prod.membres
-            .filter(member => member.contribution_status === "ACCEPTED")
-            .reduce((sum, member) => sum + member.contribution_amount, 0)) * 100 / prod.amount).toFixed(0);
+             const invest = ((prod?.initialAmount + prod?.membres
+            .filter(member => member?.contribution_status === "ACCEPTED")
+            .reduce((sum, member) => sum + member?.contribution_amount, 0)) * 100 / prod?.amount).toFixed(0);
 
-            console.log(invest);
             return (
               <TouchableOpacity
                 key={key}
