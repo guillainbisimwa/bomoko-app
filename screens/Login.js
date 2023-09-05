@@ -30,7 +30,7 @@ const Login = ({ navigation }) => {
       },
     ];
 
-    dispatch(loginUser(userObj));
+    //dispatch(loginUser(userObj));
     navigation.navigate('Tab');
   };
 

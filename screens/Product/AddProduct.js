@@ -24,8 +24,8 @@ const AddProduct = ({route, navigation}) => {
   const { error, isLoading, success, products } = useSelector((state) => state.products);
 
   const [name, setName] = useState('');
-  const [amount, setAmount] = useState(0);
-  const [initialAmount, setInitialAmount] = useState(0);
+  const [amount, setAmount] = useState(null);
+  const [initialAmount, setInitialAmount] = useState(null);
   const [type, setType] = useState('produit');
 
   const [description, setDescription] = useState('');
@@ -109,9 +109,11 @@ const AddProduct = ({route, navigation}) => {
         detail: description,
         location: [checkedGoma?'Goma':'',
           checkedBukavu?'Bukavu':'', checkedKinshasa?'Kinshasa':'' ],
-        amount: parseInt(amount),
+       // amount: parseInt(amount),
+        amount: amount !== null ? parseInt(amount) : 0,
         images: images.length == 0 ? (type == 'produit'? [img_prod]:[img_serv]): images,
-        initialAmount: parseInt(initialAmount),
+        //initialAmount: parseInt(initialAmount),
+        initialAmount: initialAmount !== null ? parseInt(initialAmount) : 0,
         type: type,
         currency: checkedDevise,
         timeline: [

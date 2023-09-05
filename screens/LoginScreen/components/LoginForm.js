@@ -16,7 +16,7 @@ export const LoginForm = ({ navigation }) => {
 
   const { error, isLoading, success, user } = useSelector((state) => state.user);
 
-  const [name, setNom] = useState('');
+  const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
 
   const [visible, setVisible] = useState(false);
@@ -55,8 +55,7 @@ const handleLogin = async () => {
     }
 
     // Handle login functionality
-    dispatch(loginUser({username:name, password}))
-    //dispatch(loginUser({username:"bvenceslas", password: "1234567890"}))
+    dispatch(loginUser({mobile: phone, password}))
  
   } catch (error) {
     Alert.alert("Attention", "Error occurred during login.");
@@ -72,7 +71,6 @@ const handleLogin = async () => {
     behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
   >
     <ScrollView contentContainerStyle={styles.scrollContainer}>
-    <View style={{}}>
       <ImageBackground
         style={styles.backgroundImage}
         source={require('./../../../assets/login1_bg.png')}
@@ -85,7 +83,7 @@ const handleLogin = async () => {
           autoPlay
           loop
         />
-        <TextInput error={error} keyboardType="default" label="Nom d'utilisateur" value={name} onChangeText={setNom} style={styles.input} />
+        <TextInput error={error} keyboardType='phone-pad' label="Numéro de téléphone" value={phone} onChangeText={setPhone} style={styles.input} />
         <TextInput
           label="Mots de passe"
           value={password}
@@ -106,7 +104,6 @@ const handleLogin = async () => {
 
       
       </View>
-    </View>
     <Snackbar
         visible={visible}
         onDismiss={onDismissSnackBar}
@@ -151,13 +148,17 @@ const styles = StyleSheet.create({
   backgroundImage: {
     flex: 1,
     position: 'absolute',
-    height,
+    height:'200%',
     width,
   },
   contentContainer: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  scrollContainer: {
+    flexGrow: 1,
+    paddingBottom: 20,
   },
   animation: {
     width: 300,
@@ -171,8 +172,5 @@ const styles = StyleSheet.create({
     marginTop: 20,
     padding:10,
     width: '70%',
-  },
-  scrollContainer: {
-    flexGrow: 1,
   },
 });

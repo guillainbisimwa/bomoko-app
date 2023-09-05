@@ -21,11 +21,11 @@ const Settings = ({ navigation }) => {
     };
 
     getTokenFromAsyncStorage();
-    console.log("ok", JSON.parse(token)?.user?.user != undefined);
+    console.log("ok", JSON.parse(token)?.user );
   },[]);
 
   const navigateToEditProfile = () => {
-    navigation.navigate("EditProfile");//  JSON.parse(token)?.user?.user?.userId == route.params.userId?
+    navigation.navigate("EditProfile", { user: {...JSON.parse(token)?.user?.user, name: JSON.parse(token)?.user?.user?.username }}); //  JSON.parse(token)?.user?.user?.userId == route.params.userId?
   };
 
   const navigateToSecurity = () => {

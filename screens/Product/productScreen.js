@@ -36,44 +36,77 @@ const ProductScreen = ({ navigation, route }) => {
 
   const [token, setToken] = useState(null);
 
-  const [ badgePanding, setBadgePanding ] = useState(0)
+  const [ badgePanding, setBadgePanding ] = useState(0);
+  const [isFetchingComplete, setIsFetchingComplete] = useState(false);
 
   useEffect(() => {
-      // Load initial user data from AsyncStorage
-      const initialUser = loadInitialUser();
-      if (initialUser) {
-        // Dispatch the action using extraReducers
-        dispatch(setInitialUser(initialUser));
-      }
-    //setActive(active == null? 'Tous':active);
-    setProduct_serviceList([...products]);
-    setProduct_serviceList([...products].sort((a, b) => a.name - b.name));
-    setBadgePanding(products.filter(product => 
-      product.status === "PENDING" && 
-      (
-          product.owner._id === JSON.parse(token)?.user?.user?.userId || 
-          product.membres.some(member => member.user._id === JSON.parse(token)?.user?.user?.userId && member.admission_req === "PENDING")
-      )
-  ).length)
-  }, []);
 
-  useEffect(() => {
-    dispatch(fetchProducts());
+    // Fetch data when the component mounts
+    fetchData();
 
-    const getTokenFromAsyncStorage = async () => {
-      try {
-        const storedToken = await AsyncStorage.getItem('user');
-        setToken(storedToken);
-        
-      } catch (error) {
-        // Handle AsyncStorage read error if needed
-        console.error('Error reading token from AsyncStorage:', error);
+    // Add a navigation listener to refetch data when the screen comes into focus
+    const focusListener = navigation.addListener('focus', () => {
+      fetchData();
+    });
+
+    return () => {
+      // Check if remove() is defined before calling it
+      if (typeof focusListener.remove === 'function') {
+        focusListener.remove();
+      } else {
+        throw new Error("focusListener.remove is not a function");
       }
     };
+  
+  }, [dispatch, navigation]);
+  
+  const fetchData = () => {
+    // Only dispatch the fetchAvecs action if fetching is not already complete
+    if (!isFetchingComplete) {
+      const getTokenFromAsyncStorage = async () => {
+        try {
+          const storedToken = await AsyncStorage.getItem('user');
+          setToken(storedToken);
+        } catch (error) {
+          // Handle AsyncStorage read error if needed
+          console.error('Error reading token from AsyncStorage:', error);
+        }
+      };
+  
+      getTokenFromAsyncStorage();
 
-    getTokenFromAsyncStorage();
-    // setProduct_serviceList([...products]);
+      dispatch(fetchProducts())
+        .then(() => {
+          setIsFetchingComplete(true); // Mark fetching as complete
+           // Load initial user data from AsyncStorage
+              // const initialUser = loadInitialUser();
+              // if (initialUser) {
+              //   // Dispatch the action using extraReducers
+              //   dispatch(setInitialUser(initialUser));
+              // }
+            //setActive(active == null? 'Tous':active);
+            setProduct_serviceList([...products]);
+            setProduct_serviceList([...products].sort((a, b) => a.name - b.name));
+            setBadgePanding(products.filter(product => 
+              product.status === "PENDING" && 
+              (
+                  product.owner._id === JSON.parse(token)?.user?.user?.userId || 
+                  product.membres.some(member => member.user._id === JSON.parse(token)?.user?.user?.userId && member.admission_req === "PENDING")
+              )
+          ).length)
+        })
+        .catch((error) => {
+          // Handle error if needed
+          console.error('Error fetching avecs:', error);
+        });
+    }
+  };
+
+
+  useEffect(() => {
+     
   }, []);
+
 
   const handleLogout = () => {
     // Dispatch the logoutUser action
@@ -191,11 +224,10 @@ const ProductScreen = ({ navigation, route }) => {
             const startDateFinal = `${startDate.getDate()}/${startDate.getMonth() + 1}/${startDate.getFullYear().toString().substr(-2)}`;
             const endDateFinal = `${endDate.getDate()}/${endDate.getMonth() + 1}/${endDate.getFullYear().toString().substr(-2)}`;
 
-             const invest = ((prod.initialAmount + prod.membres
-            .filter(member => member.contribution_status === "ACCEPTED")
-            .reduce((sum, member) => sum + member.contribution_amount, 0)) * 100 / prod.amount).toFixed(0);
+             const invest = ((prod?.initialAmount + prod?.membres
+            .filter(member => member?.contribution_status === "ACCEPTED")
+            .reduce((sum, member) => sum + member?.contribution_amount, 0)) * 100 / prod?.amount).toFixed(0);
 
-            console.log(invest);
             return (
               <TouchableOpacity
                 key={key}
@@ -389,18 +421,6 @@ const ProductScreen = ({ navigation, route }) => {
           style={{ justifyContent: 'center', alignItems: 'flex-end', width: 50 }}
           onPress={() => {
             console.log('shopping');
-            //console.log("Token --",JSON.parse(token).user.user.username);
-            console.log('UserJ --', user?._j?.user?.user?.username);
-            console.log('User --', user?._j);
-            // navigation.navigate('ShoppingCard', {
-            //   prodServ : products.filter(product => 
-            //     product.status === "PENDING" && 
-            //     (
-            //       product.owner._id === JSON.parse(token)?.user?.user?.userId || 
-            //       product.membres.some(member => member.user._id === JSON.parse(token)?.user?.user?.userId && member.admission_req === "PENDING")
-            //     )
-            // )
-            // });
           }}
         >
           <Image
@@ -415,7 +435,7 @@ const ProductScreen = ({ navigation, route }) => {
 
         </TouchableOpacity>
         { 
-      user?._j?  
+      
       <View
         style={{
           justifyContent: 'center', alignItems: 'flex-end', width: 50
@@ -462,7 +482,7 @@ const ProductScreen = ({ navigation, route }) => {
           <Menu.Item leadingIcon="logout" onPress={handleLogout} title="Deconnexion" />
         </Menu>
       </View>
-      :<></>}       
+      }       
       </View>
       </View>
     );
