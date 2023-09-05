@@ -15,20 +15,11 @@ const { height, width } = Dimensions.get('window');
 export const EditProfileForm = ({ navigation, route }) => {
   const dispatch = useDispatch();
 
-  console.log("");
-  console.log("", route?.params?.user);
-  console.log("");
-  // {"__v": 0, "_id": "64c96038e199bcbfe1e02654",
-  //  "email": "Gb@test.com", "mobile": "0987654321", 
-  //  "name": "Gb", "password": ", "role": "user", "status": "PENDING", "username": "Gb"}
-
-
   const { errorSignUp, isLoadingSignUp, successSignUp, userSignUp } = useSelector((state) => state.user);
   const [loadPic, setLoadPic] = useState(false);
   const [onSuccess, setOnSuccess] = useState(false);
 
   const [name, setNom] = useState(route?.params?.user.name);
-  const [password, setPassword] = useState('');
 
   const [email, setEmail] = useState( route?.params?.user.email);
   const [mobile, setMobile] = useState( route?.params?.user.mobile);
@@ -36,7 +27,7 @@ export const EditProfileForm = ({ navigation, route }) => {
 
   const [visible, setVisible] = useState(false);
 
-  const [selectedImage, setSelectedImage] = useState( route?.params?.user?.profile_pic);
+  const [selectedImage, setSelectedImage] = useState( route?.params?.user?.profile_pic || '');
 
   const onToggleSnackBar = () => setVisible(!visible);
 
@@ -44,14 +35,9 @@ export const EditProfileForm = ({ navigation, route }) => {
 
   // Use useEffect or any other method to handle the success state and display the alert
     useEffect(() => {
-      console.log("userSignUp", userSignUp);
+      //console.log("userSignUp", userSignUp);
         // Fetch user details from API
-        const netInfo = NetInfo.fetch();
-        // console.log("netInfo.isConnected", netInfo.isConnected);
-        if (!netInfo.isConnected) {
-          Alert.alert("Pas de connexion Internet", "Veuillez vérifier votre connexion Internet et réessayer.");
-          return;
-        }
+       
       if (onSuccess) {
         // Alert.alert("Success", "Login successful!");
         navigation.navigate('LoginScreen'); 
@@ -74,10 +60,9 @@ const handleSignUp = async () => {
 
     // Handle login functionality
     dispatch(editUser({
-      id: route?.params?.user._id,
+      userId: route?.params?.user._id,
       username:name,
       name,
-      password,
       email,
       mobile,
       role,

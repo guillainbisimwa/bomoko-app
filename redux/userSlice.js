@@ -9,12 +9,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const loginUser = createAsyncThunk(
   "user/loginUser",
-  async ( {username, password}) => {
-    const response = await axios.post( BASE_URL +'auth/login', {
-      username,
+  async ( {mobile, password}) => {
+    console.log({mobile, password});
+    console.log(BASE_URL +'auth/login-phone');
+    const response = await axios.post( BASE_URL +'auth/login-phone', {
+      mobile,
       password,
     });
-    // console.log("loginnnnnnn---?????? ",response.data?.user);
+    console.log("loginnnnnnn---?????? ",response.data?.user);
     
     return response.data?.user;
   }
@@ -52,23 +54,21 @@ export const signUpUser = createAsyncThunk(
 export const editUser = createAsyncThunk(
   "user/edit",
   async ({
-    id,
+    userId,
     name,
     email,
     mobile,
     username,
-    password,
     cover_url, 
     profile_pic,
     role
   }) => {
-    const url = `${BASE_URL}auth/${id}`; // Concatenate ID to the base URL
+    const url = `${BASE_URL}auth/update-user/${userId}`; // Concatenate ID to the base URL
     const response = await axios.put(url, { // Use PUT request for updating
       name,
       email,
       mobile,
       username,
-      password,
       cover_url, 
       profile_pic,
       role

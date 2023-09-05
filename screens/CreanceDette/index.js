@@ -1,8 +1,10 @@
 
 import CreanceDette from './CreanceDette';
-import addAvec from './addAvec'
+import AddAvec from './AddAvec';
+import DetailsAvec from './DetailsAvec'
 
 export {
     CreanceDette,
-    addAvec
+    AddAvec,
+    DetailsAvec
 };

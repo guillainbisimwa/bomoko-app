@@ -31,6 +31,8 @@ export const createAvec = createAsyncThunk('avec/create', async (avecData) => {
     const response = await axios.post(`${BASE_URL}api/avec`, avecData);
     return response.data;
   } catch (error) {
+    console.log("Error =========??????", `${BASE_URL}api/avec/`);
+
     throw error;
   }
 });

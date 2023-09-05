@@ -409,7 +409,7 @@ const ServiceRoutes = () => (
               Modifier le Profile 
           </Button>:
            <Button mode="contained">   
-              Contacter 
+              Suivre + 
           </Button>
          }
          
@@ -452,7 +452,6 @@ const styles = StyleSheet.create({
     borderWidth: 5,
     borderColor: COLORS.white,
     backgroundColor: COLORS.white,
-    elevation: 5
   },
   scene: {
     flex: 1,
