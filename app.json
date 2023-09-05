@@ -1,8 +1,8 @@
 {
   "expo": {
     "name": "African Fintech",
-    "slug": "african-fintech",
-    "version": "4.5.0",
+    "slug": "bomoko-cash",
+    "version": "4.6.0",
     "privacy": "public",
     "orientation": "portrait",
     "icon": "./assets/app-icon.png",
@@ -27,11 +27,11 @@
         "backgroundColor": "#FFFFFF"
       },
       "package": "com.wezalab.bomoko4",
-      "versionCode": 45,
+      "versionCode": 46,
       "permissions": []
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/app-icon.png"
     },
     "extra": {
       "eas": {
