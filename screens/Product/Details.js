@@ -310,7 +310,7 @@ const Details = ({ route, navigation }) => {
     const outputTimeLineSoum = {
       time:`${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear().toString().substr(-2)}`,
       title: 'Soumission',
-      details: `Votre ${route.params.food.type} a été soumis à l'équipe BOMOKO Cash et est en attente de validation`
+      details: `Votre ${route.params.food.type} a été soumis à l'équipe African Fintech et est en attente de validation`
     };
 
     dispatch(soumettreProduct({
@@ -1176,7 +1176,7 @@ const Details = ({ route, navigation }) => {
               {" "}{ route.params.food.name}?</Text>
 
               <Text color={COLORS.peach} variant="titleLarge">Ceci implique que votre {route.params.food.type} {" "} 
-              sera soumis a l'equipe de BOMOKO sera etudier soigneusement pendant deux ou trois jours avant de 
+              sera soumis a l'equipe d'African Fintech sera etudier soigneusement pendant deux ou trois jours avant de 
               de le valider ou le rejeter dans la plateforme!</Text>
           </Card.Content>
           <Card.Actions style={{ marginTop: 15 }}>

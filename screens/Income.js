@@ -81,7 +81,7 @@ const Income = ({ route }) => {
         }}
       >
         <View style={{ paddingVertical: SIZES.padding / 2 }}>
-          <Text style={{ color: COLORS.primary, ...FONTS.h2 }}>Bomoko Cash</Text>
+          <Text style={{ color: COLORS.primary, ...FONTS.h2 }}>African Fintech</Text>
           <Text style={{ ...FONTS.h3, color: COLORS.darkgray }}>(Portefeuil electronique)</Text>
         </View>
       </View>

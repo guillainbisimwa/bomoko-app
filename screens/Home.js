@@ -106,7 +106,7 @@ const Home = ({ navigation }) => {
             />
           </TouchableOpacity>
 
-          <Text style={{ color: COLORS.white, ...FONTS.h2 }}>BOMOKO Cash</Text>
+          <Text style={{ color: COLORS.white, ...FONTS.h2 }}>African Fintech</Text>
         </View>
 
         <TouchableOpacity

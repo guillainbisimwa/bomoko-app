@@ -145,7 +145,7 @@ const CreanceDette = ({ navigation, route }) => {
           </TouchableOpacity>
           
           <View>
-            <Text style={{ color: COLORS.white, ...FONTS.h2 }}>BOMOKO Cash</Text>
+            <Text style={{ color: COLORS.white, ...FONTS.h2 }}>African Fintech</Text>
             <Text style={{ ...FONTS.h3, color: COLORS.gray }}>(Créance et Dettes)</Text>
         </View>
         </View>

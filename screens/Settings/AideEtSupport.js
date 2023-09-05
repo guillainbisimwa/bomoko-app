@@ -12,7 +12,7 @@ const AideEtSupport = () => {
     <ScrollView style={styles.container}>
       <Text style={styles.header}>Aide et Support</Text>
       <Text style={styles.paragraph}>
-        Bienvenue dans la section d'aide et de support de l'application BOMOKO Cash. Nous sommes là pour vous aider à résoudre tout problème que vous pourriez rencontrer lors de l'utilisation de notre application.
+        Bienvenue dans la section d'aide et de support de l'application African Fintech. Nous sommes là pour vous aider à résoudre tout problème que vous pourriez rencontrer lors de l'utilisation de notre application.
       </Text>
 
       <Text style={styles.subtitle}>FAQ</Text>
@@ -31,7 +31,7 @@ const AideEtSupport = () => {
 
       <Text style={styles.subtitle}>Centre d'Aide</Text>
       <Text style={styles.paragraph}>
-        Visitez notre centre d'aide en ligne pour accéder à des guides détaillés, des tutoriels et des ressources pour vous aider à tirer le meilleur parti de l'application BOMOKO Cash.
+        Visitez notre centre d'aide en ligne pour accéder à des guides détaillés, des tutoriels et des ressources pour vous aider à tirer le meilleur parti de l'application African Fintech.
       </Text>
       <TouchableOpacity style={styles.helpCenterButton}>
         <Text style={styles.buttonText}>Accéder au Centre d'Aide</Text>
