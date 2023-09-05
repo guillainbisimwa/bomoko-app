@@ -5,7 +5,7 @@ const slides = [
     lable: 'Bienvenue',
     subtitle: ' Simplifiez votre vie',
     des: 'Notre application de portefeuille électronique facilite vos calculs de revenus et vos dépenses au quotidien. Oubliez les tracas liés au calcul de rentabilite.',
-    imageUrl: require('./../../assets/img/logo1.png'),
+    imageUrl: require('./../../assets/img/logo2.png'),
   },
   {
     id: 2,

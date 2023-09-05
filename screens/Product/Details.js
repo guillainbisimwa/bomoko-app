@@ -1176,7 +1176,7 @@ const Details = ({ route, navigation }) => {
               {" "}{ route.params.food.name}?</Text>
 
               <Text color={COLORS.peach} variant="titleLarge">Ceci implique que votre {route.params.food.type} {" "} 
-              sera soumis a l'equipe de BOMOKO sera etudier soigneusement pendant deux ou trois jours avant de 
+              sera soumis a l'equipe d'African Fintech sera etudier soigneusement pendant deux ou trois jours avant de 
               de le valider ou le rejeter dans la plateforme!</Text>
           </Card.Content>
           <Card.Actions style={{ marginTop: 15 }}>
