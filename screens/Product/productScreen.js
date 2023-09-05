@@ -51,10 +51,11 @@ const ProductScreen = ({ navigation, route }) => {
 
     return () => {
       // Check if remove() is defined before calling it
-      if (typeof focusListener.remove === 'function') {
+      if (typeof focusListener?.remove === 'function') {
         focusListener.remove();
       } else {
-        throw new Error("focusListener.remove is not a function");
+        // throw new Error("focusListener.remove is not a function");
+        console.log('focusListener.remove is not a function');
       }
     };
   
@@ -112,6 +113,14 @@ const ProductScreen = ({ navigation, route }) => {
     // Dispatch the logoutUser action
     closeMenu();
     dispatch(logoutUser());
+
+    navigation.navigate('AuthScreen');
+  };
+
+  const handleLogin = () => {
+    // Dispatch the logoutUser action
+    closeMenu();
+    //dispatch(logoutUser());
 
     navigation.navigate('AuthScreen');
   };
@@ -468,18 +477,30 @@ const ProductScreen = ({ navigation, route }) => {
       )}
           </TouchableOpacity>
           }>
-          <Menu.Item leadingIcon="account" onPress={() => {
-            console.log("Token --",JSON.parse(token).user.user);
-            //console.log('User --', user.user.username);
-            console.log('User --', user['_j']?.user?.user?.username);
-            navigation.navigate('Profile', {
-              userId: JSON.parse(token)?.user?.user?.userId
-            })
-
-          }}
-           title={user['_j']?.user?.user?.username} />
+            {
+              user['_j']?.user?.user?.username?
+              <Menu.Item leadingIcon="account" onPress={() => {
+                console.log("Token --",JSON.parse(token).user.user);
+                //console.log('User --', user.user.username);
+                console.log('User --', user['_j']?.user?.user?.username);
+                navigation.navigate('Profile', {
+                  userId: JSON.parse(token)?.user?.user?.userId
+                })
+    
+              }}
+               title={user['_j']?.user?.user?.username} />
+               :<></>
+            }
+          
           <Divider />
-          <Menu.Item leadingIcon="logout" onPress={handleLogout} title="Deconnexion" />
+
+          {
+              user['_j']?.user?.user?.username?
+              <Menu.Item leadingIcon="logout" onPress={handleLogout} title="Deconnexion" />
+                :
+              <Menu.Item leadingIcon="login" onPress={handleLogin} title="Se connecter" />
+
+            }
         </Menu>
       </View>
       }       
