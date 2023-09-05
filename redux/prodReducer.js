@@ -26,13 +26,13 @@ const product = [
 //       "timeline": [
 //           {
 //               "title": "Soumission",
-//               "details": "Votre produit a été soumis à l'équipe BOMOKO Cash. Et\n      est en attente de validation",
+//               "details": "Votre produit a été soumis à l'équipe African Fintech. Et\n      est en attente de validation",
 //               "timestamp": "2023-08-14T22:38:08.241Z",
 //               "_id": "64daba16eef17e68383f8ebb"
 //           },
 //           {
 //               "title": "Soumission",
-//               "details": "Votre produit a été soumis à l'équipe BOMOKO Cash.",
+//               "details": "Votre produit a été soumis à l'équipe African Fintech.",
 //               "timestamp": "2023-08-14T20:35:00.301Z",
 //               "_id": "64da9bea64059cce459e0e60"
 //           },
@@ -130,7 +130,7 @@ const product = [
 //       "timeline": [
 //           {
 //               "title": "Soumission",
-//               "details": "Votre produit a été soumis à l'équipe BOMOKO Cash.",
+//               "details": "Votre produit a été soumis à l'équipe African Fintech.",
 //               "timestamp": "2023-08-14T20:35:00.301Z",
 //               "_id": "64da9c9264059cce459e0e7b"
 //           },
@@ -301,7 +301,7 @@ const product = [
 //       "timeline": [
 //           {
 //               "title": "Soumission",
-//               "details": "Votre service a été soumis à l'équipe BOMOKO Cash.",
+//               "details": "Votre service a été soumis à l'équipe African Fintech.",
 //               "timestamp": "2023-08-14T20:35:00.301Z",
 //               "_id": "64da9ba164059cce459e0e47"
 //           },
@@ -411,7 +411,7 @@ const product = [
 //       "timeline": [
 //           {
 //               "title": "Soumission",
-//               "details": "Votre service a été soumis à l'équipe BOMOKO Cash.",
+//               "details": "Votre service a été soumis à l'équipe African Fintech.",
 //               "timestamp": "2023-08-14T20:35:00.301Z",
 //               "_id": "64da9dac64059cce459e0e9a"
 //           },
@@ -428,7 +428,7 @@ const product = [
 //           },
 //           {
 //               "title": "Soumission",
-//               "details": "Votre service a été soumis à l'équipe BOMOKO Cash.",
+//               "details": "Votre service a été soumis à l'équipe African Fintech.",
 //               "timestamp": "2023-08-14T20:35:00.301Z",
 //               "_id": "64da9b1a64059cce459e0e28"
 //           }
@@ -489,7 +489,7 @@ const product = [
 //       "timeline": [
 //           {
 //               "title": "Soumission",
-//               "details": "Votre produit a été soumis à l'équipe BOMOKO Cash. Et\n      est en attente de validation",
+//               "details": "Votre produit a été soumis à l'équipe African Fintech. Et\n      est en attente de validation",
 //               "timestamp": "2023-08-14T20:35:00.301Z",
 //               "_id": "64daaaa964059cce459e1007"
 //           },

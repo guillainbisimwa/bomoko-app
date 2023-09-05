@@ -6,7 +6,7 @@ const DataSecurityScreen = () => {
     <ScrollView style={styles.container}>
       <Text style={styles.header}>Sécurité des Données</Text>
       <Text style={styles.paragraph}>
-        Chez BOMOKO Cash, nous accordons une importance capitale à la sécurité de vos données personnelles. Cette page vise à vous informer sur les mesures que nous prenons pour protéger vos informations.
+        Chez African Fintech, nous accordons une importance capitale à la sécurité de vos données personnelles. Cette page vise à vous informer sur les mesures que nous prenons pour protéger vos informations.
       </Text>
 
       <Text style={styles.subtitle}>Protection des Données</Text>

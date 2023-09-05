@@ -13,6 +13,6 @@ const App = () => {
   );
 };
 
-AppRegistry.registerComponent('Bomoko Cash', () => App); // Add this line
+AppRegistry.registerComponent('African Fintech', () => App); // Add this line
 
 export default App;

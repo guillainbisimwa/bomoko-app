@@ -19,7 +19,7 @@ const Privacy = ({  }) => {
         
 
       <Text style={styles.paragraph}>
-        Nous sommes ravis de vous accueillir sur l'application mobile BOMOKO Cash ("l'Application"). Cette Politique de Confidentialité a été élaborée pour vous informer de la manière dont nous collectons, utilisons, partageons et protégeons vos informations personnelles. En utilisant notre Application, vous consentez aux pratiques décrites dans cette politique.
+        Nous sommes ravis de vous accueillir sur l'application mobile African Fintech ("l'Application"). Cette Politique de Confidentialité a été élaborée pour vous informer de la manière dont nous collectons, utilisons, partageons et protégeons vos informations personnelles. En utilisant notre Application, vous consentez aux pratiques décrites dans cette politique.
       </Text>
 
       <Text style={styles.subtitle}>Collecte et Utilisation des Informations</Text>
@@ -48,7 +48,7 @@ const Privacy = ({  }) => {
       </Text>
 
       <Text style={styles.footer}>
-        En utilisant l'application BOMOKO Cash, vous acceptez les termes de cette Politique de Confidentialité.
+        En utilisant l'application African Fintech, vous acceptez les termes de cette Politique de Confidentialité.
       </Text>
 
       <Text style={styles.contact}>

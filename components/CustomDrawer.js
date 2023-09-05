@@ -25,7 +25,7 @@ const CustomDrawer = (props) => {
               marginBottom: 5,
             }}
           >
-            BOMOKO Cash
+            African Fintech
           </Text>
         </ImageBackground>
         <View style={{ flex: 1, backgroundColor: '#fff', paddingTop: 10 }}>
