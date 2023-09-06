@@ -29,18 +29,6 @@ const CreanceDette = ({ navigation, route }) => {
   const [isFetchingComplete, setIsFetchingComplete] = useState(false);
 
   useEffect(() => {
-    const getTokenFromAsyncStorage = async () => {
-      try {
-        const storedToken = await AsyncStorage.getItem('user');
-        setToken(storedToken);
-      } catch (error) {
-        // Handle AsyncStorage read error if needed
-        console.error('Error reading token from AsyncStorage:', error);
-      }
-    };
-
-    getTokenFromAsyncStorage();
-
     // Fetch data when the component mounts
     fetchData();
 
@@ -54,11 +42,22 @@ const CreanceDette = ({ navigation, route }) => {
       if (typeof focusListener.remove === 'function') {
         focusListener.remove();
       } else {
-        throw new Error("focusListener.remove is not a function");
+        //throw new Error("focusListener.remove is not a function");
+        console.log('FocusListener.remove is not a function')
       }
     };
 
   }, [dispatch, navigation]);
+
+  const getTokenFromAsyncStorage = async () => {
+    try {
+      const storedToken = await AsyncStorage.getItem('user');
+      setToken(storedToken);
+    } catch (error) {
+      // Handle AsyncStorage read error if needed
+      console.error('Error reading token from AsyncStorage:', error);
+    }
+  };
 
   const fetchData = () => {
     // Only dispatch the fetchAvecs action if fetching is not already complete
@@ -66,6 +65,7 @@ const CreanceDette = ({ navigation, route }) => {
       dispatch(fetchAvecs())
         .then(() => {
           setIsFetchingComplete(true); // Mark fetching as complete
+          getTokenFromAsyncStorage(); 
         })
         .catch((error) => {
           // Handle error if needed
@@ -130,7 +130,7 @@ const CreanceDette = ({ navigation, route }) => {
               paddingRight: SIZES.base * 2,
             }}
             onPress={() => {
-              console.log('Menu');
+              //console.log('Menu');
               navigation.openDrawer();
             }}
           >
@@ -215,8 +215,8 @@ const CreanceDette = ({ navigation, route }) => {
             const timeDifference = date.getTime() - today.getTime();
             const daysLeft = Math.ceil(timeDifference / (1000 * 3600 * 24));
             
-            console.log('French Date:', frenchDate);
-            console.log('Days Left:', daysLeft);
+            // console.log('French Date:', frenchDate);
+            // console.log('Days Left:', daysLeft);
 
           return(
             <TouchableOpacity style={styles.card} key={avec._id} onPress={()=> navigation.navigate("DetailsAvec", {avec})}>
@@ -241,7 +241,7 @@ const CreanceDette = ({ navigation, route }) => {
               <View style={styles.imgs}>
                 {avec?.membres?.slice(0,5).map((value, key) =>{
                   console.log();
-                  console.log(value.user);
+                  //console.log(value.user);
                   return(
                   <Image
                     key={key}

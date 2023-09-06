@@ -64,17 +64,6 @@ const ProductScreen = ({ navigation, route }) => {
   const fetchData = () => {
     // Only dispatch the fetchAvecs action if fetching is not already complete
     if (!isFetchingComplete) {
-      const getTokenFromAsyncStorage = async () => {
-        try {
-          const storedToken = await AsyncStorage.getItem('user');
-          setToken(storedToken);
-        } catch (error) {
-          // Handle AsyncStorage read error if needed
-          console.error('Error reading token from AsyncStorage:', error);
-        }
-      };
-  
-      getTokenFromAsyncStorage();
 
       dispatch(fetchProducts())
         .then(() => {
@@ -86,6 +75,8 @@ const ProductScreen = ({ navigation, route }) => {
               //   dispatch(setInitialUser(initialUser));
               // }
             //setActive(active == null? 'Tous':active);
+            getTokenFromAsyncStorage();
+
             setProduct_serviceList([...products]);
             setProduct_serviceList([...products].sort((a, b) => a.name - b.name));
             setBadgePanding(products.filter(product => 
@@ -103,12 +94,15 @@ const ProductScreen = ({ navigation, route }) => {
     }
   };
 
-
-  useEffect(() => {
-     
-  }, []);
-
-
+  const getTokenFromAsyncStorage = async () => {
+    try {
+      const storedToken = await AsyncStorage.getItem('user');
+      setToken(storedToken);
+    } catch (error) {
+      // Handle AsyncStorage read error if needed
+      console.error('Error reading token from AsyncStorage:', error);
+    }
+  };
   const handleLogout = () => {
     // Dispatch the logoutUser action
     closeMenu();
@@ -478,24 +472,24 @@ const ProductScreen = ({ navigation, route }) => {
           </TouchableOpacity>
           }>
             {
-              user['_j']?.user?.user?.username?
+              user?._j?.user?.user?.username?
               <Menu.Item leadingIcon="account" onPress={() => {
                 console.log("Token --",JSON.parse(token).user.user);
                 //console.log('User --', user.user.username);
-                console.log('User --', user['_j']?.user?.user?.username);
+                console.log('User --', user?._j?.user?.user?.username);
                 navigation.navigate('Profile', {
                   userId: JSON.parse(token)?.user?.user?.userId
                 })
     
               }}
-               title={user['_j']?.user?.user?.username} />
+               title={user?._j?.user?.user?.username} />
                :<></>
             }
           
           <Divider />
 
           {
-              user['_j']?.user?.user?.username?
+              user?._j?.user?.user?.username?
               <Menu.Item leadingIcon="logout" onPress={handleLogout} title="Deconnexion" />
                 :
               <Menu.Item leadingIcon="login" onPress={handleLogin} title="Se connecter" />
@@ -542,7 +536,7 @@ const ProductScreen = ({ navigation, route }) => {
             }
           {search.trim().length == 0 ? (
             <>
-              {popular()}
+              {/* {popular()} */}
               {list()}
             </>
           ) : (

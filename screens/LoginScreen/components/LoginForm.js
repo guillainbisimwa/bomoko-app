@@ -16,8 +16,8 @@ export const LoginForm = ({ navigation }) => {
 
   const { error, isLoading, success, user } = useSelector((state) => state.user);
 
-  const [phone, setPhone] = useState('');
-  const [password, setPassword] = useState('');
+  const [phone, setPhone] = useState('0978532756');
+  const [password, setPassword] = useState('12345678');
 
   const [visible, setVisible] = useState(false);
   const [visibleSuccess, setVisibleSuccess] = useState(false);
@@ -35,7 +35,7 @@ export const LoginForm = ({ navigation }) => {
       if (success) {
         onToggleSnackBarSuccess();
       
-        navigationV2.navigate('Main');
+        //navigationV2.navigate('Main');
        
       }
       if (error) {

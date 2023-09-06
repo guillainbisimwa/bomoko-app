@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 
-import { useFonts } from 'expo-font';
+import * as Font from 'expo-font';
+
 import { useDispatch, useSelector } from 'react-redux';
 import InitialLoader from './screens/InitialLoader';
 import Onboard from './navigations/Onboard';
@@ -39,6 +40,11 @@ const Stack = createStackNavigator();
 const App = () => {
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
+  const [fontLoading, setFontLoading]=useState(false);
+
+
+  const isInstalled = useSelector((state) => state.app.isInstalled);
+  const u = useSelector((state) => state?.user);
 
   const income = 'income';
   const expense = 'expense';
@@ -158,7 +164,7 @@ const App = () => {
     const initialUser = loadInitialUser();
     if (initialUser) {
       // Dispatch the action using extraReducers
-      dispatch(setInitialUser(initialUser));
+      // dispatch(setInitialaUser(initialUser));
     }
   }, []);
 
@@ -217,19 +223,14 @@ const App = () => {
     }
   };
 
-  const isInstalled = useSelector((state) => state.app.isInstalled);
-  const u = useSelector((state) => state?.user);
-  // console.log("user -->",u)
-
-  const [loaded] = useFonts({
+  Font.loadAsync( {
     'Roboto-Black': require('./assets/fonts/Roboto-Black.ttf'),
     'Roboto-Bold': require('./assets/fonts/Roboto-Bold.ttf'),
     'Roboto-Regular': require('./assets/fonts/Roboto-Regular.ttf'),
-  });
-
-  if (!loaded) {
-    return null;
-  }
+    'Roboto-Medium': require('./assets/fonts/Roboto-Medium.ttf'),
+      }
+  ).then( () => setFontLoading('true') )
+  
 
   if (loading) {
     return <InitialLoader />;
