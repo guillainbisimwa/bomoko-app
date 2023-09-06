@@ -16,7 +16,7 @@ export const loginUser = createAsyncThunk(
       mobile,
       password,
     });
-    console.log("loginnnnnnn---?????? ",response.data?.user);
+    console.log("loginnnnnnn---?????? ", await response.data);
     
     return response.data?.user;
   }

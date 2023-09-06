@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Alert, View, StyleSheet, ImageBackground, Dimensions,ScrollView, KeyboardAvoidingView } from 'react-native';
-import { Button, TextInput, Text, ActivityIndicator, Snackbar, } from 'react-native-paper';
+import { Button, TextInput, Text, Snackbar, } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import NetInfo from "@react-native-community/netinfo";
 
@@ -9,14 +9,14 @@ import { COLORS, FONTS } from '../../../constants';
 import { loginUser } from '../../../redux/userSlice';
 import { useNavigation } from '@react-navigation/native';
 
-const { height, width } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 export const LoginForm = ({ navigation }) => {
   const dispatch = useDispatch();
 
   const { error, isLoading, success, user } = useSelector((state) => state.user);
 
-  const [phone, setPhone] = useState('0978532756');
+  const [phone, setPhone] = useState('097853275');
   const [password, setPassword] = useState('12345678');
 
   const [visible, setVisible] = useState(false);
@@ -92,46 +92,31 @@ const handleLogin = async () => {
           style={styles.input}
           error={error}
         />
-          <ActivityIndicator  animating={isLoading} color={COLORS.red} />
-
-        
-        <Button mode="contained" onPress={handleLogin} style={styles.button}>
-          Login
+        {
+          visible? <Text style={{color:COLORS.red}} >Mots de passe ou Numéro de téléphone invalide </Text>:<></>
+        }
+       
+        <Button disabled={isLoading} mode="contained" loading={isLoading} onPress={handleLogin} style={styles.button}>
+          Se connecter
         </Button>
 
         <Text style={{ marginVertical: 20, color: COLORS.white, ...FONTS.h2}} 
       onPress={()=> navigation.goBack()} > Retour</Text>
 
-      
       </View>
     <Snackbar
-        visible={visible}
-        onDismiss={onDismissSnackBar}
-        style={{ backgroundColor: COLORS.peach}}
-        wrapperStyle={{ bottom: 30 }}
-        action={{
-          label: 'Annuler',
-          onPress: () => {
-            // Do something
-          },
-        }}
-        >
-        {error}
-      
-        
+      visible={visible}
+      onDismiss={onDismissSnackBar}
+      style={{ backgroundColor: COLORS.peach}}
+      wrapperStyle={{ bottom: 30 }}
+    >
+       Mots de passe ou Numéro de téléphone invalide
       </Snackbar>
       <Snackbar
         visible={visibleSuccess}
         onDismiss={onDismissSnackBarSuccess}
         style={{ backgroundColor: COLORS.darkgreen}}
         wrapperStyle={{ bottom: 30 }}
-        
-        action={{
-          label: 'Annuler',
-          onPress: () => {
-            // Do something
-          },
-        }}
         >
         Login avec success
         
@@ -170,7 +155,7 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 20,
-    padding:10,
+    //padding:10,
     width: '70%',
   },
 });
