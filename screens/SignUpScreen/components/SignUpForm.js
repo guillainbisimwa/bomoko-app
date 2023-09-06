@@ -28,7 +28,7 @@ export const SignUpForm = ({ navigation }) => {
 
   const [visible, setVisible] = useState(false);
 
-  const [selectedImage, setSelectedImage] = useState('');
+  const [selectedImage, setSelectedImage] = useState('https://raw.githubusercontent.com/guillainbisimwa/bomoko-app/master/assets/icons/gens.png');
 
   const onToggleSnackBar = () => setVisible(!visible);
 
