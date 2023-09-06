@@ -9,10 +9,11 @@ import NetInfo from "@react-native-community/netinfo";
 
 import { ImageBackground, Alert } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { ActivityIndicator, Badge, Divider, Menu, Provider } from 'react-native-paper';
+import { ActivityIndicator, Badge, Divider, Menu, Provider, Searchbar } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { loginSuccess, logoutUser } from '../../redux/authReducer';
 import { useFocusEffect } from '@react-navigation/native';
+import { FlatList } from 'react-native';
 
 const ProductScreen = ({ navigation, route }) => {
   const [visibleMenu, setVisibleMenu] = useState(false);
@@ -22,9 +23,15 @@ const ProductScreen = ({ navigation, route }) => {
   console.log(route);
   // Refresh Control
   const [refreshing, setRefreshing] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [activeTabType, setActiveJobType] = useState("Tous");
 
   const dispatch = useDispatch();
+
+  const jobTypes = ["Tous", "Disponible", "En cours",  "Financé"];
+
+  const onChangeSearch = query => setSearchQuery(query);
 
    // Function to handle screen reload
    const reloadScreen = (value) => {
@@ -219,6 +226,28 @@ const ProductScreen = ({ navigation, route }) => {
       </View>
     );
   }
+
+  const tabTop = () => (
+
+    <View style={styles.tabsContainer}>
+    <FlatList
+      data={jobTypes}
+      renderItem={({ item }) => (
+        <TouchableOpacity
+          style={styles.tab(activeTabType, item)}
+          onPress={() => {
+            setActiveJobType(item);
+          }}
+        >
+          <Text style={styles.tabText(activeTabType, item)}>{item}</Text>
+        </TouchableOpacity>
+      )}
+      keyExtractor={(item) => item}
+      contentContainerStyle={{ columnGap: SIZES.base*1.5 }}
+      horizontal
+    />
+  </View>
+  )
   
 
   if (loading) {
@@ -246,15 +275,18 @@ const ProductScreen = ({ navigation, route }) => {
           }
           >
             <Block flex={false}>
-              <TextInput
+             
+              <Searchbar
                 placeholder="Rechecher un produit/service"
-                style={styles.input}
-                //value={search}
-                //onChangeText={(text) => onSearch(text)}
+                onChangeText={onChangeSearch}
+                value={searchQuery}
               />
             </Block>
             {
               loading?<ActivityIndicator size="large" />: <></>
+            }
+            {
+              tabTop()
             }
            </ScrollView>
         </Block>
@@ -269,14 +301,25 @@ const ProductScreen = ({ navigation, route }) => {
  
 
 const styles = StyleSheet.create({
-  input: {
-    width: '100%',
-    height: 55,
-    backgroundColor: COLORS.white,
-    borderRadius: 16,
-    paddingHorizontal: 44,
-    fontSize: 20,
+ 
+  tabsContainer: {
+    width: "100%",
+    marginTop: SIZES.base*2,
   },
+  tab: (activeTabType, item) => ({
+    paddingHorizontal:SIZES.base*2,
+    paddingVertical:SIZES.base,
+    borderRadius: SIZES.radius*2,
+    borderWidth: 1,
+    marginBottom:SIZES.base*2,
+    borderColor: activeTabType === item ? COLORS.secondary : COLORS.gray,
+    backgroundColor: activeTabType === item ? COLORS.secondary : COLORS.lightGray2,
+    elevation:2,
+  }),
+  tabText: (activeTabType, item) => ({
+    color: activeTabType === item ? COLORS.white : COLORS.black,
+    fontWeight: 'bold',
+  }),
 });
 
 export default ProductScreen;
