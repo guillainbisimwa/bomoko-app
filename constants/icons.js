@@ -16,6 +16,7 @@ export const search = require('../assets/icons/search.png');
 export const app_icon = require('../assets/app-icon.png');
 export const expense = require('../assets/icons/expense.png'); 
 export const income = require('../assets/icons/income.png');
+export const notification = require('../assets/icons/notifications.png');
 
 export const grant = require('../assets/icons/icons8-grant-50.png');
 export const interest = require('../assets/icons/icons8-interest-48.png');
@@ -51,6 +52,7 @@ export default {
   refund,
   interest,
   investment,
+  notification,
 
   shopping,
   cash,

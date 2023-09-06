@@ -193,7 +193,7 @@ const ProductScreen = ({ navigation, route }) => {
           }}
         >
           <Image
-            source={icons.shopping}
+            source={icons.notification}
             style={{
               width: 30,
               height: 30,
