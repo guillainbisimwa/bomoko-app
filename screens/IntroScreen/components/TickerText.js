@@ -48,6 +48,5 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     fontWeight: '800',
     color: '#000',
-    fontFamily: 'Roboto-Medium',
   },
 });

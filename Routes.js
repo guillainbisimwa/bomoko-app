@@ -159,15 +159,6 @@ const App = () => {
     checkCategories();
   }, []);
 
-  useEffect(() => {
-    // Load initial user data from AsyncStorage
-    const initialUser = loadInitialUser();
-    if (initialUser) {
-      // Dispatch the action using extraReducers
-      // dispatch(setInitialaUser(initialUser));
-    }
-  }, []);
-
   const checkInstallationStatus = async () => {
     try {
       const value = await AsyncStorage.getItem('isInstalled');
@@ -187,7 +178,7 @@ const App = () => {
   const checkLoginStatus = async () => {
     try {
       const value = await AsyncStorage.getItem('user');
-      //AsyncStorage.clear();
+      // AsyncStorage.clear();
 
       console.log('value-user', value);
       if (value !== null) {
@@ -222,15 +213,6 @@ const App = () => {
       setLoading(false);
     }
   };
-
-  Font.loadAsync( {
-    'Roboto-Black': require('./assets/fonts/Roboto-Black.ttf'),
-    'Roboto-Bold': require('./assets/fonts/Roboto-Bold.ttf'),
-    'Roboto-Regular': require('./assets/fonts/Roboto-Regular.ttf'),
-    'Roboto-Medium': require('./assets/fonts/Roboto-Medium.ttf'),
-      }
-  ).then( () => setFontLoading('true') )
-  
 
   if (loading) {
     return <InitialLoader />;
