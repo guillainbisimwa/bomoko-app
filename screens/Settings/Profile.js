@@ -57,7 +57,7 @@ const Profile = ({ route, navigation }) => {
   const [loadingProd, setLoadingProd] = useState(true);
 
   const [token, setToken] = useState(null);
-
+  console.log(route.params);
 
   const layout = useWindowDimensions();
   const [index, setIndex] = useState(0);
@@ -403,7 +403,7 @@ const ServiceRoutes = () => (
 
         <View style={{ paddingVertical:20, flexDirection: "row", gap:10, justifyContent:"space-between"  }}>
          {
-          JSON.parse(token)?.user?.user?.userId == route.params.userId?
+          JSON.parse(token)?._id== route.params.userId?
           <Button mode="contained" onPress={()=> 
             navigation.navigate('EditProfile', { user: userDetails})} >   
               Modifier le Profile 

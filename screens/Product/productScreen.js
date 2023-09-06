@@ -8,7 +8,7 @@ import NetInfo from "@react-native-community/netinfo";
 
 import { ImageBackground, Alert } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { ActivityIndicator, Badge, Divider, Menu, Provider, Searchbar } from 'react-native-paper';
+import { ActivityIndicator, Badge, Button, Card, Divider, FAB, Menu, Modal, Provider, Searchbar } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { loginSuccess, logoutUser } from '../../redux/authReducer';
 import { useFocusEffect } from '@react-navigation/native';
@@ -17,10 +17,12 @@ import Product from './Product';
 
 const ProductScreen = ({ navigation, route }) => {
   const [visibleMenu, setVisibleMenu] = useState(false);
+  const [visible, setVisible] = useState(false);
   const [connectedUser, setConnectedUser] = useState(null);
   const [badgePanding, setBadgePanding] = useState(0);
 
   console.log(route);
+  
   // Refresh Control
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -1489,6 +1491,17 @@ const ProductScreen = ({ navigation, route }) => {
   
   const openMenu = () => setVisibleMenu(true);
   const closeMenu = () => setVisibleMenu(false);
+
+  // Modal
+  const showModal = () => setVisible(true);
+  const hideModal = () => setVisible(false);
+
+  const containerStyle = {
+    backgroundColor: 'white',
+    width: '85%',
+    borderRadius: 10,
+    alignSelf: 'center',
+  };
   
   const handleLogin = () => {
     closeMenu();
@@ -1615,9 +1628,9 @@ const ProductScreen = ({ navigation, route }) => {
               connectedUser?.username?
               <Menu.Item leadingIcon="account" onPress={() => {
                 //console.log('User --', user.user.username);
-                console.log('User --', connectedUser?.username);
+                console.log('User --', connectedUser.userId);
                 navigation.navigate('Profile', {
-                  userId: connectedUser.userId
+                  userId: connectedUser.userId,
                 })
     
               }}
@@ -1672,12 +1685,14 @@ const ProductScreen = ({ navigation, route }) => {
     return (
    
       <Provider>
+       
       <ImageBackground
-        style={{ flex: 1, position: 'absolute', height: '100%', width: '100%' }}
+        style={{  position: 'absolute', height: '100%', width: '100%' }}
         source={require('./../../assets/login1_bg.png')}
         blurRadius={10}
       ></ImageBackground>
-      <View style={{ flex: 1 }}>
+       <Block flex  >
+     
         {/* Nav bar section */}
         {renderNavBar()}
   
@@ -1703,21 +1718,59 @@ const ProductScreen = ({ navigation, route }) => {
             {
               tabTop()
             }
-             <ScrollView  showsHorizontalScrollIndicator={false}>
+             <ScrollView style={{ flexGrow: 1, height:'80%' }} showsHorizontalScrollIndicator={false}>
               {
                 p.map((product,index)=>
                 <Product prod={product} navigation={navigation} />)
               }
               </ScrollView>
-              
-              
             
            </View>
         </Block>
       </Block>
+
+      <Modal
+        style={{ zIndex: 99 }}
+        visible={visible}
+        onDismiss={hideModal}
+        contentContainerStyle={[containerStyle, { zIndex: 999 }]} // Set a higher value for the z-index
+      >
+        <Card style={{ padding: 10 }}>
+          <Card.Title
+            titleStyle={{ fontWeight: 'bold', textTransform: 'uppercase' }}
+            title="ATTENTION!" 
+          />
+          <Card.Content>
+            <Text variant="titleLarge">Vous devez d'abord vous connecter</Text>
+          </Card.Content>
+          <Card.Actions style={{ marginTop: 15 }}>
+            <Button onPress={hideModal}>Annuler</Button>
+            <Button buttonColor={COLORS.red}
+             onPress={() => {
+              hideModal()
+              navigation.navigate('AuthScreen')
+            }} >Se Connecter</Button>
+          </Card.Actions>
+        </Card>
+      </Modal>
+
+        <FAB icon="plus" variant="tertiary" style={styles.fab} 
+        onPress={() => {
+          console.log()
+    
+          if(!connectedUser) {
+            showModal(true);
+          }
+          else {
+            navigation.navigate('AddProduct', { owner: connectedUser?.userId,
+              username: connectedUser?.username });
+          }
+       
+        }} />
      
       
-      </View>
+      </Block>
+      <Block></Block>
       </Provider>
     );
   };
@@ -1744,6 +1797,13 @@ const styles = StyleSheet.create({
     color: activeTabType === item ? COLORS.white : COLORS.black,
     fontWeight: 'bold',
   }),
+  fab: {
+    position: 'absolute',
+    margin: 16,
+    //backgroundColor: '#ff0000',
+    right: 0,
+    bottom: 0,
+  },
 });
 
 export default ProductScreen;

@@ -85,24 +85,41 @@ const Product = (props) => {
                         onPress={() => console.log('Pressed')}
                       />
                      <Text numberOfLines={1} semibold size={12}>
-                        {props.prod.location.length > 1 ? props.prod.location.join(', ') : props.prod.location[0]}
+                     {props.prod.location.filter(town => town !== '').join(', ')}
                       </Text>
                     </Block>
+
+                    <View style={styles.imgs}>
+                {props.prod?.membres?.slice(0,5).map((value, key) =>{
+                  console.log();
+                  //console.log(value.user);
+                  return(
+                  <Image
+                    key={key}
+                    source={{uri: value?.user?.profile_pic}}
+                    style={[
+                      styles.img,
+                      key > 0 && { marginLeft: -15 }, // Apply negative margin for images after the first one
+                    ]}
+                  />
+                )})}
+                
+              </View>
                   </Block>
                 
                    <Block
                      
                       style={{backgroundColor: COLORS.lightGray,
-                      borderRadius: SIZES.base*2, padding:8, marginTop:5 }}
+                      borderRadius: SIZES.base*2, padding:8,}}
                     >
                      <Block>
               <Block row space="between">
-              <Text numberOfLines={1} semibold size={16}>
-              {((props.prod.initialAmount + props.prod.membres
-.filter(member => member.contribution_status === "ACCEPTED")
-.reduce((sum, member) => sum + member.contribution_amount, 0)) * 100 / props.prod.amount).toFixed(1)}% d'investissement
-              </Text>
-                <Text> {props.prod.initialAmount} {props.prod.currency}</Text>
+                <Text numberOfLines={1} semibold size={16}>
+                  {((props.prod.initialAmount + props.prod.membres
+                  .filter(member => member.contribution_status === "ACCEPTED")
+                  .reduce((sum, member) => sum + member.contribution_amount, 0)) * 100 / props.prod.amount).toFixed(1)}% d'investissement
+                </Text>
+                  <Text> {props.prod.initialAmount} {props.prod.currency}</Text>
               </Block>
 
               <Block row space="between">
@@ -126,7 +143,7 @@ const Product = (props) => {
                 <Text> 0 {props.prod.currency} </Text>
               </Block>
             </Block>
-                    </Block>
+          </Block>
                
                 </Block>
                 </Block>
@@ -175,6 +192,25 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     right: 0,
     margin: SIZES.base * 2,
+  },
+  imgs: {
+    flexDirection: 'row',
+    marginVertical:10,
+  },
+  img: {
+    borderRadius: SIZES.base * 3,
+    backgroundColor:COLORS.white,
+    borderWidth:2,
+    borderColor: COLORS.black,
+    width: SIZES.base * 5,
+    height: SIZES.base * 5,
+    //tintColor: COLORS.black,
+  },
+
+  moreImagesText: {
+    flex:1,
+    alignSelf:'center', 
+    marginLeft:10
   },
 
 });
