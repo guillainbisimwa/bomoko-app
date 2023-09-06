@@ -3,7 +3,6 @@ import { Image, RefreshControl, ScrollView, StyleSheet, TextInput, TouchableOpac
 import { COLORS, FONTS, SIZES, icons } from './../../constants';
 import Block from './Block';
 import Text from './Text';
-import Product_service from './Product_service';
 import LottieView from 'lottie-react-native';
 import NetInfo from "@react-native-community/netinfo";
 
@@ -1685,7 +1684,7 @@ const ProductScreen = ({ navigation, route }) => {
         <Block flex color="grey">
         
         <Block flex color="grey" p={15}>
-          <ScrollView style={{ paddingTop: 5 }} showsVerticalScrollIndicator={false}
+          <View style={{ paddingTop: 5 }} 
            refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
@@ -1704,24 +1703,16 @@ const ProductScreen = ({ navigation, route }) => {
             {
               tabTop()
             }
-            
-               <Block row space="between" m_t={5}>
-               <Text h2 grey bold>
-                 Les produits/services populaires
-               </Text>
-               <Text primary>Voir plus</Text>
-             </Block>
-     
-             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+             <ScrollView  showsHorizontalScrollIndicator={false}>
               {
                 p.map((product,index)=>
-                <Product prod={product}/>)
+                <Product prod={product} navigation={navigation} />)
               }
               </ScrollView>
               
               
             
-           </ScrollView>
+           </View>
         </Block>
       </Block>
      

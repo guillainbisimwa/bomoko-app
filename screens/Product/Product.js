@@ -1,7 +1,7 @@
-import React from 'react';
-import { Image, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { Image, StyleSheet, TouchableOpacity } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { FAB, IconButton, MD3Colors, ProgressBar } from 'react-native-paper';
+import { IconButton, MD3Colors, ProgressBar } from 'react-native-paper';
 
 import { COLORS, SIZES } from '../../constants';
 import Block from './Block';
@@ -13,7 +13,7 @@ const Product = (props) => {
   const stars = (starsNumber) => {
     const totalStars = 5;
     const filledStars = Math.min(starsNumber, totalStars);
-  
+
     return (
       <Block row>
         {[...Array(filledStars).keys()].map((star, index) => (
@@ -29,7 +29,11 @@ const Product = (props) => {
   console.log();
     const startDate = new Date(props.prod.startDate);
     const endDate = new Date(props.prod.endDate);
-    
+
+    const [totAmount, setTotAmount] = useState(
+      props.prod.couts.reduce((sum, cout) => sum + cout.amount, 0)
+    );
+  
     const startDateFinal = `${startDate.getDate()}/${startDate.getMonth() + 1}/${startDate.getFullYear().toString().substr(-2)}`;
     const endDateFinal = `${endDate.getDate()}/${endDate.getMonth() + 1}/${endDate.getFullYear().toString().substr(-2)}`;
 
@@ -42,10 +46,10 @@ const Product = (props) => {
        
               <TouchableOpacity
                 onPress={() => {
-                  // navigation.navigate('Details', { food: props.prod });
+                  props.navigation.navigate('Details', { food: props.prod });
                 }}
               >
-                <Block p={10} color="white" style={styles.container} m_t={14}>
+                <Block color="white" style={styles.container} m_t={14}>
                   <View style={styles.price}>
                     <Text white bold>
                       {props.prod.amount} {props.prod.currency}
@@ -62,6 +66,8 @@ const Product = (props) => {
                   </View>
                 
                   <Image source={{uri:  props.prod.images[0] }} style={styles.imgFood} />
+                  
+                  <Block p_l={10} p_r={10} p_b={10}>
                   <Text numberOfLines={1} grey h2 bold>
                     {props.prod.name}
                   </Text>
@@ -69,74 +75,60 @@ const Product = (props) => {
                   <Text numberOfLines={2} grey>
                     {props.prod.detail}
                   </Text>
-                  <Block m_t={5} row center space="between">
-                    {stars(props.prod.stars.length)}
+                  <Block row center space="between">
+                    {/* {stars(props.prod.stars.length)} */}
                     <Block row center>
                       <IconButton
                         icon="pin"
                         iconColor={MD3Colors.error50}
-                        size={10}
+                        size={15}
                         onPress={() => console.log('Pressed')}
                       />
-                      <Text numberOfLines={1} semibold size={12}>
-                        {props.prod.location.join(', ')}
+                     <Text numberOfLines={1} semibold size={12}>
+                        {props.prod.location.length > 1 ? props.prod.location.join(', ') : props.prod.location[0]}
                       </Text>
                     </Block>
                   </Block>
-                  <Block m_t={2} m_b={10} row center space="between">
-                   
-                    <Block row center space="between">
-                      <ProgressBar
-                        progress={invest/100}
-                        color={MD3Colors.error50}
-                        style={{ width: '100%', height: SIZES.base }}
-                        animatedValue={invest/100}
-                        visible
-                        
-                      />
-                      <Text numberOfLines={1} semibold size={19} style={{ marginLeft: 20 }}>
-                      {invest}%
-                      </Text>
-                    </Block>
-                  </Block>
-                  <Block row>
-                    <Block
-                      center
-                      middle
-                      style={[styles.cat, { backgroundColor: COLORS.primary }]}
+                
+                   <Block
+                     
+                      style={{backgroundColor: COLORS.lightGray,
+                      borderRadius: SIZES.base*2, padding:8, marginTop:5 }}
                     >
-                      <Text white bold size={12}>
-                        {invest}%
-                      </Text>
-                      <Text white bold numberOfLines={1}>
-                        Realisation
-                      </Text>
+                     <Block>
+              <Block row space="between">
+              <Text numberOfLines={1} semibold size={16}>
+              {((props.prod.initialAmount + props.prod.membres
+.filter(member => member.contribution_status === "ACCEPTED")
+.reduce((sum, member) => sum + member.contribution_amount, 0)) * 100 / props.prod.amount).toFixed(1)}% d'investissement
+              </Text>
+                <Text> {props.prod.initialAmount} {props.prod.currency}</Text>
+              </Block>
+
+              <Block row space="between">
+                <Text numberOfLines={1} semibold>
+                  Le prix d'une part:
+                </Text>
+                <Text> {props.prod.amount/100} {props.prod.currency}</Text>
+              </Block>
+
+              <Block row space="between">
+                <Text numberOfLines={1} semibold>
+                  Les parts disponibles:
+                </Text>
+                <Text>{(100 - (props.prod.initialAmount / (props.prod.amount / 100))).toFixed(1)} parts</Text>
+              </Block>
+
+              <Block row space="between">
+                <Text numberOfLines={1} semibold>
+                  Le coût total de Revient:
+                </Text>
+                <Text> 0 {props.prod.currency} </Text>
+              </Block>
+            </Block>
                     </Block>
-                    <Block
-                      center
-                      middle
-                      style={[styles.cat, { backgroundColor: COLORS.purple }]}
-                    >
-                      <Text white bold size={12}>
-                      {props.prod.membres.length + 1}
-                      </Text>
-                      <Text white bold numberOfLines={1}>
-                        Membres
-                      </Text>
-                    </Block>
-                    <Block
-                      center
-                      middle
-                      style={[styles.cat, { backgroundColor: COLORS.peach }]}
-                    >
-                      <Text white size={12}>
-                        {props.prod.amount} {props.prod.currency}
-                      </Text>
-                      <Text white bold numberOfLines={1}>
-                        Budjet
-                      </Text>
-                    </Block>
-                  </Block>
+               
+                </Block>
                 </Block>
               </TouchableOpacity>
       </>
@@ -145,10 +137,9 @@ const Product = (props) => {
 
 const styles = StyleSheet.create({
   container: {
-    width: SIZES.width,
+    width: '100%',
     backgroundColor: COLORS.white,
     borderRadius: 20,
-    marginRight:15
   },
   cat: {
     //width: SIZES.width / 4 - 4,
@@ -162,9 +153,10 @@ const styles = StyleSheet.create({
   },
   imgFood: {
     width: '100%',
-    height: (SIZES.width - 100) / 2,
-    borderRadius: 16,
+    height: (SIZES.width - 150) / 2,
     marginBottom: 10,
+    borderTopLeftRadius:20,
+    borderTopRightRadius:20,
     borderWidth:1,
     borderColor: COLORS.gray
   },
