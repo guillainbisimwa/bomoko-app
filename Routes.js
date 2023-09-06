@@ -20,7 +20,6 @@ import Details from './screens/Product/Details';
 import AddProduct from './screens/Product/AddProduct';
 import { loginSuccess } from './redux/authReducer';
 import { EditProfile, SignUpScreen } from './screens/SignUpScreen';
-import { loadInitialUser, logoutUser, setInitialUser } from './redux/userSlice';
 import EditProduct from './screens/Product/EditProduct';
 import ShowImages from './screens/Product/ShowImages';
 import ShoppingCard from './screens/ShoppingCard/ShoppingCard';
@@ -162,7 +161,7 @@ const App = () => {
   const checkInstallationStatus = async () => {
     try {
       const value = await AsyncStorage.getItem('isInstalled');
-      console.log('value', value);
+      console.log('installed', value);
       if (value !== null && value === 'true') {
         dispatch(setInstalled());
       } else {

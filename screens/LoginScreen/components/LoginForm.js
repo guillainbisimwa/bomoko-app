@@ -8,6 +8,7 @@ import LottieView from 'lottie-react-native';
 import { COLORS, FONTS } from '../../../constants';
 import { loginUser } from '../../../redux/userSlice';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { width } = Dimensions.get('window');
 
@@ -32,6 +33,7 @@ export const LoginForm = ({ navigation }) => {
 
   // Use useEffect or any other method to handle the success state and display the alert
     useEffect(() => {
+      checkLoginStatus();
       if (success) {
         onToggleSnackBarSuccess();
       
@@ -44,6 +46,21 @@ export const LoginForm = ({ navigation }) => {
       
     }, [success, error]);
 
+    const checkLoginStatus = async () => {
+      try {
+        const value = await AsyncStorage.getItem('user');
+  
+        console.log('value-user', value);
+        if (value !== null) {
+           navigationV2.navigate('Main');
+        } else {
+        }
+      } catch (error) {
+        console.log('Error retrieving installation status:', error);
+      }
+    };
+
+    
 const handleLogin = async () => {
   try {
     // Check internet connections
