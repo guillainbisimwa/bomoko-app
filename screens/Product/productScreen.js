@@ -1,69 +1,101 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Image, RefreshControl, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import { COLORS, FONTS, SIZES, icons } from './../../constants';
 import Block from './Block';
 import Text from './Text';
 import Product_service from './Product_service';
 import LottieView from 'lottie-react-native';
+import NetInfo from "@react-native-community/netinfo";
 
 import { ImageBackground, Alert } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { Badge, Divider, Menu, Provider } from 'react-native-paper';
+import { ActivityIndicator, Badge, Divider, Menu, Provider } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { loginSuccess } from '../../redux/authReducer';
+import { loginSuccess, logoutUser } from '../../redux/authReducer';
+import { useFocusEffect } from '@react-navigation/native';
 
 const ProductScreen = ({ navigation, route }) => {
-
-  const { user } = useSelector((state) => state);
   const [visibleMenu, setVisibleMenu] = useState(false);
-
-  const [token, setToken] = useState(null);
   const [connectedUser, setConnectedUser] = useState(null);
+  const [badgePanding, setBadgePanding] = useState(0);
 
-  const [ badgePanding, setBadgePanding ] = useState(0);
+  console.log(route);
+  // Refresh Control
+  const [refreshing, setRefreshing] = useState(false);
+  const [loading, setLoading] = useState(true);
+
   const dispatch = useDispatch();
 
-
-  useEffect(() => {
-    checkLoginStatus();
-  },[connectedUser])
-
-  // Menu
-  const openMenu = () => setVisibleMenu(true);
-
-  const closeMenu = () => setVisibleMenu(false);
-
-  const handleLogin = () => {
-    // Dispatch the logoutUser action
-    closeMenu();
-    navigation.navigate('AuthScreen');
-  };
-
-  const checkLoginStatus = async () => {
-    try {
-      const value = await AsyncStorage.getItem('user');
-      // AsyncStorage.clear();
-
-      console.log('AsyncStorage-user', value);
-      console.log("");
-      console.log('State-user', connectedUser);
-      
-      if (value !== null) {
-        // dispatch(loginSuccess(value));
-        // AsyncStorage.clear();
-        // dispatch(logoutUser());
-        setConnectedUser(value);
-        
-      } else {
-        //setLoading(false);
-        //dispatch(setUnInstalled());
-      }
-    } catch (error) {
-      console.log('Error retrieving installation status:', error);
-      //setLoading(false);
+   // Function to handle screen reload
+   const reloadScreen = (value) => {
+    // You can put your screen reload logic here
+    console.log('Screen reloaded');
+    const parsedValue = JSON.parse(value);
+    if (parsedValue.user && parsedValue.user.user) {
+      setConnectedUser(parsedValue.user.user);
+      setLoading(false)
+      console.log('Async State:', parsedValue.user.user);
     }
   };
 
+   // Use the useFocusEffect hook to execute reloadScreen when the screen gains focus
+   useFocusEffect(
+    useCallback(() => {
+      const fetchData = async () => {
+        try {
+          const value = await AsyncStorage.getItem('user');
+          if (value !== null) {
+            // Data found, reload the screen
+            reloadScreen(value);
+          }
+        } catch (error) {
+          console.error('Error retrieving data:', error);
+        }
+      };
+
+      // Fetch data when the screen gains focus
+      fetchData();
+
+      // Return a cleanup function
+      return () => {
+        // You can perform cleanup here if needed
+        console.log('Cleanup function');
+      };
+    }, []) // Empty dependency array to run this effect only once when the screen mounts
+  );
+
+  
+  const openMenu = () => setVisibleMenu(true);
+  const closeMenu = () => setVisibleMenu(false);
+  
+  const handleLogin = () => {
+    closeMenu();
+    navigation.navigate('AuthScreen');
+  };
+  
+  const handleLogout = async() => {
+    closeMenu();
+    setConnectedUser(null);
+    dispatch(logoutUser());
+
+    navigation.navigate('AuthScreen');
+  };
+  
+
+  const onRefresh = async () => {
+
+    const netInfo = await NetInfo.fetch();
+    // console.log("netInfo.isConnected", netInfo.isConnected);
+    if (!netInfo.isConnected) {
+      Alert.alert("Pas de connexion Internet", "Veuillez vérifier votre connexion Internet et réessayer.");
+      return;
+    }
+
+    setRefreshing(loading);
+  };
+
+  console.log();
+  console.log();
 
   function renderNavBar() {
     return (
@@ -138,11 +170,11 @@ const ProductScreen = ({ navigation, route }) => {
             style={{  justifyContent: 'center', width: 40 }}
             onPress={openMenu}
           >
-            {user?._j?.user?.user?.profile_pic ? (
+            {connectedUser?.profile_pic ? (
         <Image
-          source={{ uri: user?._j?.user?.user?.profile_pic }}
+          source={{ uri: connectedUser?.profile_pic }}
           style={{ width: 40, height: 40, borderRadius:20, borderWidth:1,
-             elevation:3, borderColor: COLORS.white}}
+             borderColor: COLORS.white}}
         />
       ) : (
         <LottieView
@@ -158,24 +190,23 @@ const ProductScreen = ({ navigation, route }) => {
           </TouchableOpacity>
           }>
             {
-              user?._j?.user?.user?.username?
+              connectedUser?.username?
               <Menu.Item leadingIcon="account" onPress={() => {
-                console.log("Token --",JSON.parse(token).user.user);
                 //console.log('User --', user.user.username);
-                console.log('User --', user?._j?.user?.user?.username);
+                console.log('User --', connectedUser?.username);
                 navigation.navigate('Profile', {
-                  userId: JSON.parse(token)?.user?.user?.userId
+                  userId: connectedUser.userId
                 })
     
               }}
-               title={user?._j?.user?.user?.username} />
+               title={connectedUser?.username} />
                :<></>
             }
           
           <Divider />
 
           {
-              user?._j?.user?.user?.username?
+              connectedUser?.username?
               <Menu.Item leadingIcon="logout" onPress={handleLogout} title="Deconnexion" />
                 :
               <Menu.Item leadingIcon="login" onPress={handleLogin} title="Se connecter" />
@@ -188,27 +219,64 @@ const ProductScreen = ({ navigation, route }) => {
       </View>
     );
   }
+  
 
-  return (
+  if (loading) {
+    return <ActivityIndicator size="large" />
+  }
+  else {
+    return (
    
-    <Provider>
-    <ImageBackground
-      style={{ flex: 1, position: 'absolute', height: '100%', width: '100%' }}
-      source={require('./../../assets/login1_bg.png')}
-      blurRadius={10}
-    ></ImageBackground>
-    <View style={{ flex: 1 }}>
-      {/* Nav bar section */}
-      {renderNavBar()}
-   
-    
-    </View>
-    </Provider>
-  );
-};
+      <Provider>
+      <ImageBackground
+        style={{ flex: 1, position: 'absolute', height: '100%', width: '100%' }}
+        source={require('./../../assets/login1_bg.png')}
+        blurRadius={10}
+      ></ImageBackground>
+      <View style={{ flex: 1 }}>
+        {/* Nav bar section */}
+        {renderNavBar()}
+  
+        <Block flex color="grey">
+        
+        <Block flex color="grey" p={15}>
+          <ScrollView style={{ paddingTop: 5 }} showsVerticalScrollIndicator={false}
+           refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+          >
+            <Block flex={false}>
+              <TextInput
+                placeholder="Rechecher un produit/service"
+                style={styles.input}
+                //value={search}
+                //onChangeText={(text) => onSearch(text)}
+              />
+            </Block>
+            {
+              loading?<ActivityIndicator size="large" />: <></>
+            }
+           </ScrollView>
+        </Block>
+      </Block>
+     
+      
+      </View>
+      </Provider>
+    );
+  };
+  }
+ 
 
 const styles = StyleSheet.create({
-  
+  input: {
+    width: '100%',
+    height: 55,
+    backgroundColor: COLORS.white,
+    borderRadius: 16,
+    paddingHorizontal: 44,
+    fontSize: 20,
+  },
 });
 
 export default ProductScreen;

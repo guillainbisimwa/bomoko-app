@@ -17,40 +17,30 @@ export const LoginForm = ({ navigation }) => {
 
   const { error, isLoading, success, user } = useSelector((state) => state.user);
 
-  const [phone, setPhone] = useState('097853275');
+  const [phone, setPhone] = useState('0978532756');
   const [password, setPassword] = useState('12345678');
 
   const [visible, setVisible] = useState(false);
-  const [visibleSuccess, setVisibleSuccess] = useState(false);
   
   const navigationV2 = useNavigation();
 
-  const onToggleSnackBarSuccess = () => setVisibleSuccess(!visibleSuccess);
   const onToggleSnackBar = () => setVisible(!visible);
 
   const onDismissSnackBar = () => setVisible(false);
-  const onDismissSnackBarSuccess = () => setVisibleSuccess(false);
 
   // Use useEffect or any other method to handle the success state and display the alert
     useEffect(() => {
       checkLoginStatus();
-      if (success) {
-        onToggleSnackBarSuccess();
-      
-        //navigationV2.navigate('Main');
-       
-      }
       if (error) {
         onToggleSnackBar()
       }
-      
     }, [success, error]);
 
     const checkLoginStatus = async () => {
       try {
         const value = await AsyncStorage.getItem('user');
   
-        console.log('value-user', value);
+        //console.log('value-user', value);
         if (value !== null) {
            navigationV2.navigate('Main');
         } else {
@@ -59,7 +49,6 @@ export const LoginForm = ({ navigation }) => {
         console.log('Error retrieving installation status:', error);
       }
     };
-
     
 const handleLogin = async () => {
   try {
@@ -128,15 +117,6 @@ const handleLogin = async () => {
       wrapperStyle={{ bottom: 30 }}
     >
        Mots de passe ou Numéro de téléphone invalide
-      </Snackbar>
-      <Snackbar
-        visible={visibleSuccess}
-        onDismiss={onDismissSnackBarSuccess}
-        style={{ backgroundColor: COLORS.darkgreen}}
-        wrapperStyle={{ bottom: 30 }}
-        >
-        Login avec success
-        
       </Snackbar>
     </ScrollView>
     </KeyboardAvoidingView>
