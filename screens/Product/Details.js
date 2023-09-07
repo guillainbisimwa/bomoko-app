@@ -683,7 +683,7 @@ const Details = ({ route, navigation }) => {
                 <Image
                   source={{ uri: item.user.profile_pic  }}
                   style={{ width: 40, height: 40, borderRadius:20, borderWidth:1,
-                    elevation:3, borderColor: COLORS.white}}
+                  borderColor: COLORS.white}}
                 />
               ) : (
                 <Image

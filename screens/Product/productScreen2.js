@@ -455,8 +455,7 @@ const ProductScreen2 = ({ navigation, route }) => {
             {user?._j?.user?.user?.profile_pic ? (
         <Image
           source={{ uri: user?._j?.user?.user?.profile_pic }}
-          style={{ width: 40, height: 40, borderRadius:20, borderWidth:1,
-             elevation:3, borderColor: COLORS.white}}
+          style={{ width: 40, height: 40, borderRadius:20, borderWidth:1}}
         />
       ) : (
         <LottieView
