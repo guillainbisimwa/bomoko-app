@@ -7,16 +7,17 @@ import NetInfo from "@react-native-community/netinfo";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 
-import LottieView from 'lottie-react-native';
 import { COLORS, FONTS } from '../../../constants';
-import { signUpUser } from '../../../redux/userSlice';
+import { loginUser, signUpUser } from '../../../redux/userSlice';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
 
 const { height, width } = Dimensions.get('window');
 
 export const SignUpForm = ({ navigation }) => {
   const dispatch = useDispatch();
 
-  const { errorSignUp, isLoadingSignUp, successSignUp, userSignUp } = useSelector((state) => state.user);
+  const { errorSignUp, isLoadingSignUp, successSignUp, success, error, isLoading } = useSelector((state) => state.user);
   const [loadPic, setLoadPic] = useState(false);
 
   const [name, setNom] = useState('');
@@ -30,22 +31,34 @@ export const SignUpForm = ({ navigation }) => {
 
   const [selectedImage, setSelectedImage] = useState('https://raw.githubusercontent.com/guillainbisimwa/bomoko-app/master/assets/icons/gens.png');
 
+  const navigationV2 = useNavigation();
+
   const onToggleSnackBar = () => setVisible(!visible);
 
   const onDismissSnackBar = () => setVisible(false);
 
   // Use useEffect or any other method to handle the success state and display the alert
     useEffect(() => {
-      console.log("userSignUp", userSignUp);
-      if (successSignUp) {
-        // Alert.alert("Success", "Login successful!");
-        navigation.navigate('LoginScreen'); 
-      }
+      checkLoginStatus();
       if (errorSignUp) {
         onToggleSnackBar()
       }
       
-    }, [successSignUp, errorSignUp]);
+    }, [successSignUp, errorSignUp, success, error]);
+
+    const checkLoginStatus = async () => {
+      try {
+        const value = await AsyncStorage.getItem('user');
+  
+        //console.log('value-user', value);
+        if (value !== null) {
+           navigationV2.navigate('Main');
+        } else {
+        }
+      } catch (error) {
+        console.log('Error retrieving installation status:', error);
+      }
+    };
 
 const handleSignUp = async () => {
   try {
@@ -57,17 +70,31 @@ const handleSignUp = async () => {
       return;
     }
 
-    // Handle login functionality
-    dispatch(signUpUser({
-      username:name,
-      name,
-      password,
-      email,
-      mobile,
-      role,
-      cover_url:'', 
-      profile_pic: selectedImage
-    }))
+    if (!name || !password || !email || !mobile || !role ) {
+      // At least one of the required fields is missing
+      // You can display an error message or take appropriate action
+      console.log('Please fill in all required fields.');
+      Alert.alert("Attention", "Veuillez completer tous les champs et réessayer.");
+
+    } else {
+      // All required fields are filled, dispatch the action
+      dispatch(
+        signUpUser({
+          username: name,
+          name,
+          password,
+          email,
+          mobile,
+          role,
+          cover_url: '',
+          profile_pic: selectedImage,
+        })
+      );
+
+       // Handle login functionality
+      dispatch(loginUser({mobile, password}))
+    }
+    
     //dispatch(loginUser({username:"bvenceslas", password: "1234567890"}))
  
   } catch (error) {
@@ -150,12 +177,7 @@ const onCloudinarySaveCb = async (base64Img) => {
         blurRadius={10}
       ></ImageBackground>
       <View style={styles.contentContainer}>
-        {/* <LottieView
-          style={styles.animation}
-          source={require('../../../assets/json/animation_lks5mkix.json')}
-          autoPlay
-          loop
-        /> */}
+        
         <View
           style={{
             alignItems: "center",
@@ -209,12 +231,13 @@ const onCloudinarySaveCb = async (base64Img) => {
       <TextInput error={errorSignUp} keyboardType="default" 
         label="Téléphone" value={mobile} 
         onChangeText={setMobile} style={styles.input} />
-
-          <ActivityIndicator  animating={isLoadingSignUp} color={COLORS.red} />
-
         
-        <Button mode="contained" onPress={handleSignUp} style={styles.button}>
-          S'enregistrer
+          {
+          visible? <Text style={{color:COLORS.red}} >Mots de passe ou Numéro de téléphone invalide </Text>:<></>
+        }
+       
+        <Button disabled={isLoading || isLoadingSignUp || loadPic} mode="contained" loading={isLoading || isLoadingSignUp || loadPic} onPress={handleSignUp} style={styles.button}>
+          S'inscrire
         </Button>
 
         <Text style={{ marginVertical: 20, color: COLORS.white, ...FONTS.h2}} 
@@ -224,15 +247,8 @@ const onCloudinarySaveCb = async (base64Img) => {
         visible={visible}
         onDismiss={onDismissSnackBar}
         style={{ backgroundColor: COLORS.peach}}
-        action={{
-          label: 'Annuler',
-          onPress: () => {
-            // Do something
-          },
-        }}
         >
-        {errorSignUp}
-        
+     Mots de passe ou Numéro de téléphone invalide
       </Snackbar>
       </View>
     </View>
@@ -270,7 +286,6 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 20,
-    padding:10,
     width: '70%',
   },
 });
