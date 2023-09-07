@@ -21,7 +21,7 @@ import { useDispatch, useSelector } from 'react-redux';
 const AddProduct = ({route, navigation}) => {
   const { owner, username } = route.params;
   const dispatch = useDispatch();
-  const { error, isLoading, success, products } = useSelector((state) => state.products);
+  const { error, isLoadingAdd, success, products } = useSelector((state) => state.products);
 
   const [name, setName] = useState('');
   const [amount, setAmount] = useState(null);
@@ -39,6 +39,7 @@ const AddProduct = ({route, navigation}) => {
   const [range, setRange] = useState({ startDate: undefined, endDate: undefined });
 
   const [open, setOpen] = useState(false);
+  const [onSuccess, setOnSuccess] = useState(false);
 
   const onDismiss = useCallback(() => {
     setOpen(false);
@@ -79,7 +80,12 @@ const AddProduct = ({route, navigation}) => {
         }
       }
     })();
-  }, []);
+    if (onSuccess) {
+      navigation.navigate('Main')
+    } else {
+      onToggleSnackBar()
+    }
+  }, [success, error]);
 
   const handleSaveAddProduct = async () => {
     try {
@@ -92,8 +98,18 @@ const AddProduct = ({route, navigation}) => {
    
       var img_prod = "https://raw.githubusercontent.com/guillainbisimwa/bomoko-app/add-product/assets/img/prod.jpg";
       var img_serv = "https://raw.githubusercontent.com/guillainbisimwa/bomoko-app/add-product/assets/img/serv.jpg";
-      if (name && description && amount !== null && initialAmount !== null && type && checkedDevise && range.startDate && range.endDate) {
-          // All required fields are filled, dispatch the action
+      
+      if (
+        name &&
+        description &&
+        amount !== null &&
+        initialAmount !== null &&
+        amount > initialAmount && // Check if amount is greater than initialAmount
+        range.startDate &&
+        range.endDate && 
+        tauxInt
+      ) {          
+        // All required fields are filled, dispatch the action
         dispatch(postProduct({
           name: name,
           detail: description,
@@ -122,22 +138,12 @@ const AddProduct = ({route, navigation}) => {
         console.log('Please fill in all required fields.');
         Alert.alert("Attention", "Veuillez valider tous les champs.");
       }
-      
-     
-
-       // Check if the product was saved successfully
-      if (!error) {
-        // Navigate back to the previous screen
-        console.log("error", error);
-        
-        //navigation.goBack();
-      }else {
-        onToggleSnackBar()
-      }
-
+       setOnSuccess(true)
 
     } catch (e) {
       console.log('error', e);
+      setOnSuccess(false)
+
     }
   };
 
@@ -391,8 +397,8 @@ const pickImage = async () => {
             <Ionicons name="save-outline" size={20} color={COLORS.white} />
           )}
 
-        loading={isLoading || loadPic}
-        disabled={isLoading || loadPic}
+        loading={isLoadingAdd || loadPic}
+        disabled={isLoadingAdd || loadPic}
         >
           Ajouter 
         </Button>
@@ -482,7 +488,7 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 32,
-    backgroundColor: COLORS.primary,
+    //backgroundColor: COLORS.primary,
   },
   input: {
     borderRadius: 0,

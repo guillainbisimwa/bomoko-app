@@ -190,6 +190,7 @@ const productSlice = createSlice({
   initialState: {
     products: [...product],
     isLoading: false,
+    isLoadingAdd: false,
     error: '',
     lastSaved: null,
     success: false,
@@ -211,10 +212,14 @@ const productSlice = createSlice({
     })
     .addCase(postProduct.pending, (state) => {
       state.isLoading = true;
+      state.isLoadingAdd = true;
+      
       state.error = null;
     })
     .addCase(postProduct.fulfilled, (state, action) => {
       state.isLoading = false;
+      state.isLoadingAdd = false;
+      
       state.lastSaved = action.payload;
       state.error = null;
       state.success = action.payload.message;
@@ -222,6 +227,8 @@ const productSlice = createSlice({
     })
     .addCase(postProduct.rejected, (state, action) => {
       state.isLoading = false;
+      state.isLoadingAdd = false;
+      
       state.error = action.error.message;
     })
     .addCase(fetchProducts.pending, (state) => {
