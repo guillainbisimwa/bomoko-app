@@ -25,6 +25,7 @@ const AddProduct = ({route, navigation}) => {
 
   const [name, setName] = useState('');
   const [amount, setAmount] = useState(null);
+  const [tauxInt, setTauxInt] = useState(null);
   const [initialAmount, setInitialAmount] = useState(null);
   const [type, setType] = useState('produit');
 
@@ -80,13 +81,6 @@ const AddProduct = ({route, navigation}) => {
     })();
   }, []);
 
-  useEffect(()=>{
-    console.log(" error---", error);
-    console.log(" success---", success);
-    console.log(" products---", products);
-    console.log(" isLoading---", isLoading);
-  },[])
-
   const handleSaveAddProduct = async () => {
     try {
       const netInfo = await NetInfo.fetch();
@@ -121,13 +115,15 @@ const AddProduct = ({route, navigation}) => {
         startDate: `${range.startDate}`, //formatDateToFrench(range.startDate)
         endDate: `${range.endDate}`,
         owner: owner,
+        tauxInt: tauxInt !== null ? parseInt(tauxInt) : 0,
       }));
 
        // Check if the product was saved successfully
       if (!error) {
         // Navigate back to the previous screen
+        console.log("error", error);
         
-        navigation.goBack();
+        //navigation.goBack();
       }else {
         onToggleSnackBar()
       }
@@ -142,7 +138,7 @@ const AddProduct = ({route, navigation}) => {
     return (
       <View
         style={{
-          paddingHorizontal: SIZES.padding,
+          //paddingHorizontal: SIZES.padding,
           backgroundColor: COLORS.white,
           marginBottom: SIZES.padding,
           borderBottomColor: COLORS.gray,
@@ -156,31 +152,6 @@ const AddProduct = ({route, navigation}) => {
       </View>
     );
   }
-
-  // const takePhoto = async () => {
-  //   try{
-  //     let result = await ImagePicker.launchCameraAsync({
-  //       mediaTypes: "Images",
-  //       aspect: [4, 3],
-  //       base64: true
-  //     });
-
-  //     if (!result.canceled) {
-  //         let base64Img = `data:image/jpg;base64,${result.assets[0].base64}`;
-
-  //         console.log("------------");
-  //         let imgCb = await onCloudinarySaveCb(base64Img);
-  //         let imgCb2 = [...images];
-
-  //         imgCb2.push(imgCb);
-  //         setImages([...imgCb2]);
-  //         console.log(images);
-  //     }
-  //   }catch(e){
-  //     setLoadPic(false);
-  //     console.log("Error while uploading image", e);
-  //   }
-  // };
 
 const pickImage = async () => {
   try {
@@ -259,7 +230,7 @@ const pickImage = async () => {
   };
 
   const info = () =>
-    Alert.alert(`Warning`, `You can't upload more than 3 pictures!`, [
+    Alert.alert(`Warning`, `Vous ne pouvez pas télécharger plus de 3 photos !`, [
       {
         text: 'Okay',
         style: 'cancel',
@@ -343,7 +314,15 @@ const pickImage = async () => {
           style={[styles.input, ]} //styles.input_49
           //prefix="USD"
         />
-        {/* </View> */}
+
+        <TextInput
+          label={`Taux d'intérêt en %`}
+          value={tauxInt}
+          onChangeText={setTauxInt}
+          mode="outlined"
+          keyboardType="numeric"
+          style={[styles.input, ]} 
+        />
 
         <SafeAreaProvider>
           <View style={{justifyContent: 'center', flex: 1, alignItems: 'center', 
@@ -405,7 +384,8 @@ const pickImage = async () => {
             <Ionicons name="save-outline" size={20} color={COLORS.white} />
           )}
 
-        loading={isLoading}
+        loading={isLoading || loadPic}
+        disabled={isLoading || loadPic}
         >
           Ajouter 
         </Button>
@@ -425,14 +405,6 @@ const pickImage = async () => {
             <Text style={{ color: COLORS.white }}>Téléverser une image</Text>
           </TouchableOpacity>
 
-          {/* <TouchableOpacity
-            style={styles.btn}
-            onPress={() => (images.length >= 3 ? info() : takePhoto())}
-          >
-            <Ionicons name="camera" size={30} color={COLORS.white} style={styles.icon} />
-           
-            <Text style={{ color: COLORS.white }}>Capturer une photo</Text>
-          </TouchableOpacity> */}
         </Block>
       </Block>
     );
@@ -476,12 +448,7 @@ const pickImage = async () => {
         onDismiss={onDismissSnackBar}
         style={{ backgroundColor: COLORS.peach}}
         wrapperStyle={{ bottom: 30 }}
-        action={{
-          label: 'Annuler',
-          onPress: () => {
-            // Do something
-          },
-        }}
+       
         >
         {error}
       

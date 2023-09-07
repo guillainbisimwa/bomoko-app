@@ -55,7 +55,8 @@ export const postProduct = createAsyncThunk(
     timeline,
     startDate,
     endDate,
-    owner 
+    owner,
+    tauxInt
   }) => {
     console.log(BASE_URL);
     const response = await axios.post( BASE_URL +'api/product', {
@@ -70,7 +71,8 @@ export const postProduct = createAsyncThunk(
       timeline,
       startDate,
       endDate,
-      owner 
+      owner,
+      tauxInt
     });
     console.log("Add prod---?????? ok==",response.data);
     
@@ -93,7 +95,8 @@ export const editProduct = createAsyncThunk(
     timeline,
     startDate,
     endDate,
-    owner
+    owner,
+    tauxInt
   }) => {
     const url = `${BASE_URL}api/product/${id}`; // Concatenate ID to the base URL
     
@@ -109,7 +112,8 @@ export const editProduct = createAsyncThunk(
       timeline,
       startDate,
       endDate,
-      owner
+      owner,
+      tauxInt
     });
 
     console.log("Edit prod---?????? ok==", response.data);
@@ -135,7 +139,8 @@ export const soumettreProduct = createAsyncThunk(
     startDate,
     endDate,
     membres,
-    owner
+    owner,
+    tauxInt
   }) => {
     const url = `${BASE_URL}api/product/${id}`; // Concatenate ID to the base URL
     
@@ -154,7 +159,8 @@ export const soumettreProduct = createAsyncThunk(
       endDate,
       couts,
       membres,
-      owner
+      owner,
+      tauxInt
     });
 
     console.log("Soummetre prod---?????? ok==", { // Use PUT request for updating

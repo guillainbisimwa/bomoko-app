@@ -28,6 +28,8 @@ const EditProduct = ({route, navigation}) => {
 
   const [name, setName] = useState(productService.name);
   const [amount, setAmount] = useState(productService.amount+'');
+  const [tauxInt, setTauxInt] = useState(productService.tauxInt+'');
+  
   const [initialAmount, setInitialAmount] = useState(productService.initialAmount+'');
   const [type, setType] = useState(productService.type);
 
@@ -108,6 +110,7 @@ const EditProduct = ({route, navigation}) => {
         location: [checkedGoma?'Goma':'',
           checkedBukavu?'Bukavu':'', checkedKinshasa?'Kinshasa':'' ],
         amount: parseInt(amount),
+        tauxInt: parseInt(tauxInt),
         images: images.length == 0 ? (type == 'produit'? [img_prod]:[img_serv]): images,
         initialAmount: parseInt(initialAmount),
         type: type,
@@ -311,8 +314,16 @@ const pickImage = async () => {
           style={[styles.input, ]} //styles.input_49
           //prefix="USD"
         />
-        {/* </View> */}
 
+         <TextInput
+          label={`Taux d'intérêt en %`}
+          value={tauxInt}
+          onChangeText={setTauxInt}
+          mode="outlined"
+          keyboardType="numeric"
+          style={[styles.input, ]} 
+        />
+       
         <SafeAreaProvider>
           <View style={{justifyContent: 'center', flex: 1, alignItems: 'center', 
           marginVertical:20,}}>
