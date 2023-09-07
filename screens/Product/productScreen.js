@@ -37,7 +37,14 @@ const ProductScreen = ({ navigation, route }) => {
   const jobTypes = ["Tous", "Produits", "Services"];
 
 
-  const onChangeSearch = query => setSearchQuery(query);
+  const onChangeSearch = (text) => {
+    setFilteredProjects([
+      ...products.filter((prod) =>
+        prod.name.toLocaleLowerCase().includes(text.toLocaleLowerCase())
+      ),
+    ]);
+    setSearchQuery(text);
+  };
 
    // Function to handle screen reload
    const reloadScreen = (value) => {
@@ -61,6 +68,7 @@ const ProductScreen = ({ navigation, route }) => {
           if (value !== null) {
             // Data found, reload the screen
             reloadScreen(value);
+            setSearchQuery('')
           }
         } catch (error) {
           console.error('Error retrieving data:', error);
@@ -78,28 +86,39 @@ const ProductScreen = ({ navigation, route }) => {
     }, []) // Empty dependency array to run this effect only once when the screen mounts
   );
 
-   // This effect will run whenever activeTabType changes
-   useEffect(() => {
+// This effect will run whenever activeTabType, search field, or products change
+useEffect(() => {
+  if (!searchQuery) {
+    // If the search field is empty, check the activeTabType to determine filtering
     if (activeTabType == 'Services') {
       // Filter your products based on the active job type here
       const filtered = [...products].filter((item) => item.type == 'service');
       setFilteredProjects(filtered);
-    }
-    else  if (activeTabType == 'Produits') {
+    } else if (activeTabType == 'Produits') {
       // Filter your products based on the active job type here
       const filtered = [...products].filter((item) => item.type == 'produit');
       setFilteredProjects(filtered);
-    } else if(activeTabType === 'Tous') {
+    } else if (activeTabType === 'Tous') {
       // If no active job type is selected, show all products
       setFilteredProjects(products);
     } else {
       // If no active job type is selected, show all products
       setFilteredProjects([]);
     }
-  }, [activeTabType, products]); // Watch for changes in activeTabType and products
-
-  // Rest of your component
-
+  } else {
+    // If the search field is not empty, you can apply your search logic here
+    // For example, filter products based on the searchQuery value
+    const filtered = products.filter((item) => {
+      // Replace 'propertyName' with the actual property you want to search in
+      return (
+        item.name.toLocaleLowerCase().includes(searchQuery.toLocaleLowerCase()) &&
+        (activeTabType == 'Services' ? item.type == 'service' : true) &&
+        (activeTabType == 'Produits' ? item.type == 'produit' : true)
+      );
+    });
+    setFilteredProjects(filtered);
+  }
+}, [activeTabType, searchQuery, products]); // Watch for changes in activeTabType, searchQuery, and products
 
   
   const openMenu = () => setVisibleMenu(true);
@@ -321,7 +340,7 @@ const ProductScreen = ({ navigation, route }) => {
              
               <Searchbar
                 placeholder="Rechecher un produit/service"
-                onChangeText={onChangeSearch}
+                onChangeText={(text) => onChangeSearch(text)}
                 value={searchQuery}
               />
             </Block>

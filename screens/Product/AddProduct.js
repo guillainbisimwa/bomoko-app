@@ -95,11 +95,7 @@ const AddProduct = ({route, navigation}) => {
         Alert.alert("Pas de connexion Internet", "Veuillez vérifier votre connexion Internet et réessayer.");
         return;
       }
-      // console.log('Add', images);
-      // console.log('Add');
-      // var img_prod = "https://github.com/guillainbisimwa/bomoko-app/blob/master/assets/img/prod.jpg";
-      // var img_serv = "https://github.com/guillainbisimwa/bomoko-app/blob/master/assets/img/serv.jpg";
-
+   
       var img_prod = "https://raw.githubusercontent.com/guillainbisimwa/bomoko-app/add-product/assets/img/prod.jpg";
       var img_serv = "https://raw.githubusercontent.com/guillainbisimwa/bomoko-app/add-product/assets/img/serv.jpg";
 
