@@ -92,31 +92,38 @@ const AddProduct = ({route, navigation}) => {
    
       var img_prod = "https://raw.githubusercontent.com/guillainbisimwa/bomoko-app/add-product/assets/img/prod.jpg";
       var img_serv = "https://raw.githubusercontent.com/guillainbisimwa/bomoko-app/add-product/assets/img/serv.jpg";
-
-      //console.log(p);
-      dispatch(postProduct({
-        name: name,
-        detail: description,
-        location: [checkedGoma?'Goma':'',
-          checkedBukavu?'Bukavu':'', checkedKinshasa?'Kinshasa':'' ],
-       // amount: parseInt(amount),
-        amount: amount !== null ? parseInt(amount) : 0,
-        images: images.length == 0 ? (type == 'produit'? [img_prod]:[img_serv]): images,
-        //initialAmount: parseInt(initialAmount),
-        initialAmount: initialAmount !== null ? parseInt(initialAmount) : 0,
-        type: type,
-        currency: checkedDevise,
-        timeline: [
-          {
-            title: `Creation du ${type} : ${name}`,
-            details: `Le ${type} : ${name}- cree par ${username}`
-          }
-        ],
-        startDate: `${range.startDate}`, //formatDateToFrench(range.startDate)
-        endDate: `${range.endDate}`,
-        owner: owner,
-        tauxInt: tauxInt !== null ? parseInt(tauxInt) : 0,
-      }));
+      if (name && description && amount !== null && initialAmount !== null && type && checkedDevise && range.startDate && range.endDate) {
+          // All required fields are filled, dispatch the action
+        dispatch(postProduct({
+          name: name,
+          detail: description,
+          location: [checkedGoma?'Goma':'',
+            checkedBukavu?'Bukavu':'', checkedKinshasa?'Kinshasa':'' ],
+        // amount: parseInt(amount),
+          amount: amount !== null ? parseInt(amount) : 0,
+          images: images.length == 0 ? (type == 'produit'? [img_prod]:[img_serv]): images,
+          //initialAmount: parseInt(initialAmount),
+          initialAmount: initialAmount !== null ? parseInt(initialAmount) : 0,
+          type: type,
+          currency: checkedDevise,
+          timeline: [
+            {
+              title: `Creation du ${type} : ${name}`,
+              details: `Le ${type} : ${name}- cree par ${username}`
+            }
+          ],
+          startDate: `${range.startDate}`, //formatDateToFrench(range.startDate)
+          endDate: `${range.endDate}`,
+          owner: owner,
+          tauxInt: tauxInt !== null ? parseInt(tauxInt) : 0,
+        }));
+      } else {
+        // Handle the case where not all required fields are filled
+        console.log('Please fill in all required fields.');
+        Alert.alert("Attention", "Veuillez valider tous les champs.");
+      }
+      
+     
 
        // Check if the product was saved successfully
       if (!error) {
