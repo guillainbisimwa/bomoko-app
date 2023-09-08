@@ -1,8 +1,8 @@
 import React, {  useEffect, useState } from 'react';
-import { Image, ScrollView, StyleSheet, TouchableOpacity, View, useWindowDimensions } from 'react-native';
+import { Alert, Image, ScrollView, StyleSheet, TouchableOpacity, View, useWindowDimensions } from 'react-native';
 import { COLORS, FONTS, SIZES, icons } from '../../constants';
 
-import {Text, Provider, Badge, Divider, Chip, MD3Colors, ProgressBar, ActivityIndicator, FAB, Modal, Card, Button } from 'react-native-paper';
+import {Text, Provider, Badge, Divider, Chip, ProgressBar, ActivityIndicator, FAB, Modal, Card, Button } from 'react-native-paper';
 import { ImageBackground } from 'react-native';
 import Block from '../Product/Block';
 import { SceneMap, TabBar, TabView } from 'react-native-tab-view';
@@ -25,12 +25,17 @@ const CreanceDette = ({ navigation, route }) => {
   const [token, setToken] = useState(null);
 
   const dispatch = useDispatch();
-  const avecs = useSelector((state) => state.avecs); 
+  const {avecs, error, status} = useSelector((state) => state.avecs); 
   const [isFetchingComplete, setIsFetchingComplete] = useState(false);
-
+  console.log(avecs);
+ 
   useEffect(() => {
     // Fetch data when the component mounts
     fetchData();
+    if (error) {
+      Alert.alert(error, 'Veuillez verifier votre internet');
+
+    }
 
     // Add a navigation listener to refetch data when the screen comes into focus
     const focusListener = navigation.addListener('focus', () => {
@@ -47,7 +52,7 @@ const CreanceDette = ({ navigation, route }) => {
       }
     };
 
-  }, [dispatch, navigation]);
+  }, [dispatch, navigation, error]);
 
   const getTokenFromAsyncStorage = async () => {
     try {
@@ -100,7 +105,7 @@ const CreanceDette = ({ navigation, route }) => {
         marginTop: -5
       }}
       renderLabel={({ focused, route }) => (
-        <Text  style={[{ color: focused ? COLORS.black : COLORS.gray }]}>
+        <Text  style={[{ color: focused ? COLORS.black : COLORS.gray, fontWeight:'bold' }]}>
           {route.title}
         </Text>
       )}
@@ -302,8 +307,7 @@ const Route3 = () => (
       <View style={styles.myTopCard}>
         {/* <Text variant="titleMedium">Associations villageoises d’épargne et de crédit (AVEC)</Text> */}
         <Text style={styles.text}>
-        Gérez 
-        vos épargnes, demandes des crédits et promouvoir la solidarité financière.
+        Gérez vos épargnes, demandes des crédits et promouvoir la solidarité financière.
         </Text>
       </View>
       
@@ -391,7 +395,8 @@ const styles = StyleSheet.create({
     flex: 1
   },
   text: {
-    marginBottom:10
+    marginBottom:10,
+    color:COLORS.black
   },
   myTopCard:{
     backgroundColor: COLORS.white,
