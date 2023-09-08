@@ -12,7 +12,6 @@ import { setInstalled, setUnInstalled } from './redux/appReducer';
 import { LoginScreen } from './screens/LoginScreen/LoginScreen';
 import { AuthScreen } from './screens/AuthScreen/AuthScreen';
 import { resetAllCat } from './redux/catReducer';
-import { StatusBar } from 'react-native';
 import MyDrawer from './navigations/MyDrawer';
 import { Expense, Income } from './screens';
 import { COLORS, icons } from './constants';
@@ -25,6 +24,7 @@ import ShowImages from './screens/Product/ShowImages';
 import ShoppingCard from './screens/ShoppingCard/ShoppingCard';
 import { AideEtSupport, DataSecurityScreen, DetailsByUser, LanguageSelectionScreen, Privacy, Profile, ReportProblemScreen, UseCondition } from './screens/Settings';
 import { AddAvec, DetailsAvec } from './screens/CreanceDette';
+import { StatusBar } from 'expo-status-bar';
 
 const theme = {
   ...DefaultTheme,
@@ -219,7 +219,7 @@ const App = () => {
   if (isInstalled) {
     return (
       <NavigationContainer theme={theme}>
-        <StatusBar barStyle="default"></StatusBar>
+        <StatusBar style="dark" />
 
         <Stack.Navigator initialRouteName={'MyDrawer'}>
           <Stack.Screen

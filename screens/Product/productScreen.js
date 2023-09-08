@@ -33,7 +33,7 @@ const ProductScreen = ({ navigation, route }) => {
   const [activeTabType, setActiveTabType] = useState("Tous");
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(2); // Number of items to display per page
+  const [itemsPerPage] = useState(4); // Number of items to display per page
 
 
   // Calculate the range of items to display for the current page
