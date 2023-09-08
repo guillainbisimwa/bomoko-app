@@ -29,7 +29,7 @@ const CreanceDette = ({ navigation, route }) => {
   const {avecs, error, status} = useSelector((state) => state.avecs); 
   const [isFetchingComplete, setIsFetchingComplete] = useState(false);
 
-  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [filteredAvecs, setFilteredAvecs] = useState([]);
 
     const layout = useWindowDimensions();
   const [index, setIndex] = useState(0);
@@ -56,9 +56,9 @@ const CreanceDette = ({ navigation, route }) => {
   const endIndex = startIndex + itemsPerPage;
 
   // Slice the products based on the current page
-  const currentProducts = filteredProducts?.slice(startIndex, endIndex);
+  const currentProducts = filteredAvecs?.slice(startIndex, endIndex);
 
-  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+  const totalPages = Math.ceil(filteredAvecs.length / itemsPerPage);
 
 
    // Use the useFocusEffect hook to execute reloadScreen when the screen gains focus
@@ -92,7 +92,7 @@ const CreanceDette = ({ navigation, route }) => {
 // This effect will run whenever activeTabType, search field, or products change
 useEffect(() => {
   if (!searchQuery) {
-    setFilteredProducts([]);
+    setFilteredAvecs(avecs);
 
   } else {
     // If the search field is not empty, you can apply your search logic here
@@ -106,7 +106,7 @@ useEffect(() => {
       );
     });
     
-    setFilteredProducts([filtered]);
+    setFilteredAvecs(filtered);
 
   console.log('avec', avecs);
   }
@@ -115,7 +115,7 @@ useEffect(() => {
 }, [activeTabType, searchQuery, avecs, currentPage]); // Watch for changes in activeTabType, searchQuery, and products
 
 const onChangeSearch = (text) => {
-  setFilteredProducts([
+  setFilteredAvecs([
     ...avecs.filter((avec) =>
       avec.name.toLocaleLowerCase().includes(text.toLocaleLowerCase())
     ),
@@ -352,7 +352,7 @@ const handlePrevPage = () => {
       <ScrollView style={{ flex: 1 ,  paddingVertical:10,
       backgroundColor: 'transparent'}}>
         {
-          avecs?.map((avec, key) => {
+          filteredAvecs?.map((avec, key) => {
 
             const date = new Date(avec.startDate);
 
@@ -494,7 +494,7 @@ const Route3 = () => (
       {renderNavBar()}
       <Block flex={false} p_l={20} p_r={20} p_t={15}>
         <Searchbar
-          placeholder="Rechecher un produit/service"
+          placeholder="Rechecher un groupe"
           onChangeText={(text) => onChangeSearch(text)}
           value={searchQuery}
         />
