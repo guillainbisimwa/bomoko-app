@@ -74,8 +74,6 @@ const CreanceDette = ({ navigation, route }) => {
     }
   };
 
-//Added error handling and validation to the handleAddAvec function 
-
   // Modal
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
@@ -115,7 +113,7 @@ const CreanceDette = ({ navigation, route }) => {
       <View
         style={{
           flexDirection: 'row',
-          paddingTop: SIZES.base * 3,
+          paddingTop: SIZES.base * 5,
           justifyContent: 'space-between',
           paddingHorizontal: SIZES.padding,
         }}

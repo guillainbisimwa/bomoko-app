@@ -4,12 +4,9 @@ import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawe
 
 import * as Icon from '@expo/vector-icons';
 import { COLORS, SIZES } from '../constants';
-import { Button } from 'react-native-paper';
-import { useNavigation } from '@react-navigation/native';
 
 
 const CustomDrawer = (props) => {
-  const navigation = useNavigation();
 
   const clearAll = async () => {};
 
@@ -38,7 +35,6 @@ const CustomDrawer = (props) => {
         </View>
       </DrawerContentScrollView>
       <View style={{ padding: 20, borderTopWidth: 1, borderTopColor: '#ccc' }}>
-        {/* <Button  mode="contained" onPress={()=> navigation.navigate('LoginScreen')}>Se connecter</Button> */}
         <TouchableOpacity onPress={() => clearAll()} style={{ paddingVertical: 15 }}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Icon.Ionicons color={COLORS.blue} size={SIZES.base * 3} name={'information-circle'} />

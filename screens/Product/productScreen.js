@@ -192,7 +192,7 @@ const handlePrevPage = () => {
       <View
         style={{
           flexDirection: 'row',
-          paddingTop: SIZES.base * 3,
+          paddingTop: SIZES.base * 5,
           justifyContent: 'space-between',
           paddingHorizontal: SIZES.padding,
         }}
