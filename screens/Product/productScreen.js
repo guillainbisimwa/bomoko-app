@@ -23,7 +23,7 @@ const ProductScreen = ({ navigation, route }) => {
   const [badgePanding, setBadgePanding] = useState(0);
 
   const { error, isLoading, success, products } = useSelector((state) => state.products);
-  const [filteredProjects, setFilteredProjects] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
 
   
   // Refresh Control
@@ -32,31 +32,24 @@ const ProductScreen = ({ navigation, route }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTabType, setActiveTabType] = useState("Tous");
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(2); // Number of items to display per page
+
+
+  // Calculate the range of items to display for the current page
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+
+  // Slice the products based on the current page
+  const currentProducts = filteredProducts.slice(startIndex, endIndex);
+
+  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+
+
   const dispatch = useDispatch();
 
   const jobTypes = ["Tous", "Produits", "Services"];
 
-
-  const onChangeSearch = (text) => {
-    setFilteredProjects([
-      ...products.filter((prod) =>
-        prod.name.toLocaleLowerCase().includes(text.toLocaleLowerCase())
-      ),
-    ]);
-    setSearchQuery(text);
-  };
-
-   // Function to handle screen reload
-   const reloadScreen = (value) => {
-    // You can put your screen reload logic here
-    console.log('Screen reloaded');
-    const parsedValue = JSON.parse(value);
-    if (parsedValue.user && parsedValue.user.user) {
-      setConnectedUser(parsedValue.user.user);
-      setLoading(false)
-      console.log('Async State:', parsedValue.user.user);
-    }
-  };
 
    // Use the useFocusEffect hook to execute reloadScreen when the screen gains focus
    useFocusEffect(
@@ -93,17 +86,17 @@ useEffect(() => {
     if (activeTabType == 'Services') {
       // Filter your products based on the active job type here
       const filtered = [...products].filter((item) => item.type == 'service');
-      setFilteredProjects(filtered);
+      setFilteredProducts(filtered);
     } else if (activeTabType == 'Produits') {
       // Filter your products based on the active job type here
       const filtered = [...products].filter((item) => item.type == 'produit');
-      setFilteredProjects(filtered);
+      setFilteredProducts(filtered);
     } else if (activeTabType === 'Tous') {
       // If no active job type is selected, show all products
-      setFilteredProjects(products);
+      setFilteredProducts(products);
     } else {
       // If no active job type is selected, show all products
-      setFilteredProjects([]);
+      setFilteredProducts([]);
     }
   } else {
     // If the search field is not empty, you can apply your search logic here
@@ -116,11 +109,44 @@ useEffect(() => {
         (activeTabType == 'Produits' ? item.type == 'produit' : true)
       );
     });
-    setFilteredProjects(filtered);
+    setFilteredProducts(filtered);
   }
-}, [activeTabType, searchQuery, products]); // Watch for changes in activeTabType, searchQuery, and products
+}, [activeTabType, searchQuery, products, currentPage]); // Watch for changes in activeTabType, searchQuery, and products
 
-  
+const onChangeSearch = (text) => {
+  setFilteredProducts([
+    ...products.filter((prod) =>
+      prod.name.toLocaleLowerCase().includes(text.toLocaleLowerCase())
+    ),
+  ]);
+  setSearchQuery(text);
+};
+
+const handleNextPage = () => {
+  if (currentPage < totalPages) {
+    setCurrentPage(currentPage + 1);
+  }
+};
+
+const handlePrevPage = () => {
+  if (currentPage > 1) {
+    setCurrentPage(currentPage - 1);
+  }
+};
+
+
+  // Function to handle screen reload
+  const reloadScreen = (value) => {
+    // You can put your screen reload logic here
+    console.log('Screen reloaded');
+    const parsedValue = JSON.parse(value);
+    if (parsedValue.user && parsedValue.user.user) {
+      setConnectedUser(parsedValue.user.user);
+      setLoading(false)
+      console.log('Async State:', parsedValue.user.user);
+    }
+  };
+
   const openMenu = () => setVisibleMenu(true);
   const closeMenu = () => setVisibleMenu(false);
 
@@ -160,9 +186,6 @@ useEffect(() => {
 
     setRefreshing(loading);
   };
-
-  console.log();
-  console.log();
 
   function renderNavBar() {
     return (
@@ -353,16 +376,31 @@ useEffect(() => {
                 isLoading?<ActivityIndicator size="large" />: <></>
               }
               {
-              filteredProjects.length === 0 ? (
+              filteredProducts.length === 0 ? (
                 <Text center h1 white bold>   Aucun produit ou service</Text>
               ) : (
-                filteredProjects.map((product, index) => (
-                  <Product prod={product} navigation={navigation} key={index} />
-                ))
+                <View>
+                <FlatList
+                  data={currentProducts}
+                  keyExtractor={(item) => item._id}
+                  renderItem={({ item }) => <Product  prod={item} navigation={navigation}  />}
+                />
+                <Text center white bold>Page {currentPage} sur {totalPages}</Text>
+                <Block row style={{columnGap: 15, marginTop: 15}}>
+                  
+                  <Button mode='contained' onPress={handlePrevPage} disabled={currentPage === 1} >Précédent</Button>
+                  <Button mode='contained' onPress={handleNextPage} disabled={currentPage === totalPages}>Suivant</Button>
+                </Block>
+              </View>
+                // filteredProducts.map((product, index) => (
+                //   // <Product prod={product} navigation={navigation} key={index} />
+                //     <Text>Loading</Text>
+                // ))
               )
             }
-              
-              </ScrollView>
+             </ScrollView>
+             
+             
             
            </View>
         </Block>
