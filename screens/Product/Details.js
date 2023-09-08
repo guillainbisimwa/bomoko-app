@@ -855,12 +855,13 @@ const Details = ({ route, navigation }) => {
             </Block>
             <Block m_t={5} row space="between">
               <Text numberOfLines={1} semibold size={16}>
+              Montant collecté(
               {((route.params.food.initialAmount + route.params.food.membres
 .filter(member => member.contribution_status === "ACCEPTED")
-.reduce((sum, member) => sum + member.contribution_amount, 0)) * 100 / route.params.food.amount).toFixed(1)}% d'investissement
+.reduce((sum, member) => sum + member.contribution_amount, 0)) * 100 / route.params.food.amount).toFixed(1)}%)
               </Text>
-              <Text numberOfLines={1} semibold size={16}>
-              {route.params.food.initialAmount} {route.params.food.currency}  reuni
+              <Text numberOfLines={1}>
+              {route.params.food.initialAmount} {route.params.food.currency}
               </Text>
             </Block>
             <Block>
@@ -882,16 +883,22 @@ const Details = ({ route, navigation }) => {
                 <Text numberOfLines={1} semibold>
                   Les parts disponibles:
                 </Text>
-                <Text>{(100 - (route.params.food.initialAmount / (route.params.food.amount / 100))).toFixed(1)} parts</Text>
+                <Text>{(100 - (route.params.food.initialAmount / (route.params.food.amount / 100).toFixed(0))).toFixed(0)} parts</Text>
               </Block>
 
-              <Block row space="between">
+              {/* <Block row space="between">
                 <Text numberOfLines={1} semibold>
                   Le coût total de Revient:
                 </Text>
                 <Text> 0 {route.params.food.currency} </Text>
+              </Block> */}
+              <Block row space="between">
+                <Text numberOfLines={1} semibold>
+                    Taux d'intérêt :
+                  </Text>
+                  <Text> {route.params.food?.tauxInt} % </Text>
+                  </Block>
               </Block>
-            </Block>
             {
               JSON.parse(token)?.user.user.username === route.params.food.owner.username? 
               <Block row space="between" m_t={10}>

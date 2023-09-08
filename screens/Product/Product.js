@@ -37,9 +37,23 @@ const Product = (props) => {
     const startDateFinal = `${startDate.getDate()}/${startDate.getMonth() + 1}/${startDate.getFullYear().toString().substr(-2)}`;
     const endDateFinal = `${endDate.getDate()}/${endDate.getMonth() + 1}/${endDate.getFullYear().toString().substr(-2)}`;
 
-     const invest = ((props.prod?.initialAmount + props.prod?.membres
-    .filter(member => member?.contribution_status === "ACCEPTED")
-    .reduce((sum, member) => sum + member?.contribution_amount, 0)) * 100 / props.prod?.amount).toFixed(0);
+      // Date Calculation
+      const targetStartDate = new Date(props.prod.startDate);
+      const targetEndDate = new Date(props.prod.endDate);
+      const today = new Date();
+      const timeDifference = targetStartDate - today;
+      const timeTotalExerc = targetEndDate - targetStartDate;
+      const timeDiffExerc = targetEndDate - today;
+
+      // Calculate the number of milliseconds in a day
+      const millisecondsInDay = 24 * 60 * 60 * 1000;
+
+      // Calculate the number of days left
+      const daysLeft = Math.ceil(timeDifference / millisecondsInDay);
+      const daysLeftExc = Math.ceil(timeDiffExerc / millisecondsInDay);
+      const daysTotalExc = Math.ceil(timeTotalExerc / millisecondsInDay);
+
+
 
   return (
     <>
@@ -65,13 +79,24 @@ const Product = (props) => {
                     />
                   </View>
                 
-                  <Image source={{uri:  props.prod.images[0] }} style={styles.imgFood} />
+                  <Image source={{uri: props.prod.images[0] }} style={styles.imgFood} />
                   
                   <Block p_l={10} p_r={10} p_b={10}>
-                  <Text numberOfLines={1} grey h2 bold>
-                    {props.prod.name}
-                  </Text>
-                  <Text color={COLORS.darkgreen}>Du {startDateFinal} au {endDateFinal}</Text>
+                      <Text numberOfLines={1} grey h2 bold>
+                      {props.prod.name}
+                    </Text>
+                    <Block row space='between'>
+                    <Text color={COLORS.darkgreen}>Du {startDateFinal} au {endDateFinal}</Text>
+
+                    <Block row center style={styles.round}>
+                      <Ionicons name="md-time" color={COLORS.peach} size={20} />
+                      <Text numberOfLines={1} color={COLORS.peach}> 
+                      {daysLeft > 0? `Dans ${daysLeft} jours`:`${-daysLeft} jours de retard`}</Text>
+                  </Block>
+
+                    </Block>
+                  
+
                   <Text numberOfLines={2} grey>
                     {props.prod.detail}
                   </Text>
@@ -114,10 +139,11 @@ const Product = (props) => {
                     >
                      <Block>
               <Block row space="between">
-                <Text numberOfLines={1} semibold size={16}>
+                <Text numberOfLines={1} semibold>
+                Montant collecté (
                   {((props.prod.initialAmount + props.prod.membres
                   .filter(member => member.contribution_status === "ACCEPTED")
-                  .reduce((sum, member) => sum + member.contribution_amount, 0)) * 100 / props.prod.amount).toFixed(1)}% d'investissement
+                  .reduce((sum, member) => sum + member.contribution_amount, 0)) * 100 / props.prod.amount).toFixed(1)}%)
                 </Text>
                   <Text> {props.prod.initialAmount} {props.prod.currency}</Text>
               </Block>
@@ -133,14 +159,14 @@ const Product = (props) => {
                 <Text numberOfLines={1} semibold>
                   Les parts disponibles:
                 </Text>
-                <Text>{(100 - (props.prod.initialAmount / (props.prod.amount / 100))).toFixed(1)} parts</Text>
+                <Text>{(100 - (props.prod.initialAmount / (props.prod.amount / 100))).toFixed(0)} parts</Text>
               </Block>
 
               <Block row space="between">
                 <Text numberOfLines={1} semibold>
-                  Le coût total de Revient:
+                  Taux d'intérêt :
                 </Text>
-                <Text> 0 {props.prod.currency} </Text>
+                <Text> {props.prod?.tauxInt} % </Text>
               </Block>
             </Block>
           </Block>
@@ -182,6 +208,7 @@ const styles = StyleSheet.create({
     zIndex: 100,
     backgroundColor: COLORS.peach,
     padding: 10,
+    margin: 10,
     borderRadius: 20,
     elevation: 5,
   },
@@ -191,7 +218,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
     borderRadius: 25,
     right: 0,
-    margin: SIZES.base * 2,
+    margin: 10,
   },
   imgs: {
     flexDirection: 'row',
