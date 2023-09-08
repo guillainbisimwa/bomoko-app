@@ -16,7 +16,36 @@ const DetailsAvec = ({ route }) => {
   
   useEffect(()=>{
     console.log(route.params.avec.owner);
-  },[])
+  },[]);
+
+  const handleAdhesion = async () => {
+
+    // // Push current user to member array
+
+    // // Reuse the soumettreProduct function
+    // dispatch(soumettreProduct({
+    //   ...route.params.food,
+    //   id: route.params.food._id,
+    //   membres: [
+    //     ...route.params.food.membres,
+    //     {
+    //       user: JSON.parse(token)?.user?.user?.userId,
+    //       admission_req: 'PENDING', 
+    //       contribution_amount: 0,
+    //       contribution_status: 'PENDING', 
+    //     }
+    //   ]
+    // }));
+
+    //  // Check if the product was deleted successfully
+    // if (!error) {
+    //   // Navigate back to the previous screen
+    //   navigation.navigate('Main');
+
+    // }else {
+    //   onToggleSnackBar()
+    // }
+  };
 
   const renderImage = () => {
     return (
@@ -141,6 +170,7 @@ const DetailsAvec = ({ route }) => {
       </Block>
     );
   };
+
 
   
 

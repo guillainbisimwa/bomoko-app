@@ -127,12 +127,15 @@ const userSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(loginUser.pending, (state) => {
+        console.log('loginUser.pending')
         state.isLoading = true;
         state.error = null;
         state.success = false
 
       })
       .addCase(loginUser.fulfilled, (state, action) => {
+        console.log('loginUser.fulfilled')
+
         state.isLoading = false;
         state.user = action.payload;
         state.error = null;
@@ -142,6 +145,8 @@ const userSlice = createSlice({
         AsyncStorage.setItem('user', JSON.stringify({ user: action.payload }));
       })
       .addCase(loginUser.rejected, (state, action) => {
+        console.log('loginUser.rejected')
+
         state.isLoading = false;
         state.error = action.error.message;
         state.success = false

@@ -17,8 +17,8 @@ export const LoginForm = ({ navigation }) => {
 
   const { error, isLoading, success, user } = useSelector((state) => state.user);
 
-  const [phone, setPhone] = useState('0978532756');
-  const [password, setPassword] = useState('12345678');
+  const [phone, setPhone] = useState('12345678');
+  const [password, setPassword] = useState('test2');
 
   const [visible, setVisible] = useState(false);
   
@@ -32,6 +32,7 @@ export const LoginForm = ({ navigation }) => {
     useEffect(() => {
       checkLoginStatus();
       if (error) {
+        console.log(error);
         onToggleSnackBar()
       }
     }, [success, error]);
