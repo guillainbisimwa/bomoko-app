@@ -217,8 +217,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: COLORS.peach
   },
-
-
   imgs: {
     flexDirection: 'row',
     marginVertical:10,
