@@ -36,10 +36,10 @@ const CreanceDette = ({ navigation, route }) => {
 
   const [routes, SetRoutes] = useState([
     { key: "first", title: `Tous`},
-    { key: "second", title: `A venir` },// 
-    
     { key: "third", title: "En retard" },
-    { key: "fourth", title: "Complet" },
+    { key: "second", title: `A venir` },
+
+   // { key: "fourth", title: "Complet" },
   ]);
   // Refresh Control
   const [refreshing, setRefreshing] = useState(false);
@@ -89,8 +89,57 @@ const CreanceDette = ({ navigation, route }) => {
     }, []) // Empty dependency array to run this effect only once when the screen mounts
   );
 
+  function countAvec(events) {
+    const today = new Date();
+    let allCount = 0;
+    let upcomingCount = 0;
+    let overdueCount = 0;
+    // TODO : To implement properly
+    let completCount = 0;
+
+    let allEvents = [];
+    let upcomingEvents = [];
+    let overdueEvents = [];
+  
+    for (const event of events) {
+      const startDate = new Date(event.startDate);
+      const endDate = new Date(event.endDate);
+  
+      if (startDate <= today) {
+        // Event is ongoing or today
+        overdueCount++;
+        overdueEvents.push(event);
+      } else if (startDate > today) {
+        // Event is overdue
+        upcomingCount++;
+        upcomingEvents.push(event);
+      }
+     
+      allCount++;
+      allEvents.push(event);
+    }
+  
+    return {
+      all: allCount,
+      upcoming: upcomingCount,
+      overdue: overdueCount,
+      complet: completCount,
+
+      allAvec: allEvents,
+      upcomingAvec: upcomingEvents,
+      overdueAvec: overdueEvents,
+    };
+  }
+  
+
 // This effect will run whenever activeTabType, search field, or products change
 useEffect(() => {
+  SetRoutes(prevRoutes => [
+    { ...prevRoutes[0], title: `Tous (${countAvec(filteredAvecs).all})` },
+    { ...prevRoutes[1], title: `A venir (${countAvec(filteredAvecs).upcoming})` },
+    { ...prevRoutes[2], title: `En retard (${countAvec(filteredAvecs).overdue})` },
+   // { ...prevRoutes[3], title: `Complet (${countAvec(filteredAvecs).complet})` },
+  ]);
   if (!searchQuery) {
     setFilteredAvecs(avecs);
 
@@ -352,7 +401,7 @@ const handlePrevPage = () => {
       <ScrollView style={{ flex: 1 ,  paddingVertical:10,
       backgroundColor: 'transparent'}}>
         {
-          filteredAvecs?.map((avec, key) => {
+          countAvec(filteredAvecs).allAvec?.map((avec, key) => {
 
             const date = new Date(avec.startDate);
 
@@ -432,20 +481,200 @@ const handlePrevPage = () => {
       </ScrollView>
   )};
 
-const Route2 = () => (
-  <ScrollView style={{ flex: 1 , paddingHorizontal:5, paddingVertical:10, 
-  backgroundColor: 'transparent'}}>
-   
-  </ScrollView>
-);
+  const Route2 = () => {
+    // Check if status is loading
+    if (avecs.status === 'loading') {
+      return (
+        // Render a loading indicator here
+        <ScrollView style={{ flex: 1 , paddingHorizontal:5, paddingVertical:10,
+          backgroundColor: 'transparent'}}>
+          <ActivityIndicator style={styles.activity} size="large" color='white'/>
+        </ScrollView>
+      );
+    }
 
-const Route3 = () => (
-  <ScrollView style={{ flex: 1 , paddingHorizontal:5, paddingVertical:10, 
-  backgroundColor: 'transparent'}}>
-     
+    return (
+      <ScrollView style={{ flex: 1 ,  paddingVertical:10,
+      backgroundColor: 'transparent'}}>
+        {
+          countAvec(filteredAvecs).overdueAvec?.map((avec, key) => {
 
-  </ScrollView>
-);
+            const date = new Date(avec.startDate);
+
+            // Create an options object for formatting the date
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            
+            // Format the date in French
+            const frenchDate = date.toLocaleDateString('fr-FR', options);
+            
+            // Calculate the number of days left to reach today's date
+            const today = new Date();
+            const timeDifference = date.getTime() - today.getTime();
+            const daysLeft = Math.ceil(timeDifference / (1000 * 3600 * 24));
+            
+            // console.log('French Date:', frenchDate);
+            // console.log('Days Left:', daysLeft);
+
+          return(
+            <TouchableOpacity style={styles.card} key={avec._id} onPress={()=> navigation.navigate("DetailsAvec", {avec})}>
+              <Text numberOfLines={1} style={styles.bold}>{avec.name}</Text>
+              <Text style={styles.small}>Debute {frenchDate}</Text>
+              <Text numberOfLines={2} style={styles.normal}>{avec.detail}</Text>
+              <Divider style={styles.div} />
+              <Block row center space="between">
+              <ProgressBar
+                progress={10}
+                color={COLORS.purple}
+                style={{ width: SIZES.width /1.8, height: SIZES.base }}
+                animatedValue={0.1}
+                visible
+              />
+              <Text numberOfLines={1} semibold size={19} style={{ marginLeft: 20 }}>
+              {10}%
+              </Text>
+            </Block>
+
+              <Text style={styles.boldGrey}>Membres</Text>
+              <View style={styles.imgs}>
+                {avec?.membres?.slice(0,5).map((value, key) =>{
+                  console.log();
+                  //console.log(value.user);
+                  return(
+                  <Image
+                    key={key}
+                    source={{uri: value?.user?.profile_pic}}
+                    style={[
+                      styles.img,
+                      key > 0 && { marginLeft: -15 }, // Apply negative margin for images after the first one
+                    ]}
+                  />
+                )})}
+                {avec?.membres?.length >= 5 && (
+                  <Text style={styles.moreImagesText}>+ 
+                  {avec?.membres?.length - 5} plus</Text>
+                )}
+              </View>
+
+
+              <Block row p={10} space="between" >
+                <Chip icon="information"style={{backgroundColor: `${avec?.status=='PENDING'? '#ebebeb':'#5dbb63'}`}}
+                 elevated >{`${avec?.status=='PENDING'? 'En attente':'Validé'}`}</Chip>
+                <Chip  style={{backgroundColor: `${daysLeft<0? '#e3242b':'#ebebeb'}`}} icon="information" elevated >{daysLeft>0? `Dans ${daysLeft} jours`:`Retard`}</Chip>
+
+              </Block>
+              <Divider />
+                <Block row space="between" m_t={5} m_b={5}>
+                <Text style={styles.bold}>
+                  {avec?.amount} {avec?.currency} 
+                </Text>
+                <Text style={styles.bold}>
+                  {avec?.cycle?.name} 
+                </Text>
+              </Block>
+            </TouchableOpacity>
+        )})}
+        
+      </ScrollView>
+  )};
+
+
+
+  const Route3 = () => {
+    // Check if status is loading
+    if (avecs.status === 'loading') {
+      return (
+        // Render a loading indicator here
+        <ScrollView style={{ flex: 1 , paddingHorizontal:5, paddingVertical:10,
+          backgroundColor: 'transparent'}}>
+          <ActivityIndicator style={styles.activity} size="large" color='white'/>
+        </ScrollView>
+      );
+    }
+
+    return (
+      <ScrollView style={{ flex: 1 ,  paddingVertical:10,
+      backgroundColor: 'transparent'}}>
+        {
+          countAvec(filteredAvecs).upcomingAvec?.map((avec, key) => {
+
+            const date = new Date(avec.startDate);
+
+            // Create an options object for formatting the date
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            
+            // Format the date in French
+            const frenchDate = date.toLocaleDateString('fr-FR', options);
+            
+            // Calculate the number of days left to reach today's date
+            const today = new Date();
+            const timeDifference = date.getTime() - today.getTime();
+            const daysLeft = Math.ceil(timeDifference / (1000 * 3600 * 24));
+            
+            // console.log('French Date:', frenchDate);
+            // console.log('Days Left:', daysLeft);
+
+          return(
+            <TouchableOpacity style={styles.card} key={avec._id} onPress={()=> navigation.navigate("DetailsAvec", {avec})}>
+              <Text numberOfLines={1} style={styles.bold}>{avec.name}</Text>
+              <Text style={styles.small}>Debute {frenchDate}</Text>
+              <Text numberOfLines={2} style={styles.normal}>{avec.detail}</Text>
+              <Divider style={styles.div} />
+              <Block row center space="between">
+              <ProgressBar
+                progress={10}
+                color={COLORS.purple}
+                style={{ width: SIZES.width /1.8, height: SIZES.base }}
+                animatedValue={0.1}
+                visible
+              />
+              <Text numberOfLines={1} semibold size={19} style={{ marginLeft: 20 }}>
+              {10}%
+              </Text>
+            </Block>
+
+              <Text style={styles.boldGrey}>Membres</Text>
+              <View style={styles.imgs}>
+                {avec?.membres?.slice(0,5).map((value, key) =>{
+                  console.log();
+                  //console.log(value.user);
+                  return(
+                  <Image
+                    key={key}
+                    source={{uri: value?.user?.profile_pic}}
+                    style={[
+                      styles.img,
+                      key > 0 && { marginLeft: -15 }, // Apply negative margin for images after the first one
+                    ]}
+                  />
+                )})}
+                {avec?.membres?.length >= 5 && (
+                  <Text style={styles.moreImagesText}>+ 
+                  {avec?.membres?.length - 5} plus</Text>
+                )}
+              </View>
+
+
+              <Block row p={10} space="between" >
+                <Chip icon="information"style={{backgroundColor: `${avec?.status=='PENDING'? '#ebebeb':'#5dbb63'}`}}
+                 elevated >{`${avec?.status=='PENDING'? 'En attente':'Validé'}`}</Chip>
+                <Chip  style={{backgroundColor: `${daysLeft<0? '#e3242b':'#ebebeb'}`}} icon="information" elevated >{daysLeft>0? `Dans ${daysLeft} jours`:`Retard`}</Chip>
+
+              </Block>
+              <Divider />
+                <Block row space="between" m_t={5} m_b={5}>
+                <Text style={styles.bold}>
+                  {avec?.amount} {avec?.currency} 
+                </Text>
+                <Text style={styles.bold}>
+                  {avec?.cycle?.name} 
+                </Text>
+              </Block>
+            </TouchableOpacity>
+        )})}
+        
+      </ScrollView>
+  )};
+
 
   const topMenu = () => {
 
@@ -465,7 +694,7 @@ const Route3 = () => (
             first: Route1,
             second: Route2,
             third: Route3,
-            fourth: Route3,
+            // fourth: Route3,
           })}
           onIndexChange={setIndex}
           initialLayout={{ width: layout.width }}
