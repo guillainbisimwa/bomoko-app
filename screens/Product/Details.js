@@ -115,9 +115,8 @@ const Details = ({ route, navigation }) => {
 
   // Timeline
   const outputTimeLine = route.params.food.timeline.map(item => {
-    const date = new Date(item.timestamp);
-    const formattedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear().toString().substr(-2)}`;
-    
+    const formattedDate = new Date(item.timestamp).toLocaleDateString('en-GB').replace(/\//g, '-');
+
     return {
       time: formattedDate,
       title: item.title,
@@ -130,14 +129,14 @@ const Details = ({ route, navigation }) => {
   const mydateEnd = new Date(targetEndDate);
 
   outputTimeLine.unshift({
-    time:`${mydateEnd.getDate()}/${mydateEnd.getMonth() + 1}/${mydateEnd.getFullYear().toString().substr(-2)}`,
+    time:`${mydateEnd.toLocaleDateString('en-GB').replace(/\//g, '-')}`,
     title: 'Fin probable de la Campagne',
-    description: `Probablelent la campagne prendra fin apres ${daysTotalExc} jours de la date de debut de la collecte`,
-    //lineColor: COLORS.peach,
-    //circleSize: 30,
-    //circleColor: COLORS.peach,
-    //dotColor: COLORS.blue,
-    //innerCircle: 'dot',
+    description: `Probablelent la campagne de collecte de fonds prendra fin apres ${daysTotalExc} jours de la date de debut de la collecte`,
+    lineColor: COLORS.peach,
+    circleSize: 30,
+    circleColor: COLORS.peach,
+    dotColor: COLORS.black,
+    innerCircle: 'dot',
   });
 
   const [expanded, setExpanded] = useState(false);
