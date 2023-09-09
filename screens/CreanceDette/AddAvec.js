@@ -23,6 +23,7 @@ const AddAvec = ({ navigation, route }) => {
   const [cycleNumber, setCycleNumber] = useState('9');
   const [nbrPartMax, setNbrPartMax] = useState('5');
   const [nbrPartMin, setNbrPartMin] = useState('1');
+  const [prixCaisseSolidaire, setPrixCaisseSolidaire] = useState();
   const [interest, setInterest] = useState('');
   const [fraisAdhesion, setFraisAdhesion] = useState();
   const [debutOctroiCredit, setDebutOctroiCredit] = useState('2023-05-10');
@@ -215,15 +216,24 @@ const AddAvec = ({ navigation, route }) => {
         />
         </Block>
         <Block>
-          <Text style={styles.label}>Date de debut</Text>
+        <Text style={styles.label}>{`Caisse solidaire (${checkedDevise})`}</Text>
+        <TextInput
+          style={styles.input}
+          value={prixCaisseSolidaire}
+          keyboardType="numeric"
+          onChangeText={setPrixCaisseSolidaire}
+          placeholder="Caisse solidaire"
+        />
+         
+        </Block>
+      </Block>
+      <Text style={styles.label}>Date de debut</Text>
           <TextInput
             style={styles.input}
             value={startDate}
             onChangeText={setStartDate}
             placeholder="Entrer la date de debut"
           />
-        </Block>
-      </Block>
        
        
         <Button mode='contained' textColor='white'  title="Creer un AVEC" onPress={handleAddAvec}  loading={status === 'loading'} disabled={status === 'loading'} />
