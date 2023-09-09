@@ -5,7 +5,7 @@ import { Block, Text } from './../../components';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Constants from 'expo-constants';
 import { format } from 'date-fns';
-import { fr } from 'date-fns/locale';
+import { fr as myFr } from 'date-fns/locale';
 import NetInfo from "@react-native-community/netinfo";
 
 import { COLORS, FONTS, SIZES, icons } from './../../constants';
@@ -13,7 +13,8 @@ import { KeyboardAvoidingView } from 'react-native';
 import { ScrollView } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 
-import { DatePickerModal } from 'react-native-paper-dates';
+import { fr, registerTranslation, DatePickerModal } from 'react-native-paper-dates'
+registerTranslation('fr', fr)
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { fetchProducts, postProduct } from '../../redux/prodReducer';
 import { useDispatch, useSelector } from 'react-redux';
@@ -55,7 +56,7 @@ const AddProduct = ({route, navigation}) => {
 
   // Fonction pour convertir la date en format français
   const formatDateToFrench = (date) => {
-    return format(new Date(date), 'dd MMMM yyyy', { locale: fr });
+    return format(new Date(date), 'dd MMMM yyyy', { locale: myFr });
   };
 
   // Location  

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { View, Text, TextInput, StyleSheet, ScrollView } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { createAvec } from '../../redux/avecReducer';
@@ -8,12 +8,21 @@ import { COLORS, FONTS, SIZES } from '../../constants';
 import Block from '../Product/Block';
 import SelectDropdown from 'react-native-select-dropdown';
 import Ionicons from '@expo/vector-icons/Ionicons';
-
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { fr, registerTranslation, DatePickerModal } from 'react-native-paper-dates'
+registerTranslation('fr', fr)
+import { format } from 'date-fns';
+import { fr as myFr } from 'date-fns/locale';
 
 const AddAvec = ({ navigation, route }) => {
   const { owner, username } = route.params;
   const dispatch = useDispatch();
   const { avecs, status, error }= useSelector((state) => state.avecs); 
+
+  // DATE RANGE PICKER
+  const [range, setRange] = useState({ startDate: undefined, endDate: undefined });
+
+  const [open, setOpen] = useState(false);
 
   const [name, setName] = useState('');
   const [detail, setDetail] = useState('');
@@ -36,6 +45,19 @@ const AddAvec = ({ navigation, route }) => {
 
   const [statusLocal, setStatusLocal] = useState(false);
 
+  const onDismiss = useCallback(() => {
+    setOpen(false);
+  }, [setOpen]);
+
+  const onConfirm = useCallback(
+    ({ startDate, endDate }) => {
+      setOpen(false);
+      setRange({ startDate, endDate });
+    },
+    [setOpen, setRange]
+  );
+
+
   useEffect(()=>{
     console.log('===>', status,);
     console.log('===>',  error);
@@ -53,6 +75,12 @@ const AddAvec = ({ navigation, route }) => {
   const [visible, setVisible] = useState(false);
   const onDismissSnackBar = () => setVisible(false);
   const onToggleSnackBar = () => setVisible(!visible);
+
+
+  // Fonction pour convertir la date en format français
+  const formatDateToFrench = (date) => {
+    return format(new Date(date), 'dd MMMM yyyy', { locale: myFr });
+  };
 
   const handleAddAvec = () => {
     try {
@@ -121,30 +149,34 @@ const AddAvec = ({ navigation, route }) => {
     return (
       <ScrollView style={styles.container}>
         <Block row space='between'>
-        <SelectDropdown
-            data={cycleList}
-            // defaultValueByIndex={1}
-            // defaultValue={'Egypt'}
-            onSelect={(selectedItem, index) => {
-              console.log(selectedItem, index);
-            }}
-            defaultButtonText={'Choisir le Cycle'}
-            buttonTextAfterSelection={(selectedItem, index) => {
-              return selectedItem;
-            }}
-            rowTextForSelection={(item, index) => {
-              return item;
-            }}
-            buttonStyle={styles.dropdown1BtnStyle}
-            renderDropdownIcon={isOpened => {
-              return  <Ionicons  name={isOpened ? 'chevron-up' : 'chevron-down'} size={20} color={COLORS.gray} />
-            }}
-            dropdownIconPosition={'right'}
-            buttonTextStyle={styles.dropdown1BtnTxtStyle}
-            dropdownStyle={styles.dropdown1DropdownStyle}
-            rowStyle={styles.dropdown1RowStyle}
-            rowTextStyle={styles.dropdown1RowTxtStyle}
-          />
+          <Block>
+          <Text  style={{ ...FONTS.h3, color: COLORS.darkgray, paddingBottom:10 }}>CHOISIR LE CYCLE</Text>
+
+            <SelectDropdown
+                data={cycleList}
+                // defaultValueByIndex={1}
+                // defaultValue={'Egypt'}
+                onSelect={(selectedItem, index) => {
+                  console.log(selectedItem, index);
+                }}
+                defaultButtonText={'Choisir le Cycle'}
+                buttonTextAfterSelection={(selectedItem, index) => {
+                  return selectedItem;
+                }}
+                rowTextForSelection={(item, index) => {
+                  return item;
+                }}
+                buttonStyle={styles.dropdown1BtnStyle}
+                renderDropdownIcon={isOpened => {
+                  return  <Ionicons  name={isOpened ? 'chevron-up' : 'chevron-down'} size={20} color={COLORS.gray} />
+                }}
+                dropdownIconPosition={'right'}
+                buttonTextStyle={styles.dropdown1BtnTxtStyle}
+                dropdownStyle={styles.dropdown1DropdownStyle}
+                rowStyle={styles.dropdown1RowStyle}
+                rowTextStyle={styles.dropdown1RowTxtStyle}
+              />
+            </Block>
          
           <Block>
             <Text  style={{ ...FONTS.h3, color: COLORS.darkgray }}>VOTRE DEVISE</Text>
@@ -227,13 +259,38 @@ const AddAvec = ({ navigation, route }) => {
          
         </Block>
       </Block>
-      <Text style={styles.label}>Date de debut</Text>
+      {/* <Text style={styles.label}>Date de debut</Text>
           <TextInput
             style={styles.input}
             value={startDate}
             onChangeText={setStartDate}
             placeholder="Entrer la date de debut"
-          />
+          /> */}
+
+        <SafeAreaProvider>
+          <View style={{justifyContent: 'center', flex: 1, alignItems: 'center', 
+          marginBottom:20,}}>
+            <Button onPress={() => setOpen(true)} uppercase={false} mode="outlined" style={{ 
+              padding: 7, width:"100%"}}>
+              Choisir la durée de votre campagne
+            </Button>
+            <DatePickerModal
+              locale="fr"
+              mode="single"
+              visible={open}
+              onDismiss={onDismiss}
+              date={range.startDate}
+              //endDate={range.endDate}
+              onConfirm={onConfirm}
+            />
+
+        {range.startDate && range.endDate && (
+          <Text style={{ marginTop: 20 }}>
+            Campagne du : {formatDateToFrench(range.startDate)} au {formatDateToFrench(range.endDate)}
+          </Text>
+        )}
+          </View>
+        </SafeAreaProvider>
        
        
         <Button mode='contained' textColor='white'  title="Creer un AVEC" onPress={handleAddAvec}  loading={status === 'loading'} disabled={status === 'loading'} />
