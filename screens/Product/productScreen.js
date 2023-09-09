@@ -377,6 +377,8 @@ const handlePrevPage = () => {
               }
               {
               filteredProducts.length === 0 ? (
+                isLoading?
+                <Text center h1 white bold>Chargement en cours...</Text>:
                 <Text center h1 white bold>   Aucun produit ou service</Text>
               ) : (
                 <View>
