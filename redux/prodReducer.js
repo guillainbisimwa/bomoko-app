@@ -241,6 +241,8 @@ const productSlice = createSlice({
       state.error = null;
     })
     .addCase(fetchProducts.rejected, (state, action) => {
+      console.log("?????? ok==",action.error.message);
+
       state.isLoading = false;
       state.error = action.error.message;
     })

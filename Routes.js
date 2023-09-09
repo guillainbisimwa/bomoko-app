@@ -249,7 +249,7 @@ const App = () => {
            options={{ title: '' , headerShown: true}}/>
 
           <Stack.Screen name="addAvec" component={AddAvec}
-           options={{ title: '' , headerShown: true}}/>
+           options={{ title: 'Ajouter un groupe' , headerShown: true}}/>
 
           <Stack.Screen name="DetailsAvec" component={DetailsAvec}
            options={{ title: '' , headerShown: true}}/>

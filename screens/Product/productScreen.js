@@ -79,8 +79,12 @@ const ProductScreen = ({ navigation, route }) => {
     }, []) // Empty dependency array to run this effect only once when the screen mounts
   );
 
-// This effect will run whenever activeTabType, search field, or products change
 useEffect(() => {
+  if(error){
+    Alert.alert(error, "Veuillez vérifier votre connexion Internet et réessayer.");
+  }
+// This effect will run whenever activeTabType, search field, or products change
+
   if (!searchQuery) {
     // If the search field is empty, check the activeTabType to determine filtering
     if (activeTabType == 'Services') {
@@ -111,7 +115,7 @@ useEffect(() => {
     });
     setFilteredProducts(filtered);
   }
-}, [activeTabType, searchQuery, products, currentPage]); // Watch for changes in activeTabType, searchQuery, and products
+}, [activeTabType, searchQuery, products, currentPage, error]); // Watch for changes in activeTabType, searchQuery, and products
 
 const onChangeSearch = (text) => {
   setFilteredProducts([
