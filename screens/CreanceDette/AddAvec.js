@@ -33,25 +33,31 @@ const AddAvec = ({ navigation, route }) => {
   const [prixCaisseSolidaire, setPrixCaisseSolidaire] = useState();
   const [interest, setInterest] = useState('');
   const [fraisAdhesion, setFraisAdhesion] = useState();
-  const [debutOctroiCredit, setDebutOctroiCredit] = useState('2023-05-10');
-  const [finOctroiCredit, setFinOctroiCredit] = useState('2023-08-10');
-  const [startDate, setStartDate] = useState('2023-05-01');
-  const [endDate, setEndDate] = useState('2023-12-01');
+  const [debutOctroiCredit, setDebutOctroiCredit] = useState('');
+  const [finOctroiCredit, setFinOctroiCredit] = useState('');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
 
   const [checkedDevise, setCheckedDevise] = useState('USD');
 
   const [statusLocal, setStatusLocal] = useState(false);
+  const [interestValid, setInterestValid] = useState(true); // Validation state for interest
 
-  const [date, setDate] = React.useState(undefined);
 
-  const onDismissSingle = React.useCallback(() => {
+  const [date, setDate] = useState(undefined);
+
+  const onDismissSingle = useCallback(() => {
     setOpen(false);
   }, [setOpen]);
 
-  const onConfirmSingle = React.useCallback(
+  const onConfirmSingle = useCallback(
     (params) => {
       setOpen(false);
       setDate(params.date);
+      setDebutOctroiCredit(addMonths(params.date, 3));// + 3 mois
+      setFinOctroiCredit(addMonths(params.date, Number(cycleNumber)-1));
+      setStartDate(params.date);
+      setEndDate(addMonths(params.date, Number(cycleNumber)));
     },
     [setOpen, setDate]
   );
@@ -82,9 +88,9 @@ const AddAvec = ({ navigation, route }) => {
     return format(new Date(date), 'dd MMMM yyyy', { locale: myFr });
   };
 
-  function addMonths(date, months) {
-        // Input date
-    const originalDate = moment(date);
+  function addMonths(dateAdded, months) {
+        // Input dateAdded
+    const originalDate = moment(dateAdded);
 
     // Add months to the date
     const newDate = originalDate.add(months, 'months');
@@ -94,41 +100,62 @@ const AddAvec = ({ navigation, route }) => {
     return formattedDate;
   }
 
+  const handleInterestChange = (text) => {
+    const numericValue = parseFloat(text);
+    if (!isNaN(numericValue) && numericValue >= 5 && numericValue <= 10) {
+      setInterestValid(true); // Interest is valid
+    } else {
+      setInterestValid(false); // Interest is not valid
+    }
+    setInterest(text); // Update interest value
+  };
+
   const handleAddAvec = () => {
     try {
       // Validation: Check if required fields are empty
-      if (!name || !amount || !currency || !cycleName || !cycleNumber || !nbrPartMax || !nbrPartMin) {
+      if (!name || !amount  || !detail || !interest || !fraisAdhesion || !prixCaisseSolidaire) {
         setStatusLocal(false);
-        throw new Error('Please fill in all required fields.');
-      }
+        //throw new Error('Please fill in all required fields.');
+        if(!interest){
+          setInterestValid(false)
+        }
+      }else {
+
+        // Create an AVEC object with the form data
+        const avec = {
+          name,
+          detail,
+          amount: Number(amount),
+          currency,
+          cycle: {
+            name: cycleName,
+            number: Number(cycleNumber),
+          },
+          nbrPart: {
+            max: Number(nbrPartMax),
+            min: Number(nbrPartMin),
+          },
+          owner,
+          interest,
+          frais_Adhesion: Number(fraisAdhesion),
+          debut_octroi_credit: debutOctroiCredit,
+          fin_octroi_credit: finOctroiCredit,
+          startDate,
+          endDate,
+          frais_Social: {
+            name: 'Hebdomadaire',
+            somme: Number(prixCaisseSolidaire),
+          },
+        };
+
+        console.log("avec", avec);
+    
+        // Dispatch the action
+        dispatch(createAvec(avec));
+    
+        }
+      
   
-      // Create an AVEC object with the form data
-      const avec = {
-        name,
-        detail,
-        amount: Number(amount),
-        currency,
-        cycle: {
-          name: cycleName,
-          number: Number(cycleNumber),
-        },
-        nbrPart: {
-          max: Number(nbrPartMax),
-          min: Number(nbrPartMin),
-        },
-        owner,
-        interest,
-        frais_Adhesion: Number(fraisAdhesion),
-        debut_octroi_credit: debutOctroiCredit,
-        fin_octroi_credit: finOctroiCredit,
-        startDate,
-        endDate,
-      };
-  
-      // Dispatch the action
-      dispatch(createAvec(avec));
-  
-      // Set statusLocal (if needed)
       setStatusLocal(true);
     } catch (error) {
       // Handle validation or dispatch errors
@@ -215,7 +242,7 @@ const AddAvec = ({ navigation, route }) => {
 
         <Text style={styles.label}>Nom de votre groupe</Text>
         <TextInput
-          style={styles.input}
+          style={[styles.input, !name && statusLocal && styles.inputError]}
           value={name}
           onChangeText={setName}
           placeholder="Entrer le nom de votre groupe"
@@ -223,8 +250,8 @@ const AddAvec = ({ navigation, route }) => {
   
         <Text style={styles.label}>Description</Text>
         <TextInput
-          style={styles.input}
           value={detail}
+          style={[styles.input, !detail && statusLocal && styles.inputError]}
           multiline
           numberOfLines={2}
           onChangeText={setDetail}
@@ -235,7 +262,8 @@ const AddAvec = ({ navigation, route }) => {
         <Block>
           <Text style={styles.label}>{`Prix d'une part (${checkedDevise})`}</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, !amount && statusLocal && styles.inputError]}
+
             value={amount}
             onChangeText={setAmount}
             keyboardType="numeric"
@@ -245,12 +273,15 @@ const AddAvec = ({ navigation, route }) => {
         <Block>
         <Text style={styles.label}>Taux d'intérêt (%)</Text>
         <TextInput
-          style={styles.input}
-          value={interest}
-          onChangeText={setInterest}
-          keyboardType="numeric"
-          placeholder="Taux d'intérêt"
-        />
+            style={[styles.input, !interestValid && styles.inputError]} // Apply red border if not valid
+            value={interest}
+            onChangeText={handleInterestChange}
+            keyboardType="numeric"
+            placeholder="Taux d'intérêt"
+          />
+          {!interestValid && (
+            <Text style={styles.errorText}>Entre 5 et 10%</Text>
+          )}
         </Block>
       </Block>
 
@@ -259,7 +290,7 @@ const AddAvec = ({ navigation, route }) => {
         <Block>
         <Text style={styles.label}>{`Frais Adhesion (${checkedDevise})`}</Text>
         <TextInput
-          style={styles.input}
+          style={[styles.input, !fraisAdhesion && statusLocal && styles.inputError]}
           value={fraisAdhesion}
           onChangeText={setFraisAdhesion}
           keyboardType="numeric"
@@ -269,7 +300,7 @@ const AddAvec = ({ navigation, route }) => {
         <Block>
         <Text style={styles.label}>{`Caisse solidaire (${checkedDevise})`}</Text>
         <TextInput
-          style={styles.input}
+          style={[styles.input, !prixCaisseSolidaire && statusLocal && styles.inputError]}
           value={prixCaisseSolidaire}
           keyboardType="numeric"
           onChangeText={setPrixCaisseSolidaire}
@@ -283,8 +314,10 @@ const AddAvec = ({ navigation, route }) => {
         <SafeAreaProvider>
           <View style={{justifyContent: 'center', flex: 1, alignItems: 'center', 
           marginBottom:20,}}>
-            <Button onPress={() => setOpen(true)} uppercase={false} mode="outlined" style={{ 
-              padding: 7, width:"100%"}}>
+            <Button onPress={() => setOpen(true)} uppercase={false} mode="outlined" 
+          style={[styles.btn, !date && statusLocal && styles.inputError]}
+
+           >
               Choisir la date de début du cycle
             </Button>
             <View style={{ justifyContent: 'center', flex: 1, alignItems: 'center' }}>
@@ -311,6 +344,9 @@ const AddAvec = ({ navigation, route }) => {
        
         <Button mode='contained'  title="Creer un AVEC" onPress={handleAddAvec}  loading={status === 'loading'} 
         disabled={status === 'loading'} style={{marginBottom:19}}>Creer un AVEC</Button>
+        <View style={{height:160,}}>
+      
+      </View>
       </ScrollView>
     );
   }
@@ -336,14 +372,16 @@ const AddAvec = ({ navigation, route }) => {
         <Text style={{color:COLORS.white}} >Veuillez vérifier votre connexion Internet </Text>
       
       </Snackbar>
+      
       </View>
+    
     </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    //flex: 1,
     paddingHorizontal: 8,
     backgroundColor: COLORS.white,
   },
@@ -375,8 +413,16 @@ const styles = StyleSheet.create({
   dropdown1DropdownStyle: {backgroundColor: '#EFEFEF', },
   dropdown1RowStyle: {backgroundColor: '#EFEFEF', borderBottomColor: '#C5C5C5'},
   dropdown1RowTxtStyle: {color: '#444', textAlign: 'left'},
-
-
+  inputError: {
+    borderColor: 'red', // Red border for invalid input
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 12,
+  },
+btn: {
+  padding: 7, width:"100%"
+}
 });
 
 export default AddAvec;

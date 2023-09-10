@@ -763,7 +763,7 @@ const handlePrevPage = () => {
         onPress={() => {
           console.log()
     
-          if(connectedUser) { //!
+          if(!connectedUser) { //!
             showModal(true);
           }
           else {
