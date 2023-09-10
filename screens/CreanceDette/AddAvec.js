@@ -9,18 +9,15 @@ import Block from '../Product/Block';
 import SelectDropdown from 'react-native-select-dropdown';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { fr, registerTranslation, DatePickerModal } from 'react-native-paper-dates'
+import { fr, registerTranslation, DatePickerModal, DatePickerInput } from 'react-native-paper-dates'
 registerTranslation('fr', fr)
 import { format } from 'date-fns';
-import { fr as myFr } from 'date-fns/locale';
+import { fr as myFr, addMonths } from 'date-fns/locale';
 
 const AddAvec = ({ navigation, route }) => {
   const { owner, username } = route.params;
   const dispatch = useDispatch();
   const { avecs, status, error }= useSelector((state) => state.avecs); 
-
-  // DATE RANGE PICKER
-  const [range, setRange] = useState({ startDate: undefined, endDate: undefined });
 
   const [open, setOpen] = useState(false);
 
@@ -42,19 +39,20 @@ const AddAvec = ({ navigation, route }) => {
 
   const [checkedDevise, setCheckedDevise] = useState('USD');
 
-
   const [statusLocal, setStatusLocal] = useState(false);
 
-  const onDismiss = useCallback(() => {
+  const [date, setDate] = React.useState(undefined);
+
+  const onDismissSingle = React.useCallback(() => {
     setOpen(false);
   }, [setOpen]);
 
-  const onConfirm = useCallback(
-    ({ startDate, endDate }) => {
+  const onConfirmSingle = React.useCallback(
+    (params) => {
       setOpen(false);
-      setRange({ startDate, endDate });
+      setDate(params.date);
     },
-    [setOpen, setRange]
+    [setOpen, setDate]
   );
 
 
@@ -79,8 +77,17 @@ const AddAvec = ({ navigation, route }) => {
 
   // Fonction pour convertir la date en format français
   const formatDateToFrench = (date) => {
+    console.log('date', date);
     return format(new Date(date), 'dd MMMM yyyy', { locale: myFr });
   };
+
+  function addMonths2(date, months) {
+    const dateCopy = new Date(date);
+  
+    dateCopy.setMonth(dateCopy.getMonth() + months);
+  
+    return dateCopy;
+  }
 
   const handleAddAvec = () => {
     try {
@@ -157,10 +164,17 @@ const AddAvec = ({ navigation, route }) => {
                 // defaultValueByIndex={1}
                 // defaultValue={'Egypt'}
                 onSelect={(selectedItem, index) => {
-                  console.log(selectedItem, index);
+                  setCycleNumber(selectedItem.split(' ')[0])
+                  //console.log(selectedItem, index);
+                  console.log();
+
+                  console.log(cycleNumber);
+
                 }}
                 defaultButtonText={'Choisir le Cycle'}
                 buttonTextAfterSelection={(selectedItem, index) => {
+                  //console.log("selectedItem", selectedItem);
+
                   return selectedItem;
                 }}
                 rowTextForSelection={(item, index) => {
@@ -171,7 +185,7 @@ const AddAvec = ({ navigation, route }) => {
                   return  <Ionicons  name={isOpened ? 'chevron-up' : 'chevron-down'} size={20} color={COLORS.gray} />
                 }}
                 dropdownIconPosition={'right'}
-                buttonTextStyle={styles.dropdown1BtnTxtStyle}
+                // buttonTextStyle={styles.dropdown1BtnTxtStyle}
                 dropdownStyle={styles.dropdown1DropdownStyle}
                 rowStyle={styles.dropdown1RowStyle}
                 rowTextStyle={styles.dropdown1RowTxtStyle}
@@ -259,41 +273,39 @@ const AddAvec = ({ navigation, route }) => {
          
         </Block>
       </Block>
-      {/* <Text style={styles.label}>Date de debut</Text>
-          <TextInput
-            style={styles.input}
-            value={startDate}
-            onChangeText={setStartDate}
-            placeholder="Entrer la date de debut"
-          /> */}
+      
 
         <SafeAreaProvider>
           <View style={{justifyContent: 'center', flex: 1, alignItems: 'center', 
           marginBottom:20,}}>
             <Button onPress={() => setOpen(true)} uppercase={false} mode="outlined" style={{ 
               padding: 7, width:"100%"}}>
-              Choisir la durée de votre campagne
+              Choisir la date de début du cycle
             </Button>
+            <View style={{ justifyContent: 'center', flex: 1, alignItems: 'center' }}>
             <DatePickerModal
               locale="fr"
               mode="single"
               visible={open}
-              onDismiss={onDismiss}
-              date={range.startDate}
-              //endDate={range.endDate}
-              onConfirm={onConfirm}
+              onDismiss={onDismissSingle}
+              date={date}
+              presentationStyle="pageSheet"
+              onConfirm={onConfirmSingle}
             />
-
-        {range.startDate && range.endDate && (
+         
+        {date && (
           <Text style={{ marginTop: 20 }}>
-            Campagne du : {formatDateToFrench(range.startDate)} au {formatDateToFrench(range.endDate)}
+            Le cycle de {cycleNumber} mois, soit du : {formatDateToFrench(date)} au 
+             {formatDateToFrench(date)}
           </Text>
         )}
+          </View>
           </View>
         </SafeAreaProvider>
        
        
-        <Button mode='contained' textColor='white'  title="Creer un AVEC" onPress={handleAddAvec}  loading={status === 'loading'} disabled={status === 'loading'} />
+        <Button mode='contained'  title="Creer un AVEC" onPress={handleAddAvec}  loading={status === 'loading'} 
+        disabled={status === 'loading'} >Creer un AVEC</Button>
       </ScrollView>
     );
   }
@@ -355,7 +367,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: COLORS.gray,
   },
-  dropdown1BtnTxtStyle: {color: '#C5C5C5', },
+  //dropdown1BtnTxtStyle: {color: '#C5C5C5', },
   dropdown1DropdownStyle: {backgroundColor: '#EFEFEF', },
   dropdown1RowStyle: {backgroundColor: '#EFEFEF', borderBottomColor: '#C5C5C5'},
   dropdown1RowTxtStyle: {color: '#444', textAlign: 'left'},
