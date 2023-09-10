@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { BASE_URL } from '../constants/utils';
 
-const avecs = [
+const avecs2 = [
   {
       "cycle": {
           "name": "Mensuel",
@@ -833,7 +833,7 @@ const avecs = [
 
 // Define an initial state for AVEC objects
 const initialState = {
-  avecs: [...avecs], // Array to store AVEC objects {avecs: [...avecs]}
+  avecs: [], // Array to store AVEC objects {avecs: [...avecs]}
   status: 'idle', // Status for async operations
   error: null, // Error object for failed requests
 };
@@ -874,15 +874,19 @@ export const updateAvec = createAsyncThunk('avec/update', async (id) => {
 });
 
 // Create an async thunk to delete an AVEC object
-export const deleteAvec = createAsyncThunk('avecs/delete', async (id) => {
-  try {
-    await axios.delete(`${BASE_URL}api/avec/${id}`);
-    return avecId;
-  } catch (error) {
-    throw error;
-  }
-});
+export const deleteAvec = createAsyncThunk(
+    "avecs/delete",
+    async ({
+      id
+    }) => {
+      const url = `${BASE_URL}api/avec/${id}`; // Concatenate ID to the base URL
+      const response = await axios.delete(url);
+      console.log("Delete avec---?????? ok==", response.data);
+      return response.data;
+    }
+  );
 
+  
 // Create a slice for AVEC objects
 const avecsSlice = createSlice({
   name: 'loading',
@@ -944,7 +948,7 @@ const avecsSlice = createSlice({
       .addCase(deleteAvec.fulfilled, (state, action) => {
         state.status = 'succeeded';
         // Remove the deleted AVEC object
-        state.avecs = state.avecs.filter((avec) => avec._id !== action.payload);
+        //state.avecs = state.avecs.filter((avec) => avec._id !== action.payload);
       })
       .addCase(deleteAvec.rejected, (state, action) => {
         state.status = 'failed';
