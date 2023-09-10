@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {ImageBackground, View, TouchableOpacity, StyleSheet, ScrollView, Image } from 'react-native';
 import Block from '../Product/Block';
 import { COLORS, FONTS, SIZES } from '../../constants';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Text } from '../../components';
-import { Divider, Button, Snackbar, Modal, Card } from 'react-native-paper';
+import { Divider, Button, Snackbar, Modal, Card, ActivityIndicator } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteAvec } from '../../redux/avecReducer';
+import { BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import { responsiveScreenWidth } from 'react-native-responsive-dimensions';
 
 const DetailsAvec = ({ route, navigation }) => {
   const dispatch = useDispatch();
@@ -24,46 +26,46 @@ const DetailsAvec = ({ route, navigation }) => {
     setShowFullContent(!showFullContent);
   };
   
-  useEffect(()=>{
-    console.log(route.params.avec.owner);
-    if (status === "succeeded" &&  statusLocal  ) {
-      // Navigate to the Home screen
-      //navigation.navigate('Main');
-    }
-    else {
-      //onToggleSnackBar()
-    }
-  },[]);
+// ref
+const bottomSheetModalRef = useRef(null);
 
+// variables
+const snapPoints = useMemo(() => ["25%"], []);
+
+// backdrop on modal open
+const [isOpen, setIsOpen] = useState(false);
+
+const openModal = useCallback(() => {
+  bottomSheetModalRef.current?.present();
+  setTimeout(() => {
+    setIsOpen(true);
+  }, 5);
+}, []);
+
+const handleClosePress = useCallback(() => {
+  bottomSheetModalRef.current?.close();
+}, []);
 
   // Modal Delete AVEC
-  const [visibleDel, setVisibleDel] = useState(false);
-  const showModalDel = () => setVisibleDel(true);
-  const hideModalDel = () => setVisibleDel(false);
+  const hideModalDel = () => handleClosePress();
 
   const handleDelete = async () => {
     dispatch(deleteAvec({
-      id: route.params.avec._id
+      id: await route.params.avec._id
     }));
-
+    console.log("--");
+    console.log(await status);
+    console.log(await error);
      // Check if the product was deleted successfully
-    if (!error) {
+    if (await status == 'succeeded') {
       // Navigate back to the previous screen
-      navigation.navigate('Main');
+
+      await navigation.navigate('Main');
     }else {
       onToggleSnackBar()
     }
   }
   
-
-  const containerStyle = {
-    backgroundColor: 'white',
-    width: '85%',
-    borderRadius: 10,
-    alignSelf: 'center',
-    position:"absolute",
-    top:'15%'
-  };
 
   const handleAdhesion = async () => {
 
@@ -214,13 +216,11 @@ const DetailsAvec = ({ route, navigation }) => {
         </Button>
         <Block row m_t={5} space='between' >
 
-        <Button buttonColor={COLORS.peach} mode="contained">
+        <Button buttonColor={COLORS.peach} mode="contained"  onPress={() => {
+          openModal();
+        }}>
               Supprimer
         </Button>
-
-        <Button textColor="#fff" elevated buttonColor={COLORS.peach} onPress={()=> showModalDel()}>
-                Supprimer
-              </Button>
 
         <Button buttonColor={COLORS.blue} mode="contained">
               Modifier
@@ -231,42 +231,17 @@ const DetailsAvec = ({ route, navigation }) => {
         </Button>
         </Block>
 
-          {/* Delete Prod/Serv */}
-      <Modal
-        style={{ zIndex: 99 }}
-        visible={visibleDel}
-        onDismiss={hideModalDel}
-        contentContainerStyle={[containerStyle, { zIndex: 999 }]} // Set a higher value for the z-index
-      >
-        <Card style={{ padding: 10 }}>
-          <Card.Title
-            titleStyle={{ fontWeight: 'bold', textTransform: 'uppercase' }}
-            title="ATTENTION!" 
-          />
-          <Card.Content>
-            <Text variant="titleLarge">Voulez-vous vraiment supprimer le Groupe { route.params.avec.name}?</Text>
-          </Card.Content>
-          <Card.Actions style={{ marginTop: 15 }}>
-            <Button onPress={hideModalDel}>Annuler</Button>
-            <Button buttonColor={COLORS.red}
-             onPress={() => {
-              hideModalDel()
-              handleDelete()
-            }} >Supprimer</Button>
-          </Card.Actions>
-        </Card>
-      </Modal>
 
       </Block>
     );
   };
 
 
-  
-
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
-    <Block flex={1}>
+      <BottomSheetModalProvider>
+
+      <ScrollView>
+    <Block>
       {/* Fixed content */}
       <View>
         {renderImage()}
@@ -287,7 +262,36 @@ const DetailsAvec = ({ route, navigation }) => {
         <Text style={{color:COLORS.white}} >Veuillez vérifier votre connexion Internet </Text>
       
       </Snackbar>
-  </ScrollView>
+      <BottomSheetModal
+          ref={bottomSheetModalRef}
+          index={0}
+          snapPoints={snapPoints}
+          backgroundStyle={{ borderRadius: responsiveScreenWidth(5),backgroundColor:
+          COLORS.lightGray }}
+          onDismiss={() => setIsOpen(false)}
+        >
+            <Card.Title
+            titleStyle={{ fontWeight: 'bold', textTransform: 'uppercase' }}
+            title="ATTENTION!" 
+          />
+          <Card.Content>
+            <Text variant="titleLarge">Voulez-vous vraiment supprimer le Groupe { route.params.avec.name}?</Text>
+            {status == 'failed'?
+              <Text style={{color: COLORS.peach}}>Erreur de suppression</Text>:<></>
+            }
+          </Card.Content>
+          <Card.Actions style={{ marginVertical: 15 }}>
+            <Button onPress={hideModalDel}>Annuler</Button>
+            <Button buttonColor={COLORS.red} disabled={status == 'loading'}
+            loading={status == 'loading'}
+             onPress={() => {
+              handleDelete()
+            }} >Supprimer</Button>
+          </Card.Actions>
+
+          </BottomSheetModal>
+          </ScrollView>
+          </BottomSheetModalProvider>
 
   );
 };
