@@ -4,11 +4,21 @@ import Block from '../Product/Block';
 import { COLORS, FONTS, SIZES } from '../../constants';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Text } from '../../components';
-import { Divider, Button } from 'react-native-paper';
+import { Divider, Button, Snackbar, Modal, Card } from 'react-native-paper';
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteAvec } from '../../redux/avecReducer';
 
-const DetailsAvec = ({ route }) => {
+const DetailsAvec = ({ route, navigation }) => {
+  const dispatch = useDispatch();
+
+  const { avecs, status, error }= useSelector((state) => state.avecs); 
 
   const [showFullContent, setShowFullContent] = useState(false);
+  const [statusLocal, setStatusLocal] = useState(false);
+
+  const [visible, setVisible] = useState(false);
+  const onDismissSnackBar = () => setVisible(false);
+  const onToggleSnackBar = () => setVisible(!visible);
 
   const toggleContent = () => {
     setShowFullContent(!showFullContent);
@@ -16,35 +26,72 @@ const DetailsAvec = ({ route }) => {
   
   useEffect(()=>{
     console.log(route.params.avec.owner);
+    if (status === "succeeded" &&  statusLocal  ) {
+      // Navigate to the Home screen
+      //navigation.navigate('Main');
+    }
+    else {
+      //onToggleSnackBar()
+    }
   },[]);
+
+
+  // Modal Delete AVEC
+  const [visibleDel, setVisibleDel] = useState(false);
+  const showModalDel = () => setVisibleDel(true);
+  const hideModalDel = () => setVisibleDel(false);
+
+  const handleDelete = async () => {
+    dispatch(deleteAvec({
+      id: route.params.avec._id
+    }));
+
+     // Check if the product was deleted successfully
+    if (!error) {
+      // Navigate back to the previous screen
+      navigation.navigate('Main');
+    }else {
+      onToggleSnackBar()
+    }
+  }
+  
+
+  const containerStyle = {
+    backgroundColor: 'white',
+    width: '85%',
+    borderRadius: 10,
+    alignSelf: 'center',
+    position:"absolute",
+    top:'15%'
+  };
 
   const handleAdhesion = async () => {
 
-    // // Push current user to member array
+    // Push current user to member array
 
-    // // Reuse the soumettreProduct function
-    // dispatch(soumettreProduct({
-    //   ...route.params.food,
-    //   id: route.params.food._id,
-    //   membres: [
-    //     ...route.params.food.membres,
-    //     {
-    //       user: JSON.parse(token)?.user?.user?.userId,
-    //       admission_req: 'PENDING', 
-    //       contribution_amount: 0,
-    //       contribution_status: 'PENDING', 
-    //     }
-    //   ]
-    // }));
+    // Reuse the soumettreProduct function
+    dispatch(soumettreProduct({
+      ...route.params.food,
+      id: route.params.food._id,
+      membres: [
+        ...route.params.food.membres,
+        {
+          user: JSON.parse(token)?.user?.user?.userId,
+          admission_req: 'PENDING', 
+          contribution_amount: 0,
+          contribution_status: 'PENDING', 
+        }
+      ]
+    }));
 
-    //  // Check if the product was deleted successfully
-    // if (!error) {
-    //   // Navigate back to the previous screen
-    //   navigation.navigate('Main');
+     // Check if the product was deleted successfully
+    if (!error) {
+      // Navigate back to the previous screen
+      //navigation.navigate('Main');
 
-    // }else {
-    //   onToggleSnackBar()
-    // }
+    }else {
+      onToggleSnackBar()
+    }
   };
 
   const renderImage = () => {
@@ -101,14 +148,14 @@ const DetailsAvec = ({ route }) => {
 
           {/* Column 2 */}
           <View style={styles.column}>
-            <Text style={styles.title}>SOMME</Text>
-            <Text style={styles.content}>{route.params.avec.amount}</Text>
+            <Text style={styles.title}>PART</Text>
+            <Text style={styles.content}>{route.params.avec.amount} {route.params.avec.currency}</Text>
           </View>
 
           {/* Column 3 */}
           <View style={styles.column}>
             <Text style={styles.title}>CYCLE</Text>
-            <Text style={styles.content}>{route.params.avec.cycle.name}/{route.params.avec.cycle.number}</Text>
+            <Text style={styles.content}>{route.params.avec.cycle.number} mois</Text>
           </View>
         </View>
 
@@ -140,7 +187,6 @@ const DetailsAvec = ({ route }) => {
           {/* Second Column */}
           <View style={styles.columnMembre2}>
           <Text numberOfLines={1} bold >MEMBRE DU GROUPE</Text>
-
           <View style={styles.imgs}>
                 {route.params.avec?.membres.slice(0,4).map((value, key) =>{
                   console.log();
@@ -165,7 +211,51 @@ const DetailsAvec = ({ route }) => {
 
         <Button buttonColor={COLORS.darkgreen} mode="contained">
               Demande d'Adhesion
-            </Button>
+        </Button>
+        <Block row m_t={5} space='between' >
+
+        <Button buttonColor={COLORS.peach} mode="contained">
+              Supprimer
+        </Button>
+
+        <Button textColor="#fff" elevated buttonColor={COLORS.peach} onPress={()=> showModalDel()}>
+                Supprimer
+              </Button>
+
+        <Button buttonColor={COLORS.blue} mode="contained">
+              Modifier
+        </Button>
+
+        <Button buttonColor={COLORS.darkgreen} mode="contained">
+              Soumettre
+        </Button>
+        </Block>
+
+          {/* Delete Prod/Serv */}
+      <Modal
+        style={{ zIndex: 99 }}
+        visible={visibleDel}
+        onDismiss={hideModalDel}
+        contentContainerStyle={[containerStyle, { zIndex: 999 }]} // Set a higher value for the z-index
+      >
+        <Card style={{ padding: 10 }}>
+          <Card.Title
+            titleStyle={{ fontWeight: 'bold', textTransform: 'uppercase' }}
+            title="ATTENTION!" 
+          />
+          <Card.Content>
+            <Text variant="titleLarge">Voulez-vous vraiment supprimer le Groupe { route.params.avec.name}?</Text>
+          </Card.Content>
+          <Card.Actions style={{ marginTop: 15 }}>
+            <Button onPress={hideModalDel}>Annuler</Button>
+            <Button buttonColor={COLORS.red}
+             onPress={() => {
+              hideModalDel()
+              handleDelete()
+            }} >Supprimer</Button>
+          </Card.Actions>
+        </Card>
+      </Modal>
 
       </Block>
     );
@@ -187,6 +277,16 @@ const DetailsAvec = ({ route }) => {
         {renderTopDetails()}
       </View>
     </Block>
+    <Snackbar
+        visible={visible}
+        onDismiss={onDismissSnackBar}
+        style={{ backgroundColor: COLORS.peach}}
+        wrapperStyle={{ bottom: 30 }}
+       
+        >
+        <Text style={{color:COLORS.white}} >Veuillez vérifier votre connexion Internet </Text>
+      
+      </Snackbar>
   </ScrollView>
 
   );
@@ -208,7 +308,7 @@ const styles = StyleSheet.create({
   },
   containerTop: {
     flexDirection: 'row', // Horizontal layout
-    justifyContent:'space-around',
+    justifyContent:"space-evenly",
     marginBottom:20
   },
   column: {
