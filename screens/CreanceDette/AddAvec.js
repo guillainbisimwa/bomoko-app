@@ -13,6 +13,7 @@ import { fr, registerTranslation, DatePickerModal, DatePickerInput } from 'react
 registerTranslation('fr', fr)
 import { format } from 'date-fns';
 import { fr as myFr, addMonths } from 'date-fns/locale';
+import moment from 'moment';
 
 const AddAvec = ({ navigation, route }) => {
   const { owner, username } = route.params;
@@ -81,12 +82,16 @@ const AddAvec = ({ navigation, route }) => {
     return format(new Date(date), 'dd MMMM yyyy', { locale: myFr });
   };
 
-  function addMonths2(date, months) {
-    const dateCopy = new Date(date);
-  
-    dateCopy.setMonth(dateCopy.getMonth() + months);
-  
-    return dateCopy;
+  function addMonths(date, months) {
+        // Input date
+    const originalDate = moment(date);
+
+    // Add months to the date
+    const newDate = originalDate.add(months, 'months');
+
+    // Format the new date (optional)
+    const formattedDate = newDate.format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
+    return formattedDate;
   }
 
   const handleAddAvec = () => {
@@ -296,7 +301,7 @@ const AddAvec = ({ navigation, route }) => {
         {date && (
           <Text style={{ marginTop: 20 }}>
             Le cycle de {cycleNumber} mois, soit du : {formatDateToFrench(date)} au 
-             {formatDateToFrench(date)}
+             {formatDateToFrench( addMonths(date, cycleNumber))}
           </Text>
         )}
           </View>
@@ -305,7 +310,7 @@ const AddAvec = ({ navigation, route }) => {
        
        
         <Button mode='contained'  title="Creer un AVEC" onPress={handleAddAvec}  loading={status === 'loading'} 
-        disabled={status === 'loading'} >Creer un AVEC</Button>
+        disabled={status === 'loading'} style={{marginBottom:19}}>Creer un AVEC</Button>
       </ScrollView>
     );
   }
@@ -328,9 +333,8 @@ const AddAvec = ({ navigation, route }) => {
         wrapperStyle={{ bottom: 30 }}
        
         >
-        {error}
+        <Text style={{color:COLORS.white}} >Veuillez vérifier votre connexion Internet </Text>
       
-        
       </Snackbar>
       </View>
     </KeyboardAvoidingView>
@@ -339,7 +343,7 @@ const AddAvec = ({ navigation, route }) => {
 
 const styles = StyleSheet.create({
   container: {
-    //flex: 1,
+    flex: 1,
     paddingHorizontal: 8,
     backgroundColor: COLORS.white,
   },
@@ -355,9 +359,9 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   scrollContainer: {
-    //flexGrow: 1,
+    flexGrow: 1,
     paddingHorizontal: 24,
-    paddingBottom: 120,
+    paddingBottom: 1,
   },
   dropdown1BtnStyle: {
     //width: '80%',
