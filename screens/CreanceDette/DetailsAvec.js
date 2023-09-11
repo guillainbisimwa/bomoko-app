@@ -9,6 +9,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { deleteAvec } from '../../redux/avecReducer';
 import { BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { responsiveScreenWidth } from 'react-native-responsive-dimensions';
+import { useFocusEffect } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const DetailsAvec = ({ route, navigation }) => {
   const dispatch = useDispatch();
@@ -17,8 +19,48 @@ const DetailsAvec = ({ route, navigation }) => {
 
   const [showFullContent, setShowFullContent] = useState(false);
   const [statusLocal, setStatusLocal] = useState(false);
+  const [connectedUser, setConnectedUser] = useState(null);
+
 
   const [visible, setVisible] = useState(false);
+
+  // Use the useFocusEffect hook to execute reloadScreen when the screen gains focus
+  useFocusEffect(
+    useCallback(() => {
+      const fetchData = async () => {
+        try {
+          const value = await AsyncStorage.getItem('user');
+          if (value !== null) {
+            // Data found, reload the screen
+            reloadScreen(value);
+          }
+        } catch (error) {
+          console.error('Error retrieving data:', error);
+        }
+      };
+
+      // Fetch data when the screen gains focus
+      fetchData();
+
+      // Return a cleanup function
+      return () => {
+        // You can perform cleanup here if needed
+        console.log('Cleanup function');
+      };
+    }, []) // Empty dependency array to run this effect only once when the screen mounts
+  );
+
+  // Function to handle screen reload
+  const reloadScreen = (value) => {
+    // You can put your screen reload logic here
+    console.log('Screen reloaded');
+    const parsedValue = JSON.parse(value);
+    if (parsedValue.user && parsedValue.user.user) {
+      setConnectedUser(parsedValue.user.user);
+      console.log('Async State:', parsedValue.user.user);
+    }
+  };
+
   const onDismissSnackBar = () => setVisible(false);
   const onToggleSnackBar = () => setVisible(!visible);
 
@@ -73,10 +115,10 @@ const handleClosePress = useCallback(() => {
 
     // Reuse the soumettreProduct function
     dispatch(soumettreProduct({
-      ...route.params.food,
-      id: route.params.food._id,
+      ...route.params.avec,
+      id: route.params.avec._id,
       membres: [
-        ...route.params.food.membres,
+        ...route.params.avec.membres,
         {
           user: JSON.parse(token)?.user?.user?.userId,
           admission_req: 'PENDING', 
@@ -125,13 +167,20 @@ const handleClosePress = useCallback(() => {
           {/* First Column */}
           <View style={styles.columnTitle1}>
             <Text  numberOfLines={2} style={styles.titleTitle}>{route.params.avec.name}</Text>
-            <Text  numberOfLines={1} style={styles.contentTitle}>{route.params.avec.timestamp}</Text>
+            {
+            // "PENDING","SUBMITED", "REJECTED", "ACCEPTED", "BANNED"
+            route.params.avec.status == "PENDING"?
+              <Text color={COLORS.red} >[Bruillon]</Text>:
+            route.params.avec.status == "SUBMITED"?
+              <Text color={COLORS.red} >[en attente de validation]</Text>:
+              <Text color={COLORS.darkgreen}>[Validé]</Text>
+          }
           </View>
 
           {/* Second Column */}
           <View style={styles.columnTitle2}>
             <Button compact mode="contained">
-              + 99000 CDF
+              + 0 CDF
             </Button>
           </View>
         </View>
@@ -225,21 +274,21 @@ const handleClosePress = useCallback(() => {
 
           {/* Column 1 */}
           <View style={styles.column}>
-            <Text style={styles.title}>DEVISE</Text>
-            <Text style={styles.content}>{route.params.avec.currency}</Text>
+            <Text style={styles.title}>MON EPARGE</Text>
+            <Text style={styles.content}>0 {route.params.avec.currency}</Text>
 
           </View>
 
           {/* Column 2 */}
           <View style={styles.column}>
-            <Text style={styles.title}>PART</Text>
-            <Text style={styles.content}>{route.params.avec.amount} {route.params.avec.currency}</Text>
+            <Text style={styles.title}>MES PARTS</Text>
+            <Text style={styles.content}>0 {route.params.avec.currency}</Text>
           </View>
 
           {/* Column 3 */}
           <View style={styles.column}>
-            <Text style={styles.title}>CYCLE</Text>
-            <Text style={styles.content}>{route.params.avec.cycle.number} mois</Text>
+            <Text style={styles.title}>MON CREDIT</Text>
+            <Text style={styles.content}>0 {route.params.avec.currency}</Text>
           </View>
         </View>
 
@@ -292,30 +341,58 @@ const handleClosePress = useCallback(() => {
               </View>
           </View>
         </View>
+        {
+              connectedUser?.username === route.params.avec.owner.username? 
+              <Block row space="between" m_t={10}>
+              {/* owner */}
+             {
+              route.params.avec.status == 'PENDING'?
+              <>
+                <Button buttonColor={COLORS.blue} mode="contained" onPress={()=>
+                  {
+                    navigation.navigate('EditAvec', {avec: route.params.avec });
+                  }}>
+                  Modifier
+                </Button>
 
-        <Button buttonColor={COLORS.darkgreen} mode="contained">
-              Demande d'Adhesion
-        </Button>
-        <Block row m_t={5} space='between' >
+                <Button buttonColor={COLORS.peach} mode="contained"  onPress={() => {
+                  openModal();
+                }}>
+                      Supprimer
+                </Button>
 
-        <Button buttonColor={COLORS.peach} mode="contained"  onPress={() => {
-          openModal();
-        }}>
-              Supprimer
-        </Button>
-
-        <Button buttonColor={COLORS.blue} mode="contained" onPress={()=>
+                <Button buttonColor={COLORS.darkgreen} mode="contained">
+                  Soumettre
+                </Button>
+              </>:<></>
+             }
+              
+            </Block>
+            :
+            <Block row space="between" m_t={10}>
+              {/* other */}
               {
-                // console.log("route.params.food", route.params.food);
-                 navigation.navigate('EditAvec', {avec: route.params.avec });
-              }}>
-              Modifier
-        </Button>
+                route.params.avec.membres.some(member => member?.user?._id == connectedUser?.userId)?
+              <>
+              <Button textColor="#fff" elevated buttonColor={COLORS.peach}>
+                Quitter
+              </Button>
 
-        <Button buttonColor={COLORS.darkgreen} mode="contained">
-              Soumettre
-        </Button>
-        </Block>
+              {
+                 route.params.avec.membres.find(member => member?.admission_req == 'ACCEPTED')? <Button textColor="#fff" elevated buttonColor={COLORS.darkgreen}>
+                  Contribuer
+                </Button>:
+                <></>
+              }
+
+              </> :
+              <Button buttonColor={COLORS.darkgreen} mode="contained">
+                Demande d'Adhesion
+              </Button>
+              }
+             
+            </Block>
+            }
 
 
       </Block>
@@ -406,14 +483,16 @@ const styles = StyleSheet.create({
   },
   title: {
     fontWeight: 'bold',
-    marginBottom: 8,
+    marginBottom: 5,
+    fontSize: 12
   },
   content: {
     fontSize: 13,
     color:'grey'
   },
   titleMenu:{
-    color: COLORS.gray
+    color: COLORS.gray,
+    paddingBottom:10
   },
 
   containerTitle: {
