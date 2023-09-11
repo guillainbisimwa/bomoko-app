@@ -34,12 +34,12 @@ const EditAvec = ({ navigation, route }) => {
   const [nbrPartMax, setNbrPartMax] = useState('5');
   const [nbrPartMin, setNbrPartMin] = useState('1');
   const [prixCaisseSolidaire, setPrixCaisseSolidaire] = useState(avec.frais_Social.somme+'');
-  const [interest, setInterest] = useState(avec.interest);
+  const [interest, setInterest] = useState(avec.interest+'');
   const [fraisAdhesion, setFraisAdhesion] = useState(avec.frais_Adhesion+'');
-  const [debutOctroiCredit, setDebutOctroiCredit] = useState(avec.debut_octroi_credit);
-  const [finOctroiCredit, setFinOctroiCredit] = useState(avec.fin_octroi_credit);
-  const [startDate, setStartDate] = useState(avec.startDate);
-  const [endDate, setEndDate] = useState(avec.endDate);
+  const [debutOctroiCredit, setDebutOctroiCredit] = useState(avec.debut_octroi_credit+'');
+  const [finOctroiCredit, setFinOctroiCredit] = useState(avec.fin_octroi_credit+'');
+  const [startDate, setStartDate] = useState(avec.startDate+'');
+  const [endDate, setEndDate] = useState(avec.endDate+'');
 
   const [checkedDevise, setCheckedDevise] = useState(avec.currency);
 
@@ -47,7 +47,7 @@ const EditAvec = ({ navigation, route }) => {
   const [interestValid, setInterestValid] = useState(true); // Validation state for interest
 
 
-  const [date, setDate] = useState(avec.startDate);
+  const [date, setDate] = useState(new Date(avec.startDate));
 
   const onDismissSingle = useCallback(() => {
     setOpen(false);
@@ -348,7 +348,7 @@ const EditAvec = ({ navigation, route }) => {
        
        
         <Button mode='contained'  title="Creer un AVEC" onPress={handleEditAvec}  loading={status === 'loading'} 
-        disabled={status === 'loading'} style={{marginBottom:19}}>Creer un AVEC</Button>
+        disabled={status === 'loading'} style={{marginBottom:19}}>Modifier</Button>
         <View style={{height:160,}}>
       
       </View>
