@@ -4,7 +4,7 @@ import Block from '../Product/Block';
 import { COLORS, FONTS, SIZES, icons } from '../../constants';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Text } from '../../components';
-import { Divider, Button, Snackbar, Modal, Card, ActivityIndicator } from 'react-native-paper';
+import { Divider, Button, Snackbar, Modal, Card, ActivityIndicator, Provider, Menu } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteAvec } from '../../redux/avecReducer';
 import { BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet';
@@ -22,7 +22,10 @@ const DetailsAvec = ({ route, navigation }) => {
   const [connectedUser, setConnectedUser] = useState(null);
 
 
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(false);  
+  const [visibleMenu, setVisibleMenu] = useState(false);
+  const [visibleMenuGouv, setVisibleMenuGouv] = useState(false);
+  const [visibleMenuArg, setVisibleMenuArg] = useState(false);
 
   // Use the useFocusEffect hook to execute reloadScreen when the screen gains focus
   useFocusEffect(
@@ -67,6 +70,17 @@ const DetailsAvec = ({ route, navigation }) => {
   const toggleContent = () => {
     setShowFullContent(!showFullContent);
   };
+
+  const openMenuGouv = () => setVisibleMenuGouv(true);
+  const closeMenuGouv = () => setVisibleMenuGouv(false);
+
+
+  const openMenuArg = () => setVisibleMenuArg(true);
+  const closeMenuArg = () => setVisibleMenuArg(false);
+
+
+  const openMenu = () => setVisibleMenu(true);
+  const closeMenu = () => setVisibleMenu(false);
   
 // ref
 const bottomSheetModalRef = useRef(null);
@@ -184,9 +198,16 @@ const handleClosePress = useCallback(() => {
             </Button>
           </View>
         </View>
-      <Block row  space='between'>
-        <Block center>
-        <TouchableOpacity
+     
+        <Block row space='between'>
+
+        <Menu
+          visible={visibleMenuGouv}
+          onDismiss={closeMenuGouv}
+          anchor={
+
+            <Block center>
+       <TouchableOpacity
             style={{
               alignItems: 'center',
               justifyContent: 'center',
@@ -195,8 +216,7 @@ const handleClosePress = useCallback(() => {
               width: 55,
               borderRadius: 25,
             }}
-            onPress={() => {
-            }}
+            onPress={openMenuGouv}
           >
             <Image
               source={icons.cashbook}
@@ -210,9 +230,21 @@ const handleClosePress = useCallback(() => {
           </TouchableOpacity>
           <Text style={styles.titleMenu}>Gouvernance</Text>
 
-          </Block>
+        </Block>
+          }>
+      
+              <Menu.Item leadingIcon="calendar" title="Réunion hebdomadaire" onPress={()=> console.log()}/>
+              <Menu.Item leadingIcon="account-group" title="5 membres du bureau" onPress={()=> console.log()}/>
+              <Menu.Item leadingIcon="book-open-variant" title="Règlement intérieur" onPress={()=> console.log()}/>
 
-          <Block center>
+        </Menu>
+
+        <Menu
+          visible={visibleMenuArg}
+          onDismiss={closeMenuArg}
+          anchor={
+
+            <Block center>
         <TouchableOpacity
             style={{
               alignItems: 'center',
@@ -222,8 +254,7 @@ const handleClosePress = useCallback(() => {
               width: 55,
               borderRadius: 25,
             }}
-            onPress={() => {
-            }}
+            onPress={openMenuArg}
           >
             <Image
               source={icons.cash}
@@ -238,8 +269,24 @@ const handleClosePress = useCallback(() => {
           <Text style={styles.titleMenu}>Argent</Text>
 
         </Block>
+          }>
+      
+              <Menu.Item leadingIcon="call-received" title="Deconnexion" />
+              
+              <Menu.Item leadingIcon="call-made" title="Se connecter" /> 
+              <Menu.Item leadingIcon="list-status" title="Se connecter" /> 
+              <Menu.Item leadingIcon="cellphone-lock" title="Se connecter" /> 
+              <Menu.Item leadingIcon="format-list-numbered" title="Se connecter" /> 
+              
 
-        <Block center>
+        </Menu>
+
+        <Menu
+          visible={visibleMenu}
+          onDismiss={closeMenu}
+          anchor={
+
+            <Block center>
         <TouchableOpacity
             style={{
               alignItems: 'center',
@@ -249,8 +296,7 @@ const handleClosePress = useCallback(() => {
               width: 55,
               borderRadius: 25,
             }}
-            onPress={() => {
-            }}
+            onPress={openMenu}
           >
             <Image
               source={icons.investment}
@@ -265,6 +311,15 @@ const handleClosePress = useCallback(() => {
           <Text style={styles.titleMenu}>Credit/épargne</Text>
 
         </Block>
+          }>
+      
+              <Menu.Item leadingIcon="account-key" title="Deconnexion" />
+                
+              <Menu.Item leadingIcon="account-arrow-right" title="Se connecter" />
+              <Menu.Item leadingIcon="account-arrow-left" title="Se connecter" />
+              <Menu.Item leadingIcon="account-tie" title="Se connecter" />
+
+        </Menu>
         </Block>
 
         <Divider />
@@ -401,6 +456,7 @@ const handleClosePress = useCallback(() => {
 
 
   return (
+    <Provider>
       <BottomSheetModalProvider>
 
       <ScrollView>
@@ -409,6 +465,8 @@ const handleClosePress = useCallback(() => {
       <View>
         {renderImage()}
       </View>
+
+      
 
       {/* Scrollable content */}
       <View style={{ alignItems: "center" }}>
@@ -454,7 +512,8 @@ const handleClosePress = useCallback(() => {
           </BottomSheetModal>
           </ScrollView>
           </BottomSheetModalProvider>
-
+        
+        </Provider>
   );
 };
 
