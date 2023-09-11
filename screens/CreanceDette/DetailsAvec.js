@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {ImageBackground, View, TouchableOpacity, StyleSheet, ScrollView, Image } from 'react-native';
 import Block from '../Product/Block';
-import { COLORS, FONTS, SIZES } from '../../constants';
+import { COLORS, FONTS, SIZES, icons } from '../../constants';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Text } from '../../components';
 import { Divider, Button, Snackbar, Modal, Card, ActivityIndicator } from 'react-native-paper';
@@ -135,6 +135,88 @@ const handleClosePress = useCallback(() => {
             </Button>
           </View>
         </View>
+      <Block row  space='between'>
+        <Block center>
+        <TouchableOpacity
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: COLORS.darkgreen,
+              height: 55,
+              width: 55,
+              borderRadius: 25,
+            }}
+            onPress={() => {
+            }}
+          >
+            <Image
+              source={icons.cashbook}
+              resizeMode="contain"
+              style={{
+                width: 30,
+                height: 30,
+                tintColor: COLORS.white,
+              }}
+            />
+          </TouchableOpacity>
+          <Text style={styles.titleMenu}>Gouvernance</Text>
+
+          </Block>
+
+          <Block center>
+        <TouchableOpacity
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: COLORS.peach,
+              height: 55,
+              width: 55,
+              borderRadius: 25,
+            }}
+            onPress={() => {
+            }}
+          >
+            <Image
+              source={icons.cash}
+              resizeMode="contain"
+              style={{
+                width: 30,
+                height: 30,
+                tintColor: COLORS.white,
+              }}
+            />
+          </TouchableOpacity>
+          <Text style={styles.titleMenu}>Argent</Text>
+
+        </Block>
+
+        <Block center>
+        <TouchableOpacity
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: COLORS.blue,
+              height: 55,
+              width: 55,
+              borderRadius: 25,
+            }}
+            onPress={() => {
+            }}
+          >
+            <Image
+              source={icons.investment}
+              resizeMode="contain"
+              style={{
+                width: 30,
+                height: 30,
+                tintColor: COLORS.white,
+              }}
+            />
+          </TouchableOpacity>
+          <Text style={styles.titleMenu}>Credit/épargne</Text>
+
+        </Block>
+        </Block>
 
         <Divider />
         <Divider />
@@ -164,7 +246,7 @@ const handleClosePress = useCallback(() => {
 
         <View>
           <View>
-            <Text h3>Description</Text>
+            <Text h3 bold>Description</Text>
           </View>
           <View>
             <Text numberOfLines={showFullContent ? undefined : 3}>{route.params.avec.detail}</Text>
@@ -330,7 +412,9 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color:'grey'
   },
-
+  titleMenu:{
+    color: COLORS.gray
+  },
 
   containerTitle: {
     flexDirection: 'row',
