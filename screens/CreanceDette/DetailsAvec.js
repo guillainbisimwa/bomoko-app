@@ -222,7 +222,11 @@ const handleClosePress = useCallback(() => {
               Supprimer
         </Button>
 
-        <Button buttonColor={COLORS.blue} mode="contained">
+        <Button buttonColor={COLORS.blue} mode="contained" onPress={()=>
+              {
+                // console.log("route.params.food", route.params.food);
+                 navigation.navigate('EditAvec', {avec: route.params.avec });
+              }}>
               Modifier
         </Button>
 
@@ -266,8 +270,7 @@ const handleClosePress = useCallback(() => {
           ref={bottomSheetModalRef}
           index={0}
           snapPoints={snapPoints}
-          backgroundStyle={{ borderRadius: responsiveScreenWidth(5),backgroundColor:
-          COLORS.lightGray }}
+          backgroundStyle={{ borderRadius: responsiveScreenWidth(5),backgroundColor:'#dadada' }}
           onDismiss={() => setIsOpen(false)}
         >
             <Card.Title

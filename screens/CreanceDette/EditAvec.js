@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { View, Text, TextInput, StyleSheet, ScrollView } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { createAvec } from '../../redux/avecReducer';
+import { createAvec, updateAvec } from '../../redux/avecReducer';
 import { Button, RadioButton, Snackbar } from 'react-native-paper';
 import { KeyboardAvoidingView } from 'react-native';
 import { COLORS, FONTS, SIZES } from '../../constants';
@@ -15,36 +15,39 @@ import { format } from 'date-fns';
 import { fr as myFr, addMonths } from 'date-fns/locale';
 import moment from 'moment';
 
-const AddAvec = ({ navigation, route }) => {
-  const { owner, username } = route.params;
+const EditAvec = ({ navigation, route }) => {
+  const {owner, avec } = route.params;
+  console.log(avec._id);
+
   const dispatch = useDispatch();
   const { avecs, status, error }= useSelector((state) => state.avecs); 
 
   const [open, setOpen] = useState(false);
 
-  const [name, setName] = useState('');
-  const [detail, setDetail] = useState('');
-  const [amount, setAmount] = useState('');
-  const [currency, setCurrency] = useState('USD');
+  const [id, setId] = useState(avec._id);
+  const [name, setName] = useState(avec.name);
+  const [detail, setDetail] = useState(avec.detail);
+  const [amount, setAmount] = useState(avec.amount+'');
+  const [currency, setCurrency] = useState(avec.currency);
   const [cycleName, setCycleName] = useState('Mensuel');
-  const [cycleNumber, setCycleNumber] = useState('9');
+  const [cycleNumber, setCycleNumber] = useState(avec.cycle.number+'');
   const [nbrPartMax, setNbrPartMax] = useState('5');
   const [nbrPartMin, setNbrPartMin] = useState('1');
-  const [prixCaisseSolidaire, setPrixCaisseSolidaire] = useState();
-  const [interest, setInterest] = useState('');
-  const [fraisAdhesion, setFraisAdhesion] = useState();
-  const [debutOctroiCredit, setDebutOctroiCredit] = useState('');
-  const [finOctroiCredit, setFinOctroiCredit] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [prixCaisseSolidaire, setPrixCaisseSolidaire] = useState(avec.frais_Social.somme+'');
+  const [interest, setInterest] = useState(avec.interest);
+  const [fraisAdhesion, setFraisAdhesion] = useState(avec.frais_Adhesion+'');
+  const [debutOctroiCredit, setDebutOctroiCredit] = useState(avec.debut_octroi_credit);
+  const [finOctroiCredit, setFinOctroiCredit] = useState(avec.fin_octroi_credit);
+  const [startDate, setStartDate] = useState(avec.startDate);
+  const [endDate, setEndDate] = useState(avec.endDate);
 
-  const [checkedDevise, setCheckedDevise] = useState('USD');
+  const [checkedDevise, setCheckedDevise] = useState(avec.currency);
 
   const [statusLocal, setStatusLocal] = useState(false);
   const [interestValid, setInterestValid] = useState(true); // Validation state for interest
 
 
-  const [date, setDate] = useState(undefined);
+  const [date, setDate] = useState(avec.startDate);
 
   const onDismissSingle = useCallback(() => {
     setOpen(false);
@@ -110,7 +113,7 @@ const AddAvec = ({ navigation, route }) => {
     setInterest(text); // Update interest value
   };
 
-  const handleAddAvec = () => {
+  const handleEditAvec = () => {
     try {
       // Validation: Check if required fields are empty
       if (!name || !amount  || !detail || !interest || !fraisAdhesion || !prixCaisseSolidaire  || !date) {
@@ -123,6 +126,8 @@ const AddAvec = ({ navigation, route }) => {
 
         // Create an AVEC object with the form data
         const avec = {
+          ...avec,
+          id: id,
           name,
           detail,
           amount: Number(amount),
@@ -148,10 +153,10 @@ const AddAvec = ({ navigation, route }) => {
           },
         };
 
-        console.log("avec", avec);
+        console.log("avec", avec.id);
     
         // Dispatch the action
-        dispatch(createAvec(avec));
+        dispatch(updateAvec(avec));
     
         }
       
@@ -194,7 +199,7 @@ const AddAvec = ({ navigation, route }) => {
             <SelectDropdown
                 data={cycleList}
                 // defaultValueByIndex={1}
-                // defaultValue={'Egypt'}
+                defaultValue={`${cycleNumber} mois`}
                 onSelect={(selectedItem, index) => {
                   setCycleNumber(selectedItem.split(' ')[0])
                   //console.log(selectedItem, index);
@@ -318,7 +323,7 @@ const AddAvec = ({ navigation, route }) => {
           style={[styles.btn, !date && statusLocal && styles.inputError]}
 
            >
-              Choisir la date de début du cycle
+              Modifier la date de début du cycle
             </Button>
             <View style={{ justifyContent: 'center', flex: 1, alignItems: 'center' }}>
             <DatePickerModal
@@ -342,7 +347,7 @@ const AddAvec = ({ navigation, route }) => {
         </SafeAreaProvider>
        
        
-        <Button mode='contained'  title="Creer un AVEC" onPress={handleAddAvec}  loading={status === 'loading'} 
+        <Button mode='contained'  title="Creer un AVEC" onPress={handleEditAvec}  loading={status === 'loading'} 
         disabled={status === 'loading'} style={{marginBottom:19}}>Creer un AVEC</Button>
         <View style={{height:160,}}>
       
@@ -425,4 +430,4 @@ btn: {
 }
 });
 
-export default AddAvec;
+export default EditAvec;

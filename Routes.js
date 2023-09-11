@@ -23,7 +23,7 @@ import EditProduct from './screens/Product/EditProduct';
 import ShowImages from './screens/Product/ShowImages';
 import ShoppingCard from './screens/ShoppingCard/ShoppingCard';
 import { AideEtSupport, DataSecurityScreen, DetailsByUser, LanguageSelectionScreen, Privacy, Profile, ReportProblemScreen, UseCondition } from './screens/Settings';
-import { AddAvec, DetailsAvec } from './screens/CreanceDette';
+import { AddAvec, DetailsAvec, EditAvec } from './screens/CreanceDette';
 import { StatusBar } from 'expo-status-bar';
 
 const theme = {
@@ -252,7 +252,10 @@ const App = () => {
            options={{ title: 'Ajouter un groupe' , headerShown: true}}/>
 
           <Stack.Screen name="DetailsAvec" component={DetailsAvec}
-           options={{ title: '' , headerShown: true}}/>
+           options={{ title: 'Details' , headerShown: true}}/>
+
+        <Stack.Screen name="EditAvec" component={EditAvec}
+           options={{ title: 'Modifier AVEC' , headerShown: true}}/>
     
 
           <Stack.Screen name="EditProfile" component={EditProfile} options={{
