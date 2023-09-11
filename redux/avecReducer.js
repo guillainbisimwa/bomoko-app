@@ -864,14 +864,65 @@ export const createAvec = createAsyncThunk('avec/create', async (avecData) => {
 });
 
 // Create an async thunk to update an existing AVEC object
-export const updateAvec = createAsyncThunk('avec/update', async (id) => {
-  try {
-    const response = await axios.put(`${BASE_URL}api/avec/${id}`, avecData);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-});
+export const updateAvec = createAsyncThunk(
+    "avec/update",
+    async ({
+        id,
+        amount,
+        currency,
+        cycle,
+        debut_octroi_credit,
+        detail,
+        docs,
+        endDate,
+        fin_octroi_credit,
+        frais_Adhesion,
+        frais_Social,
+        images,
+        interest,
+        location,
+        membres,
+        name,
+        nbrPart,
+        owner,
+        socialSolidarity,
+        startDate,
+        status,
+        timeline,
+        timestamp,
+    }) => {
+      const url = `${BASE_URL}api/avec/${id}`; // Concatenate ID to the base URL
+      
+      const response = await axios.put(url, { // Use PUT request for updating
+        amount,
+        currency,
+        cycle,
+        debut_octroi_credit,
+        detail,
+        docs,
+        endDate,
+        fin_octroi_credit,
+        frais_Adhesion,
+        frais_Social,
+        images,
+        interest,
+        location,
+        membres,
+        name,
+        nbrPart,
+        owner,
+        socialSolidarity,
+        startDate,
+        status,
+        timeline,
+        timestamp,
+      });
+  
+      console.log("Edit AVEC---?????? ok==", response.data);
+      return response.data;
+    }
+  );
+  
 
 // Create an async thunk to delete an AVEC object
 export const deleteAvec = createAsyncThunk(
@@ -930,10 +981,10 @@ const avecsSlice = createSlice({
       .addCase(updateAvec.fulfilled, (state, action) => {
         state.status = 'succeeded';
         // Update the corresponding AVEC object
-        const updatedAvecIndex = state.avecs.findIndex((avec) => avec._id === action.payload._id);
-        if (updatedAvecIndex !== -1) {
-          state.avecs[updatedAvecIndex] = action.payload;
-        }
+        // const updatedAvecIndex = state.avecs.findIndex((avec) => avec._id === action.payload._id);
+        // if (updatedAvecIndex !== -1) {
+        //   state.avecs[updatedAvecIndex] = action.payload;
+        // }
       })
       .addCase(updateAvec.rejected, (state, action) => {
         state.status = 'failed';
