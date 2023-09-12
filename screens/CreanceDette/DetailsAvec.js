@@ -7,7 +7,7 @@ import { Text } from '../../components';
 import { Divider, Button, Snackbar, Modal, Card, ActivityIndicator, Provider, Menu } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteAvec } from '../../redux/avecReducer';
-import { BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import { BottomSheetBackdrop, BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { responsiveScreenWidth } from 'react-native-responsive-dimensions';
 import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -81,6 +81,18 @@ const DetailsAvec = ({ route, navigation }) => {
 
   const openMenu = () => setVisibleMenu(true);
   const closeMenu = () => setVisibleMenu(false);
+
+  const BackdropElement = useCallback(
+    (backdropProps) => (
+      <BottomSheetBackdrop
+        {...backdropProps}
+        opacity={0.7}
+        appearsOnIndex={0}
+        disappearsOnIndex={-1}
+      />
+    ),
+    []
+  )
   
 // ref
 const bottomSheetModalRef = useRef(null);
@@ -486,8 +498,9 @@ const handleClosePress = useCallback(() => {
       <BottomSheetModal
           ref={bottomSheetModalRef}
           index={0}
+          backdropComponent={BackdropElement}
           snapPoints={snapPoints}
-          backgroundStyle={{ borderRadius: responsiveScreenWidth(5),backgroundColor:'#dadada' }}
+          backgroundStyle={{ borderRadius: responsiveScreenWidth(5),}}
           onDismiss={() => setIsOpen(false)}
         >
             <Card.Title
