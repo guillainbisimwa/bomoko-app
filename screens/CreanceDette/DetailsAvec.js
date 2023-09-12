@@ -27,6 +27,10 @@ const DetailsAvec = ({ route, navigation }) => {
   const [visibleMenuGouv, setVisibleMenuGouv] = useState(false);
   const [visibleMenuArg, setVisibleMenuArg] = useState(false);
 
+  // backdrop on modal open
+  const [isOpen, setIsOpen] = useState(false);
+  const [isOpenAdhesion, setIsOpenAdhesion] = useState(false);
+
   // Use the useFocusEffect hook to execute reloadScreen when the screen gains focus
   useFocusEffect(
     useCallback(() => {
@@ -96,12 +100,11 @@ const DetailsAvec = ({ route, navigation }) => {
   
 // ref
 const bottomSheetModalRef = useRef(null);
+const bottomSheetModalRefAdhesion = useRef(null);
 
 // variables
 const snapPoints = useMemo(() => ["25%"], []);
 
-// backdrop on modal open
-const [isOpen, setIsOpen] = useState(false);
 
 const openModal = useCallback(() => {
   bottomSheetModalRef.current?.present();
@@ -110,12 +113,25 @@ const openModal = useCallback(() => {
   }, 5);
 }, []);
 
+const openModalAdhesion = useCallback(() => {
+  bottomSheetModalRefAdhesion.current?.present();
+  setTimeout(() => {
+    setIsOpenAdhesion(true);
+  }, 5);
+}, []);
+
 const handleClosePress = useCallback(() => {
   bottomSheetModalRef.current?.close();
 }, []);
 
+const handleClosePressAdhesion = useCallback(() => {
+  bottomSheetModalRefAdhesion.current?.close();
+}, []);
+
+
   // Modal Delete AVEC
   const hideModalDel = () => handleClosePress();
+  const hideModalAdhesion = () => handleClosePressAdhesion();
 
   const handleDelete = async () => {
     dispatch(deleteAvec({
@@ -453,7 +469,9 @@ const handleClosePress = useCallback(() => {
               }
 
               </> :
-              <Button buttonColor={COLORS.darkgreen} mode="contained">
+              <Button buttonColor={COLORS.darkgreen} mode="contained" onPress={() => {
+                openModalAdhesion()}}
+              >
                 Demande d'Adhesion
               </Button>
               }
@@ -520,6 +538,35 @@ const handleClosePress = useCallback(() => {
              onPress={() => {
               handleDelete()
             }} >Supprimer</Button>
+          </Card.Actions>
+
+          </BottomSheetModal>
+
+          <BottomSheetModal
+          ref={bottomSheetModalRefAdhesion}
+          index={0}
+          backdropComponent={BackdropElement}
+          snapPoints={snapPoints}
+          backgroundStyle={{ borderRadius: responsiveScreenWidth(5),}}
+          onDismiss={() => setIsOpenAdhesion(false)}
+        >
+            <Card.Title
+            titleStyle={{ fontWeight: 'bold', textTransform: 'uppercase' }}
+            title="ATTENTION!" 
+          />
+          <Card.Content>
+            <Text variant="titleLarge">Vous souhaitez vraiment rejoindre le Groupe : { route.params.avec.name}?</Text>
+            {status == 'failed'?
+              <Text style={{color: COLORS.peach}}>Erreur d'adhésion</Text>:<></>
+            }
+          </Card.Content>
+          <Card.Actions style={{ marginVertical: 15 }}>
+            <Button onPress={hideModalAdhesion}>Annuler</Button>
+            <Button buttonColor={COLORS.red} disabled={status == 'loading'}
+            loading={status == 'loading'}
+             onPress={() => {
+              handleAdhesion()
+            }} >Confirmer</Button>
           </Card.Actions>
 
           </BottomSheetModal>
