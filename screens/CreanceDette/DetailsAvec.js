@@ -6,7 +6,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Text } from '../../components';
 import { Divider, Button, Snackbar, Modal, Card, ActivityIndicator, Provider, Menu } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteAvec } from '../../redux/avecReducer';
+import { deleteAvec, updateAvec } from '../../redux/avecReducer';
 import { BottomSheetBackdrop, BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { responsiveScreenWidth } from 'react-native-responsive-dimensions';
 import { useFocusEffect } from '@react-navigation/native';
@@ -155,26 +155,23 @@ const handleClosePressAdhesion = useCallback(() => {
 
     // Push current user to member array
 
-    // Reuse the soumettreProduct function
-    dispatch(soumettreProduct({
+    // Reuse the updateAvec function
+    dispatch(updateAvec({
       ...route.params.avec,
       id: route.params.avec._id,
       membres: [
         ...route.params.avec.membres,
         {
-          user: JSON.parse(token)?.user?.user?.userId,
-          admission_req: 'PENDING', 
-          contribution_amount: 0,
-          contribution_status: 'PENDING', 
+          user: connectedUser.userId,
+          status: 'PENDING', 
         }
       ]
     }));
 
-     // Check if the product was deleted successfully
-    if (!error) {
+    if (await status == 'succeeded') {
       // Navigate back to the previous screen
-      //navigation.navigate('Main');
 
+      await navigation.navigate('Main');
     }else {
       onToggleSnackBar()
     }
