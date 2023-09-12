@@ -30,6 +30,9 @@ const DetailsAvec = ({ route, navigation }) => {
   // backdrop on modal open
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenAdhesion, setIsOpenAdhesion] = useState(false);
+  const [isOpenSubmit, setIsOpenSubmit] = useState(false);
+  const [isOpenQuit, setIsOpenQuit] = useState(false);
+
 
   // Use the useFocusEffect hook to execute reloadScreen when the screen gains focus
   useFocusEffect(
@@ -97,41 +100,67 @@ const DetailsAvec = ({ route, navigation }) => {
     ),
     []
   )
-  
-// ref
-const bottomSheetModalRef = useRef(null);
-const bottomSheetModalRefAdhesion = useRef(null);
+    
+  // ref
+  const bottomSheetModalRef = useRef(null);
+  const bottomSheetModalRefAdhesion = useRef(null);
+  const bottomSheetModalRefSubmit = useRef(null);
+  const bottomSheetModalRefQuit = useRef(null);
 
-// variables
-const snapPoints = useMemo(() => ["25%"], []);
+  // variables
+  const snapPoints = useMemo(() => ["25%","50"], []);
 
 
-const openModal = useCallback(() => {
-  bottomSheetModalRef.current?.present();
-  setTimeout(() => {
-    setIsOpen(true);
-  }, 5);
-}, []);
+  const openModal = useCallback(() => {
+    bottomSheetModalRef.current?.present();
+    setTimeout(() => {
+      setIsOpen(true);
+    }, 5);
+  }, []);
 
-const openModalAdhesion = useCallback(() => {
-  bottomSheetModalRefAdhesion.current?.present();
-  setTimeout(() => {
-    setIsOpenAdhesion(true);
-  }, 5);
-}, []);
+  const openModalAdhesion = useCallback(() => {
+    bottomSheetModalRefAdhesion.current?.present();
+    setTimeout(() => {
+      setIsOpenAdhesion(true);
+    }, 5);
+  }, []);
 
-const handleClosePress = useCallback(() => {
-  bottomSheetModalRef.current?.close();
-}, []);
+  const openModalSubmit = useCallback(() => {
+    bottomSheetModalRefSubmit.current?.present();
+    setTimeout(() => {
+      setIsOpenSubmit(true);
+    }, 5);
+  }, []);
 
-const handleClosePressAdhesion = useCallback(() => {
-  bottomSheetModalRefAdhesion.current?.close();
-}, []);
+  const openModalQuit = useCallback(() => {
+    bottomSheetModalRefQuit.current?.present();
+    setTimeout(() => {
+      setIsOpenQuit(true);
+    }, 5);
+  }, []);
+
+  const handleClosePress = useCallback(() => {
+    bottomSheetModalRef.current?.close();
+  }, []);
+
+  const handleClosePressAdhesion = useCallback(() => {
+    bottomSheetModalRefAdhesion.current?.close();
+  }, []);
+
+  const handleClosePressSubmit = useCallback(() => {
+    bottomSheetModalRefSubmit.current?.close();
+  }, []);
+
+  const handleClosePressQuit = useCallback(() => {
+    bottomSheetModalRefQuit.current?.close();
+  }, []);
 
 
   // Modal Delete AVEC
   const hideModalDel = () => handleClosePress();
   const hideModalAdhesion = () => handleClosePressAdhesion();
+  const hideModalSubmit= () => handleClosePressSubmit();
+  const hideModalQuit = () => handleClosePressQuit();
 
   const handleDelete = async () => {
     dispatch(deleteAvec({
@@ -166,6 +195,40 @@ const handleClosePressAdhesion = useCallback(() => {
           status: 'PENDING', 
         }
       ]
+    }));
+
+    if (await status == 'succeeded') {
+      // Navigate back to the previous screen
+
+      await navigation.navigate('Main');
+    }else {
+      onToggleSnackBar()
+    }
+  };
+  
+  const handleSubmit = async () => {
+
+    // Reuse the updateAvec function
+    dispatch(updateAvec({
+      ...route.params.avec,
+      
+    }));
+
+    if (await status == 'succeeded') {
+      // Navigate back to the previous screen
+
+      await navigation.navigate('Main');
+    }else {
+      onToggleSnackBar()
+    }
+  };
+
+  const handleQuit = async () => {
+
+    // Reuse the updateAvec function
+    dispatch(updateAvec({
+      ...route.params.avec,
+      
     }));
 
     if (await status == 'succeeded') {
@@ -441,7 +504,9 @@ const handleClosePressAdhesion = useCallback(() => {
                       Supprimer
                 </Button>
 
-                <Button buttonColor={COLORS.darkgreen} mode="contained">
+                <Button buttonColor={COLORS.darkgreen} mode="contained" onPress={() => {
+                  openModalSubmit();
+                }}>
                   Soumettre
                 </Button>
               </>:<></>
@@ -454,16 +519,18 @@ const handleClosePressAdhesion = useCallback(() => {
               {
                 route.params.avec.membres.some(member => member?.user?._id == connectedUser?.userId)?
               <>
-              <Button textColor="#fff" elevated buttonColor={COLORS.peach}>
+              <Button textColor="#fff" elevated buttonColor={COLORS.peach} onPress={() => {
+                  openModalQuit();
+                }}>
                 Quitter
               </Button>
-
+{/* 
               {
                  route.params.avec.membres.find(member => member?.admission_req == 'ACCEPTED')? <Button textColor="#fff" elevated buttonColor={COLORS.darkgreen}>
                   Contribuer
                 </Button>:
                 <></>
-              }
+              } */}
 
               </> :
               <Button buttonColor={COLORS.darkgreen} mode="contained" onPress={() => {
@@ -563,6 +630,67 @@ const handleClosePressAdhesion = useCallback(() => {
             loading={status == 'loading'}
              onPress={() => {
               handleAdhesion()
+            }} >Confirmer</Button>
+          </Card.Actions>
+
+          </BottomSheetModal>
+
+          {/* {submit} */}
+          <BottomSheetModal
+          ref={bottomSheetModalRefSubmit}
+          index={0}
+          backdropComponent={BackdropElement}
+          snapPoints={snapPoints}
+          backgroundStyle={{ borderRadius: responsiveScreenWidth(5),}}
+          onDismiss={() => setIsOpenSubmit(false)}
+        >
+            <Card.Title
+            titleStyle={{ fontWeight: 'bold', textTransform: 'uppercase' }}
+            title="ATTENTION!" 
+          />
+          <Card.Content>
+            <Text variant="titleLarge">Vous souhaitez vraiment Soummetre le Groupe : { route.params.avec.name}
+            à l'équipe d'AFRICAN FINTECH pour validation?</Text>
+            {status == 'failed'?
+              <Text style={{color: COLORS.peach}}>Une erreur est survenue </Text>:<></>
+            }
+          </Card.Content>
+          <Card.Actions style={{ marginVertical: 15 }}>
+            <Button onPress={hideModalSubmit}>Annuler</Button>
+            <Button buttonColor={COLORS.red} disabled={status == 'loading'}
+            loading={status == 'loading'}
+             onPress={() => {
+              handleSubmit()
+            }} >Confirmer</Button>
+          </Card.Actions>
+
+          </BottomSheetModal>
+
+          {/* {quit} */}
+          <BottomSheetModal
+          ref={bottomSheetModalRefQuit}
+          index={0}
+          backdropComponent={BackdropElement}
+          snapPoints={snapPoints}
+          backgroundStyle={{ borderRadius: responsiveScreenWidth(5),}}
+          onDismiss={() => setIsOpenQuit(false)}
+        >
+            <Card.Title
+            titleStyle={{ fontWeight: 'bold', textTransform: 'uppercase' }}
+            title="ATTENTION!" 
+          />
+          <Card.Content>
+            <Text variant="titleLarge">Vous souhaitez vraiment quitter le Groupe : { route.params.avec.name}?</Text>
+            {status == 'failed'?
+              <Text style={{color: COLORS.peach}}>Une erreur est survenue </Text>:<></>
+            }
+          </Card.Content>
+          <Card.Actions style={{ marginVertical: 15 }}>
+            <Button onPress={hideModalQuit}>Annuler</Button>
+            <Button buttonColor={COLORS.red} disabled={status == 'loading'}
+            loading={status == 'loading'}
+             onPress={() => {
+              handleQuit()
             }} >Confirmer</Button>
           </Card.Actions>
 
