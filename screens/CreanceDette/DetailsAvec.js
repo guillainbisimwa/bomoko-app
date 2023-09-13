@@ -185,9 +185,15 @@ const DetailsAvec = ({ route, navigation }) => {
   
 
   const handleAdhesion = async () => {
+    // Pushing the additional object to the output array
+    const today = new Date();
 
     // Push current user to member array
-
+    const outputTimeLineSoum = {
+      time:`${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear().toString().substr(-2)}`,
+      title: "Demande d'Adhesion",
+      details: `${connectedUser.name} veut adherer dans le groupe ${route.params.avec.name}`
+    };
     // Reuse the updateAvec function
     dispatch(updateAvec({
       ...route.params.avec,
@@ -196,8 +202,16 @@ const DetailsAvec = ({ route, navigation }) => {
         ...route.params.avec.membres,
         {
           user: connectedUser.userId,
-          status: 'PENDING', 
-        }
+          adhesion:{
+            status: 'SUBMITTED',
+            ...route.params.avec.membres?.adhesion,
+          }
+        },
+        
+      ],
+      timeline: [
+        outputTimeLineSoum,
+        ...route.params.avec.timeline,
       ]
     }));
 
