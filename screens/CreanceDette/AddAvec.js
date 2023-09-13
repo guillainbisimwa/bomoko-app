@@ -142,6 +142,12 @@ const AddAvec = ({ navigation, route }) => {
           fin_octroi_credit: finOctroiCredit,
           startDate,
           endDate,
+          timeline: [
+            {
+              title: `Creation du Groupe${name}`,
+              details: `Le Groupe ${name}- cree par ${username}`
+            }
+          ],
           frais_Social: {
             name: 'Hebdomadaire',
             somme: Number(prixCaisseSolidaire),
