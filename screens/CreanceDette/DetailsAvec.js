@@ -205,16 +205,30 @@ const DetailsAvec = ({ route, navigation }) => {
       onToggleSnackBar()
     }
   };
-  
+
   const handleSubmit = async () => {
 
-    // Reuse the updateAvec function
+    // Pushing the additional object to the output array
+    const today = new Date();
+
+    const outputTimeLineSoum = {
+      time:`${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear().toString().substr(-2)}`,
+      title: 'Soumission',
+      details: `Votre groupe ${route.params.avec.name} a été soumis à l'équipe African Fintech et est en attente de validation`
+    };
+
     dispatch(updateAvec({
       ...route.params.avec,
-      
+      id: route.params.avec._id,
+      status: "SUBMITED",
+      timeline: [
+        outputTimeLineSoum,
+        ...route.params.avec.timeline,
+      ]
     }));
 
-    if (await status == 'succeeded') {
+     // Check if the product was submited successfully
+     if (await status == 'succeeded') {
       // Navigate back to the previous screen
 
       await navigation.navigate('Main');
