@@ -18,7 +18,7 @@ const DetailsAvec = ({ route, navigation }) => {
   const { avecs, status, error }= useSelector((state) => state.avecs); 
 
   const [showFullContent, setShowFullContent] = useState(false);
-  const [statusLocal, setStatusLocal] = useState(false);
+  const [statusLocal, setStatusLocal] = useState('');
   const [connectedUser, setConnectedUser] = useState(null);
 
 
@@ -108,7 +108,7 @@ const DetailsAvec = ({ route, navigation }) => {
   const bottomSheetModalRefQuit = useRef(null);
 
   // variables
-  const snapPoints = useMemo(() => ["25%","50"], []);
+  const snapPoints = useMemo(() => ["28%","50"], []);
 
 
   const openModal = useCallback(() => {
@@ -169,12 +169,16 @@ const DetailsAvec = ({ route, navigation }) => {
     console.log("--");
     console.log(await status);
     console.log(await error);
+    setStatusLocal(await status);
+
      // Check if the product was deleted successfully
     if (await status == 'succeeded') {
       // Navigate back to the previous screen
 
       await navigation.navigate('Main');
     }else {
+      setStatusLocal(await status);
+
       onToggleSnackBar()
     }
   }
@@ -197,11 +201,14 @@ const DetailsAvec = ({ route, navigation }) => {
       ]
     }));
 
+    setStatusLocal(await status);
+
     if (await status == 'succeeded') {
       // Navigate back to the previous screen
 
       await navigation.navigate('Main');
     }else {
+      setStatusLocal(await status);
       onToggleSnackBar()
     }
   };
@@ -226,6 +233,7 @@ const DetailsAvec = ({ route, navigation }) => {
         ...route.params.avec.timeline,
       ]
     }));
+    setStatusLocal(await status);
 
      // Check if the product was submited successfully
      if (await status == 'succeeded') {
@@ -233,6 +241,8 @@ const DetailsAvec = ({ route, navigation }) => {
 
       await navigation.navigate('Main');
     }else {
+      setStatusLocal(await status);
+
       onToggleSnackBar()
     }
   };
@@ -244,12 +254,16 @@ const DetailsAvec = ({ route, navigation }) => {
       ...route.params.avec,
       
     }));
+    setStatusLocal(await status);
+
 
     if (await status == 'succeeded') {
       // Navigate back to the previous screen
 
       await navigation.navigate('Main');
     }else {
+      setStatusLocal(await status);
+
       onToggleSnackBar()
     }
   };
@@ -605,8 +619,8 @@ const DetailsAvec = ({ route, navigation }) => {
           />
           <Card.Content>
             <Text variant="titleLarge">Voulez-vous vraiment supprimer le Groupe { route.params.avec.name}?</Text>
-            {status == 'failed'?
-              <Text style={{color: COLORS.peach}}>Erreur de suppression</Text>:<></>
+            {statusLocal == 'failed' && status != 'loading'?
+              <Text style={{color: COLORS.peach}}>Une erreur est survenue </Text>:<></>
             }
           </Card.Content>
           <Card.Actions style={{ marginVertical: 15 }}>
@@ -618,7 +632,7 @@ const DetailsAvec = ({ route, navigation }) => {
             }} >Supprimer</Button>
           </Card.Actions>
 
-          </BottomSheetModal>
+        </BottomSheetModal>
 
           <BottomSheetModal
           ref={bottomSheetModalRefAdhesion}
@@ -634,7 +648,7 @@ const DetailsAvec = ({ route, navigation }) => {
           />
           <Card.Content>
             <Text variant="titleLarge">Vous souhaitez vraiment rejoindre le Groupe : { route.params.avec.name}?</Text>
-            {status == 'failed'?
+            {statusLocal == 'failed' && status != 'loading'?
               <Text style={{color: COLORS.peach}}>Erreur d'adhésion</Text>:<></>
             }
           </Card.Content>
@@ -665,7 +679,7 @@ const DetailsAvec = ({ route, navigation }) => {
           <Card.Content>
             <Text variant="titleLarge">Vous souhaitez vraiment Soummetre le Groupe : { route.params.avec.name}
             à l'équipe d'AFRICAN FINTECH pour validation?</Text>
-            {status == 'failed'?
+            {statusLocal == 'failed' && status != 'loading'?
               <Text style={{color: COLORS.peach}}>Une erreur est survenue </Text>:<></>
             }
           </Card.Content>
@@ -695,7 +709,7 @@ const DetailsAvec = ({ route, navigation }) => {
           />
           <Card.Content>
             <Text variant="titleLarge">Vous souhaitez vraiment quitter le Groupe : { route.params.avec.name}?</Text>
-            {status == 'failed'?
+            {statusLocal == 'failed' && status != 'loading'?
               <Text style={{color: COLORS.peach}}>Une erreur est survenue </Text>:<></>
             }
           </Card.Content>
