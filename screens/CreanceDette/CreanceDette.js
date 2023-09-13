@@ -134,6 +134,9 @@ const CreanceDette = ({ navigation, route }) => {
 
 // This effect will run whenever activeTabType, search field, or products change
 useEffect(() => {
+  if(error){
+    Alert.alert(error, "Veuillez vérifier votre connexion Internet et réessayer.");
+  }
   SetRoutes(prevRoutes => [
     { ...prevRoutes[0], title: `Tous (${countAvec(filteredAvecs).all})` },
     { ...prevRoutes[1], title: `A venir (${countAvec(filteredAvecs).upcoming})` },
@@ -161,7 +164,7 @@ useEffect(() => {
   }
 
   
-}, [activeTabType, searchQuery, avecs, currentPage]); // Watch for changes in activeTabType, searchQuery, and products
+}, [activeTabType, searchQuery, avecs, currentPage, error]); // Watch for changes in activeTabType, searchQuery, and products
 
 const onChangeSearch = (text) => {
   setFilteredAvecs([
