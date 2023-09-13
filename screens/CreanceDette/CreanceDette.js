@@ -387,12 +387,19 @@ const handlePrevPage = () => {
 
   const Route1 = () => {
     // Check if status is loading
-    if (avecs.status === 'loading') {
+    if (status === 'loading') {
       return (
         // Render a loading indicator here
         <ScrollView style={{ flex: 1 , paddingHorizontal:5, paddingVertical:10,
           backgroundColor: 'transparent'}}>
           <ActivityIndicator style={styles.activity} size="large" color='white'/>
+
+          {
+            filteredAvecs.length === 0 ?
+                <Text center white bold>Chargement en cours...</Text>:
+                <Text center white bold>  Aucun groue trouve</Text>
+          }
+        
         </ScrollView>
       );
     }
@@ -400,6 +407,9 @@ const handlePrevPage = () => {
     return (
       <ScrollView style={{ flex: 1 ,  paddingVertical:10,
       backgroundColor: 'transparent'}}>
+        {
+            filteredAvecs.length === 0 ? <Text center white bold>  Aucun groupe trouvé</Text>:<></>
+        }
         {
           countAvec(filteredAvecs).allAvec?.map((avec, key) => {
 
@@ -483,12 +493,13 @@ const handlePrevPage = () => {
 
   const Route2 = () => {
     // Check if status is loading
-    if (avecs.status === 'loading') {
+    if (status === 'loading') {
       return (
         // Render a loading indicator here
         <ScrollView style={{ flex: 1 , paddingHorizontal:5, paddingVertical:10,
           backgroundColor: 'transparent'}}>
           <ActivityIndicator style={styles.activity} size="large" color='white'/>
+          <Text center white bold>Chargement en cours...</Text>
         </ScrollView>
       );
     }
@@ -496,6 +507,9 @@ const handlePrevPage = () => {
     return (
       <ScrollView style={{ flex: 1 ,  paddingVertical:10,
       backgroundColor: 'transparent'}}>
+         {
+            countAvec(filteredAvecs).overdueAvec?.length === 0 ? <Text center white bold>  Aucun groupe trouvé</Text>:<></>
+        }
         {
           countAvec(filteredAvecs).overdueAvec?.map((avec, key) => {
 
@@ -581,12 +595,13 @@ const handlePrevPage = () => {
 
   const Route3 = () => {
     // Check if status is loading
-    if (avecs.status === 'loading') {
+    if (status === 'loading') {
       return (
         // Render a loading indicator here
         <ScrollView style={{ flex: 1 , paddingHorizontal:5, paddingVertical:10,
           backgroundColor: 'transparent'}}>
           <ActivityIndicator style={styles.activity} size="large" color='white'/>
+          <Text center white bold>Chargement en cours...</Text>
         </ScrollView>
       );
     }
@@ -594,6 +609,9 @@ const handlePrevPage = () => {
     return (
       <ScrollView style={{ flex: 1 ,  paddingVertical:10,
       backgroundColor: 'transparent'}}>
+        {
+          countAvec(filteredAvecs).upcomingAvec?.length === 0 ? <Text center white bold>  Aucun groupe trouvé</Text>:<></>
+        }
         {
           countAvec(filteredAvecs).upcomingAvec?.map((avec, key) => {
 
@@ -731,6 +749,15 @@ const handlePrevPage = () => {
      
 
       {topMenu()}
+    
+      {/* {
+                isLoading?<ActivityIndicator size="large" />: <></>
+              }
+              {
+              filteredProducts.length === 0 ? (
+                isLoading?
+                <Text center h1 white bold>Chargement en cours...</Text>:
+                <Text center h1 white bold>   Aucun produit ou service</Text> */}
       
     </View>
 
