@@ -264,10 +264,10 @@ const DetailsAvec = ({ route, navigation }) => {
   const handleQuit = async () => {
 
     // Reuse the updateAvec function
-    dispatch(updateAvec({
-      ...route.params.avec,
-      
+    dispatch(deleteAvec({
+      id: route.params.avec._id
     }));
+    // 
     setStatusLocal(await status);
 
 
