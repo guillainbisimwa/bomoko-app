@@ -7,7 +7,7 @@ import { Text } from '../../components';
 import { Divider, Button, Snackbar, Modal, Card, ActivityIndicator, Provider, Menu } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteAvec, updateAvec } from '../../redux/avecReducer';
-import { BottomSheetBackdrop, BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import { BottomSheetBackdrop, BottomSheetFlatList, BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { responsiveScreenWidth } from 'react-native-responsive-dimensions';
 import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -32,6 +32,14 @@ const DetailsAvec = ({ route, navigation }) => {
   const [isOpenAdhesion, setIsOpenAdhesion] = useState(false);
   const [isOpenSubmit, setIsOpenSubmit] = useState(false);
   const [isOpenQuit, setIsOpenQuit] = useState(false);
+
+  // Gouvernance
+  const [isOpenReunion, setIsOpenReunion] = useState(false);
+  const [isOpenMembreBureau, setIsOpenMembreBureau] = useState(false);
+  const [isOpenRoi, setIsOpenRoi] = useState(false);
+
+
+  const [isOpenMembres, setIsOpenMembres] = useState(false);
 
 
   // Use the useFocusEffect hook to execute reloadScreen when the screen gains focus
@@ -107,8 +115,16 @@ const DetailsAvec = ({ route, navigation }) => {
   const bottomSheetModalRefSubmit = useRef(null);
   const bottomSheetModalRefQuit = useRef(null);
 
+  // Gouvernance
+  const bottomSheetModalReunion = useRef(null);
+  const bottomSheetModalMembreBureau = useRef(null);
+  const bottomSheetModalRoi = useRef(null);
+
+  const bottomSheetModalMembres = useRef(null);
+
   // variables
-  const snapPoints = useMemo(() => ["28%","50"], []);
+  const snapPoints = useMemo(() => ["28%","50%"], []);
+  const snapPointsGouv = useMemo(() => ["50%","90%"], []);
 
 
   const openModal = useCallback(() => {
@@ -139,6 +155,35 @@ const DetailsAvec = ({ route, navigation }) => {
     }, 5);
   }, []);
 
+  // GOuv
+  const openModalReunion = useCallback(() => {
+    bottomSheetModalReunion.current?.present();
+    setTimeout(() => {
+      setIsOpenReunion(true);
+    }, 5);
+  }, []);
+
+  const openModalMembreBureau = useCallback(() => {
+    bottomSheetModalMembreBureau.current?.present();
+    setTimeout(() => {
+      setIsOpenMembreBureau(true);
+    }, 5);
+  }, []);
+
+  const openModalRoi = useCallback(() => {
+    bottomSheetModalRoi.current?.present();
+    setTimeout(() => {
+      setIsOpenRoi(true);
+    }, 5);
+  }, []);
+
+  const openModalMembres = useCallback(() => {
+    bottomSheetModalMembres.current?.present();
+    setTimeout(() => {
+      setIsOpenMembres(true);
+    }, 5);
+  }, []);
+
   const handleClosePress = useCallback(() => {
     bottomSheetModalRef.current?.close();
   }, []);
@@ -155,12 +200,36 @@ const DetailsAvec = ({ route, navigation }) => {
     bottomSheetModalRefQuit.current?.close();
   }, []);
 
+  // Gouv
+  const handleClosePressReunion = useCallback(() => {
+    bottomSheetModalReunion.current?.close();
+  }, []);
+
+  const handleClosePressMembreBureau = useCallback(() => {
+    bottomSheetModalMembreBureau.current?.close();
+  }, []);
+
+  const handleClosePressRoi = useCallback(() => {
+    bottomSheetModalRoi.current?.close();
+  }, []);
+
+  const handleClosePressMembres = useCallback(() => {
+    bottomSheetModalMembres.current?.close();
+  }, []);
+
 
   // Modal Delete AVEC
   const hideModalDel = () => handleClosePress();
   const hideModalAdhesion = () => handleClosePressAdhesion();
   const hideModalSubmit= () => handleClosePressSubmit();
   const hideModalQuit = () => handleClosePressQuit();
+
+  // Gouv
+  const hideModalReunion = () => handleClosePressReunion();
+  const hideModalMembreBureau = () => handleClosePressMembreBureau();
+  const hideModalRoi = () => handleClosePressRoi();
+
+  const hideModalMembres = () => handleClosePressMembres();
 
   const handleDelete = async () => {
     dispatch(deleteAvec({
@@ -363,9 +432,12 @@ const DetailsAvec = ({ route, navigation }) => {
         </Block>
           }>
       
-              <Menu.Item leadingIcon="calendar" title="Réunion hebdomadaire" onPress={()=> console.log()}/>
-              <Menu.Item leadingIcon="account-group" title="5 membres du bureau" onPress={()=> console.log()}/>
-              <Menu.Item leadingIcon="book-open-variant" title="Règlement intérieur" onPress={()=> console.log()}/>
+          <Menu.Item leadingIcon="calendar" title="Réunion hebdomadaire" 
+            onPress={()=> openModalReunion() }/>
+          <Menu.Item leadingIcon="account-group" title="5 membres du bureau" 
+            onPress={()=> openModalMembreBureau()}/>
+          <Menu.Item leadingIcon="book-open-variant" title="Règlement intérieur" 
+            onPress={()=> openModalRoi()}/>
 
         </Menu>
 
@@ -505,7 +577,7 @@ const DetailsAvec = ({ route, navigation }) => {
           {/* Second Column */}
           <View style={styles.columnMembre2}>
           <Text numberOfLines={1} bold >MEMBRE DU GROUPE</Text>
-          <View style={styles.imgs}>
+          <TouchableOpacity style={styles.imgs} onPress={()=> openModalMembres()}>
                 {route.params.avec?.membres.slice(0,4).map((value, key) =>{
                   console.log();
                  // console.log(value.user);
@@ -523,7 +595,7 @@ const DetailsAvec = ({ route, navigation }) => {
                   <Text style={styles.moreImagesText}>+ 
                   {route.params.avec?.membres.length - 4} plus</Text>
                 )}
-              </View>
+              </TouchableOpacity>
           </View>
         </View>
         {
@@ -737,6 +809,27 @@ const DetailsAvec = ({ route, navigation }) => {
           </Card.Actions>
 
           </BottomSheetModal>
+
+          {/* Membres */}
+
+            <BottomSheetModal
+              ref={bottomSheetModalMembres}
+              index={1}
+              backdropComponent={BackdropElement}
+              snapPoints={snapPointsGouv}
+              backgroundStyle={{ borderRadius: responsiveScreenWidth(5),}}
+              onDismiss={() => setIsOpen(false)}
+            >
+              {/* <BottomSheetFlatList
+                data={data}
+                keyExtractor={(i) => i}
+                renderItem={renderItem}
+                contentContainerStyle={styles.contentContainer}
+                refreshing={false}
+                onRefresh={handleRefresh}
+              /> */}
+
+            </BottomSheetModal>
           </ScrollView>
           </BottomSheetModalProvider>
         
