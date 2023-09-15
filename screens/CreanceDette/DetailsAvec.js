@@ -12,6 +12,7 @@ import { responsiveScreenWidth } from 'react-native-responsive-dimensions';
 import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Membre from '../Product/Membre';
+import Reunion from './Reunion';
 
 const DetailsAvec = ({ route, navigation }) => {
   const dispatch = useDispatch();
@@ -160,6 +161,7 @@ const DetailsAvec = ({ route, navigation }) => {
   const openModalReunion = useCallback(() => {
     bottomSheetModalReunion.current?.present();
     setTimeout(() => {
+      setVisibleMenuGouv(false);
       setIsOpenReunion(true);
     }, 5);
   }, []);
@@ -167,6 +169,7 @@ const DetailsAvec = ({ route, navigation }) => {
   const openModalMembreBureau = useCallback(() => {
     bottomSheetModalMembreBureau.current?.present();
     setTimeout(() => {
+      setVisibleMenuGouv(false);
       setIsOpenMembreBureau(true);
     }, 5);
   }, []);
@@ -174,6 +177,7 @@ const DetailsAvec = ({ route, navigation }) => {
   const openModalRoi = useCallback(() => {
     bottomSheetModalRoi.current?.present();
     setTimeout(() => {
+      setVisibleMenuGouv(false);
       setIsOpenRoi(true);
     }, 5);
   }, []);
@@ -909,7 +913,7 @@ const DetailsAvec = ({ route, navigation }) => {
 
             <BottomSheetModal
               ref={bottomSheetModalMembres}
-              index={0}
+              index={1}
               backdropComponent={BackdropElement}
               snapPoints={snapPointsGouv}
               backgroundStyle={{ borderRadius: responsiveScreenWidth(5), backgroundColor:'#eee'}}
@@ -934,6 +938,33 @@ const DetailsAvec = ({ route, navigation }) => {
               />
 
             </BottomSheetModal>
+
+            {/* Gouv */}
+            <BottomSheetModal
+              ref={bottomSheetModalReunion}
+              index={1}
+              backdropComponent={BackdropElement}
+              snapPoints={snapPointsGouv}
+              backgroundStyle={{ borderRadius: responsiveScreenWidth(5), backgroundColor:'#eee'}}
+              onDismiss={() => setIsOpen(false)}
+            >
+              
+              <BottomSheetFlatList
+                data={route.params.avec?.reunion}
+                keyExtractor={(item) => item._id}
+                renderItem={({ item }) => 
+                
+                  <Reunion date={item} navigation={navigation} 
+                  />
+
+                }
+                contentContainerStyle={styles.contentContainer}
+                refreshing={false}
+                onRefresh={handleRefresh}
+              />
+
+            </BottomSheetModal>
+
           </ScrollView>
           </BottomSheetModalProvider>
         

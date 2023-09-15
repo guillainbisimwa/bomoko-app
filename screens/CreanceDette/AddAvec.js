@@ -200,7 +200,7 @@ const AddAvec = ({ navigation, route }) => {
             <SelectDropdown
                 data={cycleList}
                 // defaultValueByIndex={1}
-                // defaultValue={'Egypt'}
+                // defaultValue={''}
                 onSelect={(selectedItem, index) => {
                   setCycleNumber(selectedItem.split(' ')[0])
                   //console.log(selectedItem, index);
