@@ -240,12 +240,47 @@ const DetailsAvec = ({ route, navigation }) => {
   }, []);
 
 
-
   const handleAcceptReject = () => {
-    console.log("handleAcceptReject} ");
-    ToastAndroid.show("Une erreur s'est produite", ToastAndroid.LONG);
+    try{
+      console.log("myUser.user._id", myUser.user.name);
+      const updatedMembres = route.params.avec.membres.map((membre) => {
+        if (membre.user._id === myUser.user._id) {
+          return {
+            ...membre,
+            adhesion:{
+              ...membre?.adhesion,
+              status: 'REJECTED',
+            }
+          };
+        }
+        return membre;
+      });
 
-    // return true;
+      dispatch(updateAvec({
+        ...route.params.avec,
+        id: route.params.avec._id,
+        membres: updatedMembres,
+      }));
+  
+       // Check if the member was updated successfully
+      if (!error && !isLoading) {
+        // Navigate back to the previous screen
+        // await navigation.navigate('Main');
+          ToastAndroid.show("Rejeté avec success", ToastAndroid.LONG);
+  
+      }else {
+        //console.log('Error ++++++')
+         ToastAndroid.show("Une erreur s'est produite", ToastAndroid.LONG);
+
+        onToggleSnackBar()
+      }
+    } catch(e){
+      console.log('Error //////////', e)
+    ToastAndroid.show(`Une erreur s'est produite ${e}`, ToastAndroid.LONG);
+
+      onToggleSnackBar()
+      showToast()
+    }
   }
 
 
