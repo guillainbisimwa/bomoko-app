@@ -276,10 +276,7 @@ const DetailsAvec = ({ route, navigation }) => {
       }
     } catch(e){
       console.log('Error //////////', e)
-    ToastAndroid.show(`Une erreur s'est produite ${e}`, ToastAndroid.LONG);
-
-      onToggleSnackBar()
-      showToast()
+      ToastAndroid.show(`Une erreur s'est produite ${e}`, ToastAndroid.LONG);
     }
   }
 
@@ -321,9 +318,6 @@ const DetailsAvec = ({ route, navigation }) => {
     } catch(e){
       console.log('Error //////////', e)
     ToastAndroid.show(`Une erreur s'est produite ${e}`, ToastAndroid.LONG);
-
-      onToggleSnackBar()
-      showToast()
     }
   };
 
