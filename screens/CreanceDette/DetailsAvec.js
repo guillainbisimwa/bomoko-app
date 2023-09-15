@@ -41,7 +41,7 @@ const DetailsAvec = ({ route, navigation }) => {
 
 
   const [isOpenMembres, setIsOpenMembres] = useState(false);
-
+  const [action, setAction] = useState();
 
   // Use the useFocusEffect hook to execute reloadScreen when the screen gains focus
   useFocusEffect(
@@ -240,9 +240,9 @@ const DetailsAvec = ({ route, navigation }) => {
   }, []);
 
 
-  const handleAcceptReject = () => {
+  const handleAcceptReject = async (myUser) => {
     try{
-      console.log("myUser.user._id", myUser.user.name);
+      
       const updatedMembres = route.params.avec.membres.map((membre) => {
         if (membre.user._id === myUser.user._id) {
           return {
@@ -261,6 +261,8 @@ const DetailsAvec = ({ route, navigation }) => {
         id: route.params.avec._id,
         membres: updatedMembres,
       }));
+
+      setAction(myUser.user._id)
   
        // Check if the member was updated successfully
       if (!error && !isLoading) {
@@ -278,6 +280,7 @@ const DetailsAvec = ({ route, navigation }) => {
       console.log('Error //////////', e)
       ToastAndroid.show(`Une erreur s'est produite ${e}`, ToastAndroid.LONG);
     }
+    return myUser.user._id 
   }
 
 
@@ -303,6 +306,8 @@ const DetailsAvec = ({ route, navigation }) => {
         membres: updatedMembres,
       }));
   
+      setAction(myUser.user._id)
+
        // Check if the member was updated successfully
       if (!error && !isLoading) {
         // Navigate back to the previous screen
@@ -914,10 +919,15 @@ const DetailsAvec = ({ route, navigation }) => {
               <BottomSheetFlatList
                 data={route.params.avec?.membres}
                 keyExtractor={(item) => item._id}
-                renderItem={({ item }) => <Membre user={item} navigation={navigation} 
-                  userConnected={connectedUser} owner={route.params.avec.owner} 
-                  handleAcceptReject={handleAcceptReject} handleAcceptReq={handleAcceptReq}
-                  isLoading={true} parts={0} dette={0} interest={route.params.avec.interest} />}
+                renderItem={({ item }) => 
+                
+                  <Membre user={item} navigation={navigation} action={action}
+                    userConnected={connectedUser} owner={route.params.avec.owner} 
+                    handleAcceptReject={handleAcceptReject} handleAcceptReq={handleAcceptReq}
+                    isLoading={true} parts={0} dette={0} interest={route.params.avec.interest} 
+                  />
+
+                }
                 contentContainerStyle={styles.contentContainer}
                 refreshing={false}
                 onRefresh={handleRefresh}

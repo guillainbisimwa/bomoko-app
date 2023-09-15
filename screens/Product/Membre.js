@@ -5,12 +5,12 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { COLORS, SIZES, icons, FONTS } from '../../constants';
 import Block from './Block';
 import Text from './Text';
+import { ActivityIndicator } from 'react-native-paper';
 
 const Membre = (props,{ navigation } ) => {
   // console.log(props.user);
   // console.log( props.owner._id);
   // console.log(props.userConnected.userId);
-  // console.log();
   // console.log();
   return (
     <TouchableOpacity
@@ -105,21 +105,19 @@ const Membre = (props,{ navigation } ) => {
           {
             props.owner._id == props.userConnected.userId &&  props.user.adhesion?.status == 'PENDING'? 
             <Block row space="between">
+               { props.action== props.user.user._id ? 
+               <ActivityIndicator animating={true} color={COLORS.peach} />:
+               <>
                   <TouchableOpacity onPress={() => props.handleAcceptReject(props.user)}>
-                    {!props.isLoading ? (
-                      <></>
-                    ) : (
+                   
                       <Ionicons name="close-circle" size={40} color={COLORS.peach} />
-                    )}
                   </TouchableOpacity>
 
                   <TouchableOpacity onPress={() => props.handleAcceptReq(props.user)}>
-                    {!props.isLoading ? (
-                      <></>
-                    ) : (
+                
                       <Ionicons name="checkmark-circle" size={40} color={COLORS.darkgreen} />
-                    )}
                   </TouchableOpacity>
+                  </>}
                 </Block> : <></>
             }
           
