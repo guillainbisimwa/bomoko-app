@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import {ImageBackground, View, TouchableOpacity, StyleSheet, ScrollView, Image } from 'react-native';
+import {ImageBackground, View, TouchableOpacity, StyleSheet, ScrollView, Image, ToastAndroid } from 'react-native';
 import Block from '../Product/Block';
 import { COLORS, FONTS, SIZES, icons } from '../../constants';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -11,6 +11,7 @@ import { BottomSheetBackdrop, BottomSheetFlatList, BottomSheetModal, BottomSheet
 import { responsiveScreenWidth } from 'react-native-responsive-dimensions';
 import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Membre from '../Product/Membre';
 
 const DetailsAvec = ({ route, navigation }) => {
   const dispatch = useDispatch();
@@ -230,6 +231,35 @@ const DetailsAvec = ({ route, navigation }) => {
   const hideModalRoi = () => handleClosePressRoi();
 
   const hideModalMembres = () => handleClosePressMembres();
+
+
+
+  // callbacks
+  const handleRefresh = useCallback(() => {
+    console.log("handleRefresh");
+  }, []);
+
+  // render
+  const renderItem = useCallback(
+    ({ item }) => (
+      <View style={styles.itemContainer}>
+        <Text>{item}</Text>
+      </View>
+    ),
+    []
+  );
+
+  const handleAcceptReject = () => {
+    console.log("handleAcceptReject} ");
+    ToastAndroid.show("Une erreur s'est produite", ToastAndroid.LONG);
+
+    // return true;
+  }
+  const handleAcceptReq = () => {
+    ToastAndroid.show("Une erreur s'est produite", ToastAndroid.LONG);
+    console.log("} handleAcceptReq");
+    // return true;
+  }
 
   const handleDelete = async () => {
     dispatch(deleteAvec({
@@ -814,20 +844,24 @@ const DetailsAvec = ({ route, navigation }) => {
 
             <BottomSheetModal
               ref={bottomSheetModalMembres}
-              index={1}
+              index={0}
               backdropComponent={BackdropElement}
               snapPoints={snapPointsGouv}
-              backgroundStyle={{ borderRadius: responsiveScreenWidth(5),}}
+              backgroundStyle={{ borderRadius: responsiveScreenWidth(5), backgroundColor:'#eee'}}
               onDismiss={() => setIsOpen(false)}
             >
-              {/* <BottomSheetFlatList
-                data={data}
-                keyExtractor={(i) => i}
-                renderItem={renderItem}
+              
+              <BottomSheetFlatList
+                data={route.params.avec?.membres}
+                keyExtractor={(item) => item._id}
+                renderItem={({ item }) => <Membre user={item} navigation={navigation} 
+                  userConnected={connectedUser} owner={route.params.avec.owner} 
+                  handleAcceptReject={handleAcceptReject} handleAcceptReq={handleAcceptReq}
+                  isLoading={true} parts={0} dette={0} interest={route.params.avec.interest} />}
                 contentContainerStyle={styles.contentContainer}
                 refreshing={false}
                 onRefresh={handleRefresh}
-              /> */}
+              />
 
             </BottomSheetModal>
           </ScrollView>
@@ -933,7 +967,12 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius:50,
-  }
+  },
+  itemContainer: {
+    padding: 6,
+    margin: 6,
+    backgroundColor: "#eee",
+  },
 
 
 });

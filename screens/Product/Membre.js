@@ -129,18 +129,16 @@ const Membre = (props,{ navigation } ) => {
           { props.owner._id == props.userConnected.userId ? 
             <>
               {
-                 props.user.adhesion?.status == 'PENDING' ? 
-                  <Text style={{ ...FONTS.h5, color: COLORS.gray}}>En attente</Text>:
-                  props.user.adhesion?.status == 'REJECTED' ? 
-                    <Text style={{ ...FONTS.h5, color: COLORS.red }}>Rejeté</Text>: <>
-                    <Text style={{ ...FONTS.h5, color: COLORS.red }}>0 PARTS</Text>
+                 props.user.adhesion?.status !== 'PENDING' && props.user.adhesion?.status !== 'REJECTED' ? 
+                  <>
+                  <Text style={{ ...FONTS.h5, color: COLORS.red }}>0 PARTS</Text>
                     <View style={{ flexDirection: 'row' }}>
                 
                       <Text style={{ marginBottom: SIZES.base, color: COLORS.darkgray, ...FONTS.body5 }}>
                       Dette 0 $
                       </Text>
                   </View>
-                  </>
+                  </>:<></>
               }
              
             </> : 
