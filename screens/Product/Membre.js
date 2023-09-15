@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { Image, StyleSheet, TouchableOpacity,View } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 import { COLORS, SIZES, icons, FONTS } from '../../constants';
 import Block from './Block';
 import Text from './Text';
-import { View } from 'react-native';
 
 const Membre = (props,{ navigation } ) => {
   console.log(props.user);
@@ -48,7 +47,7 @@ const Membre = (props,{ navigation } ) => {
         >
           <View
             style={{
-              width: '60%',
+              width: '65%',
               flexDirection: 'row',
               alignItems: 'center',
             }}
@@ -85,8 +84,7 @@ const Membre = (props,{ navigation } ) => {
             <View>
               <Text numberOfLines={1} style={{ ...FONTS.h3, color: COLORS.black }}>{
                 props.user.user.admin? props.user.user?.name: props.user.user?.name 
-              } 
-              guillain bisimwa Ngaboyeka
+              }
               </Text>
               <Text
                 numberOfLines={1}
@@ -100,114 +98,74 @@ const Membre = (props,{ navigation } ) => {
               {props.user.type}
               </Text>
             </View>
+
+            
           </View>
+
+          {
+            props.owner._id == props.userConnected.userId &&  props.user.adhesion?.status == 'PENDING'? 
+            <Block row space="between">
+                  <TouchableOpacity onPress={() => props.handleAcceptReject(props.user.user)}>
+                    {!props.isLoading ? (
+                      <></>
+                    ) : (
+                      <Ionicons name="close-circle" size={40} color={COLORS.peach} />
+                    )}
+                  </TouchableOpacity>
+
+                  <TouchableOpacity onPress={() => props.handleAcceptReq(props.user.user)}>
+                    {!props.isLoading ? (
+                      <></>
+                    ) : (
+                      <Ionicons name="checkmark-circle" size={40} color={COLORS.darkgreen} />
+                    )}
+                  </TouchableOpacity>
+                </Block> : <></>
+            }
+          
+
+      
           <View style={{ alignItems: 'flex-end' }}>
           { props.owner._id == props.userConnected.userId ? 
             <>
-              <Text style={{ ...FONTS.h5, color: COLORS.red }}>{props.user.interest} %</Text>
-              <View style={{ flexDirection: 'row' }}>
-                <Image
-                  source={icons.calendar}
-                  style={{
-                    width: 12,
-                    height: 12,
-                    tintColor: COLORS.darkgray,
-                    marginRight: 7,
-                    marginTop: 3,
-                  }}
-                />
-                <Text style={{ marginBottom: SIZES.base, color: COLORS.darkgray, ...FONTS.body5 }}>
-                  {props.user.user.date}
-                </Text>
-            </View>
+              {
+                 props.user.adhesion?.status == 'PENDING' ? 
+                  <Text style={{ ...FONTS.h5, color: COLORS.gray}}>En attente</Text>:
+                  props.user.adhesion?.status == 'REJECTED' ? 
+                    <Text style={{ ...FONTS.h5, color: COLORS.red }}>Rejeté</Text>: <>
+                    <Text style={{ ...FONTS.h5, color: COLORS.red }}>0 PARTS</Text>
+                    <View style={{ flexDirection: 'row' }}>
+                
+                      <Text style={{ marginBottom: SIZES.base, color: COLORS.darkgray, ...FONTS.body5 }}>
+                      Dette 0 $
+                      </Text>
+                  </View>
+                  </>
+              }
+             
             </> : 
             <>
             {/* If is not the owner */}
-            <Text style={{ ...FONTS.h5, color: COLORS.red }}>Taux d'Interet {props.interest} %</Text>
-              <View style={{ flexDirection: 'row' }}>
-                <Image
-                  source={icons.cash}
-                  style={{
-                    width: 12,
-                    height: 12,
-                    tintColor: COLORS.darkgray,
-                    marginRight: 7,
-                    marginTop: 3,
-                  }}
-                />
-                <Text style={{ marginBottom: SIZES.base, color: COLORS.darkgray, ...FONTS.body5 }}>
-                 Dette: {props.user.user.date}
-                </Text>
-            </View>
+           
+              {
+                 props.user.adhesion?.status == 'PENDING' ? 
+                  <Text style={{ ...FONTS.h5, color: COLORS.gray}}>En attente</Text>:
+                  props.user.adhesion?.status == 'REJECTED' ? 
+                    <Text style={{ ...FONTS.h5, color: COLORS.red }}>Rejeté</Text>: <>
+                    <Text style={{ ...FONTS.h5, color: COLORS.red }}>0 PARTS</Text>
+                    <View style={{ flexDirection: 'row' }}>
+                
+                      <Text style={{ marginBottom: SIZES.base, color: COLORS.darkgray, ...FONTS.body5 }}>
+                      Dette 0 $
+                      </Text>
+                  </View>
+                  </>
+              }
+             
             </>
+            
           }
 
-
-  {/* {( props.owner._id == props.userConnected.userId) ? (
-    props.user.adhesion?.status == 'ACCEPTED' ? (
-      <>
-        <Text style={{ ...FONTS.h5, color: COLORS.red }}>{props.user.interest} %</Text>
-        <View style={{ flexDirection: 'row' }}>
-          <Image
-            source={icons.calendar}
-            style={{
-              width: 12,
-              height: 12,
-              tintColor: COLORS.darkgray,
-              marginRight: 7,
-              marginTop: 3,
-            }}
-          />
-          <Text style={{ marginBottom: SIZES.base, color: COLORS.darkgray, ...FONTS.body5 }}>
-            {props.user.user.date}
-          </Text>
-        </View>
-      </>
-    ) : props.user.adhesion?.status == 'REJECTED' ? (
-      <Text style={{ ...FONTS.h5, color: COLORS.red }}>Rejeté</Text>
-    ) : (
-      <Block row space="between">
-        <TouchableOpacity onPress={() => props.handleAcceptReject(props.user.user)}>
-          {props.isLoading ? (
-            <></>
-          ) : (
-            <Ionicons name="close-circle" size={40} color={COLORS.peach} />
-          )}
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={() => handleAcceptReq(props.user.user)}>
-          {props.isLoading ? (
-            <></>
-          ) : (
-            <Ionicons name="checkmark-circle" size={40} color={COLORS.darkgreen} />
-          )}
-        </TouchableOpacity>
-      </Block>
-    )
-  ) : props.user.adhesion?.status == 'PENDING' ? (
-    <>
-      <Text style={{ ...FONTS.h5, color: COLORS.gray}}>En attente</Text>
-    </>
-  ) : (
-    <>
-      <Text style={{ ...FONTS.h5, color: COLORS.red }}>{props.user.interest} %</Text>
-      <View style={{ flexDirection: 'row', marginTop:20 }}>
-        <Image
-          source={icons.calendar}
-          style={{
-            width: 12,
-            height: 12,
-            tintColor: COLORS.darkgray,
-            marginRight: 7,
-            marginTop: 3,
-          }}
-        />
-        <Text style={{ marginBottom: SIZES.base, color: COLORS.darkgray, ...FONTS.body5 }}>
-          
-        </Text>
-      </View>
-    </>
-  )} */}
 </View>
     
         </View>

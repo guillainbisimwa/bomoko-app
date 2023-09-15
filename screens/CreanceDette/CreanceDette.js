@@ -396,12 +396,7 @@ const handlePrevPage = () => {
         <ScrollView style={{ flex: 1 , paddingHorizontal:5, paddingVertical:10,
           backgroundColor: 'transparent'}}>
           <ActivityIndicator style={styles.activity} size="large" color='white'/>
-
-          {
-            filteredAvecs.length === 0 ?
-                <Text center white bold>Chargement en cours...</Text>:
-                <Text center white bold>  Aucun groue trouve</Text>
-          }
+          <Text center white bold>Chargement en cours...</Text>
         
         </ScrollView>
       );
