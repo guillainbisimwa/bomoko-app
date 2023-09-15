@@ -7,11 +7,11 @@ import Block from './Block';
 import Text from './Text';
 
 const Membre = (props,{ navigation } ) => {
-  console.log(props.user);
-  console.log( props.owner._id);
-  console.log(props.userConnected.userId);
-  console.log();
-  console.log();
+  // console.log(props.user);
+  // console.log( props.owner._id);
+  // console.log(props.userConnected.userId);
+  // console.log();
+  // console.log();
   return (
     <TouchableOpacity
       onPress={() => {
@@ -105,7 +105,7 @@ const Membre = (props,{ navigation } ) => {
           {
             props.owner._id == props.userConnected.userId &&  props.user.adhesion?.status == 'PENDING'? 
             <Block row space="between">
-                  <TouchableOpacity onPress={() => props.handleAcceptReject(props.user.user)}>
+                  <TouchableOpacity onPress={() => props.handleAcceptReject(props.user)}>
                     {!props.isLoading ? (
                       <></>
                     ) : (
@@ -113,7 +113,7 @@ const Membre = (props,{ navigation } ) => {
                     )}
                   </TouchableOpacity>
 
-                  <TouchableOpacity onPress={() => props.handleAcceptReq(props.user.user)}>
+                  <TouchableOpacity onPress={() => props.handleAcceptReq(props.user)}>
                     {!props.isLoading ? (
                       <></>
                     ) : (
@@ -123,8 +123,6 @@ const Membre = (props,{ navigation } ) => {
                 </Block> : <></>
             }
           
-
-      
           <View style={{ alignItems: 'flex-end' }}>
           { props.owner._id == props.userConnected.userId ? 
             <>

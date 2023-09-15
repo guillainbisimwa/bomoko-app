@@ -239,15 +239,7 @@ const DetailsAvec = ({ route, navigation }) => {
     console.log("handleRefresh");
   }, []);
 
-  // render
-  const renderItem = useCallback(
-    ({ item }) => (
-      <View style={styles.itemContainer}>
-        <Text>{item}</Text>
-      </View>
-    ),
-    []
-  );
+
 
   const handleAcceptReject = () => {
     console.log("handleAcceptReject} ");
@@ -255,11 +247,50 @@ const DetailsAvec = ({ route, navigation }) => {
 
     // return true;
   }
-  const handleAcceptReq = () => {
-    ToastAndroid.show("Une erreur s'est produite", ToastAndroid.LONG);
-    console.log("} handleAcceptReq");
-    // return true;
-  }
+
+
+  const handleAcceptReq = async (myUser) => {
+    try{
+      console.log("myUser.user._id", myUser.user.name);
+      const updatedMembres = route.params.avec.membres.map((membre) => {
+        if (membre.user._id === myUser.user._id) {
+          return {
+            ...membre,
+            adhesion:{
+              ...membre?.adhesion,
+              status: 'ACCEPTED',
+            }
+          };
+        }
+        return membre;
+      });
+
+      dispatch(updateAvec({
+        ...route.params.avec,
+        id: route.params.avec._id,
+        membres: updatedMembres,
+      }));
+  
+       // Check if the member was updated successfully
+      if (!error && !isLoading) {
+        // Navigate back to the previous screen
+        // await navigation.navigate('Main');
+          ToastAndroid.show("Confirmé avec success", ToastAndroid.LONG);
+  
+      }else {
+        //console.log('Error ++++++')
+         ToastAndroid.show("Une erreur s'est produite", ToastAndroid.LONG);
+
+        onToggleSnackBar()
+      }
+    } catch(e){
+      console.log('Error //////////', e)
+    ToastAndroid.show(`Une erreur s'est produite ${e}`, ToastAndroid.LONG);
+
+      onToggleSnackBar()
+      showToast()
+    }
+  };
 
   const handleDelete = async () => {
     dispatch(deleteAvec({
