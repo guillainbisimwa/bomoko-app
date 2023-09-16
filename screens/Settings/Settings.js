@@ -33,6 +33,11 @@ const Settings = ({ navigation }) => {
     console.log("Security function");
   };
 
+  const navigateToMagicValidation = () => {
+    navigation.navigate('MagicValidation');
+    console.log("MagicValidation");
+  };
+
   const navigateToPrivacy = () => {
     navigation.navigate('Privacy')
     console.log("Privacy function");
@@ -115,6 +120,8 @@ const Settings = ({ navigation }) => {
     { icon: "save", text: "Exporter les données", action: navigateToSave },
     { icon: "language", text: "Langues", action: navigateToLanguage },
     { icon: "logout", text: "Déconnexion", action: logout },
+    { icon: "settings", text: "Magic Validation", action: navigateToMagicValidation },
+    
   ];
 
   const renderSettingsItem = ({ icon, text, action, conected=true}) => {

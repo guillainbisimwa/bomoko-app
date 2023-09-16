@@ -22,7 +22,7 @@ import { EditProfile, SignUpScreen } from './screens/SignUpScreen';
 import EditProduct from './screens/Product/EditProduct';
 import ShowImages from './screens/Product/ShowImages';
 import ShoppingCard from './screens/ShoppingCard/ShoppingCard';
-import { AideEtSupport, DataSecurityScreen, DetailsByUser, LanguageSelectionScreen, Privacy, Profile, ReportProblemScreen, UseCondition } from './screens/Settings';
+import { AideEtSupport, DataSecurityScreen, DetailsByUser, LanguageSelectionScreen, MagicValidation, Privacy, Profile, ReportProblemScreen, UseCondition } from './screens/Settings';
 import { AddAvec, DetailsAvec, DetailsReunion, EditAvec } from './screens/CreanceDette';
 import { StatusBar } from 'expo-status-bar';
 
@@ -245,6 +245,9 @@ const App = () => {
           <Stack.Screen name="UseCondition" component={UseCondition} options={{ title: "Condition d'utilisation" }} />
           <Stack.Screen name="ReportProblemScreen" component={ReportProblemScreen} options={{ title: "Signaler un problème" }} />
           <Stack.Screen name="LanguageSelectionScreen" component={LanguageSelectionScreen} options={{ title: "Choisissez une Langue" }} />
+          <Stack.Screen name="MagicValidation" component={MagicValidation} options={{ title: "Magic Validation" }} />
+          
+          
           <Stack.Screen name="DetailsByUser" component={DetailsByUser}
            options={{ title: '' , headerShown: true}}/>
 
