@@ -954,8 +954,7 @@ const DetailsAvec = ({ route, navigation }) => {
                 keyExtractor={(item) => item._id}
                 renderItem={({ item }) => 
                 
-                  <Reunion date={item} navigation={navigation} 
-                  />
+                  <Reunion date={item} navigation={navigation} avec={route.params.avec} />
 
                 }
                 contentContainerStyle={styles.contentContainer}

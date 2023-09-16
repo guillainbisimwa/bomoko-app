@@ -4,7 +4,7 @@ import Block from '../Product/Block';
 import { COLORS, FONTS, SIZES, icons } from '../../constants';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Text } from '../../components';
-import {  Provider, Menu, Button, IconButton } from 'react-native-paper';
+import {  Provider, Menu, Button, IconButton, Chip, Divider } from 'react-native-paper';
 import {  BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { format } from 'date-fns';
 import { fr as myFr } from 'date-fns/locale';
@@ -27,7 +27,7 @@ const DetailsReunion = ({ route, navigation }) => {
         style={{ width: SIZES.width, height: 120, justifyContent: 'flex-end' }}
       >
         <LinearGradient
-          colors={['rgba(0,0,0,0.1)', 'rgba(0,0,0,0.3)']}
+          colors={['rgba(0,0,0,0.1)', 'rgba(0,0,0,0.9)']}
           style={{
             position: 'absolute',
             left: 0,
@@ -52,14 +52,6 @@ const DetailsReunion = ({ route, navigation }) => {
           </Block>
           <Button mode='contained'>Menu</Button>
         </Block>
-
-        <Block center m_t={20} m_b={20} >
-            <Text bold h1>0 USD</Text>
-            <Text >Total de l’épargne</Text>
-        </Block>
-     
-        
-
       </Block>
     );
   };
@@ -73,6 +65,10 @@ const DetailsReunion = ({ route, navigation }) => {
       <ScrollView>
     <Block>
       {/* Fixed content */}
+      <Block style={styles.topdetailsText} >
+            <Text bold h1 white> 100 USD</Text>
+            <Text white>Total de l’épargne</Text>
+        </Block>
       <View>
         {renderImage()}
       </View>
@@ -81,8 +77,9 @@ const DetailsReunion = ({ route, navigation }) => {
       <View style={{ alignItems: "center" }}>
         {renderTopDetails()}
       </View>
+{/* 
       <Block row space="between" center>
-        <TouchableOpacity style={{ width: '40%', margin:'5%'}} onPress={()=> console.log('ok')}>
+        <TouchableOpacity style={{ width: '40%', marginHorizontal:20, marginVertical: 10}} onPress={()=> console.log('ok')}>
           <Block card  style={{ alignItems: 'center',  padding:10}}>
         <IconButton
           icon="arrow-up"
@@ -94,7 +91,7 @@ const DetailsReunion = ({ route, navigation }) => {
           </Block>
         </TouchableOpacity>
 
-        <TouchableOpacity style={{ width: '40%', margin:'5%' }} onPress={()=> console.log('ok')}>
+        <TouchableOpacity style={{ width: '40%', marginHorizontal:20, marginVertical: 10 }} onPress={()=> console.log('ok')}>
           <Block card style={{ alignItems: 'center',  padding:10}}>
           <IconButton
             icon="arrow-down"
@@ -105,12 +102,155 @@ const DetailsReunion = ({ route, navigation }) => {
           <Text>Une part a 5 USD</Text>
           </Block>
         </TouchableOpacity>
+      </Block> */}
+
+      <Block row space="between" m_l={20} m_r={20} m_t={10}>
+      <TouchableOpacity style={{ }} onPress={()=> console.log('ok')}>
+          <Block card style={{ alignItems: 'center'}} p={10}>
+        
+                    <Text bold>0</Text>
+                    <Text>Mes parts</Text>
+          
+         
+          </Block>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={{ }} onPress={()=> console.log('ok')}>
+          <Block card style={{ alignItems: 'center'}} p={10}>
+        
+                    <Text bold>0</Text>
+                    <Text>Mes emprunts</Text>
+          
+         
+          </Block>
+        </TouchableOpacity>
+
+
+        <TouchableOpacity style={{ }} onPress={()=> console.log('ok')}>
+          <Block card style={{ alignItems: 'center'}} p={10}>
+        
+                    <Text bold>0</Text>
+                    <Text>Mon intérêt</Text>
+          
+         
+          </Block>
+        </TouchableOpacity>
+
+
       </Block>
 
-      <Block row >
+      <Block card m_l={20} m_r={20} p={10} m_t={10}>
+        <Block>
+          <Text h2 bold>Details de la Reunion</Text>
+          <Text>2 Membres</Text>
+        </Block>
+        <Block m_t={5} m_b={15} row center space='between'>
+          <Chip icon="information" elevated >Reunion 1</Chip>
+          <Text>30 min</Text>
+        </Block>
+        <Divider />
+        <Block m_t={15} row>
+          <IconButton
+            icon="circle"
+            iconColor={COLORS.darkgreen}
+            size={20}
+          />
+          <Block middle>
+            <Text bold>CYCLE - {route.params.avec.cycle.number} Mois </Text>
+          </Block>
+        </Block>
+
+        <Block row space='between' center m_l={45} m_t={-15} >
+          <Text color={COLORS.gray}>Debut</Text>
+          <Text bold>  {formatDateToFrench(route.params.avec.startDate)} </Text>
+        </Block>
+
+        <Block row space='between' center m_l={45} >
+          <Text color={COLORS.gray}>Fin</Text>
+          <Text bold>  {formatDateToFrench(route.params.avec.endDate)} </Text>
+        </Block>
+
+        <Block  row>
+          <IconButton
+            icon="circle"
+            iconColor={COLORS.purple}
+            size={20}
+          />
+          <Block middle>
+            <Text bold>Credit </Text>
+          </Block>
+        </Block>
+
+        <Block row space='between' center m_l={45} m_t={-15}>
+          <Text color={COLORS.gray}>Debut Octroi</Text>
+          <Text bold>  {formatDateToFrench(route.params.avec.debut_octroi_credit)} </Text>
+        </Block>
+
+        <Block row space='between' center m_l={45} >
+          <Text color={COLORS.gray}>Fin Octroi</Text>
+          <Text bold>  {formatDateToFrench(route.params.avec.fin_octroi_credit)} </Text>
+        </Block>
+
+        <Block row>
+          <IconButton
+            icon="circle"
+            iconColor={COLORS.blue}
+            size={20}
+          />
+          <Block middle>
+            <Text bold>Parts</Text>
+          </Block>
+        </Block>
+
+        <Block row space='between' center m_l={45} m_t={-15}>
+          <Text color={COLORS.gray}> Parts Totales du groupe</Text>
+          <Text bold>20 (200 USD)</Text>
+        </Block>
+
+        <Block row space='between' center m_l={45} >
+          <Text color={COLORS.gray}> Parts achetees aujourdh'hui</Text>
+          <Text bold>0 (0 USD)</Text>
+        </Block>
+
+        <Block row>
+          <IconButton
+            icon="circle"
+            iconColor={COLORS.peach}
+            size={20}
+          />
+          <Block middle>
+            <Text bold>Emprunts</Text>
+          </Block>
+        </Block>
         
+        <Block row space='between' center m_l={45} m_t={-15}>
+          <Text color={COLORS.gray}> Emprunts Totales du groupe</Text>
+          <Text bold>20 (200 USD)</Text>
+        </Block>
+
+        <Block row space='between' center m_l={45} >
+          <Text numberOfLines={1} color={COLORS.gray}> Remboursement attendu</Text>
+          <Text bold>0 (0 USD)</Text>
+        </Block>
+
+        <Block row space='between' center m_l={45} >
+          <Text numberOfLines={1} color={COLORS.gray}> Remboursement en retard</Text>
+          <Text bold>0 (0 USD)</Text>
+        </Block>
+
+
+
+
+        {/* <Block row space='between' center m_l={40} >
+          <Text color={COLORS.gray}> Parts achetees aujourdh'hui</Text>
+          <IconButton
+            icon="circle"
+            iconColor={COLORS.darkgreen}
+            size={10}
+          />
+        </Block> */}
       </Block>
-      </Block>
+    </Block>
 
       
           </ScrollView>
@@ -134,6 +274,13 @@ const styles = StyleSheet.create({
     marginTop:-20,
     padding:15,
     elevation:2,
+  },
+  topdetailsText:{
+  zIndex:99,
+    position:'absolute',
+    top:40,
+    left: '35%',
+    
   },
   containerTop: {
     flexDirection: 'row', // Horizontal layout

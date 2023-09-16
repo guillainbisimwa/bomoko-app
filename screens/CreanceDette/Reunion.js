@@ -18,10 +18,6 @@ const Reunion = (props,{ navigation } ) => {
     return format(new Date(date), 'dd MMMM yyyy', { locale: myFr });
   };
 
-  // console.log(props.user);
-  // console.log( props.owner._id);
-  // console.log(props.userConnected.userId);
-  // console.log();
   return (
     <>
    
@@ -29,7 +25,7 @@ const Reunion = (props,{ navigation } ) => {
     <TouchableOpacity
       onPress={() => {
         console.log(props.date);
-        props.navigation.navigate('DetailsReunion', { reunion: props.date})
+        props.navigation.navigate('DetailsReunion', { reunion: props.date, avec: props.avec })
         
       }}
     >
