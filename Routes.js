@@ -23,7 +23,7 @@ import EditProduct from './screens/Product/EditProduct';
 import ShowImages from './screens/Product/ShowImages';
 import ShoppingCard from './screens/ShoppingCard/ShoppingCard';
 import { AideEtSupport, DataSecurityScreen, DetailsByUser, LanguageSelectionScreen, Privacy, Profile, ReportProblemScreen, UseCondition } from './screens/Settings';
-import { AddAvec, DetailsAvec, EditAvec } from './screens/CreanceDette';
+import { AddAvec, DetailsAvec, DetailsReunion, EditAvec } from './screens/CreanceDette';
 import { StatusBar } from 'expo-status-bar';
 
 const theme = {
@@ -253,6 +253,10 @@ const App = () => {
 
           <Stack.Screen name="DetailsAvec" component={DetailsAvec}
            options={{ title: 'Details' , headerShown: true}}/>
+
+
+        <Stack.Screen name="DetailsReunion" component={DetailsReunion}
+           options={{ title: 'Details Reunion' , headerShown: true}}/>
 
         <Stack.Screen name="EditAvec" component={EditAvec}
            options={{ title: 'Modifier AVEC' , headerShown: true}}/>

@@ -29,11 +29,8 @@ const Reunion = (props,{ navigation } ) => {
     <TouchableOpacity
       onPress={() => {
         console.log(props.date);
-        // navigation.navigate('Profile', { user: props.user.user})
-        // props.navigation.navigate('Profile', {
-        //   userId: props.user.user._id,
-        //   user: props.user.user
-        // })
+        props.navigation.navigate('DetailsReunion', { reunion: props.date})
+        
       }}
     >
       <View
