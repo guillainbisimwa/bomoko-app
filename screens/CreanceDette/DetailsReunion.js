@@ -4,12 +4,20 @@ import Block from '../Product/Block';
 import { COLORS, FONTS, SIZES, icons } from '../../constants';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Text } from '../../components';
-import {  Provider, Menu } from 'react-native-paper';
+import {  Provider, Menu, Button, IconButton } from 'react-native-paper';
 import {  BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import { format } from 'date-fns';
+import { fr as myFr } from 'date-fns/locale';
+
 
 
 const DetailsReunion = ({ route, navigation }) => {
   
+  // Fonction pour convertir la date en format français
+  const formatDateToFrench = (date) => {
+    console.log('date', date);
+    return format(new Date(date), 'dd MMMM yyyy', { locale: myFr });
+  };
 
   const renderImage = () => {
     return (
@@ -37,7 +45,18 @@ const DetailsReunion = ({ route, navigation }) => {
     return (
       <Block card style={styles.topdetails} >
         
-        <Block
+        <Block row center space='between'>
+          <Block>
+          <Text h2  bold >REUNION</Text>
+          <Text color={COLORS.peach} >Du {formatDateToFrench(route.params.reunion.dateStart)}</Text>
+          </Block>
+          <Button mode='contained'>Menu</Button>
+        </Block>
+
+        <Block center m_t={20} m_b={20} >
+            <Text bold h1>0 USD</Text>
+            <Text >Total de l’épargne</Text>
+        </Block>
      
         
 
@@ -62,6 +81,35 @@ const DetailsReunion = ({ route, navigation }) => {
       <View style={{ alignItems: "center" }}>
         {renderTopDetails()}
       </View>
+      <Block row space="between" center>
+        <TouchableOpacity style={{ width: '40%', margin:'5%'}} onPress={()=> console.log('ok')}>
+          <Block card  style={{ alignItems: 'center',  padding:10}}>
+        <IconButton
+          icon="arrow-up"
+          iconColor={COLORS.darkgreen}
+          size={30}
+        />
+          <Text bold>Achat des parts</Text>
+          <Text>Une part a 5 USD</Text>
+          </Block>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={{ width: '40%', margin:'5%' }} onPress={()=> console.log('ok')}>
+          <Block card style={{ alignItems: 'center',  padding:10}}>
+          <IconButton
+            icon="arrow-down"
+            iconColor={COLORS.peach}
+            size={30}
+          />
+          <Text bold>Achat des parts</Text>
+          <Text>Une part a 5 USD</Text>
+          </Block>
+        </TouchableOpacity>
+      </Block>
+
+      <Block row >
+        
+      </Block>
       </Block>
 
       
@@ -85,6 +133,7 @@ const styles = StyleSheet.create({
     width: '90%',
     marginTop:-20,
     padding:15,
+    elevation:2,
   },
   containerTop: {
     flexDirection: 'row', // Horizontal layout
