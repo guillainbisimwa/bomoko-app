@@ -8,6 +8,8 @@ import {  Provider, Menu, Button, IconButton, Chip, Divider } from 'react-native
 import {  BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { format } from 'date-fns';
 import { fr as myFr } from 'date-fns/locale';
+import { VictoryBar, VictoryChart, VictoryTheme } from 'victory-native';
+import { Svg } from 'react-native-svg';
 
 
 
@@ -55,6 +57,49 @@ const DetailsReunion = ({ route, navigation }) => {
       </Block>
     );
   };
+
+  const renderGraph = () => {
+    return (
+      <Block p={20}>
+          <Text bold numberOfLines={1}>
+          Accumulation de l’épargne  ({route.params.avec.currency})
+          </Text>
+          <Text>Projection du retour sur investissement</Text>
+
+          <Svg style={{ width: '100%' }}>
+            <VictoryChart domainPadding={50} theme={VictoryTheme.material} >
+              <VictoryBar
+                style={{ 
+                  data: {
+                    fill: ({ datum }) => {
+                      return COLORS.black;
+                    }
+                  }
+                 }}
+                labels={({ datum }) => `${datum.y}`}
+
+                categories={{
+                  x: [`O Mois`, 
+                  `3 Mois`,
+                  `6 Mois`,
+                  `9 Mois`,
+                  `12 Mois`
+                ],
+                }}
+                data={[
+                  { x: `O Mois`, y: 0 },
+                  { x:  `3 Mois`, y: 200
+                  },
+                  { x:  `6 Mois`, y: 300 },
+                  { x: `9 Mois`, y: 400 },
+                  { x: `12 Mois`, y: 500 },
+                ]}
+              />
+            </VictoryChart>
+          </Svg>
+          </Block>
+    
+  )}
 
 
 
@@ -266,6 +311,10 @@ const DetailsReunion = ({ route, navigation }) => {
         </Block>
 
       
+      </Block>
+
+      <Block>
+        {renderGraph()}
       </Block>
     </Block>
 
