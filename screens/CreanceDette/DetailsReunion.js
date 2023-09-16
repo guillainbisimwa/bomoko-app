@@ -139,7 +139,7 @@ const DetailsReunion = ({ route, navigation }) => {
 
       </Block>
 
-      <Block card m_l={20} m_r={20} p={10} m_t={10}>
+      <Block card m_l={20} m_r={20} p={10} m_t={10} m_b={20}>
         <Block>
           <Text h2 bold>Details de la Reunion</Text>
           <Text>2 Membres</Text>
@@ -238,17 +238,34 @@ const DetailsReunion = ({ route, navigation }) => {
           <Text bold>0 (0 USD)</Text>
         </Block>
 
-
-
-
-        {/* <Block row space='between' center m_l={40} >
-          <Text color={COLORS.gray}> Parts achetees aujourdh'hui</Text>
+       
+        <Block row>
           <IconButton
             icon="circle"
-            iconColor={COLORS.darkgreen}
-            size={10}
+            iconColor={COLORS.gray}
+            size={20}
           />
-        </Block> */}
+          <Block middle>
+            <Text bold> Caisse de solidarités</Text>
+          </Block>
+        </Block>
+        
+        <Block row space='between' center m_l={45} m_t={-15}>
+          <Text color={COLORS.gray}> Contributions Totales</Text>
+          <Text bold>20/21 (200 USD)</Text>
+        </Block>
+
+        <Block row space='between' center m_l={45} >
+          <Text numberOfLines={1} color={COLORS.gray}> Contributions attendues</Text>
+          <Text bold>0/21 (0 USD)</Text>
+        </Block>
+
+        <Block row space='between' center m_l={45} >
+          <Text numberOfLines={1} color={COLORS.gray}> Contributions en retard</Text>
+          <Text bold>0 (0 USD)</Text>
+        </Block>
+
+      
       </Block>
     </Block>
 
