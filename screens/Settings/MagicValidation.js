@@ -4,7 +4,7 @@ import { TabView, SceneMap } from 'react-native-tab-view';
 import Block from '../Product/Block';
 import { useFocusEffect } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchAvecs } from '../../redux/avecReducer';
+import { fetchAvecs, updateAvec } from '../../redux/avecReducer';
 import { FlatList } from 'react-native-gesture-handler';
 import { Text } from '../../components';
 import { Button } from 'react-native-paper';
@@ -41,6 +41,44 @@ const MagicValidation = () => {
     // { key: 'second', title: 'Second' },
   ];
 
+
+  const handlerValidate = async (item) => {
+
+    // Pushing the additional object to the output array
+    const today = new Date();
+
+    const outputTimeLineSoum = {
+      time:`${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear().toString().substr(-2)}`,
+      title: 'Validation',
+      details: `Votre groupe ${item.name} a été validé à l'équipe African Fintech`
+    };
+
+    console.log();
+    console.log();
+
+    console.log({
+      ...item,
+      id: item._id,
+      status: "ACCEPTED",
+      timeline: [
+        outputTimeLineSoum,
+        ...item.timeline,
+      ]
+    });
+
+    // dispatch(updateAvec({
+    //   ...item,
+    //   id: item._id,
+    //   status: "SUBMITED",
+    //   timeline: [
+    //     outputTimeLineSoum,
+    //     ...item.timeline,
+    //   ]
+    // }));
+
+  };
+
+
   const FirstRoute = () => (
     <Block>
       <FlatList
@@ -61,7 +99,8 @@ const MagicValidation = () => {
       <Block row>
         {
           item.status=='SUBMITED'? 
-          <Button mode='contained' buttonColor={COLORS.darkgreen} onPress={()=> handlerValidate(item)} > Valider</Button>:
+          <Button disabled={status == 'loading'}
+          loading={status == 'loading'} mode='contained' buttonColor={COLORS.darkgreen} onPress={()=> handlerValidate(item)} > Valider</Button>:
           <></>
         }
        
