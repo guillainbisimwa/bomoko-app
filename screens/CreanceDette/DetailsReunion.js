@@ -211,66 +211,13 @@ const DetailsReunion = ({ route, navigation }) => {
     return (
       <Block m={20} card>
         <Block p={20}>
-        <Text bold numberOfLines={1}>
+        <Text bold numberOfLines={1} h2>
           Message
           </Text>
           <Text>La reunion en chattant</Text>
         </Block>
         </Block>
     )};
-
-  const renderGraph = () => {
-    return (
-      <Block m={20} card>
-        <Block p={20}>
-        <Text bold numberOfLines={1}>
-          Accumulation de l’épargne  ({route.params.avec.currency})
-          </Text>
-          <Text>les épargnes accumulées et les bénéfices tirés des prêts sont répartis entre les membres proportionnellement au montant qu’ils
-ont épargné.</Text>
-        </Block>
-
-        <Svg style={{ width: '100%' }}>
-
-        <VictoryChart height={400} //width={400}
-         //domainPadding={50} 
-         //theme={VictoryTheme.material} 
-          //domain={{ x: [0,5], y: [0, 100000] }}
-          domainPadding={{ x: 30, y: 20 }}
-        >
-           <VictoryLegend x={50} y={0}
-              gutter={50}
-              style={{title: {fontSize: 20 } }}
-              data={[
-                { name: "Remboursement capital", symbol: { fill: "green" } },
-                { name: "Intêret", symbol: { fill: COLORS.blue } },
-                { name: "Epargne Collectée", symbol: { fill: "orange" } }
-              ]}
-            />
-            <VictoryStack
-              colorScale={["green", COLORS.blue, "orange"]}
-            >
-              {myDataset.map((data, i) => {
-                return <VictoryBar labels={({ datum }) => {
-                  return `${datum.y!==0? datum.y : ''}`
-                }}
-             data={data} key={i} //labelComponent={<VictoryLabel y={100} verticalAnchor={"middle"}/>}
-             />;
-              })}
-            </VictoryStack>
-            <VictoryAxis dependentAxis />
-            <VictoryAxis 
-            padding={{ left: 80, right: 60 }}
-            axisLabelComponent={<VictoryLabel angle={20}/>}
-            tickFormat={[`O Mois`, 
-            `3 Mois`,
-            `6 Mois`,
-            `9 Mois`,
-            `12 Mois`]}/>
-        </VictoryChart>
-        </Svg>
-          </Block>
-  )}
 
   const renderMenu = () => {
     return (
@@ -490,6 +437,8 @@ ont épargné.</Text>
 
       </Block>
 
+      {renderChat()}
+
       <Block card m_l={20} m_r={20} p={10} m_t={10} m_b={20}>
         <Block>
           <Text h2 bold>Details de la Reunion</Text>
@@ -621,8 +570,9 @@ ont épargné.</Text>
       </Block>
 
       <Block>
-        {renderGraph()}
-        {renderChat()}
+        
+      
+        {/* Bottomsheet */}
         {renderMenu()}
         {renderAchatPart()}
       </Block>

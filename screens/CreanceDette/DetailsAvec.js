@@ -15,6 +15,8 @@ import Membre from '../Product/Membre';
 import Reunion from './Reunion';
 import { format } from 'date-fns';
 import { fr as myFr } from 'date-fns/locale';
+import { Svg } from 'react-native-svg';
+import { VictoryAxis, VictoryBar, VictoryChart, VictoryLabel, VictoryLegend, VictoryStack } from 'victory-native';
 
 const DetailsAvec = ({ route, navigation }) => {
   const dispatch = useDispatch();
@@ -243,6 +245,33 @@ const DetailsAvec = ({ route, navigation }) => {
     console.log('date', date);
     return format(new Date(date), 'dd MMMM yyyy', { locale: myFr });
   };
+
+
+  const myDataset = [
+    [
+      { x: "O Mois", y: 90 },
+      { x: "3 Mois", y: 100 },
+      { x: "6 Mois", y: 150 },
+      { x: "9 Mois", y: 250 },
+      { x: "12 Mois", y: 400 }
+    ],
+    [
+        { x: "O Mois", y: 0 },
+        { x: "3 Mois", y: 50 },
+        { x: "6 Mois", y: 60 },
+        { x: "9 Mois", y: 100 },
+        { x: "12 Mois", y: 120 }
+    ],
+    [
+      { x: "O Mois", y: 0 },
+      { x: "3 Mois", y: 40 },
+      { x: "6 Mois", y: 60 },
+      { x: "9 Mois", y: 75 },
+      { x: "12 Mois", y: 80 }
+    ],
+  
+  ];
+  
 
   // callbacks
   const handleRefresh = useCallback(() => {
@@ -898,6 +927,56 @@ const DetailsAvec = ({ route, navigation }) => {
     )
   }
 
+  const renderGraph = () => {
+    return (
+      <Block m={20} card>
+        <Block p={20}>
+        <Text bold numberOfLines={1}>
+          Accumulation de l’épargne  ({route.params.avec.currency})
+          </Text>
+          <Text>les épargnes accumulées et les bénéfices tirés des prêts sont répartis entre les membres proportionnellement au montant qu’ils
+ont épargné.</Text>
+        </Block>
+
+        <Svg style={{ width: '100%' }}>
+
+        <VictoryChart height={400} 
+          domainPadding={{ x: 30, y: 20 }}
+        >
+           <VictoryLegend x={50} y={0}
+              gutter={50}
+              style={{title: {fontSize: 20 } }}
+              data={[
+                { name: "Remboursement capital", symbol: { fill: "green" } },
+                { name: "Intêret", symbol: { fill: COLORS.blue } },
+                { name: "Epargne Collectée", symbol: { fill: "orange" } }
+              ]}
+            />
+            <VictoryStack
+              colorScale={["green", COLORS.blue, "orange"]}
+            >
+              {myDataset.map((data, i) => {
+                return <VictoryBar labels={({ datum }) => {
+                  return `${datum.y!==0? datum.y : ''}`
+                }}
+             data={data} key={i} //labelComponent={<VictoryLabel y={100} verticalAnchor={"middle"}/>}
+             />;
+              })}
+            </VictoryStack>
+            <VictoryAxis dependentAxis />
+            <VictoryAxis 
+            padding={{ left: 80, right: 60 }}
+            axisLabelComponent={<VictoryLabel angle={20}/>}
+            tickFormat={[`O Mois`, 
+            `3 Mois`,
+            `6 Mois`,
+            `9 Mois`,
+            `12 Mois`]}/>
+        </VictoryChart>
+        </Svg>
+          </Block>
+  )}
+
   return (
     <Provider>
       <BottomSheetModalProvider>
@@ -918,6 +997,9 @@ const DetailsAvec = ({ route, navigation }) => {
     </Block>
 
     {renderInfoGroup()}
+
+    {renderGraph()}
+
     <Snackbar
         visible={visible}
         onDismiss={onDismissSnackBar}
