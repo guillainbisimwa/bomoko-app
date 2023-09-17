@@ -15,7 +15,7 @@ const DetailsReunion = ({ route, navigation }) => {
 
   const myDataset = [
     [
-      { x: "O Mois", y: 0 },
+      { x: "O Mois", y: 90 },
       { x: "3 Mois", y: 100 },
       { x: "6 Mois", y: 150 },
       { x: "9 Mois", y: 250 },
@@ -81,6 +81,18 @@ const DetailsReunion = ({ route, navigation }) => {
     );
   };
 
+  const renderChat = () => {
+    return (
+      <Block m={20} card>
+        <Block p={20}>
+        <Text bold numberOfLines={1}>
+          Message
+          </Text>
+          <Text>La reunion en chattant</Text>
+        </Block>
+        </Block>
+    )};
+
   const renderGraph = () => {
     return (
       <Block m={20} card>
@@ -113,8 +125,10 @@ ont épargné.</Text>
               colorScale={["green", COLORS.blue, "orange"]}
             >
               {myDataset.map((data, i) => {
-                return <VictoryBar barWidth={20} labels={({ datum }) => `${datum.y}`}
-             data={data} key={i} //labelComponent={<VictoryLabel y={10} verticalAnchor={"start"}/>}
+                return <VictoryBar labels={({ datum }) => {
+                  return `${datum.y!==0? datum.y : ''}`
+                }}
+             data={data} key={i} //labelComponent={<VictoryLabel y={100} verticalAnchor={"middle"}/>}
              />;
               })}
             </VictoryStack>
@@ -129,9 +143,7 @@ ont épargné.</Text>
             `12 Mois`]}/>
         </VictoryChart>
         </Svg>
-          
           </Block>
-    
   )}
 
 
@@ -348,9 +360,9 @@ ont épargné.</Text>
 
       <Block>
         {renderGraph()}
+        {renderChat()}
       </Block>
     </Block>
-
       
           </ScrollView>
           </BottomSheetModalProvider>
