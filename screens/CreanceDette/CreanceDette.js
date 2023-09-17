@@ -31,7 +31,7 @@ const CreanceDette = ({ navigation, route }) => {
 
   const [filteredAvecs, setFilteredAvecs] = useState([]);
 
-    const layout = useWindowDimensions();
+  const layout = useWindowDimensions();
   const [index, setIndex] = useState(0);
 
   const [routes, SetRoutes] = useState([
