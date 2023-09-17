@@ -4,7 +4,7 @@ import Block from '../Product/Block';
 import { COLORS, FONTS, SIZES, icons } from '../../constants';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Text } from '../../components';
-import { Divider, Button, Snackbar, Modal, Card, ActivityIndicator, Provider, Menu } from 'react-native-paper';
+import { Divider, Button, Snackbar, Modal, Card, Provider, Menu } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteAvec, updateAvec } from '../../redux/avecReducer';
 import { BottomSheetBackdrop, BottomSheetFlatList, BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet';

@@ -1,17 +1,58 @@
-import React, { useState } from 'react';
-import {ImageBackground, View, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
+import {ImageBackground, View, TouchableOpacity, StyleSheet, ScrollView, Image } from 'react-native';
 import Block from '../Product/Block';
 import { COLORS, FONTS, SIZES, icons } from '../../constants';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Text } from '../../components';
 import {  Provider, Menu, Button, IconButton, Chip, Divider } from 'react-native-paper';
-import {  BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import {  BottomSheetBackdrop, BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { format } from 'date-fns';
 import { fr as myFr } from 'date-fns/locale';
 import { VictoryAxis, VictoryBar, VictoryChart, VictoryLabel, VictoryLegend, VictoryStack, VictoryTheme } from 'victory-native';
 import { Svg } from 'react-native-svg';
+import { responsiveScreenWidth } from 'react-native-responsive-dimensions';
 
 const DetailsReunion = ({ route, navigation }) => {
+  const [visibleMenu, setVisibleMenu] = useState(false);
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  const snapPoints = useMemo(() => ["28%","50%"], []);
+
+  const bottomSheetModalMenu = useRef(null);
+
+
+  const openMenu = () => setVisibleMenu(true);
+  const closeMenu = () => setVisibleMenu(false);
+
+  const BackdropElement = useCallback(
+    (backdropProps) => (
+      <BottomSheetBackdrop
+        {...backdropProps}
+        opacity={0.7}
+        appearsOnIndex={0}
+        disappearsOnIndex={-1}
+      />
+    ),
+    []
+  );
+
+  // GOuv
+  const openModalReunion = useCallback(() => {
+    bottomSheetModalMenu.current?.present();
+    setTimeout(() => {
+      setVisibleMenu(false);
+      setIsOpen(true);
+    }, 5);
+  }, []);
+
+   // Gouv
+   const handleClosePressReunion = useCallback(() => {
+    bottomSheetModalMenu.current?.close();
+  }, []);
+
+  const hideModalReunion = () => handleClosePressReunion();
+
 
   const myDataset = [
     [
@@ -75,7 +116,9 @@ const DetailsReunion = ({ route, navigation }) => {
           <Text h2  bold >REUNION</Text>
           <Text color={COLORS.peach} >Du {formatDateToFrench(route.params.reunion.dateStart)}</Text>
           </Block>
-          <Button mode='contained'>Menu</Button>
+
+          <Button mode='contained'  onPress={()=> openModalReunion()} >Menu</Button>
+          
         </Block>
       </Block>
     );
@@ -146,6 +189,90 @@ ont épargné.</Text>
           </Block>
   )}
 
+  const renderMenu = () => {
+    return (
+      <BottomSheetModal
+      ref={bottomSheetModalMenu}
+      index={1}
+      backdropComponent={BackdropElement}
+      snapPoints={snapPoints}
+      backgroundStyle={{ borderRadius: responsiveScreenWidth(5), backgroundColor:'#eee'}}
+      onDismiss={() => setIsOpen(false)}
+    >
+      
+      <Block >
+        <TouchableOpacity>
+          <Block m_b={10} p={20} row center>
+          <Image
+            source={icons.shopping}
+            style={{
+              width: 30,
+              height: 30,
+              marginRight: 20,
+              tintColor: COLORS.purple,
+            }}
+          />
+            <Text bold>Achats des parts</Text>
+          </Block>
+        </TouchableOpacity>
+
+        <Divider />
+
+        <TouchableOpacity>
+          <Block m_b={10} p={20} row center>
+          <Image
+            source={icons.sell}
+            style={{
+              width: 30,
+              height: 30,
+              marginRight: 20,
+              tintColor: COLORS.peach,
+            }}
+          />
+            <Text bold>Demande de Credit</Text>
+          </Block>
+        </TouchableOpacity>
+
+        <Divider />
+
+        <TouchableOpacity>
+          <Block m_b={10} p={20} row center>
+          <Image
+            source={icons.cash}
+            style={{
+              width: 30,
+              height: 30,
+              marginRight: 20,
+              tintColor: COLORS.blue,
+            }}
+          />
+            <Text bold>Contribution caisse solidaire </Text>
+          </Block>
+        </TouchableOpacity>
+
+
+        <Divider />
+
+        <TouchableOpacity>
+          <Block m_b={10} p={20} row center>
+          <Image
+            source={icons.calendar}
+            style={{
+              width: 30,
+              height: 30,
+              marginRight: 20,
+              tintColor: COLORS.darkgray,
+            }}
+          />
+            <Text bold>Calendrier de Remboursement </Text>
+          </Block>
+        </TouchableOpacity>
+      </Block>
+
+    </BottomSheetModal>
+    )
+  }
+
 
 
   return (
@@ -156,8 +283,8 @@ ont épargné.</Text>
     <Block>
       {/* Fixed content */}
       <Block style={styles.topdetailsText} >
-            <Text bold h1 white> 100 USD</Text>
-            <Text white>Total de l’épargne</Text>
+            <Text bold h1 white> 0 USD</Text>
+            <Text white>Mon épargne total</Text>
         </Block>
       <View>
         {renderImage()}
@@ -239,7 +366,8 @@ ont épargné.</Text>
           <Text>30 min</Text>
         </Block>
         <Divider />
-        <Block m_t={15} row>
+        <Block m_t={15}><Text numberOfLines={1} h2 bold>{route.params.avec.name}</Text></Block>
+        <Block  row>
           <IconButton
             icon="circle"
             iconColor={COLORS.darkgreen}
@@ -361,6 +489,7 @@ ont épargné.</Text>
       <Block>
         {renderGraph()}
         {renderChat()}
+        {renderMenu()}
       </Block>
     </Block>
       
