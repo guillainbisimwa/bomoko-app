@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {ImageBackground, View, TouchableOpacity, StyleSheet, ScrollView, Image, ToastAndroid } from 'react-native';
+import {ImageBackground, View, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import Block from '../Product/Block';
 import { COLORS, FONTS, SIZES, icons } from '../../constants';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -8,12 +8,35 @@ import {  Provider, Menu, Button, IconButton, Chip, Divider } from 'react-native
 import {  BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { format } from 'date-fns';
 import { fr as myFr } from 'date-fns/locale';
-import { VictoryBar, VictoryChart, VictoryTheme } from 'victory-native';
+import { VictoryAxis, VictoryBar, VictoryChart, VictoryLabel, VictoryLegend, VictoryStack, VictoryTheme } from 'victory-native';
 import { Svg } from 'react-native-svg';
 
-
-
 const DetailsReunion = ({ route, navigation }) => {
+
+  const myDataset = [
+    [
+      { x: "O Mois", y: 0 },
+      { x: "3 Mois", y: 100 },
+      { x: "6 Mois", y: 150 },
+      { x: "9 Mois", y: 250 },
+      { x: "12 Mois", y: 400 }
+    ],
+    [
+        { x: "O Mois", y: 0 },
+        { x: "3 Mois", y: 50 },
+        { x: "6 Mois", y: 60 },
+        { x: "9 Mois", y: 100 },
+        { x: "12 Mois", y: 120 }
+    ],
+    [
+      { x: "O Mois", y: 0 },
+      { x: "3 Mois", y: 40 },
+      { x: "6 Mois", y: 60 },
+      { x: "9 Mois", y: 75 },
+      { x: "12 Mois", y: 80 }
+    ],
+  
+  ];
   
   // Fonction pour convertir la date en format français
   const formatDateToFrench = (date) => {
@@ -60,43 +83,53 @@ const DetailsReunion = ({ route, navigation }) => {
 
   const renderGraph = () => {
     return (
-      <Block p={20}>
-          <Text bold numberOfLines={1}>
+      <Block m={20} card>
+        <Block p={20}>
+        <Text bold numberOfLines={1}>
           Accumulation de l’épargne  ({route.params.avec.currency})
           </Text>
-          <Text>Projection du retour sur investissement</Text>
+          <Text>les épargnes accumulées et les bénéfices tirés des prêts sont répartis entre les membres proportionnellement au montant qu’ils
+ont épargné.</Text>
+        </Block>
 
-          <Svg style={{ width: '100%' }}>
-            <VictoryChart domainPadding={50} theme={VictoryTheme.material} >
-              <VictoryBar
-                style={{ 
-                  data: {
-                    fill: ({ datum }) => {
-                      return COLORS.black;
-                    }
-                  }
-                 }}
-                labels={({ datum }) => `${datum.y}`}
+        <Svg style={{ width: '100%' }}>
 
-                categories={{
-                  x: [`O Mois`, 
-                  `3 Mois`,
-                  `6 Mois`,
-                  `9 Mois`,
-                  `12 Mois`
-                ],
-                }}
-                data={[
-                  { x: `O Mois`, y: 0 },
-                  { x:  `3 Mois`, y: 200
-                  },
-                  { x:  `6 Mois`, y: 300 },
-                  { x: `9 Mois`, y: 400 },
-                  { x: `12 Mois`, y: 500 },
-                ]}
-              />
-            </VictoryChart>
-          </Svg>
+        <VictoryChart height={400} //width={400}
+         //domainPadding={50} 
+         //theme={VictoryTheme.material} 
+          //domain={{ x: [0,5], y: [0, 100000] }}
+          domainPadding={{ x: 30, y: 20 }}
+        >
+           <VictoryLegend x={50} y={0}
+              gutter={50}
+              style={{title: {fontSize: 20 } }}
+              data={[
+                { name: "Remboursement capital", symbol: { fill: "green" } },
+                { name: "Intêret", symbol: { fill: COLORS.blue } },
+                { name: "Epargne Collectée", symbol: { fill: "orange" } }
+              ]}
+            />
+            <VictoryStack
+              colorScale={["green", COLORS.blue, "orange"]}
+            >
+              {myDataset.map((data, i) => {
+                return <VictoryBar barWidth={20} labels={({ datum }) => `${datum.y}`}
+             data={data} key={i} //labelComponent={<VictoryLabel y={10} verticalAnchor={"start"}/>}
+             />;
+              })}
+            </VictoryStack>
+            <VictoryAxis dependentAxis />
+            <VictoryAxis 
+            padding={{ left: 80, right: 60 }}
+            axisLabelComponent={<VictoryLabel angle={20}/>}
+            tickFormat={[`O Mois`, 
+            `3 Mois`,
+            `6 Mois`,
+            `9 Mois`,
+            `12 Mois`]}/>
+        </VictoryChart>
+        </Svg>
+          
           </Block>
     
   )}
@@ -153,8 +186,8 @@ const DetailsReunion = ({ route, navigation }) => {
       <TouchableOpacity style={{ }} onPress={()=> console.log('ok')}>
           <Block card style={{ alignItems: 'center'}} p={10}>
         
-                    <Text bold>0</Text>
-                    <Text>Mes parts</Text>
+              <Text bold>0</Text>
+              <Text>Mes parts</Text>
           
          
           </Block>
@@ -297,12 +330,12 @@ const DetailsReunion = ({ route, navigation }) => {
         
         <Block row space='between' center m_l={45} m_t={-15}>
           <Text color={COLORS.gray}> Contributions Totales</Text>
-          <Text bold>20/21 (200 USD)</Text>
+          <Text bold>20 (200 USD)</Text>
         </Block>
 
         <Block row space='between' center m_l={45} >
           <Text numberOfLines={1} color={COLORS.gray}> Contributions attendues</Text>
-          <Text bold>0/21 (0 USD)</Text>
+          <Text bold>0 (0 USD)</Text>
         </Block>
 
         <Block row space='between' center m_l={45} >
