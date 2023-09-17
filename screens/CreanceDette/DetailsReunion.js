@@ -11,6 +11,9 @@ import { fr as myFr } from 'date-fns/locale';
 import { VictoryAxis, VictoryBar, VictoryChart, VictoryLabel, VictoryLegend, VictoryStack, VictoryTheme } from 'victory-native';
 import { Svg } from 'react-native-svg';
 import { responsiveScreenWidth } from 'react-native-responsive-dimensions';
+import { FlatList } from 'react-native';
+import Membre from '../Product/Membre';
+import Transaction from './Transaction';
 
 const DetailsReunion = ({ route, navigation }) => {
 
@@ -217,7 +220,59 @@ const DetailsReunion = ({ route, navigation }) => {
           <Text>La reunion en chattant</Text>
         </Block>
         </Block>
-    )};
+)};
+
+  const renderListContrib = () => {
+    return (
+      <Block card m={20} p_b={20} >
+        <Block p={20}>
+          <Text bold numberOfLines={1} h2>
+            Contibutions solidaires
+          </Text>
+          <Block row space='between' >
+          <Text numberOfLines={1} style={{flex: 1, marginRight: 10}}>La liste de toutes les contributions de ce jours</Text>
+          <TouchableOpacity onPress={()=> console.log('ok')}>
+          <Text color={COLORS.blue}>Voir plus</Text>
+
+          </TouchableOpacity>
+          </Block>
+        </Block>
+        <FlatList
+            data={route.params.avec?.membres?.slice(0,3)}
+            renderItem={({ item }) => 
+              <Transaction user={item} navigation={navigation} subtitle='Contibution solidaire' topRight={1} 
+              bottomRight='10 sep 2023' currency={route.params.avec.currency} />}
+            keyExtractor={(item) => item._id} // Use a unique key for each item
+          />
+       
+        </Block>
+  )};
+
+  const renderListAchatParts= () => {
+    return (
+      <Block card m_l={20} m_r={20} p_b={10} >
+        <Block p={20}>
+          <Text bold numberOfLines={1} h2>
+            Achat des parts
+          </Text>
+          <Block row space='between' >
+          <Text numberOfLines={1} style={{flex: 1, marginRight: 10}}>La liste de touts les Achats de parts de ce jours</Text>
+          <TouchableOpacity onPress={()=> console.log('ok')}>
+          <Text color={COLORS.blue}>Voir plus</Text>
+
+          </TouchableOpacity>
+          </Block>
+        </Block>
+        <FlatList
+            data={route.params.avec?.membres?.slice(-3)}
+            renderItem={({ item }) => 
+              <Transaction user={item} navigation={navigation} subtitle='ACHAT DES PARTS' topRight={50} 
+              bottomRight='10 sep 2023' currency={route.params.avec.currency} />}
+            keyExtractor={(item) => item._id} // Use a unique key for each item
+          />
+       
+        </Block>
+  )};
 
   const renderMenu = () => {
     return (
@@ -346,7 +401,7 @@ const DetailsReunion = ({ route, navigation }) => {
               <Text style={styles.errorText}>Entre 1 et 5 parts</Text>
             )}
 
-          <Button mode='contained'  style={{marginTop:10}}>Creer un AVEC</Button>
+          <Button mode='contained'  style={{marginTop:10}}>ACHETER</Button>
           </Block>
       </Block>
 
@@ -360,7 +415,7 @@ const DetailsReunion = ({ route, navigation }) => {
     <Provider>
       <BottomSheetModalProvider>
 
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
     <Block>
       {/* Fixed content */}
       <Block style={styles.topdetailsText} >
@@ -437,137 +492,13 @@ const DetailsReunion = ({ route, navigation }) => {
 
       </Block>
 
+      {renderListContrib()}
+
+      {renderListAchatParts()}
+
       {renderChat()}
 
-      <Block card m_l={20} m_r={20} p={10} m_t={10} m_b={20}>
-        <Block>
-          <Text h2 bold>Details de la Reunion</Text>
-          <Text>2 Membres</Text>
-        </Block>
-        <Block m_t={5} m_b={15} row center space='between'>
-          <Chip icon="information" elevated >Reunion 1</Chip>
-          <Text>30 min</Text>
-        </Block>
-        <Divider />
-        <Block m_t={15}><Text numberOfLines={1} h2 bold>{route.params.avec.name}</Text></Block>
-        <Block  row>
-          <IconButton
-            icon="circle"
-            iconColor={COLORS.darkgreen}
-            size={20}
-          />
-          <Block middle>
-            <Text bold>CYCLE - {route.params.avec.cycle.number} Mois </Text>
-          </Block>
-        </Block>
-
-        <Block row space='between' center m_l={45} m_t={-15} >
-          <Text color={COLORS.gray}>Debut</Text>
-          <Text bold>  {formatDateToFrench(route.params.avec.startDate)} </Text>
-        </Block>
-
-        <Block row space='between' center m_l={45} >
-          <Text color={COLORS.gray}>Fin</Text>
-          <Text bold>  {formatDateToFrench(route.params.avec.endDate)} </Text>
-        </Block>
-
-        <Block  row>
-          <IconButton
-            icon="circle"
-            iconColor={COLORS.purple}
-            size={20}
-          />
-          <Block middle>
-            <Text bold>Credit </Text>
-          </Block>
-        </Block>
-
-        <Block row space='between' center m_l={45} m_t={-15}>
-          <Text color={COLORS.gray}>Debut Octroi</Text>
-          <Text bold>  {formatDateToFrench(route.params.avec.debut_octroi_credit)} </Text>
-        </Block>
-
-        <Block row space='between' center m_l={45} >
-          <Text color={COLORS.gray}>Fin Octroi</Text>
-          <Text bold>  {formatDateToFrench(route.params.avec.fin_octroi_credit)} </Text>
-        </Block>
-
-        <Block row>
-          <IconButton
-            icon="circle"
-            iconColor={COLORS.blue}
-            size={20}
-          />
-          <Block middle>
-            <Text bold>Parts</Text>
-          </Block>
-        </Block>
-
-        <Block row space='between' center m_l={45} m_t={-15}>
-          <Text color={COLORS.gray}> Parts Totales du groupe</Text>
-          <Text bold>20 (200 USD)</Text>
-        </Block>
-
-        {/* <Block row space='between' center m_l={45} >
-          <Text color={COLORS.gray}> Parts achetees aujourdh'hui</Text>
-          <Text bold>0 (0 USD)</Text>
-        </Block> */}
-
-        <Block row>
-          <IconButton
-            icon="circle"
-            iconColor={COLORS.peach}
-            size={20}
-          />
-          <Block middle>
-            <Text bold>Emprunts</Text>
-          </Block>
-        </Block>
-        
-        <Block row space='between' center m_l={45} m_t={-15}>
-          <Text color={COLORS.gray}> Emprunts Totales du groupe</Text>
-          <Text bold>20 (200 USD)</Text>
-        </Block>
-
-        {/* <Block row space='between' center m_l={45} >
-          <Text numberOfLines={1} color={COLORS.gray}> Remboursement attendu</Text>
-          <Text bold>0 (0 USD)</Text>
-        </Block>*/}
-
-        <Block row space='between' center m_l={45} >
-          <Text numberOfLines={1} color={COLORS.gray}> Remboursement en retard</Text>
-          <Text bold>0 (0 USD)</Text>
-        </Block> 
-
-       
-        <Block row>
-          <IconButton
-            icon="circle"
-            iconColor={COLORS.gray}
-            size={20}
-          />
-          <Block middle>
-            <Text bold> Caisse de solidarités</Text>
-          </Block>
-        </Block>
-        
-        <Block row space='between' center m_l={45} m_t={-15}>
-          <Text color={COLORS.gray}> Contributions Totales</Text>
-          <Text bold>20 (200 USD)</Text>
-        </Block>
-
-        {/* <Block row space='between' center m_l={45} >
-          <Text numberOfLines={1} color={COLORS.gray}> Contributions attendues</Text>
-          <Text bold>0 (0 USD)</Text>
-        </Block> */}
-
-        <Block row space='between' center m_l={45} >
-          <Text numberOfLines={1} color={COLORS.gray}> Contributions en retard</Text>
-          <Text bold>0 (0 USD)</Text>
-        </Block>
-
-      
-      </Block>
+     
 
       <Block>
         

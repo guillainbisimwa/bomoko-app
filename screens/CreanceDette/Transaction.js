@@ -23,15 +23,16 @@ const Transaction = (props,{ navigation } ) => {
     >
       <View
         style={{
-          marginVertical: SIZES.padding / 3.7,
+          //marginVertical: SIZES.padding / 5,
+          borderBottomWidth:0.3,
           marginHorizontal:SIZES.padding/2,
-          borderRadius: SIZES.radius,
+          //borderRadius: SIZES.radius,
           backgroundColor: COLORS.white,
-            shadowColor: COLORS.black,
-            shadowOffset: { width: 0, height: 2 },
-            shadowOpacity: 0.1,
-            shadowRadius: 13,
-            elevation: 2,
+            // shadowColor: COLORS.black,
+            // shadowOffset: { width: 0, height: 2 },
+            // shadowOpacity: 0.1,
+            // shadowRadius: 13,
+            // elevation: 2,
             
         }}
       >
