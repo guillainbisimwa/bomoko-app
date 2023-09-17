@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
-import {ImageBackground, View, TouchableOpacity, StyleSheet, ScrollView, Image } from 'react-native';
+import {ImageBackground, View, TouchableOpacity, StyleSheet, ScrollView, Image, TextInput } from 'react-native';
 import Block from '../Product/Block';
 import { COLORS, FONTS, SIZES, icons } from '../../constants';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -13,17 +13,26 @@ import { Svg } from 'react-native-svg';
 import { responsiveScreenWidth } from 'react-native-responsive-dimensions';
 
 const DetailsReunion = ({ route, navigation }) => {
-  const [visibleMenu, setVisibleMenu] = useState(false);
 
   const [isOpen, setIsOpen] = useState(false);
 
-  const snapPoints = useMemo(() => ["28%","50%"], []);
+  const [isOpenAchatPart, setIsOpenAchatPart] = useState(false);
+  const [isOpenMesParts, setIsOpenMesParts] = useState(false);
+  const [isOpenMesEmp, setIsOpenMesEmp] = useState(false);
+  const [isOpenDemandCred, setIsOpenDemandCred] = useState(false);
+
+  const snapPoints = useMemo(() => ["28%","50%", "60%", "80%", '90%'], []);
 
   const bottomSheetModalMenu = useRef(null);
 
+  const [interestValid, setInterestValid] = useState(true); // Validation state for interest
+  const [interest, setInterest] = useState('');
 
-  const openMenu = () => setVisibleMenu(true);
-  const closeMenu = () => setVisibleMenu(false);
+  const bottomSheetModalAchatPart = useRef(null);
+  const bottomSheetModalMesParts = useRef(null);
+  const bottomSheetModalMesEmp = useRef(null);
+  const bottomSheetModalDemandCred = useRef(null);
+
 
   const BackdropElement = useCallback(
     (backdropProps) => (
@@ -37,22 +46,96 @@ const DetailsReunion = ({ route, navigation }) => {
     []
   );
 
-  // GOuv
-  const openModalReunion = useCallback(() => {
+  const openModalMenu = useCallback(() => {
     bottomSheetModalMenu.current?.present();
     setTimeout(() => {
-      setVisibleMenu(false);
       setIsOpen(true);
     }, 5);
   }, []);
 
    // Gouv
-   const handleClosePressReunion = useCallback(() => {
+   const handleClosePressMenu = useCallback(() => {
     bottomSheetModalMenu.current?.close();
   }, []);
 
-  const hideModalReunion = () => handleClosePressReunion();
+  const hideModalMenu = () => handleClosePressMenu();
 
+
+  const openModalAchatPart = useCallback(() => {
+    bottomSheetModalAchatPart.current?.present();
+    setTimeout(() => {
+      setIsOpen(false)
+      hideModalMenu();
+      setIsOpenAchatPart(true);
+    }, 0);
+    setIsOpen(false)
+    hideModalMenu();
+  }, []);
+
+   // Gouv
+   const handleClosePressAchatPart = useCallback(() => {
+    bottomSheetModalAchatPart.current?.close();
+  }, []);
+
+  const hideModalAchatPart = () => handleClosePressAchatPart();
+
+
+  const openModalMesParts = useCallback(() => {
+    bottomSheetModalMesParts.current?.present();
+    setTimeout(() => {
+      setIsOpenMesParts(true);
+    }, 5);
+  }, []);
+
+   // Gouv
+   const handleClosePressMesParts = useCallback(() => {
+    bottomSheetModalMesParts.current?.close();
+  }, []);
+
+  const hideModalMesParts = () => handleClosePressMesParts();
+
+
+  const openModalMesEmp = useCallback(() => {
+    bottomSheetModalMesEmp.current?.present();
+    setTimeout(() => {
+      setIsOpenMesEmp(true);
+    }, 5);
+  }, []);
+
+   // Gouv
+   const handleClosePressMesEmp = useCallback(() => {
+    bottomSheetModalMesEmp.current?.close();
+  }, []);
+
+  const hideModalMesEmp = () => handleClosePressMesEmp();
+
+
+
+  const openModalDemandCred = useCallback(() => {
+    bottomSheetModalDemandCred.current?.present();
+    setTimeout(() => {
+      setIsOpenDemandCred(true);
+    }, 5);
+  }, []);
+
+   // Gouv
+   const handleClosePressDemandCred = useCallback(() => {
+    bottomSheetModalDemandCred.current?.close();
+  }, []);
+
+  const hideModalDemandCred = () => handleClosePressDemandCred();
+
+  
+  const handleInterestChange = (text) => {
+    const numericValue = parseFloat(text);
+    if (!isNaN(numericValue) && numericValue >= 1 && numericValue <= 5) {
+      setInterestValid(true); // Interest is valid
+    } else {
+      setInterestValid(false); // Interest is not valid
+    }
+    setInterest(text); // Update interest value
+  };
+  
 
   const myDataset = [
     [
@@ -117,7 +200,7 @@ const DetailsReunion = ({ route, navigation }) => {
           <Text color={COLORS.peach} >Du {formatDateToFrench(route.params.reunion.dateStart)}</Text>
           </Block>
 
-          <Button mode='contained'  onPress={()=> openModalReunion()} >Menu</Button>
+          <Button mode='contained'  onPress={()=> openModalMenu()} >Menu</Button>
           
         </Block>
       </Block>
@@ -197,11 +280,14 @@ ont épargné.</Text>
       backdropComponent={BackdropElement}
       snapPoints={snapPoints}
       backgroundStyle={{ borderRadius: responsiveScreenWidth(5), backgroundColor:'#eee'}}
-      onDismiss={() => setIsOpen(false)}
+      onDismiss={() => hideModalMenu()}
     >
       
       <Block >
-        <TouchableOpacity>
+        <TouchableOpacity onPress={()=>{ 
+            //hideModalMenu();
+            openModalAchatPart();
+          }} >
           <Block m_b={10} p={20} row center>
           <Image
             source={icons.shopping}
@@ -267,6 +353,54 @@ ont épargné.</Text>
             <Text bold>Calendrier de Remboursement </Text>
           </Block>
         </TouchableOpacity>
+      </Block>
+
+    </BottomSheetModal>
+    )
+  }
+
+
+  const renderAchatPart = () => {
+    return (
+      <BottomSheetModal
+        ref={bottomSheetModalAchatPart}
+        index={1}
+        backdropComponent={BackdropElement}
+        snapPoints={snapPoints}
+        backgroundStyle={{ borderRadius: responsiveScreenWidth(5), backgroundColor:'#eee'}}
+        onDismiss={() => hideModalAchatPart()}
+      >
+      
+      <Block p={20} >
+        <Block row space='between'>
+          <Block >
+            <Text bold h2>Achat des parts</Text>
+            <Text color={COLORS.peach}>{`Le prix d'une part est de ${route.params.avec.amount}  ${route.params.avec.currency} `}</Text>
+          </Block>
+          <TouchableOpacity onPress={()=> hideModalAchatPart()}>
+            <IconButton
+              icon="close"
+              iconColor={COLORS.red}
+              size={40}
+            />
+          </TouchableOpacity>
+        
+        </Block>
+        <Block p_b={10}>
+          <Text style={styles.label}>Nombre de parts</Text>
+          <TextInput
+              style={[styles.input, !interestValid && styles.inputError]} // Apply red border if not valid
+              value={interest}
+              onChangeText={handleInterestChange}
+              keyboardType="numeric"
+              placeholder="Nombre de parts"
+            />
+            {!interestValid && (
+              <Text style={styles.errorText}>Entre 1 et 5 parts</Text>
+            )}
+
+          <Button mode='contained'  style={{marginTop:10}}>Creer un AVEC</Button>
+          </Block>
       </Block>
 
     </BottomSheetModal>
@@ -425,10 +559,10 @@ ont épargné.</Text>
           <Text bold>20 (200 USD)</Text>
         </Block>
 
-        <Block row space='between' center m_l={45} >
+        {/* <Block row space='between' center m_l={45} >
           <Text color={COLORS.gray}> Parts achetees aujourdh'hui</Text>
           <Text bold>0 (0 USD)</Text>
-        </Block>
+        </Block> */}
 
         <Block row>
           <IconButton
@@ -446,15 +580,15 @@ ont épargné.</Text>
           <Text bold>20 (200 USD)</Text>
         </Block>
 
-        <Block row space='between' center m_l={45} >
+        {/* <Block row space='between' center m_l={45} >
           <Text numberOfLines={1} color={COLORS.gray}> Remboursement attendu</Text>
           <Text bold>0 (0 USD)</Text>
-        </Block>
+        </Block>*/}
 
         <Block row space='between' center m_l={45} >
           <Text numberOfLines={1} color={COLORS.gray}> Remboursement en retard</Text>
           <Text bold>0 (0 USD)</Text>
-        </Block>
+        </Block> 
 
        
         <Block row>
@@ -473,10 +607,10 @@ ont épargné.</Text>
           <Text bold>20 (200 USD)</Text>
         </Block>
 
-        <Block row space='between' center m_l={45} >
+        {/* <Block row space='between' center m_l={45} >
           <Text numberOfLines={1} color={COLORS.gray}> Contributions attendues</Text>
           <Text bold>0 (0 USD)</Text>
-        </Block>
+        </Block> */}
 
         <Block row space='between' center m_l={45} >
           <Text numberOfLines={1} color={COLORS.gray}> Contributions en retard</Text>
@@ -490,6 +624,7 @@ ont épargné.</Text>
         {renderGraph()}
         {renderChat()}
         {renderMenu()}
+        {renderAchatPart()}
       </Block>
     </Block>
       
@@ -501,14 +636,6 @@ ont épargné.</Text>
 };
 
 const styles = StyleSheet.create({
-  container: {
-    //padding: 20,
-    margin:20
-  },
-  label: {
-    fontSize: 16,
-    marginBottom: 5,
-  },
   topdetails:{
     width: '90%',
     marginTop:-20,
@@ -522,96 +649,24 @@ const styles = StyleSheet.create({
     left: '35%',
     
   },
-  containerTop: {
-    flexDirection: 'row', // Horizontal layout
-    justifyContent:"space-evenly",
-    marginBottom:20
+  inputError: {
+    borderColor: 'red', // Red border for invalid input
   },
-  column: {
-    flex: 1, // Equal width for each column
-    paddingVertical: 16,
+  errorText: {
+    color: 'red',
+    fontSize: 12,
   },
-  title: {
-    fontWeight: 'bold',
+  label: {
+    fontSize: 16,
     marginBottom: 5,
-    fontSize: 12
   },
-  content: {
-    fontSize: 13,
-    color:'grey'
-  },
-  titleMenu:{
-    color: COLORS.gray,
-    paddingBottom:10
-  },
-
-  containerTitle: {
-    flexDirection: 'row',
-    marginBottom:10
-  },
-  columnTitle1: {
-    flex: 2, // Takes 50% width
-    marginRight: 8, // Adjust the margin as needed
-    paddingVertical:8,
-  },
-  columnTitle2: {
-    flex: 1, // Takes 50% width
-    marginLeft: 4, // Adjust the margin as needed
-    paddingVertical:8,
-  },
-  titleTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  contentTitle: {
-    fontSize: 13,
-    color: COLORS.peach
-  },
-  imgs: {
-    flexDirection: 'row',
-    marginVertical:10,
-    // alignContent:'center',
-    //alignItems: 'flex-end'
-    // alignSelf:'flex-end'
-  },
-  img: {
-    borderRadius: SIZES.base * 3,
-    backgroundColor:COLORS.white,
-    borderWidth:2,
-    borderColor: COLORS.black,
-    width: SIZES.base * 5,
-    height: SIZES.base * 5,
-    //tintColor: COLORS.black,
-  },
-  columnMembre1: {
-    flex: 1, // Takes 50% width
-    marginRight: 8, // Adjust the margin as needed
-    paddingVertical:8,
-    alignItems:'center'
-  },
-  columnMembre2: {
-    flex: 2, // Takes 50% width
-    marginLeft: 12, // Adjust the margin as needed
-    paddingVertical:8,
-    justifyContent:'center',
-  },
-  moreImagesText: {
-    flex:1,
-    alignSelf:'center', 
-    marginLeft:10
-  },
-  imgOwner:{
-    width: 100,
-    height: 100,
-    borderRadius:50,
-  },
-  itemContainer: {
-    padding: 6,
-    margin: 6,
-    backgroundColor: "#eee",
-  },
-
-
+  input: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 15,
+  }
 });
 
 export default DetailsReunion;
