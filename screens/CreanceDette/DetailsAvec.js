@@ -4,7 +4,7 @@ import Block from '../Product/Block';
 import { COLORS, FONTS, SIZES, icons } from '../../constants';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Text } from '../../components';
-import { Divider, Button, Snackbar, Modal, Card, Provider, Menu } from 'react-native-paper';
+import { Divider, Button, Snackbar, Modal, Card, Provider, Menu, Chip, IconButton } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteAvec, updateAvec } from '../../redux/avecReducer';
 import { BottomSheetBackdrop, BottomSheetFlatList, BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet';
@@ -13,6 +13,8 @@ import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Membre from '../Product/Membre';
 import Reunion from './Reunion';
+import { format } from 'date-fns';
+import { fr as myFr } from 'date-fns/locale';
 
 const DetailsAvec = ({ route, navigation }) => {
   const dispatch = useDispatch();
@@ -236,7 +238,11 @@ const DetailsAvec = ({ route, navigation }) => {
 
   const hideModalMembres = () => handleClosePressMembres();
 
-
+  // Fonction pour convertir la date en format français
+  const formatDateToFrench = (date) => {
+    console.log('date', date);
+    return format(new Date(date), 'dd MMMM yyyy', { locale: myFr });
+  };
 
   // callbacks
   const handleRefresh = useCallback(() => {
@@ -761,6 +767,136 @@ const DetailsAvec = ({ route, navigation }) => {
     );
   };
 
+  const renderInfoGroup = () => {
+    return (
+      <Block card m_l={20} m_r={20} p={10} m_t={10} m_b={20}>
+        <Block>
+        <Block><Text numberOfLines={1} h2 bold>{route.params.avec.name}</Text></Block>
+          <Text>{ route.params?.avec?.membres.length} Membres</Text>
+        </Block>
+        <Block m_t={5} m_b={15} row center space='between'>
+          <Chip icon="information" elevated >Reunions</Chip>
+          <Text>7/20</Text>
+        </Block>
+        <Divider />
+        <Block  row>
+          <IconButton
+            icon="circle"
+            iconColor={COLORS.darkgreen}
+            size={20}
+          />
+          <Block middle>
+            <Text bold>CYCLE - {route.params.avec.cycle.number} Mois </Text>
+          </Block>
+        </Block>
+
+        <Block row space='between' center m_l={45} m_t={-15} >
+          <Text color={COLORS.gray}>Debut</Text>
+          <Text bold>  {formatDateToFrench(route.params.avec.startDate)} </Text>
+        </Block>
+
+        <Block row space='between' center m_l={45} >
+          <Text color={COLORS.gray}>Fin</Text>
+          <Text bold>  {formatDateToFrench(route.params.avec.endDate)} </Text>
+        </Block>
+
+        <Block  row>
+          <IconButton
+            icon="circle"
+            iconColor={COLORS.purple}
+            size={20}
+          />
+          <Block middle>
+            <Text bold>Credit </Text>
+          </Block>
+        </Block>
+
+        <Block row space='between' center m_l={45} m_t={-15}>
+          <Text color={COLORS.gray}>Debut Octroi</Text>
+          <Text bold>  {formatDateToFrench(route.params.avec.debut_octroi_credit)} </Text>
+        </Block>
+
+        <Block row space='between' center m_l={45} >
+          <Text color={COLORS.gray}>Fin Octroi</Text>
+          <Text bold>  {formatDateToFrench(route.params.avec.fin_octroi_credit)} </Text>
+        </Block>
+
+        <Block row>
+          <IconButton
+            icon="circle"
+            iconColor={COLORS.blue}
+            size={20}
+          />
+          <Block middle>
+            <Text bold>Parts</Text>
+          </Block>
+        </Block>
+
+        <Block row space='between' center m_l={45} m_t={-15}>
+          <Text color={COLORS.gray}> Parts Totales du groupe</Text>
+          <Text bold>20 (200 USD)</Text>
+        </Block>
+
+        {/* <Block row space='between' center m_l={45} >
+          <Text color={COLORS.gray}> Parts achetees aujourdh'hui</Text>
+          <Text bold>0 (0 USD)</Text>
+        </Block> */}
+
+        <Block row>
+          <IconButton
+            icon="circle"
+            iconColor={COLORS.peach}
+            size={20}
+          />
+          <Block middle>
+            <Text bold>Emprunts</Text>
+          </Block>
+        </Block>
+        
+        <Block row space='between' center m_l={45} m_t={-15}>
+          <Text color={COLORS.gray}> Emprunts Totales du groupe</Text>
+          <Text bold>20 (200 USD)</Text>
+        </Block>
+
+        {/* <Block row space='between' center m_l={45} >
+          <Text numberOfLines={1} color={COLORS.gray}> Remboursement attendu</Text>
+          <Text bold>0 (0 USD)</Text>
+        </Block>*/}
+
+        <Block row space='between' center m_l={45} >
+          <Text numberOfLines={1} color={COLORS.gray}> Remboursement en retard</Text>
+          <Text bold>0 (0 USD)</Text>
+        </Block> 
+
+       
+        <Block row>
+          <IconButton
+            icon="circle"
+            iconColor={COLORS.gray}
+            size={20}
+          />
+          <Block middle>
+            <Text bold> Caisse de solidarités</Text>
+          </Block>
+        </Block>
+        
+        <Block row space='between' center m_l={45} m_t={-15}>
+          <Text color={COLORS.gray}> Contributions Totales</Text>
+          <Text bold>20 (200 USD)</Text>
+        </Block>
+
+        {/* <Block row space='between' center m_l={45} >
+          <Text numberOfLines={1} color={COLORS.gray}> Contributions attendues</Text>
+          <Text bold>0 (0 USD)</Text>
+        </Block> */}
+
+        <Block row space='between' center m_l={45} >
+          <Text numberOfLines={1} color={COLORS.gray}> Contributions en retard</Text>
+          <Text bold>0 (0 USD)</Text>
+        </Block>
+      </Block>
+    )
+  }
 
   return (
     <Provider>
@@ -780,6 +916,8 @@ const DetailsAvec = ({ route, navigation }) => {
         {renderTopDetails()}
       </View>
     </Block>
+
+    {renderInfoGroup()}
     <Snackbar
         visible={visible}
         onDismiss={onDismissSnackBar}
