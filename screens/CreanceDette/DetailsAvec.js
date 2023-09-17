@@ -1145,7 +1145,7 @@ ont épargné.</Text>
                 keyExtractor={(item) => item._id}
                 renderItem={({ item }) => 
                 
-                  <Membre user={item} navigation={navigation} action={action}
+                  <Membre type={false} user={item} navigation={navigation} action={action}
                     userConnected={connectedUser} owner={route.params.avec.owner} 
                     handleAcceptReject={handleAcceptReject} handleAcceptReq={handleAcceptReq}
                     isLoading={true} parts={0} dette={0} interest={route.params.avec.interest} 
@@ -1183,6 +1183,36 @@ ont épargné.</Text>
               />
 
             </BottomSheetModal>
+
+            {/* 5 membres  */}
+            {/* Gouv */}
+            <BottomSheetModal
+              ref={bottomSheetModalMembreBureau}
+              index={0}
+              backdropComponent={BackdropElement}
+              snapPoints={snapPointsGouv}
+              backgroundStyle={{ borderRadius: responsiveScreenWidth(5), backgroundColor:'#eee'}}
+              onDismiss={() => setIsOpenMembreBureau(false)}
+            >
+              <BottomSheetFlatList
+                data={route.params.avec.membres.filter((val,key)=> val.type != "MEMBRE")}
+                keyExtractor={(item) => item._id}
+                renderItem={({ item }) => 
+                
+                    <Membre type={true} user={item} navigation={navigation} action={action}
+                    userConnected={connectedUser} owner={route.params.avec.owner} 
+                    handleAcceptReject={handleAcceptReject} handleAcceptReq={handleAcceptReq}
+                    isLoading={true} parts={0} dette={0} interest={route.params.avec.interest} 
+                  />
+
+                }
+                contentContainerStyle={styles.contentContainer}
+                refreshing={false}
+                onRefresh={handleRefresh}
+              />
+
+            </BottomSheetModal>
+
 
           </ScrollView>
           </BottomSheetModalProvider>

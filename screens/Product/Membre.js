@@ -99,10 +99,10 @@ const Membre = (props,{ navigation } ) => {
               </Text>
             </View>
 
-            
           </View>
 
           {
+              !props.type?
             props.owner._id == props.userConnected.userId &&  props.user.adhesion?.status == 'PENDING'? 
             <Block row space="between">
                { props.action== props.user.user._id ? 
@@ -119,10 +119,14 @@ const Membre = (props,{ navigation } ) => {
                   </TouchableOpacity>
                   </>}
                 </Block> : <></>
+                :<></>
             }
           
           <View style={{ alignItems: 'flex-end' }}>
-          { props.owner._id == props.userConnected.userId ? 
+            {
+            !props.type?
+
+           props.owner._id == props.userConnected.userId ? 
             <>
               {
                  props.user.adhesion?.status !== 'PENDING' && props.user.adhesion?.status !== 'REJECTED' ? 
@@ -158,7 +162,8 @@ const Membre = (props,{ navigation } ) => {
              
             </>
             
-          }
+          :<></>
+      }
 
 </View>
     

@@ -386,8 +386,8 @@ const DetailsReunion = ({ route, navigation }) => {
               size={40}
             />
           </TouchableOpacity>
-        
         </Block>
+
         <Block p_b={10}>
           <Text style={styles.label}>Nombre de parts</Text>
           <TextInput
