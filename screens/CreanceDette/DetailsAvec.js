@@ -614,12 +614,8 @@ const DetailsAvec = ({ route, navigation }) => {
         </Block>
           }>
       
-              <Menu.Item leadingIcon="call-received" title="Deconnexion" />
-              
-              <Menu.Item leadingIcon="call-made" title="Se connecter" /> 
-              <Menu.Item leadingIcon="list-status" title="Se connecter" /> 
-              <Menu.Item leadingIcon="cellphone-lock" title="Se connecter" /> 
-              <Menu.Item leadingIcon="format-list-numbered" title="Se connecter" /> 
+              <Menu.Item leadingIcon="transfer" title="Transactions" />
+       
               
 
         </Menu>
@@ -656,11 +652,12 @@ const DetailsAvec = ({ route, navigation }) => {
         </Block>
           }>
       
-              <Menu.Item leadingIcon="account-key" title="Deconnexion" />
+              <Menu.Item leadingIcon="account-key" title="Credits" />
                 
-              <Menu.Item leadingIcon="account-arrow-right" title="Se connecter" />
-              <Menu.Item leadingIcon="account-arrow-left" title="Se connecter" />
-              <Menu.Item leadingIcon="account-tie" title="Se connecter" />
+              <Menu.Item leadingIcon="bank" title="Epargnes" />
+              <Menu.Item leadingIcon="calendar" title="Cotisation Hebdomadaire" />
+              <Menu.Item leadingIcon="cash" title="Caisse solidaire" />
+              <Menu.Item leadingIcon="account-tie" title="Amamdes" />
 
         </Menu>
         </Block>
