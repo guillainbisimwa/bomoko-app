@@ -272,6 +272,13 @@ const DetailsAvec = ({ route, navigation }) => {
   
   ];
   
+  const membresList = [
+    ...route.params.avec.membres.filter((val,key)=> val.type != "MEMBRE"),
+  { type: 'President', user:{...route.params.avec.owner, admin: true}} ];
+
+  const membresListFull = [
+    ...route.params.avec.membres,
+  { type: 'President', user:{...route.params.avec.owner, admin: true}} ];
 
   // callbacks
   const handleRefresh = useCallback(() => {
@@ -1140,7 +1147,7 @@ ont épargné.</Text>
               onDismiss={() => setIsOpen(false)}
             >
               <BottomSheetFlatList
-                data={route.params.avec?.membres}
+                data={membresListFull}
                 keyExtractor={(item) => item._id}
                 renderItem={({ item }) => 
                 
@@ -1193,7 +1200,9 @@ ont épargné.</Text>
               onDismiss={() => setIsOpenMembreBureau(false)}
             >
               <BottomSheetFlatList
-                data={route.params.avec.membres.filter((val,key)=> val.type != "MEMBRE")}
+                //data={route.params.avec.membres.filter((val,key)=> val.type != "MEMBRE")}
+                data={membresList}
+                
                 keyExtractor={(item) => item._id}
                 renderItem={({ item }) => 
                 

@@ -63,7 +63,7 @@ const Membre = (props,{ navigation } ) => {
                 marginRight: SIZES.base,
               }}
             >
-              { props.user.user.profile_pic  ? (
+              { props.user?.user?.profile_pic  ? (
                 <Image
                   source={{ uri: props.user.user.profile_pic  }}
                   style={{ width: 40, height: 40, borderRadius:20, borderWidth:1,
@@ -83,7 +83,7 @@ const Membre = (props,{ navigation } ) => {
             </View>
             <View>
               <Text numberOfLines={1} style={{ ...FONTS.h3, color: COLORS.black }}>{
-                props.user.user.admin? props.user.user?.name: props.user.user?.name 
+                props.user.user?.admin? props.user.user?.name: props.user.user?.name 
               }
               </Text>
               <Text
