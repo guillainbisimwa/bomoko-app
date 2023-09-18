@@ -164,6 +164,11 @@ const DetailsReunion = ({ route, navigation }) => {
     ],
   
   ];
+
+
+  const membresListFull = [
+    ...route.params?.avec?.membres,
+  { type: 'President', user:{...route.params?.avec?.owner, admin: true}} ];
   
   // Fonction pour convertir la date en format français
   const formatDateToFrench = (date) => {
@@ -238,7 +243,7 @@ const DetailsReunion = ({ route, navigation }) => {
           </Block>
         </Block>
         <FlatList
-            data={route.params.avec?.membres?.slice(0,3)}
+            data={membresListFull?.slice(0,3)}
             renderItem={({ item }) => 
               <Transaction user={item} navigation={navigation} subtitle='Contibution solidaire' topRight={1} 
               bottomRight='10 sep 2023' currency={route.params.avec.currency} />}
@@ -264,7 +269,7 @@ const DetailsReunion = ({ route, navigation }) => {
           </Block>
         </Block>
         <FlatList
-            data={route.params.avec?.membres?.slice(-3)}
+            data={membresListFull?.slice(-3)}
             renderItem={({ item }) => 
               <Transaction user={item} navigation={navigation} subtitle='ACHAT DES PARTS' topRight={50} 
               bottomRight='10 sep 2023' currency={route.params.avec.currency} />}
