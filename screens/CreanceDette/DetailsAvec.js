@@ -721,7 +721,7 @@ const DetailsAvec = ({ route, navigation }) => {
                  // console.log(value.user);
                   return(
                   <Image
-                    key={key}
+                    key={value._id}
                     source={{uri: value?.user?.profile_pic}}
                     style={[
                       styles.img,

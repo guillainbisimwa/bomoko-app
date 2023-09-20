@@ -23,6 +23,7 @@ const Reunion = (props,{ navigation } ) => {
    
     {/* <Text center bold>{formatDateToFrench(new Date())}</Text> */}
     <TouchableOpacity
+      key={ props.avec._id}
       onPress={() => {
         console.log(props.date);
         props.navigation.navigate('DetailsReunion', { reunion: props.date, avec: props.avec })
@@ -84,7 +85,7 @@ const Reunion = (props,{ navigation } ) => {
               <Text numberOfLines={1} style={{ ...FONTS.h3, color: COLORS.black }}>{
                
               }
-            REUNION
+            REUNION : {props.date.num}
               </Text>
               <Text
                 numberOfLines={1}
