@@ -1232,38 +1232,79 @@ ont épargné.</Text>
               backgroundStyle={{ borderRadius: responsiveScreenWidth(5), backgroundColor:'#eee'}}
               onDismiss={() => setIsOpenRoi(false)}
             >
+              
            
               <ScrollView style={styles.container}>
 
-                <Text style={styles.header}>Conditions d'Utilisation</Text>
+                <Text style={styles.header}>Règlement Intérieur de l'Association Villageoise d'Épargne Crédit (AVEC)</Text>
                 <Text style={styles.paragraph}>
-                  En utilisant l'application mobile African Fintech ("l'Application"), vous acceptez de respecter les conditions d'utilisation énoncées ci-dessous. Si vous n'acceptez pas ces conditions, veuillez ne pas utiliser l'Application.
+                L'Association Villageoise d'Épargne Crédit (AVEC) est une organisation communautaire visant à promouvoir l'épargne, l'accès au crédit et le développement économique des membres. Ce règlement intérieur vise à établir des règles claires pour le bon fonctionnement de l'AVEC.
                 </Text>
 
-                <Text style={styles.subtitle}>Utilisation de l'Application</Text>
+                <Text style={styles.subtitle}>Article 1 : Durée du Cycle</Text>
                 <Text style={styles.paragraph}>
-                  Vous vous engagez à utiliser l'Application conformément aux lois et réglementations en vigueur. Vous ne devez pas utiliser l'Application à des fins illégales, frauduleuses ou nuisibles.
+                1.1. Chaque cycle de l'AVEC a une durée de 9 à 12 mois.
+
                 </Text>
 
-                <Text style={styles.subtitle}>Propriété Intellectuelle</Text>
-                <Text style={styles.paragraph}>
-                  Tous les droits de propriété intellectuelle relatifs à l'Application sont la propriété de African Fintech. Vous n'êtes pas autorisé à copier, modifier, distribuer ou reproduire l'Application sans autorisation expresse.
+                <Text style={styles.subtitle}>Article 2 : Réunions Hebdomadaires</Text>
+                <Text style={styles.paragraph}>2.1. Les membres de l'AVEC se réunissent de manière hebdomadaire conformément au calendrier préétabli.
+
+                </Text>
+                <Text style={styles.paragraph}>2.2. Lors de chaque réunion hebdomadaire, les membres sont tenus de verser leur cotisation à la caisse de solidarité conformément aux montants définis par l'assemblée générale.
+                </Text>
+                <Text style={styles.paragraph}>2.3. Les membres ont également la possibilité d'acheter des parts d'épargne lors des réunions hebdomadaires.
+
                 </Text>
 
-                <Text style={styles.subtitle}>Limitation de Responsabilité</Text>
+                <Text style={styles.subtitle}>Article 3 : Épargne</Text>
                 <Text style={styles.paragraph}>
-                  L'Application est fournie "telle quelle", sans garantie d'aucune sorte. Nous ne serons pas responsables des dommages directs, indirects, spéciaux, consécutifs ou punitifs résultant de l'utilisation de l'Application.
+                3.1. Les parts d'épargne représentent la somme totale épargnée par chaque membre au cours du cycle.
+                </Text>
+                <Text style={styles.paragraph}>3.2. Les membres sont encouragés à épargner régulièrement pour bénéficier des avantages de l'AVEC.
+
                 </Text>
 
-                <Text style={styles.subtitle}>Modifications des Conditions</Text>
+                <Text style={styles.subtitle}>Article 4 : Crédit</Text>
                 <Text style={styles.paragraph}>
-                  Nous nous réservons le droit de modifier ces conditions d'utilisation à tout moment. Les modifications prendront effet dès leur publication sur l'Application. Il vous est conseillé de consulter régulièrement cette page pour rester informé des changements.
+                4.1. À partir du 3ème ou 4ème mois du cycle, les membres qui le souhaitent peuvent souscrire un crédit auprès de l'AVEC.
                 </Text>
 
-                <Text style={styles.subtitle}>Contact</Text>
                 <Text style={styles.paragraph}>
-                  Pour toute question concernant ces conditions d'utilisation, veuillez nous contacter à info@alphanewgroup.com.
+                4.2. Le montant du crédit ne peut pas dépasser trois fois le montant total épargné par le membre.
                 </Text>
+
+                <Text style={styles.paragraph}>
+                4.3. Les crédits sont assortis d'un taux d'intérêt de 10% par mois et doivent être remboursés sur une période de 3 à 4 mois.
+                </Text>
+
+                <Text style={styles.subtitle}>Article 5 : Remboursement</Text>
+                <Text style={styles.paragraph}>
+                5.1. À la fin de chaque cycle, tous les crédits octroyés doivent être entièrement remboursés par les débitrices.
+                </Text>
+                <Text style={styles.paragraph}>
+                5.2. Les membres sont encouragés à rembourser leurs crédits de manière ponctuelle pour préserver la solidité financière de l'AVEC.
+                </Text>
+                
+
+                <Text style={styles.subtitle}>Article 6 : Répartition des Bénéfices</Text>
+                <Text style={styles.paragraph}>
+                6.1. À la fin de chaque cycle, tous les bénéfices générés par l'AVEC, y compris les intérêts des crédits, sont distribués équitablement entre les membres au prorata de leurs parts épargnées.
+                </Text>
+              
+
+                <Text style={styles.subtitle}>Article 7 : Modifications du Règlement Intérieur</Text>
+                <Text style={styles.paragraph}>
+                7.1. Toute modification du présent règlement intérieur doit être proposée lors d'une assemblée générale et adoptée à la majorité des membres présents.
+                </Text>
+                <Text style={styles.paragraph}>
+                5.2. Les membres sont encouragés à rembourser leurs crédits de manière ponctuelle pour préserver la solidité financière de l'AVEC.
+                </Text>
+
+                
+
+                <Text style={styles.subtitle}>Fait à Goma, le 01/01/2023</Text>
+
                 <Text style={styles.subtitle}></Text>
                 </ScrollView>
               
@@ -1383,7 +1424,7 @@ const styles = StyleSheet.create({
   },
 
   header: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 20,
   },
