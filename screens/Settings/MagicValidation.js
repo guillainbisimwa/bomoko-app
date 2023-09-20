@@ -86,24 +86,23 @@ const MagicValidation = () => {
       const exampleReunion = {
         status: "UPCOMING",
         num: 1,
-        dateStart: new Date(value),
-        dateEnd: new Date(value),
-        attendees: [],
-        chat: [
-          {
-            message: `Bienvenue a la Reunion du ${value}`,
-            member: item.owner._id, 
-            timestamp: new Date(),
-          }
-        ],
-        timestamp: new Date(),
+        dateStart: new Date(value).toString(),
+        dateEnd: new Date(value).toString(),
+        //attendees: [],
+        // chat: [
+        //   {
+        //     message: `Bienvenue a la Reunion du ${value}`,
+        //     member: item.owner._id, 
+        //     timestamp: new Date().toString(),
+        //   }
+        // ],
+        timestamp: new Date().toString(),
       };
 
       return exampleReunion;
     });
 
-    
-    dispatch(updateAvec({
+    console.log({
       ...item,
       id: item._id,
       //status: "ACCEPTED",
@@ -111,9 +110,23 @@ const MagicValidation = () => {
         outputTimeLineSoum,
         ...item.timeline,
       ],
-      reunion: [
+      reunion: 
         reunions,
-      ]
+      
+    });
+
+    
+    dispatch(updateAvec({
+      ...item,
+      id: item._id,
+      status: "ACCEPTED",
+      timeline: [
+        outputTimeLineSoum,
+        ...item.timeline,
+      ],
+      reunion: 
+        reunions,
+      
     }))
   };
 

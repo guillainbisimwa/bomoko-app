@@ -1688,7 +1688,7 @@ const avecs2 =[
 
 // Define an initial state for AVEC objects
 const initialState = {
-  avecs: [...avecs2], // Array to store AVEC objects {avecs: [...avecs]}
+  avecs: [], // Array to store AVEC objects {avecs: [...avecs]}
   status: 'idle', // Status for async operations
   error: null, // Error object for failed requests
 };
