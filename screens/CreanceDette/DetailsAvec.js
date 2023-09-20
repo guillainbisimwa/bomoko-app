@@ -7,7 +7,7 @@ import { Text } from '../../components';
 import { Divider, Button, Snackbar, Modal, Card, Provider, Menu, Chip, IconButton } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteAvec, updateAvec } from '../../redux/avecReducer';
-import { BottomSheetBackdrop, BottomSheetFlatList, BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import { BottomSheetBackdrop, BottomSheetFlatList, BottomSheetModal, BottomSheetModalProvider, BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { responsiveScreenWidth } from 'react-native-responsive-dimensions';
 import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -1231,10 +1231,13 @@ ont épargné.</Text>
               snapPoints={snapPointsGouv}
               backgroundStyle={{ borderRadius: responsiveScreenWidth(5), backgroundColor:'#eee'}}
               onDismiss={() => setIsOpenRoi(false)}
+              backgroundComponent={({ style }) => (
+                <View style={[style, { backgroundColor: 'white' }]} />
+              )}
             >
               
            
-              <ScrollView style={styles.container}>
+              <BottomSheetScrollView style={styles.container}>
 
                 <Text style={styles.header}>Règlement Intérieur de l'Association Villageoise d'Épargne Crédit (AVEC)</Text>
                 <Text style={styles.paragraph}>
@@ -1306,7 +1309,7 @@ ont épargné.</Text>
                 <Text style={styles.subtitle}>Fait à Goma, le 01/01/2023</Text>
 
                 <Text style={styles.subtitle}></Text>
-                </ScrollView>
+                </BottomSheetScrollView>
               
 
             </BottomSheetModal>
