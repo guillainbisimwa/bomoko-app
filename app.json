@@ -2,7 +2,7 @@
   "expo": {
     "name": "African Fintech",
     "slug": "bomoko-cash",
-    "version": "5.1.0",
+    "version": "5.2.0",
     "privacy": "public",
     "orientation": "portrait",
     "icon": "./assets/app-icon.png",
