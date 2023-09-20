@@ -17,7 +17,7 @@ import moment from 'moment';
 
 const EditAvec = ({ navigation, route }) => {
   const {owner, avec } = route.params;
-  console.log(avec._id);
+  console.log(avec.membres);
 
   const dispatch = useDispatch();
   const { avecs, status, error }= useSelector((state) => state.avecs); 
@@ -67,9 +67,9 @@ const EditAvec = ({ navigation, route }) => {
 
 
   useEffect(()=>{
-    console.log('===>', status,);
-    console.log('===>',  error);
-    console.log('===>', owner);
+    console.log('===>', avec,);
+    // console.log('===>',  error);
+    // console.log('===>', owner);
     if (status === "succeeded" &&  statusLocal  ) {
       // Navigate to the Home screen
       navigation.navigate('Main');
@@ -151,12 +151,14 @@ const EditAvec = ({ navigation, route }) => {
             name: 'Hebdomadaire',
             somme: Number(prixCaisseSolidaire),
           },
+          reunion: []
         };
-
-        console.log("avec", avec.id);
+  
+        // console.log("id", avec.id);
+        // console.log("avec", avec);
     
         // Dispatch the action
-        dispatch(updateAvec(avec));
+         dispatch(updateAvec(avec));
     
         }
       
@@ -404,7 +406,7 @@ const styles = StyleSheet.create({
   scrollContainer: {
     flexGrow: 1,
     paddingHorizontal: 24,
-    paddingBottom: 1,
+    paddingBottom: 50,
   },
   dropdown1BtnStyle: {
     //width: '80%',

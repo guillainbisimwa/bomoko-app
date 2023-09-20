@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { View, StyleSheet, Dimensions, StatusBar } from 'react-native';
 import { TabView, SceneMap } from 'react-native-tab-view';
 import Block from '../Product/Block';
@@ -35,6 +35,10 @@ const MagicValidation = () => {
       };
     }, []) // Empty dependency array to run this effect only once when the screen mounts
   );
+
+  useEffect(()=>{
+    //console.log("error",error)
+  }, [error,status])
 
 
   const [index, setIndex] = useState(0);
@@ -80,12 +84,12 @@ const MagicValidation = () => {
     };
 
     console.log();
-
-    const reunions = generateDateIntervals(today, item.cycle.number , 1).map((value, key) => {
-      
+    var number = 0;
+    const reunions = generateDateIntervals(today, item.cycle.number * 4 , 1).map((value, key) => {
+      number++;
       const exampleReunion = {
         status: "UPCOMING",
-        num: 1,
+        num: number,
         dateStart: new Date(value).toString(),
         dateEnd: new Date(value).toString(),
         //attendees: [],
@@ -102,18 +106,19 @@ const MagicValidation = () => {
       return exampleReunion;
     });
 
-    console.log({
+    const a = {
       ...item,
       id: item._id,
-      //status: "ACCEPTED",
+      status: "ACCEPTED",
       timeline: [
         outputTimeLineSoum,
         ...item.timeline,
       ],
-      reunion: 
-        reunions,
+      reunion: reunions,
       
-    });
+    }
+
+    // console.log(JSON.stringify(a));
 
     
     dispatch(updateAvec({
@@ -124,9 +129,7 @@ const MagicValidation = () => {
         outputTimeLineSoum,
         ...item.timeline,
       ],
-      reunion: 
-        reunions,
-      
+      reunion: reunions
     }))
   };
 
@@ -150,7 +153,7 @@ const MagicValidation = () => {
       <Text>Status: {item.status}</Text>
       <Block row>
         {
-          item.status=='SUBMITED'? 
+          item.status !='ACCEPTED'? 
           <Button disabled={status == 'loading'}
           loading={status == 'loading'} mode='contained' buttonColor={COLORS.darkgreen} onPress={()=> handlerValidate(item)} > Valider</Button>:
           <></>
