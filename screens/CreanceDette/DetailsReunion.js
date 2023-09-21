@@ -11,6 +11,7 @@ import { fr as myFr } from 'date-fns/locale';
 import { responsiveScreenWidth } from 'react-native-responsive-dimensions';
 import { FlatList } from 'react-native';
 import Transaction from './Transaction';
+import { Chat } from '@flyerhq/react-native-chat-ui';
 
 const DetailsReunion = ({ route, navigation }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -32,6 +33,57 @@ const DetailsReunion = ({ route, navigation }) => {
   const [empruntValid, setEmpruntValid] = useState(true); // Validation state for interest
   const [emprunt, setEmprunt] = useState('');
 
+  // const { showActionSheetWithOptions } = useActionSheet()
+  const [messages, setMessages] = useState([
+   {
+    author:{
+      firstName: route.params?.avec?.owner.name,
+      id: route.params?.avec?.owner._id,
+      imageUrl: 'https://raw.githubusercontent.com/guillainbisimwa/bomoko-app/master/assets/icons/gens.png',
+    },
+    createdAt: Date.now() ,
+      id: Math.random().toString(),
+      status: 'seen',
+      text: `Et soyez le bienvnues au group AVEC : ${route.params?.avec?.name}`,
+      type: 'text',
+   }])
+
+  const addMessage = (message) => {
+    setMessages([message, ...messages])
+  }
+
+
+  const handlePreviewDataFetched = ({
+    message,
+    previewData,
+  }) => {
+    setMessages(
+      messages.map((m) =>
+        m.id === message.id ? { ...m, previewData } : m
+      )
+    )
+  }
+
+  const handleMessagePress = async (message) => {
+    if (message.type === 'file') {
+      console.log('File');
+      // try {
+      //   await FileViewer.open(message.uri, { showOpenWithDialog: true })
+      // } catch {}
+    }
+  }
+
+  const handleSendPress = (message) => {
+    const textMessage = {
+      author: '06c33e8b-e835-4736-80f4-63f44b66666c',// id: route.params.connectedUser._id 
+      createdAt: Date.now(),
+      id: Math.random().toString(),
+      text: message.text,
+      type: 'text',
+    }
+    addMessage(textMessage)
+  }
+  
   const bottomSheetModalAchatPart = useRef(null);
   const bottomSheetModalMesParts = useRef(null);
   const bottomSheetModalMesEmp = useRef(null);
@@ -261,7 +313,9 @@ const DetailsReunion = ({ route, navigation }) => {
     );
   };
 
+
   const renderChat = () => {
+    
     return (
       <Block m={20} card>
         <Block p={17}>
@@ -269,6 +323,22 @@ const DetailsReunion = ({ route, navigation }) => {
           Message
           </Text>
           <Text>La reunion en chattant</Text>
+        </Block>
+        <Block>
+          
+
+        <Chat
+          messages={messages}
+          //onAttachmentPress={handleAttachmentPress}
+          onMessagePress={handleMessagePress}
+          onPreviewDataFetched={handlePreviewDataFetched}
+          onSendPress={handleSendPress}
+          user={{ id: route.params.connectedUser._id }}
+          showUserNames={true}
+          showUserAvatars={true}
+        />
+
+
         </Block>
         </Block>
 )};
@@ -772,7 +842,7 @@ const DetailsReunion = ({ route, navigation }) => {
     <Provider>
       <BottomSheetModalProvider>
 
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView showsVerticalScrollIndicator={false} accessibilityElementsHidden={false}>
     <Block>
       {/* Fixed content */}
       <Block style={styles.topdetailsText} >
