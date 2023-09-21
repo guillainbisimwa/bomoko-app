@@ -17,7 +17,7 @@ const avecs2 =[
             },
             "frais_Social": {
                 "name": "Hebdomadaire",
-                "somme": 0
+                "somme": 10
             },
             "_id": "65020c768655d8acbb923a60",
             "name": "Sambaza(Fretins Frais)V5",
@@ -657,7 +657,7 @@ const avecs2 =[
                 "min": 1
             },
             "frais_Social": {
-                "somme": 0
+                "somme": 5
             },
             "_id": "65020e048655d8acbb923af1",
             "name": "Voitures d'occasion japonaises à vendre",
@@ -1381,7 +1381,7 @@ const avecs2 =[
                 "min": 1
             },
             "frais_Social": {
-                "somme": 0
+                "somme": 30
             },
             "_id": "65022619a98a3e8c20cc9ae0",
             "name": "Éducation et État de droit",

@@ -35,6 +35,11 @@ const DetailsReunion = ({ route, navigation }) => {
   const bottomSheetModalMesEmp = useRef(null);
   const bottomSheetModalDemandCred = useRef(null);
 
+  const bottomSheetModalContribHebdo = useRef(null);
+  const bottomSheetModalCalend= useRef(null);
+  const bottomSheetModalContribCaiss = useRef(null);
+
+
 
   const BackdropElement = useCallback(
     (backdropProps) => (
@@ -123,6 +128,59 @@ const DetailsReunion = ({ route, navigation }) => {
   const hideModalDemandCred= () => handleClosePressDemandCred();
 
 
+
+  const openModalContibHebdo = useCallback(() => {
+    bottomSheetModalContribHebdo.current?.present();
+    setTimeout(() => {
+      setIsOpen(false)
+      hideModalMenu();
+    }, 0);
+    setIsOpen(false)
+    hideModalMenu();
+  }, []);
+
+   // Gouv
+   const handleClosePressContribHebdo = useCallback(() => {
+    bottomSheetModalContribHebdo.current?.close();
+  }, []);
+
+  const hideModalContribHebdo = () => handleClosePressContribHebdo();
+
+
+
+  const openModalCalend = useCallback(() => {
+    bottomSheetModalCalend.current?.present();
+    setTimeout(() => {
+      setIsOpen(false)
+      hideModalMenu();
+    }, 0);
+    setIsOpen(false)
+    hideModalMenu();
+  }, []);
+
+   const handleClosePressCalend = useCallback(() => {
+    bottomSheetModalCalend.current?.close();
+  }, []);
+
+  const hideModalCalend = () => handleClosePressCalend();
+
+
+  const openModalContribCaiss = useCallback(() => {
+    bottomSheetModalContribCaiss.current?.present();
+    setTimeout(() => {
+      setIsOpen(false)
+      hideModalMenu();
+    }, 0);
+    setIsOpen(false)
+    hideModalMenu();
+  }, []);
+
+   const handleClosePressContribCaiss = useCallback(() => {
+    bottomSheetModalContribCaiss.current?.close();
+  }, []);
+
+  const hideModalContribCaiss = () => handleClosePressContribCaiss();
+
   
   const handleInterestChange = (text) => {
     const numericValue = parseFloat(text);
@@ -182,10 +240,10 @@ const DetailsReunion = ({ route, navigation }) => {
       <Block card style={styles.topdetails} >
         
         <Block row center space='between'>
-          <Block>
+          <Block flex={1}>
           <Text h2  bold >REUNION : {route.params.reunion.num}</Text>
           <Text color={COLORS.peach} >Du {formatDateToFrench(route.params.reunion.dateStart)}</Text>
-          <Text numberOfLines={1} bold >Bienvenue, { route.params.connectedUser.name}</Text>
+          <Text numberOfLines={1} gray bold >Bienvenue, { route.params.connectedUser.name}</Text>
           </Block>
 
           <Button mode='contained'  onPress={()=> openModalMenu()} >Menu</Button>
@@ -309,7 +367,9 @@ const DetailsReunion = ({ route, navigation }) => {
 
         <Divider />
 
-        <TouchableOpacity>
+        <TouchableOpacity onPress={()=>{ 
+            openModalContibHebdo();
+          }} >
           <Block p={17} row center>
           <Image
             source={icons.cash}
@@ -349,7 +409,7 @@ const DetailsReunion = ({ route, navigation }) => {
               width: 30,
               height: 30,
               marginRight: 20,
-              tintColor: COLORS.blue,
+              tintColor: COLORS.darkgreen,
             }}
           />
             <Text bold>Contribution caisse solidaire </Text>
@@ -504,6 +564,61 @@ const DetailsReunion = ({ route, navigation }) => {
   }
 
 
+  const renderContribHebdo = () => {
+    return (
+      <BottomSheetModal
+        ref={bottomSheetModalContribHebdo}
+        index={1}
+        backdropComponent={BackdropElement}
+        snapPoints={snapPoints}
+        backgroundStyle={{ borderRadius: responsiveScreenWidth(5), backgroundColor:'#eee'}}
+        onDismiss={() => hideModalContribHebdo()}
+      >
+        <BottomSheetScrollView>
+        <Block p={17} >
+        <Block row space='between'>
+          <Block m_b={10} flex={1}>
+            <Text bold h2>Contibution Hebdomadaire</Text>
+            <Text color={COLORS.blue}>{`Le somme de contribution est de ${route.params.avec.frais_Social.somme}  ${route.params.avec.currency} `}</Text>
+          </Block>
+          <TouchableOpacity onPress={()=> hideModalContribHebdo()}>
+            <IconButton
+              icon="close"
+              iconColor={COLORS.red}
+              size={40}
+            />
+          </TouchableOpacity>
+        </Block>
+
+        <Block p_b={10}>
+          <Text style={styles.label}>Contribution hebdomadaire</Text>
+
+          <Button mode='contained' disabled={!empruntValid}  style={{marginTop:10}} onPress={()=> {
+            setEmprunt(null);
+            setEmpruntValid(true);
+            hideModalDemandCred();
+            navigation.navigate('ConfirmPayment', {
+              somme: parseInt(emprunt),
+              nombreParts: parseInt(parseInt(interest)),
+              prixParts: parseInt(parseInt(route.params.avec.amount)),
+              connectedUser:  route.params.connectedUser,
+              motif:  `Demande de ${parseInt(emprunt)}  ${route.params.avec.currency} d'emprunt`,
+              titre: "Confirmer votre demande d'Emprunt",
+              button:'Confirmer votre demande',
+              avec: route.params.avec,
+              type:'emprunt'
+            })
+          }} >Contribuer</Button>
+          </Block>
+      </Block>
+        </BottomSheetScrollView>
+      
+
+    </BottomSheetModal>
+    )
+  }
+
+
 
   return (
     <Provider>
@@ -601,6 +716,7 @@ const DetailsReunion = ({ route, navigation }) => {
         {renderMenu()}
         {renderAchatPart()}
         {renderDemandeCredit()}
+        {renderContribHebdo()}
       </Block>
     </Block>
       
