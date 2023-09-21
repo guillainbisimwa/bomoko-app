@@ -402,7 +402,7 @@ const DetailsReunion = ({ route, navigation }) => {
             <Text bold>Calendrier de Remboursement </Text>
           </Block>
         </TouchableOpacity>
-        <Divider />
+        {/* <Divider />
         <TouchableOpacity onPress={()=>{ 
             openModalContribCaiss();
           }} >
@@ -418,7 +418,7 @@ const DetailsReunion = ({ route, navigation }) => {
           />
             <Text bold>Contribution caisse solidaire </Text>
           </Block>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </Block>
 
     </BottomSheetModal>
@@ -572,7 +572,7 @@ const DetailsReunion = ({ route, navigation }) => {
     return (
       <BottomSheetModal
         ref={bottomSheetModalContribHebdo}
-        index={1}
+        index={0}
         backdropComponent={BackdropElement}
         snapPoints={snapPoints}
         backgroundStyle={{ borderRadius: responsiveScreenWidth(5), backgroundColor:'#eee'}}
@@ -595,24 +595,23 @@ const DetailsReunion = ({ route, navigation }) => {
         </Block>
 
         <Block p_b={10}>
-          <Text style={styles.label}>Contribution hebdomadaire</Text>
-
+         
           <Button mode='contained' disabled={!empruntValid}  style={{marginTop:10}} onPress={()=> {
             setEmprunt(null);
             setEmpruntValid(true);
             hideModalDemandCred();
             navigation.navigate('ConfirmPayment', {
-              somme: parseInt(emprunt),
+              somme: parseInt(route.params.avec.frais_Social.somme),
               nombreParts: parseInt(parseInt(interest)),
               prixParts: parseInt(parseInt(route.params.avec.amount)),
               connectedUser:  route.params.connectedUser,
-              motif:  `Demande de ${parseInt(emprunt)}  ${route.params.avec.currency} d'emprunt`,
-              titre: "Confirmer votre demande d'Emprunt",
-              button:'Confirmer votre demande',
+              motif:  `Contribution hebdomadaire de ${parseInt(route.params.avec.frais_Social.somme)}  ${route.params.avec.currency}`,
+              titre: "Confirmer votre contribution hebdomadaire",
+              button:'Contribuer',
               avec: route.params.avec,
-              type:'emprunt'
+              type:'contrib'
             })
-          }} >Contribuer</Button>
+          }} > {` Contibuer ${route.params.avec.frais_Social.somme}  ${route.params.avec.currency}`}</Button>
           </Block>
       </Block>
         </BottomSheetScrollView>
@@ -660,7 +659,58 @@ const DetailsReunion = ({ route, navigation }) => {
     </BottomSheetModal>
     )
   }
+  const renderContribCaiss = () => {
+    return (
+      <BottomSheetModal
+        ref={bottomSheetModalContribCaiss}
+        index={1}
+        backdropComponent={BackdropElement}
+        snapPoints={snapPoints}
+        backgroundStyle={{ borderRadius: responsiveScreenWidth(5), backgroundColor:'#eee'}}
+        onDismiss={() => hideModalContribCaiss()}
+      >
+        <BottomSheetScrollView>
+        <Block p={17} >
+        <Block row space='between'>
+          <Block m_b={10} flex={1}>
+            <Text bold h2>Contibution Caisse Sociale</Text>
+            <Text color={COLORS.blue}>{`Le somme de contribution est de ${route.params.avec.frais_Social.somme}  ${route.params.avec.currency} `}</Text>
+          </Block>
+          <TouchableOpacity onPress={()=> hideModalContribCaiss()}>
+            <IconButton
+              icon="close"
+              iconColor={COLORS.red}
+              size={40}
+            />
+          </TouchableOpacity>
+        </Block>
 
+        <Block p_b={10}>
+         
+          <Button mode='contained' disabled={!empruntValid}  style={{marginTop:10}} onPress={()=> {
+            setEmprunt(null);
+            setEmpruntValid(true);
+            hideModalDemandCred();
+            navigation.navigate('ConfirmPayment', {
+              somme: parseInt(route.params.avec.frais_Social.somme),
+              nombreParts: parseInt(parseInt(interest)),
+              prixParts: parseInt(parseInt(route.params.avec.amount)),
+              connectedUser:  route.params.connectedUser,
+              motif:  `Contribution Caisse Sociale de ${parseInt(route.params.avec.frais_Social.somme)}  ${route.params.avec.currency}`,
+              titre: "Confirmer votre contribution caisse sociale",
+              button:'Contribuer',
+              avec: route.params.avec,
+              type:'contrib'
+            })
+          }} > {` Contibuer ${route.params.avec.frais_Social.somme}  ${route.params.avec.currency}`}</Button>
+          </Block>
+      </Block>
+        </BottomSheetScrollView>
+      
+
+    </BottomSheetModal>
+    )
+  }
 
 
   return (
@@ -761,6 +811,7 @@ const DetailsReunion = ({ route, navigation }) => {
         {renderDemandeCredit()}
         {renderContribHebdo()}
         {renderCalend()}
+        {/* {renderContribCaiss()} */}
       </Block>
     </Block>
       
