@@ -5,19 +5,11 @@ import { COLORS, SIZES, icons, FONTS } from '../../constants';
 import { Text } from '../../components';
 
 const Transaction = (props,{ navigation } ) => {
-  // console.log(props.user);
-  // console.log();
-  // subtitle='Contibution solidaire' topRight={1} 
-  //             bottomRight='10 sep 2023'
   return (
     <TouchableOpacity
       onPress={() => {
-        console.log(props.user.user.name);
-        // navigation.navigate('Profile', { user: props.user.user})
-        // props.navigation.navigate('Profile', {
-        //   userId: props.user.user._id,
-        //   user: props.user.user
-        // })
+        console.log();
+        props.onPressTransaction(props.user)
       }}
     >
       <View

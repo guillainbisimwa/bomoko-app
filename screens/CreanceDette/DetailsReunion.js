@@ -20,7 +20,9 @@ const DetailsReunion = ({ route, navigation }) => {
   const [isOpenMesEmp, setIsOpenMesEmp] = useState(false);
   const [isOpenDemandCred, setIsOpenDemandCred] = useState(false);
 
-  const snapPoints = useMemo(() => ["28%","50%", "60%", "80%", '90%'], []);
+  const [selectedItem, setSelectedItem] = useState([]);
+
+  const snapPoints = useMemo(() => ["28%","50%", "60%", "70%", "80%", '90%'], []);
 
   const bottomSheetModalMenu = useRef(null);
 
@@ -37,7 +39,7 @@ const DetailsReunion = ({ route, navigation }) => {
 
   const bottomSheetModalContribHebdo = useRef(null);
   const bottomSheetModalCalend= useRef(null);
-  const bottomSheetModalContribCaiss = useRef(null);
+  const bottomSheetModalDisplayDetail = useRef(null);
 
 
 
@@ -165,8 +167,8 @@ const DetailsReunion = ({ route, navigation }) => {
   const hideModalCalend = () => handleClosePressCalend();
 
 
-  const openModalContribCaiss = useCallback(() => {
-    bottomSheetModalContribCaiss.current?.present();
+  const openModalDisplayDetail = useCallback(() => {
+    bottomSheetModalDisplayDetail.current?.present();
     setTimeout(() => {
       setIsOpen(false)
       hideModalMenu();
@@ -175,11 +177,11 @@ const DetailsReunion = ({ route, navigation }) => {
     hideModalMenu();
   }, []);
 
-   const handleClosePressContribCaiss = useCallback(() => {
-    bottomSheetModalContribCaiss.current?.close();
+   const handleClosePressDisplayDetail = useCallback(() => {
+    bottomSheetModalDisplayDetail.current?.close();
   }, []);
 
-  const hideModalContribCaiss = () => handleClosePressContribCaiss();
+  const hideModalDisplayDetail = () => handleClosePressDisplayDetail();
 
   
   const handleInterestChange = (text) => {
@@ -213,6 +215,12 @@ const DetailsReunion = ({ route, navigation }) => {
     return format(new Date(date), 'dd MMMM yyyy', { locale: myFr });
   };
 
+  const onPressTransaction = (item) => {
+    console.log("On press", item);
+    setSelectedItem(item)
+    openModalDisplayDetail();
+
+  }
   const renderImage = () => {
     return (
       <ImageBackground
@@ -284,7 +292,7 @@ const DetailsReunion = ({ route, navigation }) => {
             data={membresListFull?.slice(0,3)}
             renderItem={({ item }) => 
               <Transaction user={item} navigation={navigation} subtitle='Contibution hebdomadaire' topRight={1} 
-              bottomRight='10 sep 2023' currency={route.params.avec.currency} />}
+              bottomRight='10 sep 2023' currency={route.params.avec.currency} onPressTransaction={onPressTransaction} />}
             keyExtractor={(item) => item._id} // Use a unique key for each item
           />
        
@@ -310,7 +318,7 @@ const DetailsReunion = ({ route, navigation }) => {
             data={membresListFull?.slice(-3)}
             renderItem={({ item }) => 
               <Transaction user={item} navigation={navigation} subtitle='ACHAT DES PARTS' topRight={50} 
-              bottomRight='10 sep 2023' currency={route.params.avec.currency} />}
+              bottomRight='10 sep 2023' currency={route.params.avec.currency} onPressTransaction={onPressTransaction} />}
             keyExtractor={(item) => item._id} // Use a unique key for each item
           />
        
@@ -329,10 +337,22 @@ const DetailsReunion = ({ route, navigation }) => {
       >
       
       <Block >
+      <Block p_l={17} p_r={17} row space='between' center>
+          <Block  flex={1}>
+            <Text bold h2>MENU</Text>
+          </Block>
+          <TouchableOpacity onPress={()=> hideModalMenu()}>
+            <IconButton
+              icon="close"
+              iconColor={COLORS.red}
+              size={40}
+            />
+          </TouchableOpacity>
+        </Block>
         <TouchableOpacity onPress={()=>{ 
             openModalAchatPart();
           }} >
-          <Block p={17} row center>
+          <Block p_l={17} p_b={17}  row center>
           <Image
             source={icons.shopping}
             style={{
@@ -351,7 +371,7 @@ const DetailsReunion = ({ route, navigation }) => {
         <TouchableOpacity onPress={()=>{ 
             openModalDemandCred();
           }} >
-          <Block p={17} row center>
+          <Block p={16} row center>
           <Image
             source={icons.sell}
             style={{
@@ -370,7 +390,7 @@ const DetailsReunion = ({ route, navigation }) => {
         <TouchableOpacity onPress={()=>{ 
             openModalContibHebdo();
           }} >
-          <Block p={17} row center>
+          <Block p={15} row center>
           <Image
             source={icons.cash}
             style={{
@@ -402,23 +422,6 @@ const DetailsReunion = ({ route, navigation }) => {
             <Text bold>Calendrier de Remboursement </Text>
           </Block>
         </TouchableOpacity>
-        {/* <Divider />
-        <TouchableOpacity onPress={()=>{ 
-            openModalContribCaiss();
-          }} >
-          <Block m_b={10} p={17} row center>
-          <Image
-            source={icons.cash}
-            style={{
-              width: 30,
-              height: 30,
-              marginRight: 20,
-              tintColor: COLORS.darkgreen,
-            }}
-          />
-            <Text bold>Contribution caisse solidaire </Text>
-          </Block>
-        </TouchableOpacity> */}
       </Block>
 
     </BottomSheetModal>
@@ -583,7 +586,7 @@ const DetailsReunion = ({ route, navigation }) => {
         <Block row space='between'>
           <Block m_b={10} flex={1}>
             <Text bold h2>Contibution Hebdomadaire</Text>
-            <Text color={COLORS.blue}>{`Le somme de contribution est de ${route.params.avec.frais_Social.somme}  ${route.params.avec.currency} `}</Text>
+            <Text color={COLORS.blue}>{`La somme de contribution est de ${route.params.avec.frais_Social.somme}  ${route.params.avec.currency} `}</Text>
           </Block>
           <TouchableOpacity onPress={()=> hideModalContribHebdo()}>
             <IconButton
@@ -659,51 +662,103 @@ const DetailsReunion = ({ route, navigation }) => {
     </BottomSheetModal>
     )
   }
-  const renderContribCaiss = () => {
+  const renderDisplayDetail = () => {
     return (
       <BottomSheetModal
-        ref={bottomSheetModalContribCaiss}
-        index={1}
+        ref={bottomSheetModalDisplayDetail}
+        index={3}
         backdropComponent={BackdropElement}
         snapPoints={snapPoints}
         backgroundStyle={{ borderRadius: responsiveScreenWidth(5), backgroundColor:'#eee'}}
-        onDismiss={() => hideModalContribCaiss()}
+        onDismiss={() => hideModalDisplayDetail()}
       >
         <BottomSheetScrollView>
         <Block p={17} >
         <Block row space='between'>
           <Block m_b={10} flex={1}>
-            <Text bold h2>Contibution Caisse Sociale</Text>
-            <Text color={COLORS.blue}>{`Le somme de contribution est de ${route.params.avec.frais_Social.somme}  ${route.params.avec.currency} `}</Text>
+            <Text bold h2>Details</Text>
+            <Text color={COLORS.blue}>{`Details de la transaction`}</Text>
           </Block>
-          <TouchableOpacity onPress={()=> hideModalContribCaiss()}>
+          <TouchableOpacity onPress={()=> hideModalDisplayDetail()}>
             <IconButton
               icon="close"
               iconColor={COLORS.red}
               size={40}
             />
           </TouchableOpacity>
+          
         </Block>
 
-        <Block p_b={10}>
-         
-          <Button mode='contained' disabled={!empruntValid}  style={{marginTop:10}} onPress={()=> {
-            setEmprunt(null);
-            setEmpruntValid(true);
-            hideModalDemandCred();
-            navigation.navigate('ConfirmPayment', {
-              somme: parseInt(route.params.avec.frais_Social.somme),
-              nombreParts: parseInt(parseInt(interest)),
-              prixParts: parseInt(parseInt(route.params.avec.amount)),
-              connectedUser:  route.params.connectedUser,
-              motif:  `Contribution Caisse Sociale de ${parseInt(route.params.avec.frais_Social.somme)}  ${route.params.avec.currency}`,
-              titre: "Confirmer votre contribution caisse sociale",
-              button:'Contribuer',
-              avec: route.params.avec,
-              type:'contrib'
-            })
-          }} > {` Contibuer ${route.params.avec.frais_Social.somme}  ${route.params.avec.currency}`}</Button>
+        <Block p_b={10} row space='between'>
+          <Block flex={1}>
+          { selectedItem.user?.profile_pic  ? (
+              <Image
+                source={{ uri: selectedItem.user?.profile_pic  }}
+                style={{ width: 80, height: 80, borderRadius:40, borderWidth:1,
+                borderColor: COLORS.white}}
+              />
+            ) : (
+              <Image
+                source={icons.investment}
+                style={{
+                  width: 80,
+                  height: 80,
+                  tintColor: COLORS.black,
+                }}
+              />
+            )}
+                
           </Block>
+
+          <Block flex={3} middle>
+            <Block row space='between'>
+              <Text bold>A :</Text>
+              <Text gray>{`${route.params.avec.name}`}</Text>
+            </Block>
+
+            <Block row space='between'>
+              <Text bold>DE :</Text>
+              <Text gray>{`${selectedItem?.user?.name}`}</Text>
+            </Block>
+
+            <Block row space='between'>
+              <Text bold>DATE :</Text>
+              <Text gray>{`${route.params.avec.timestamp}`}</Text>
+            </Block>
+          </Block>
+
+        </Block>
+
+        <Divider />
+          <Block p_t={15} p_b={15} row space='between'>
+            <Text h3 bold>TYPE</Text>
+            <Text >Contributions Hebdomadaires</Text>
+          </Block>
+
+          <Divider />
+          <Block p_t={15} p_b={15} row space='between'>
+            <Text h3 bold>SOMME</Text>
+            <Text >{route.params.avec.amount} {route.params.avec.currency}</Text>
+          </Block>
+
+          <Divider />
+          <Block p_t={15} p_b={15} row space='between'>
+            <Text h3 bold>TRANSACTION ID</Text>
+            <Text >#123-345</Text>
+          </Block>
+
+          <Divider />
+          <Block p_t={15} p_b={15} row space='between'>
+            <Text h3 bold>STATUS</Text>
+            <Text color={COLORS.peach} >En attente</Text>
+          </Block>
+
+          <Divider />
+          <Block p_t={15} p_b={15} >
+            <Button mode='contained' buttonColor={COLORS.blue} >TELECHARGER PDF</Button>
+          </Block>
+
+          
       </Block>
         </BottomSheetScrollView>
       
@@ -811,7 +866,7 @@ const DetailsReunion = ({ route, navigation }) => {
         {renderDemandeCredit()}
         {renderContribHebdo()}
         {renderCalend()}
-        {/* {renderContribCaiss()} */}
+        {renderDisplayDetail()}
       </Block>
     </Block>
       
