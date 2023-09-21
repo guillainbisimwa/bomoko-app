@@ -262,7 +262,7 @@ const App = () => {
            options={{ title: 'Details Reunion' , headerShown: true}}/>
 
         <Stack.Screen name="ConfirmPayment" component={ConfirmPayment}
-           options={{ title: 'Confirmation du payement' , headerShown: true}}/>
+           options={{ title: 'Confirmation' , headerShown: true}}/>
 
         <Stack.Screen name="EditAvec" component={EditAvec}
            options={{ title: 'Modifier AVEC' , headerShown: true}}/>

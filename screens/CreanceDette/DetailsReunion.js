@@ -416,12 +416,12 @@ const DetailsReunion = ({ route, navigation }) => {
               somme: parseInt(parseInt(interest) * parseInt(route.params.avec.amount)),
               nombreParts: parseInt(parseInt(interest)),
               prixParts: parseInt(parseInt(route.params.avec.amount)),
-              currency: route.params.avec.currency,
               connectedUser:  route.params.connectedUser,
               motif:  `Achat de ${parseInt(parseInt(interest))} parts a ${parseInt(parseInt(interest) * parseInt(route.params.avec.amount))} ${route.params.avec.currency}`,
               titre: 'Confirmez votre payment',
               button:'Verifier && confirmer',
-              name: route.params.avec.name
+              avec: route.params.avec,
+              type:'achat'
 
             })
           }} >ACHETER</Button>
@@ -480,17 +480,17 @@ const DetailsReunion = ({ route, navigation }) => {
           <Button mode='contained' disabled={!empruntValid}  style={{marginTop:10}} onPress={()=> {
             setEmprunt(null);
             setEmpruntValid(true);
-            hideModalDemandCred()
+            hideModalDemandCred();
             navigation.navigate('ConfirmPayment', {
               somme: parseInt(emprunt),
               nombreParts: parseInt(parseInt(interest)),
               prixParts: parseInt(parseInt(route.params.avec.amount)),
-              currency: route.params.avec.currency,
               connectedUser:  route.params.connectedUser,
               motif:  `Demande de ${parseInt(emprunt)}  ${route.params.avec.currency} d'emprunt`,
               titre: "Confirmer votre demande d'Emprunt",
               button:'Confirmer votre demande',
-              name: route.params.avec.name
+              avec: route.params.avec,
+              type:'emprunt'
             })
           }} >Demande d'emprunt</Button>
           </Block>
