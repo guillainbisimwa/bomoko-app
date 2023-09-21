@@ -26,7 +26,7 @@ const Reunion = (props,{ navigation } ) => {
       key={ props.avec._id}
       onPress={() => {
         console.log(props.date);
-        props.navigation.navigate('DetailsReunion', { reunion: props.date, avec: props.avec })
+        props.navigation.navigate('DetailsReunion', { reunion: props.date, avec: props.avec, connectedUser: props.connectedUser })
         
       }}
     >

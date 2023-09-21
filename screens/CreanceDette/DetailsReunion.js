@@ -4,19 +4,15 @@ import Block from '../Product/Block';
 import { COLORS, FONTS, SIZES, icons } from '../../constants';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Text } from '../../components';
-import {  Provider, Menu, Button, IconButton, Chip, Divider } from 'react-native-paper';
+import {  Provider, Menu, Button, IconButton, Divider } from 'react-native-paper';
 import {  BottomSheetBackdrop, BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { format } from 'date-fns';
 import { fr as myFr } from 'date-fns/locale';
-import { VictoryAxis, VictoryBar, VictoryChart, VictoryLabel, VictoryLegend, VictoryStack, VictoryTheme } from 'victory-native';
-import { Svg } from 'react-native-svg';
 import { responsiveScreenWidth } from 'react-native-responsive-dimensions';
 import { FlatList } from 'react-native';
-import Membre from '../Product/Membre';
 import Transaction from './Transaction';
 
 const DetailsReunion = ({ route, navigation }) => {
-
   const [isOpen, setIsOpen] = useState(false);
 
   const [isOpenAchatPart, setIsOpenAchatPart] = useState(false);
@@ -95,8 +91,6 @@ const DetailsReunion = ({ route, navigation }) => {
     bottomSheetModalMesParts.current?.close();
   }, []);
 
-  const hideModalMesParts = () => handleClosePressMesParts();
-
 
   const openModalMesEmp = useCallback(() => {
     bottomSheetModalMesEmp.current?.present();
@@ -109,9 +103,6 @@ const DetailsReunion = ({ route, navigation }) => {
    const handleClosePressMesEmp = useCallback(() => {
     bottomSheetModalMesEmp.current?.close();
   }, []);
-
-  const hideModalMesEmp = () => handleClosePressMesEmp();
-
 
 
   const openModalDemandCred = useCallback(() => {
@@ -126,8 +117,6 @@ const DetailsReunion = ({ route, navigation }) => {
     bottomSheetModalDemandCred.current?.close();
   }, []);
 
-  const hideModalDemandCred = () => handleClosePressDemandCred();
-
   
   const handleInterestChange = (text) => {
     const numericValue = parseFloat(text);
@@ -139,32 +128,6 @@ const DetailsReunion = ({ route, navigation }) => {
     setInterest(text); // Update interest value
   };
   
-
-  const myDataset = [
-    [
-      { x: "O Mois", y: 90 },
-      { x: "3 Mois", y: 100 },
-      { x: "6 Mois", y: 150 },
-      { x: "9 Mois", y: 250 },
-      { x: "12 Mois", y: 400 }
-    ],
-    [
-        { x: "O Mois", y: 0 },
-        { x: "3 Mois", y: 50 },
-        { x: "6 Mois", y: 60 },
-        { x: "9 Mois", y: 100 },
-        { x: "12 Mois", y: 120 }
-    ],
-    [
-      { x: "O Mois", y: 0 },
-      { x: "3 Mois", y: 40 },
-      { x: "6 Mois", y: 60 },
-      { x: "9 Mois", y: 75 },
-      { x: "12 Mois", y: 80 }
-    ],
-  
-  ];
-
 
   const membresListFull = [
     ...route.params?.avec?.membres,
@@ -204,8 +167,9 @@ const DetailsReunion = ({ route, navigation }) => {
         
         <Block row center space='between'>
           <Block>
-          <Text h2  bold >REUNION</Text>
+          <Text h2  bold >REUNION : {route.params.reunion.num}</Text>
           <Text color={COLORS.peach} >Du {formatDateToFrench(route.params.reunion.dateStart)}</Text>
+          <Text numberOfLines={1} bold >Bienvenue, { route.params.connectedUser.name}</Text>
           </Block>
 
           <Button mode='contained'  onPress={()=> openModalMenu()} >Menu</Button>
@@ -282,13 +246,13 @@ const DetailsReunion = ({ route, navigation }) => {
   const renderMenu = () => {
     return (
       <BottomSheetModal
-      ref={bottomSheetModalMenu}
-      index={1}
-      backdropComponent={BackdropElement}
-      snapPoints={snapPoints}
-      backgroundStyle={{ borderRadius: responsiveScreenWidth(5), backgroundColor:'#eee'}}
-      onDismiss={() => hideModalMenu()}
-    >
+        ref={bottomSheetModalMenu}
+        index={1}
+        backdropComponent={BackdropElement}
+        snapPoints={snapPoints}
+        backgroundStyle={{ borderRadius: responsiveScreenWidth(5), backgroundColor:'#eee'}}
+        onDismiss={() => hideModalMenu()}
+      >
       
       <Block >
         <TouchableOpacity onPress={()=>{ 
@@ -342,7 +306,6 @@ const DetailsReunion = ({ route, navigation }) => {
             <Text bold>Contribution hebdomadaire </Text>
           </Block>
         </TouchableOpacity>
-
 
         <Divider />
 
@@ -428,7 +391,20 @@ const DetailsReunion = ({ route, navigation }) => {
             )}
 
 
-          <Button mode='contained'  style={{marginTop:10}}>ACHETER</Button>
+          <Button mode='contained' disabled={!interestValid}  style={{marginTop:10}} onPress={()=> {
+            setInterest(null);
+            setInterestValid(true);
+            hideModalAchatPart()
+            navigation.navigate('ConfirmPayment', {
+              somme: parseInt(parseInt(interest) * parseInt(route.params.avec.amount)),
+              nombreParts: parseInt(parseInt(interest)),
+              prixParts: parseInt(parseInt(route.params.avec.amount)),
+              currency: route.params.avec.currency,
+              connectedUser:  route.params.connectedUser,
+              motif:  `Achat de ${parseInt(parseInt(interest))} parts a ${parseInt(parseInt(interest) * parseInt(route.params.avec.amount))} ${route.params.avec.currency}`,
+
+            })
+          }} >ACHETER</Button>
           </Block>
       </Block>
 

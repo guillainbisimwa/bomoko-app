@@ -1183,7 +1183,7 @@ ont épargné.</Text>
                 keyExtractor={(item) => item._id}
                 renderItem={({ item }) => 
                 
-                  <Reunion date={item} navigation={navigation} avec={route.params.avec} />
+                  <Reunion date={item} navigation={navigation} avec={route.params.avec} connectedUser={connectedUser} />
 
                 }
                 contentContainerStyle={styles.contentContainer}

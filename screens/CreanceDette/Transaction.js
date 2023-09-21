@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Image, StyleSheet, TouchableOpacity,View } from 'react-native';
-import Ionicons from '@expo/vector-icons/Ionicons';
 
 import { COLORS, SIZES, icons, FONTS } from '../../constants';
 import { Text } from '../../components';
@@ -23,17 +22,9 @@ const Transaction = (props,{ navigation } ) => {
     >
       <View
         style={{
-          //marginVertical: SIZES.padding / 5,
           borderBottomWidth:0.3,
           marginHorizontal:SIZES.padding/2,
-          //borderRadius: SIZES.radius,
           backgroundColor: COLORS.white,
-            // shadowColor: COLORS.black,
-            // shadowOffset: { width: 0, height: 2 },
-            // shadowOpacity: 0.1,
-            // shadowRadius: 13,
-            // elevation: 2,
-            
         }}
       >
         {/* Title */}
