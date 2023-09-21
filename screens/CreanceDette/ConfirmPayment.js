@@ -21,12 +21,12 @@ const ConfirmPayment = (props, { route }) => {
   const renderConfirm = () => {
     return <Block p={20} m={20} card >
       <Block center>
-        <Text h2 center bold >Confirmez votre payement</Text>
-        <Text center >Entez votre mots de passe pour confirmer aue c'est bien vous</Text>
+        <Text h2 center bold >{props?.route?.params?.titre}</Text>
+        <Text center >Entez votre mots de passe pour confirmer que c'est bien vous</Text>
       </Block>
 
       <Block row space='between' m_t={30} m_b={30}>
-        <Block center>
+        <Block center flex={1}>
           { props?.route?.params?.connectedUser?.profile_pic  ? (
               <Image
                 source={{ uri: props?.route?.params?.connectedUser?.profile_pic  }}
@@ -43,10 +43,10 @@ const ConfirmPayment = (props, { route }) => {
                 }}
               />
             )}
-          <Text bold>{props?.route?.params?.connectedUser?.name}</Text>
+          <Text gray center >{props?.route?.params?.connectedUser?.name} </Text>
         </Block>
 
-        <Block center>
+        <Block center flex={1}>
             <IconButton
               icon="arrow-right-circle"
               iconColor={COLORS.darkgreen}
@@ -55,7 +55,7 @@ const ConfirmPayment = (props, { route }) => {
           <Text bold>{props?.route?.params?.somme} {props?.route?.params?.currency}</Text>
         </Block>
 
-        <Block center>
+        <Block center flex={1}>
           <View style={{ 
               borderWidth:1,
                 borderColor:COLORS.black,
@@ -71,7 +71,8 @@ const ConfirmPayment = (props, { route }) => {
               }}
             />
           </View>
-        
+          <Text gray center > {props?.route?.params?.name} </Text>
+              
         </Block>
 
       </Block>
@@ -80,9 +81,21 @@ const ConfirmPayment = (props, { route }) => {
       <Divider />
 
       <Block m_t={20} p_t={10}>
-      <Text center gray style={styles.label}>Entrez votre Mots de passe</Text>
        
         <TextInput
+            style={styles.input} 
+            value={password}
+            onChangeText={setPassword}
+            keyboardType="default"
+            placeholder="Ajouter une note de demande"
+            multiline
+            numberOfLines={3}
+
+          />
+      <Text center gray style={styles.label}>Entrez votre Mots de passe</Text>
+
+         
+          <TextInput
             style={styles.input} 
             value={password}
             onChangeText={setPassword}
@@ -90,7 +103,7 @@ const ConfirmPayment = (props, { route }) => {
             placeholder="Mots de passe"
             secureTextEntry={true}
           />
-          <Button mode='contained' buttonColor='green' onPress={()=> navigation.goBack()}>Verifier && Transferer</Button>
+          <Button mode='contained' buttonColor='green' onPress={()=> navigation.goBack()}>{props?.route?.params?.button}</Button>
       </Block>
       
     </Block>

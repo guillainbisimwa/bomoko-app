@@ -5,7 +5,7 @@ import { COLORS, FONTS, SIZES, icons } from '../../constants';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Text } from '../../components';
 import {  Provider, Menu, Button, IconButton, Divider } from 'react-native-paper';
-import {  BottomSheetBackdrop, BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import {  BottomSheetBackdrop, BottomSheetModal, BottomSheetModalProvider, BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { format } from 'date-fns';
 import { fr as myFr } from 'date-fns/locale';
 import { responsiveScreenWidth } from 'react-native-responsive-dimensions';
@@ -26,6 +26,9 @@ const DetailsReunion = ({ route, navigation }) => {
 
   const [interestValid, setInterestValid] = useState(true); // Validation state for interest
   const [interest, setInterest] = useState('');
+
+  const [empruntValid, setEmpruntValid] = useState(true); // Validation state for interest
+  const [emprunt, setEmprunt] = useState('');
 
   const bottomSheetModalAchatPart = useRef(null);
   const bottomSheetModalMesParts = useRef(null);
@@ -117,6 +120,9 @@ const DetailsReunion = ({ route, navigation }) => {
     bottomSheetModalDemandCred.current?.close();
   }, []);
 
+  const hideModalDemandCred= () => handleClosePressDemandCred();
+
+
   
   const handleInterestChange = (text) => {
     const numericValue = parseFloat(text);
@@ -126,6 +132,16 @@ const DetailsReunion = ({ route, navigation }) => {
       setInterestValid(false); // Interest is not valid
     }
     setInterest(text); // Update interest value
+  };
+
+  const handleEmprunChange = (text) => {
+    const numericValue = parseFloat(text);
+    if (!isNaN(numericValue) && numericValue >= parseInt(route.params.avec.amount) && numericValue <= (parseInt(route.params.avec.amount)*3)) {
+      setEmpruntValid(true); // Interest is valid
+    } else {
+      setEmpruntValid(false); // Interest is not valid
+    }
+    setEmprunt(text); // Update interest value
   };
   
 
@@ -256,7 +272,6 @@ const DetailsReunion = ({ route, navigation }) => {
       
       <Block >
         <TouchableOpacity onPress={()=>{ 
-            //hideModalMenu();
             openModalAchatPart();
           }} >
           <Block p={17} row center>
@@ -275,7 +290,9 @@ const DetailsReunion = ({ route, navigation }) => {
 
         <Divider />
 
-        <TouchableOpacity>
+        <TouchableOpacity onPress={()=>{ 
+            openModalDemandCred();
+          }} >
           <Block p={17} row center>
           <Image
             source={icons.sell}
@@ -360,7 +377,7 @@ const DetailsReunion = ({ route, navigation }) => {
         <Block row space='between'>
           <Block >
             <Text bold h2>Achat des parts</Text>
-            <Text color={COLORS.peach}>{`Le prix d'une part est de ${route.params.avec.amount}  ${route.params.avec.currency} `}</Text>
+            <Text color={COLORS.blue}>{`Le prix d'une part est de ${route.params.avec.amount}  ${route.params.avec.currency} `}</Text>
           </Block>
           <TouchableOpacity onPress={()=> hideModalAchatPart()}>
             <IconButton
@@ -402,11 +419,85 @@ const DetailsReunion = ({ route, navigation }) => {
               currency: route.params.avec.currency,
               connectedUser:  route.params.connectedUser,
               motif:  `Achat de ${parseInt(parseInt(interest))} parts a ${parseInt(parseInt(interest) * parseInt(route.params.avec.amount))} ${route.params.avec.currency}`,
+              titre: 'Confirmez votre payment',
+              button:'Verifier && confirmer',
+              name: route.params.avec.name
 
             })
           }} >ACHETER</Button>
           </Block>
       </Block>
+
+    </BottomSheetModal>
+    )
+  }
+
+  const renderDemandeCredit = () => {
+    return (
+      <BottomSheetModal
+        ref={bottomSheetModalDemandCred}
+        index={1}
+        backdropComponent={BackdropElement}
+        snapPoints={snapPoints}
+        backgroundStyle={{ borderRadius: responsiveScreenWidth(5), backgroundColor:'#eee'}}
+        onDismiss={() => hideModalDemandCred()}
+      >
+        <BottomSheetScrollView>
+        <Block p={17} >
+        <Block row space='between'>
+          <Block m_b={10} flex={1}>
+            <Text bold h2>Demande de Credit</Text>
+            <Text numberOfLines={2} color={COLORS.blue}>{`Vous pouvez emprunter jusqu’à un maximum de 3 fois la valeur de votre épargne `}</Text>
+          </Block>
+          <TouchableOpacity onPress={()=> hideModalDemandCred()}>
+            <IconButton
+              icon="close"
+              iconColor={COLORS.red}
+              size={40}
+            />
+          </TouchableOpacity>
+        </Block>
+
+        <Block p_b={10}>
+          <Text style={styles.label}>Somme a emprunter</Text>
+          <TextInput
+              style={[styles.input, !empruntValid && styles.inputError]} // Apply red border if not valid
+              value={emprunt}
+              onChangeText={handleEmprunChange}
+              keyboardType="numeric"
+              placeholder="Somme a emprunter"
+            />
+            {!empruntValid && (
+              <Text style={styles.errorText}>Entre {route.params.avec.amount} et {parseInt(route.params.avec.amount*3)} {route.params.avec.currency}</Text>
+            )}
+
+            {emprunt &&empruntValid && (
+              <Text style={styles.label}>Voulez-vous emprunter {parseInt(emprunt)} {route.params.avec.currency}?
+              </Text>
+            )}
+
+
+          <Button mode='contained' disabled={!empruntValid}  style={{marginTop:10}} onPress={()=> {
+            setEmprunt(null);
+            setEmpruntValid(true);
+            hideModalDemandCred()
+            navigation.navigate('ConfirmPayment', {
+              somme: parseInt(emprunt),
+              nombreParts: parseInt(parseInt(interest)),
+              prixParts: parseInt(parseInt(route.params.avec.amount)),
+              currency: route.params.avec.currency,
+              connectedUser:  route.params.connectedUser,
+              motif:  `Demande de ${parseInt(emprunt)}  ${route.params.avec.currency} d'emprunt`,
+              titre: "Confirmer votre demande d'Emprunt",
+              button:'Confirmer votre demande',
+              name: route.params.avec.name
+            })
+          }} >Demande d'emprunt</Button>
+          </Block>
+      </Block>
+        </BottomSheetScrollView>
+      
+      
 
     </BottomSheetModal>
     )
@@ -509,6 +600,7 @@ const DetailsReunion = ({ route, navigation }) => {
         {/* Bottomsheet */}
         {renderMenu()}
         {renderAchatPart()}
+        {renderDemandeCredit()}
       </Block>
     </Block>
       
