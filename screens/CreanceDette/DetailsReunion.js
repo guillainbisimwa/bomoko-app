@@ -386,7 +386,9 @@ const DetailsReunion = ({ route, navigation }) => {
 
         <Divider />
 
-        <TouchableOpacity>
+        <TouchableOpacity onPress={()=>{ 
+            openModalCalend();
+          }} >
           <Block p={17} row center>
           <Image
             source={icons.calendar}
@@ -401,7 +403,9 @@ const DetailsReunion = ({ route, navigation }) => {
           </Block>
         </TouchableOpacity>
         <Divider />
-        <TouchableOpacity>
+        <TouchableOpacity onPress={()=>{ 
+            openModalContribCaiss();
+          }} >
           <Block m_b={10} p={17} row center>
           <Image
             source={icons.cash}
@@ -618,6 +622,45 @@ const DetailsReunion = ({ route, navigation }) => {
     )
   }
 
+  const renderCalend = () => {
+    return (
+      <BottomSheetModal
+        ref={bottomSheetModalCalend}
+        index={1}
+        backdropComponent={BackdropElement}
+        snapPoints={snapPoints}
+        backgroundStyle={{ borderRadius: responsiveScreenWidth(5), backgroundColor:'#eee'}}
+        onDismiss={() => hideModalCalend()}
+      >
+        <BottomSheetScrollView>
+        <Block p={17} >
+        <Block row space='between'>
+          <Block m_b={10} flex={1}>
+            <Text bold h2>Calendrier de Remboursement</Text>
+            <Text color={COLORS.blue}>{`Le remboursement`}</Text>
+          </Block>
+          <TouchableOpacity onPress={()=> hideModalCalend()}>
+            <IconButton
+              icon="close"
+              iconColor={COLORS.red}
+              size={40}
+            />
+          </TouchableOpacity>
+        </Block>
+
+        <Block p_b={10}>
+          <Text style={styles.label}>Calendrier de remboursement</Text>
+
+          
+          </Block>
+      </Block>
+        </BottomSheetScrollView>
+      
+
+    </BottomSheetModal>
+    )
+  }
+
 
 
   return (
@@ -717,6 +760,7 @@ const DetailsReunion = ({ route, navigation }) => {
         {renderAchatPart()}
         {renderDemandeCredit()}
         {renderContribHebdo()}
+        {renderCalend()}
       </Block>
     </Block>
       
