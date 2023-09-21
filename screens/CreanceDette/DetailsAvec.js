@@ -736,12 +736,12 @@ const DetailsAvec = ({ route, navigation }) => {
               </TouchableOpacity>
           </View>
         </View>
-        <Button buttonColor={COLORS.blue} mode="contained" onPress={()=>
+        {/* <Button buttonColor={COLORS.blue} mode="contained" onPress={()=>
                   {
                     navigation.navigate('EditAvec', {avec: route.params.avec, owner: route.params.avec.owner });
                   }}>
                   Modifier
-                </Button>
+                </Button> */}
         {
               connectedUser?.username === route.params.avec.owner.username? 
               <Block row space="between" m_t={10}>

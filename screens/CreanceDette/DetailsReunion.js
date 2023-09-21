@@ -218,7 +218,7 @@ const DetailsReunion = ({ route, navigation }) => {
   const renderChat = () => {
     return (
       <Block m={20} card>
-        <Block p={20}>
+        <Block p={17}>
         <Text bold numberOfLines={1} h2>
           Message
           </Text>
@@ -230,9 +230,9 @@ const DetailsReunion = ({ route, navigation }) => {
   const renderListContrib = () => {
     return (
       <Block card m={20} p_b={20} >
-        <Block p={20}>
+        <Block p={17}>
           <Text bold numberOfLines={1} h2>
-            Contibutions solidaires
+            Contibutions hebdomadaires
           </Text>
           <Block row space='between' >
           <Text numberOfLines={1} style={{flex: 1, marginRight: 10}}>La liste de toutes les contributions de ce jours</Text>
@@ -245,7 +245,7 @@ const DetailsReunion = ({ route, navigation }) => {
         <FlatList
             data={membresListFull?.slice(0,3)}
             renderItem={({ item }) => 
-              <Transaction user={item} navigation={navigation} subtitle='Contibution solidaire' topRight={1} 
+              <Transaction user={item} navigation={navigation} subtitle='Contibution hebdomadaire' topRight={1} 
               bottomRight='10 sep 2023' currency={route.params.avec.currency} />}
             keyExtractor={(item) => item._id} // Use a unique key for each item
           />
@@ -256,7 +256,7 @@ const DetailsReunion = ({ route, navigation }) => {
   const renderListAchatParts= () => {
     return (
       <Block card m_l={20} m_r={20} p_b={10} >
-        <Block p={20}>
+        <Block p={17}>
           <Text bold numberOfLines={1} h2>
             Achat des parts
           </Text>
@@ -295,7 +295,7 @@ const DetailsReunion = ({ route, navigation }) => {
             //hideModalMenu();
             openModalAchatPart();
           }} >
-          <Block m_b={10} p={20} row center>
+          <Block p={17} row center>
           <Image
             source={icons.shopping}
             style={{
@@ -312,7 +312,7 @@ const DetailsReunion = ({ route, navigation }) => {
         <Divider />
 
         <TouchableOpacity>
-          <Block m_b={10} p={20} row center>
+          <Block p={17} row center>
           <Image
             source={icons.sell}
             style={{
@@ -329,7 +329,7 @@ const DetailsReunion = ({ route, navigation }) => {
         <Divider />
 
         <TouchableOpacity>
-          <Block m_b={10} p={20} row center>
+          <Block p={17} row center>
           <Image
             source={icons.cash}
             style={{
@@ -339,7 +339,7 @@ const DetailsReunion = ({ route, navigation }) => {
               tintColor: COLORS.blue,
             }}
           />
-            <Text bold>Contribution caisse solidaire </Text>
+            <Text bold>Contribution hebdomadaire </Text>
           </Block>
         </TouchableOpacity>
 
@@ -347,7 +347,7 @@ const DetailsReunion = ({ route, navigation }) => {
         <Divider />
 
         <TouchableOpacity>
-          <Block m_b={10} p={20} row center>
+          <Block p={17} row center>
           <Image
             source={icons.calendar}
             style={{
@@ -358,6 +358,21 @@ const DetailsReunion = ({ route, navigation }) => {
             }}
           />
             <Text bold>Calendrier de Remboursement </Text>
+          </Block>
+        </TouchableOpacity>
+        <Divider />
+        <TouchableOpacity>
+          <Block m_b={10} p={17} row center>
+          <Image
+            source={icons.cash}
+            style={{
+              width: 30,
+              height: 30,
+              marginRight: 20,
+              tintColor: COLORS.blue,
+            }}
+          />
+            <Text bold>Contribution caisse solidaire </Text>
           </Block>
         </TouchableOpacity>
       </Block>
@@ -378,7 +393,7 @@ const DetailsReunion = ({ route, navigation }) => {
         onDismiss={() => hideModalAchatPart()}
       >
       
-      <Block p={20} >
+      <Block p={17} >
         <Block row space='between'>
           <Block >
             <Text bold h2>Achat des parts</Text>
@@ -405,6 +420,13 @@ const DetailsReunion = ({ route, navigation }) => {
             {!interestValid && (
               <Text style={styles.errorText}>Entre 1 et 5 parts</Text>
             )}
+
+            {interest &&interestValid && (
+              <Text style={styles.label}>Voulez-vous acheter {parseInt(interest)} parts a {
+              parseInt(parseInt(interest) * parseInt(route.params.avec.amount))} {route.params.avec.currency}?
+              </Text>
+            )}
+
 
           <Button mode='contained'  style={{marginTop:10}}>ACHETER</Button>
           </Block>
