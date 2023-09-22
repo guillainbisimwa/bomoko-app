@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Alert, View, StyleSheet, ScrollView, ImageBackground, Dimensions, 
   KeyboardAvoidingView, TouchableOpacity, Image } from 'react-native';
 import { Button, TextInput, Text, ActivityIndicator, Snackbar, } from 'react-native-paper';
@@ -9,25 +9,76 @@ import * as ImagePicker from "expo-image-picker";
 
 import { COLORS, FONTS } from '../../../constants';
 import { editUser } from '../../../redux/userSlice';
+import { useFocusEffect } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { height, width } = Dimensions.get('window');
 
-export const EditProfileForm = ({ navigation, route }) => {
+export const EditProfileForm = ({ navigation }) => {
+  console.log();
   const dispatch = useDispatch();
+  const [connectedUser, setConnectedUser] = useState(null);
 
   const { errorSignUp, isLoadingSignUp, successSignUp, userSignUp } = useSelector((state) => state.user);
   const [loadPic, setLoadPic] = useState(false);
   const [onSuccess, setOnSuccess] = useState(false);
+  const [onError, setOnError] = useState(false);
 
-  const [name, setNom] = useState(route?.params?.user.name);
+  const [id, setId] = useState();
+  const [name, setNom] = useState();
 
-  const [email, setEmail] = useState( route?.params?.user.email);
-  const [mobile, setMobile] = useState( route?.params?.user.mobile);
+  const [email, setEmail] = useState( );
+  const [mobile, setMobile] = useState();
   const [role, setRole] = useState('user');
 
   const [visible, setVisible] = useState(false);
 
-  const [selectedImage, setSelectedImage] = useState( route?.params?.user?.profile_pic || '');
+  const [selectedImage, setSelectedImage] = useState();
+
+
+   // Use the useFocusEffect hook to execute reloadScreen when the screen gains focus
+   useFocusEffect(
+    useCallback(() => {
+      const fetchData = async () => {
+       
+        try {
+          const value = await AsyncStorage.getItem('user');
+          if (value !== null) {
+            // Data found, reload the screen
+            reloadScreen(value);
+          }
+        } catch (error) {
+          console.error('Error retrieving data:', error);
+        }
+      };
+
+      // Fetch data when the screen gains focus
+      fetchData();
+
+      // Return a cleanup function
+      return () => {
+        // You can perform cleanup here if needed
+        console.log('Cleanup function');
+      };
+    }, []) // Empty dependency array to run this effect only once when the screen mounts
+  );
+
+
+  // Function to handle screen reload
+  const reloadScreen = (value) => {
+    // You can put your screen reload logic here
+    console.log('Screen reloaded');
+    const parsedValue = JSON.parse(value);
+    if (parsedValue.user && parsedValue.user.user) {
+      setConnectedUser(parsedValue.user.user);
+      setNom(parsedValue.user.user.name)
+      setEmail(parsedValue.user.user.email)
+      setMobile(parsedValue.user.user.mobile)
+      setSelectedImage(parsedValue.user.user.profile_pic)
+      setId(parsedValue.user.user._id)
+      console.log('Async State:', parsedValue.user.user);
+    }
+  };
 
   const onToggleSnackBar = () => setVisible(!visible);
 
@@ -37,16 +88,21 @@ export const EditProfileForm = ({ navigation, route }) => {
     useEffect(() => {
       //console.log("userSignUp", userSignUp);
         // Fetch user details from API
+        console.log(onSuccess);
+        console.log(onError);
+        console.log(isLoadingSignUp);
+        console.log(errorSignUp);
+        console.log(userSignUp);
        
-      if (onSuccess) {
+      if (onSuccess  && isLoadingSignUp) {
         // Alert.alert("Success", "Login successful!");
         navigation.navigate('LoginScreen'); 
       }
-      if (errorSignUp) {
+      if (onError) {
         onToggleSnackBar()
       }
       
-    }, [successSignUp, errorSignUp]);
+    }, [successSignUp, onError, isLoadingSignUp]);
 
 const handleSignUp = async () => {
   try {
@@ -59,8 +115,22 @@ const handleSignUp = async () => {
     }
 
     // Handle login functionality
+    console.log({
+      ...connectedUser,
+      userId: id,
+      id: id,
+      username:name,
+      name,
+      email,
+      mobile,
+      role,
+      cover_url:'', 
+      profile_pic: selectedImage
+    });
     dispatch(editUser({
-      userId: route?.params?.user._id,
+      ...connectedUser,
+      userId: connectedUser._id,
+      id: connectedUser._id,
       username:name,
       name,
       email,
@@ -70,10 +140,12 @@ const handleSignUp = async () => {
       profile_pic: selectedImage
     }));
 
-    setOnSuccess(true);
+    setOnSuccess(onSuccess);
+    setOnError(true);
  
   } catch (error) {
     Alert.alert("Attention", "Une erreur est survenue.");
+    setOnError(false)
 
     console.error("Error occurred during login:", error);
   }
@@ -189,29 +261,22 @@ const onCloudinarySaveCb = async (base64Img) => {
             </View>
           </TouchableOpacity>
         </View>
-        <TextInput error={errorSignUp} keyboardType="default" label="Nom d'utilisateur" value={name} onChangeText={setNom} style={styles.input} />
-        {/* <TextInput
-          label="Mots de passe"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-          style={styles.input}
-          error={errorSignUp}
-        /> */}
-
-        <TextInput error={errorSignUp} keyboardType="default" 
+        <TextInput error={onError} keyboardType="default" label="Nom d'utilisateur" value={name} onChangeText={setNom} style={styles.input} />
+        
+        <TextInput error={onError} keyboardType="default" 
         label="E-mail" value={email} 
         onChangeText={setEmail} style={styles.input} />
 
-      <TextInput error={errorSignUp} keyboardType="default" 
+      <TextInput error={onError} keyboardType="default" 
         label="Téléphone" value={mobile} 
         onChangeText={setMobile} style={styles.input} />
 
-          <ActivityIndicator  animating={isLoadingSignUp} color={COLORS.red} />
+          {/* <ActivityIndicator  animating={isLoadingSignUp} color={COLORS.red} /> */}
 
         
-        <Button mode="contained" onPress={handleSignUp} style={styles.button}>
-          S'enregistrer
+        <Button mode="contained" onPress={handleSignUp} style={styles.button}
+        loading={loadPic || isLoadingSignUp} disabled={loadPic || isLoadingSignUp} >
+          MODIFIER
         </Button>
 
         <Text style={{ marginVertical: 20, color: COLORS.white, ...FONTS.h2}} 
@@ -228,7 +293,7 @@ const onCloudinarySaveCb = async (base64Img) => {
           },
         }}
         >
-        {errorSignUp}
+        {onError}
         
       </Snackbar>
       </View>

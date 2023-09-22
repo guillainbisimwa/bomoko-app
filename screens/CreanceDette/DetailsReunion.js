@@ -12,10 +12,11 @@ import { responsiveScreenWidth } from 'react-native-responsive-dimensions';
 import { FlatList } from 'react-native';
 import Transaction from './Transaction';
 import { Chat } from '@flyerhq/react-native-chat-ui';
-import { useActionSheet } from '@expo/react-native-action-sheet'
+import { ActionSheetProvider, useActionSheet } from '@expo/react-native-action-sheet'
 import { launchImageLibrary } from 'react-native-image-picker';
 import DocumentPicker from 'react-native-document-picker';
 import FileViewer from 'react-native-file-viewer'
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 
 const DetailsReunion = ({ route, navigation }) => {
@@ -915,6 +916,8 @@ const DetailsReunion = ({ route, navigation }) => {
 
 
   return (
+    <SafeAreaProvider>
+    <ActionSheetProvider>
     <Provider>
       <BottomSheetModalProvider>
 
@@ -1020,6 +1023,8 @@ const DetailsReunion = ({ route, navigation }) => {
           </BottomSheetModalProvider>
         
         </Provider>
+        </ActionSheetProvider>
+        </SafeAreaProvider>
   );
 };
 
