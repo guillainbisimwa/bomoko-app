@@ -36,11 +36,6 @@
     "web": {
       "favicon": "./assets/app-icon.png"
     },
-    "extra": {
-      "eas": {
-        "projectId": "96544713-72ae-499c-944a-481a090080c3"
-      }
-    },
     "plugins": [
       [
         "expo-image-picker",
@@ -51,6 +46,11 @@
     ],
     "runtimeVersion": {
       "policy": "sdkVersion"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "29b5c6ee-165d-4ad5-89a2-727d3426e585"
+      }
     }
   }
 }
