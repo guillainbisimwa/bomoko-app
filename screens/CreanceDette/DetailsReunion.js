@@ -12,8 +12,15 @@ import { responsiveScreenWidth } from 'react-native-responsive-dimensions';
 import { FlatList } from 'react-native';
 import Transaction from './Transaction';
 import { Chat } from '@flyerhq/react-native-chat-ui';
+import { useActionSheet } from '@expo/react-native-action-sheet'
+import { launchImageLibrary } from 'react-native-image-picker';
+import DocumentPicker from 'react-native-document-picker';
+import FileViewer from 'react-native-file-viewer'
+
 
 const DetailsReunion = ({ route, navigation }) => {
+  const { showActionSheetWithOptions } = useActionSheet();
+
   const [isOpen, setIsOpen] = useState(false);
 
   const [isOpenAchatPart, setIsOpenAchatPart] = useState(false);
@@ -33,9 +40,7 @@ const DetailsReunion = ({ route, navigation }) => {
   const [empruntValid, setEmpruntValid] = useState(true); // Validation state for interest
   const [emprunt, setEmprunt] = useState('');
 
-  // const { showActionSheetWithOptions } = useActionSheet()
   const [messages, setMessages] = useState([
-   
    {
     author:{
       firstName: route.params?.avec?.owner.name,
@@ -53,6 +58,74 @@ const DetailsReunion = ({ route, navigation }) => {
     setMessages([message, ...messages])
   }
 
+  const handleAttachmentPress = () => {
+    showActionSheetWithOptions(
+      {
+        options: ['Photo', 'File', 'Cancel'],
+        cancelButtonIndex: 2,
+      },
+      (buttonIndex) => {
+        switch (buttonIndex) {
+          case 0:
+            handleImageSelection()
+            break
+          case 1:
+            handleFileSelection()
+            break
+        }
+      }
+    )
+  }
+
+
+  const handleImageSelection = () => {
+    launchImageLibrary(
+      {
+        includeBase64: true,
+        maxWidth: 1440,
+        mediaType: 'photo',
+        quality: 0.7,
+      },
+      ({ assets }) => {
+        const response = assets?.[0]
+
+        if (response?.base64) {
+          const imageMessage = {
+            author: user,
+            createdAt: Date.now(),
+            height: response.height,
+            id: uuidv4(),
+            name: response.fileName ?? response.uri?.split('/').pop() ?? '🖼',
+            size: response.fileSize ?? 0,
+            type: 'image',
+            uri: `data:image/*;base64,${response.base64}`,
+            width: response.width,
+          }
+          addMessage(imageMessage)
+        }
+      }
+    )
+  }
+
+
+  const handleFileSelection = async () => {
+    try {
+      const response = await DocumentPicker.pickSingle({
+        type: [DocumentPicker.types.allFiles],
+      })
+      const fileMessage = {
+        author: user,
+        createdAt: Date.now(),
+        id: uuidv4(),
+        mimeType: response.type ?? undefined,
+        name: response.name,
+        size: response.size ?? 0,
+        type: 'file',
+        uri: response.uri,
+      }
+      addMessage(fileMessage)
+    } catch {}
+  }
 
   const handlePreviewDataFetched = ({
     message,
@@ -66,11 +139,13 @@ const DetailsReunion = ({ route, navigation }) => {
   }
 
   const handleMessagePress = async (message) => {
+    console.log('File');
+
     if (message.type === 'file') {
       console.log('File');
-      // try {
-      //   await FileViewer.open(message.uri, { showOpenWithDialog: true })
-      // } catch {}
+      try {
+        await FileViewer.open(message.uri, { showOpenWithDialog: true })
+      } catch {}
     }
   }
 
@@ -330,7 +405,7 @@ const DetailsReunion = ({ route, navigation }) => {
 
         <Chat
           messages={messages}
-          //onAttachmentPress={handleAttachmentPress}
+          onAttachmentPress={handleAttachmentPress}
           onMessagePress={handleMessagePress}
           onPreviewDataFetched={handlePreviewDataFetched}
           onSendPress={handleSendPress}
