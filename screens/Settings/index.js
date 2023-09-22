@@ -5,7 +5,8 @@ import UseCondition from './UseCondition'
 import ReportProblemScreen from './ReportProblemScreen'
 import LanguageSelectionScreen from './LanguageSelectionScreen'
 import Profile from './Profile';
-import DetailsByUser from './DetailsByUser'
+import DetailsByUser from './DetailsByUser';
+import MagicValidation from './MagicValidation';
 
 export {
     Privacy,
@@ -15,5 +16,6 @@ export {
     ReportProblemScreen,
     LanguageSelectionScreen,
     Profile,
-    DetailsByUser
+    DetailsByUser,
+    MagicValidation
 };

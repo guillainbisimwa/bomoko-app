@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 
-import { useFonts } from 'expo-font';
+import * as Font from 'expo-font';
+
 import { useDispatch, useSelector } from 'react-redux';
 import InitialLoader from './screens/InitialLoader';
 import Onboard from './navigations/Onboard';
@@ -11,7 +12,6 @@ import { setInstalled, setUnInstalled } from './redux/appReducer';
 import { LoginScreen } from './screens/LoginScreen/LoginScreen';
 import { AuthScreen } from './screens/AuthScreen/AuthScreen';
 import { resetAllCat } from './redux/catReducer';
-import { StatusBar } from 'react-native';
 import MyDrawer from './navigations/MyDrawer';
 import { Expense, Income } from './screens';
 import { COLORS, icons } from './constants';
@@ -19,12 +19,12 @@ import Details from './screens/Product/Details';
 import AddProduct from './screens/Product/AddProduct';
 import { loginSuccess } from './redux/authReducer';
 import { EditProfile, SignUpScreen } from './screens/SignUpScreen';
-import { loadInitialUser, logoutUser, setInitialUser } from './redux/userSlice';
 import EditProduct from './screens/Product/EditProduct';
 import ShowImages from './screens/Product/ShowImages';
 import ShoppingCard from './screens/ShoppingCard/ShoppingCard';
-import { AideEtSupport, DataSecurityScreen, DetailsByUser, LanguageSelectionScreen, Privacy, Profile, ReportProblemScreen, UseCondition } from './screens/Settings';
-import { AddAvec, DetailsAvec } from './screens/CreanceDette';
+import { AideEtSupport, DataSecurityScreen, DetailsByUser, LanguageSelectionScreen, MagicValidation, Privacy, Profile, ReportProblemScreen, UseCondition } from './screens/Settings';
+import { AddAvec, ConfirmPayment, DetailsAvec, DetailsReunion, EditAvec } from './screens/CreanceDette';
+import { StatusBar } from 'expo-status-bar';
 
 const theme = {
   ...DefaultTheme,
@@ -39,6 +39,11 @@ const Stack = createStackNavigator();
 const App = () => {
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
+  const [fontLoading, setFontLoading]=useState(false);
+
+
+  const isInstalled = useSelector((state) => state.app.isInstalled);
+  const u = useSelector((state) => state?.user);
 
   const income = 'income';
   const expense = 'expense';
@@ -153,19 +158,10 @@ const App = () => {
     checkCategories();
   }, []);
 
-  useEffect(() => {
-    // Load initial user data from AsyncStorage
-    const initialUser = loadInitialUser();
-    if (initialUser) {
-      // Dispatch the action using extraReducers
-      dispatch(setInitialUser(initialUser));
-    }
-  }, []);
-
   const checkInstallationStatus = async () => {
     try {
       const value = await AsyncStorage.getItem('isInstalled');
-      console.log('value', value);
+      console.log('installed', value);
       if (value !== null && value === 'true') {
         dispatch(setInstalled());
       } else {
@@ -181,7 +177,7 @@ const App = () => {
   const checkLoginStatus = async () => {
     try {
       const value = await AsyncStorage.getItem('user');
-      //AsyncStorage.clear();
+      // AsyncStorage.clear();
 
       console.log('value-user', value);
       if (value !== null) {
@@ -217,27 +213,13 @@ const App = () => {
     }
   };
 
-  const isInstalled = useSelector((state) => state.app.isInstalled);
-  const u = useSelector((state) => state?.user);
-  // console.log("user -->",u)
-
-  const [loaded] = useFonts({
-    'Roboto-Black': require('./assets/fonts/Roboto-Black.ttf'),
-    'Roboto-Bold': require('./assets/fonts/Roboto-Bold.ttf'),
-    'Roboto-Regular': require('./assets/fonts/Roboto-Regular.ttf'),
-  });
-
-  if (!loaded) {
-    return null;
-  }
-
   if (loading) {
     return <InitialLoader />;
   }
   if (isInstalled) {
     return (
       <NavigationContainer theme={theme}>
-        <StatusBar barStyle="default"></StatusBar>
+        <StatusBar style="dark" />
 
         <Stack.Navigator initialRouteName={'MyDrawer'}>
           <Stack.Screen
@@ -251,7 +233,8 @@ const App = () => {
           <Stack.Screen name="Income" component={Income} options={{ title: 'Crédit (Entrée)' }} />
           <Stack.Screen name="Expense" component={Expense} options={{ title: 'Débit (Sortie)' }} />
           <Stack.Screen name="Details" component={Details} options={{ title: 'Details' }} />
-          <Stack.Screen name="AddProduct" component={AddProduct} options={{ title: 'Produit' }} />
+          <Stack.Screen name="AddProduct" component={AddProduct}
+           options={{ title: 'Ajouter un Produit ou Service' }} />
           <Stack.Screen name="EditProduct" component={EditProduct} options={{ title: 'Modifier Produit' }} />
           <Stack.Screen name="ShowImages" component={ShowImages} options={{ title: 'Images' }} />
           <Stack.Screen name="ShoppingCard" component={ShoppingCard} options={{ title: 'Panier' }} />
@@ -262,14 +245,27 @@ const App = () => {
           <Stack.Screen name="UseCondition" component={UseCondition} options={{ title: "Condition d'utilisation" }} />
           <Stack.Screen name="ReportProblemScreen" component={ReportProblemScreen} options={{ title: "Signaler un problème" }} />
           <Stack.Screen name="LanguageSelectionScreen" component={LanguageSelectionScreen} options={{ title: "Choisissez une Langue" }} />
+          <Stack.Screen name="MagicValidation" component={MagicValidation} options={{ title: "Magic Validation" }} />
+          
+          
           <Stack.Screen name="DetailsByUser" component={DetailsByUser}
            options={{ title: '' , headerShown: true}}/>
 
           <Stack.Screen name="addAvec" component={AddAvec}
-           options={{ title: '' , headerShown: true}}/>
+           options={{ title: 'Ajouter un groupe' , headerShown: true}}/>
 
           <Stack.Screen name="DetailsAvec" component={DetailsAvec}
-           options={{ title: '' , headerShown: true}}/>
+           options={{ title: 'Details' , headerShown: true}}/>
+
+
+        <Stack.Screen name="DetailsReunion" component={DetailsReunion}
+           options={{ title: 'Details Reunion' , headerShown: true}}/>
+
+        <Stack.Screen name="ConfirmPayment" component={ConfirmPayment}
+           options={{ title: 'Confirmation' , headerShown: true}}/>
+
+        <Stack.Screen name="EditAvec" component={EditAvec}
+           options={{ title: 'Modifier AVEC' , headerShown: true}}/>
     
 
           <Stack.Screen name="EditProfile" component={EditProfile} options={{

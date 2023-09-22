@@ -46,6 +46,12 @@ Now that we have set up our build profile and app signing, running a build for i
 
 `eas build --profile preview --platform all`
 
+## Publish an update
+
+Once the update is built and uploaded to EAS and the command completes, force close and reopen your app up to two times to download and view the update.
+
+`eas update --branch preview --message "Updating the app"`
+
 ## Author
 
 👤 **Guillain Bisimwa**

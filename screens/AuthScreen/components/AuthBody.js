@@ -32,9 +32,10 @@ export const AuthBody = ({navigation}) => {
           backgroundColor: '#fff',
           borderRadius: 50,
           elevation: 5,
+          paddingHorizontal:20
         }}
       >
-        <Image style={styles.logo} source={require('./../../../assets/img/logo1.png')} />
+        <Image style={styles.logo} source={require('./../../../assets/img/logo3.png')} />
       </View>
       <LottieView
         source={require('./../../../assets/json/welcome.json')}

@@ -71,7 +71,7 @@ const Home = ({ navigation }) => {
       <View
         style={{
           flexDirection: 'row',
-          paddingTop: SIZES.base * 3,
+          paddingTop: SIZES.base * 5,
           justifyContent: 'space-between',
           //alignItems: 'flex-end',
           paddingHorizontal: SIZES.padding,

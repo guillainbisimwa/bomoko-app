@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Alert, View, StyleSheet, ImageBackground, Dimensions,ScrollView, KeyboardAvoidingView } from 'react-native';
-import { Button, TextInput, Text, ActivityIndicator, Snackbar, } from 'react-native-paper';
+import { Button, TextInput, Text, Snackbar, } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import NetInfo from "@react-native-community/netinfo";
 
@@ -8,42 +8,49 @@ import LottieView from 'lottie-react-native';
 import { COLORS, FONTS } from '../../../constants';
 import { loginUser } from '../../../redux/userSlice';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const { height, width } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 export const LoginForm = ({ navigation }) => {
   const dispatch = useDispatch();
 
   const { error, isLoading, success, user } = useSelector((state) => state.user);
 
-  const [phone, setPhone] = useState('');
-  const [password, setPassword] = useState('');
+  const [phone, setPhone] = useState(''); //12345678
+  const [password, setPassword] = useState('');//test2
 
   const [visible, setVisible] = useState(false);
-  const [visibleSuccess, setVisibleSuccess] = useState(false);
   
   const navigationV2 = useNavigation();
 
-  const onToggleSnackBarSuccess = () => setVisibleSuccess(!visibleSuccess);
   const onToggleSnackBar = () => setVisible(!visible);
 
   const onDismissSnackBar = () => setVisible(false);
-  const onDismissSnackBarSuccess = () => setVisibleSuccess(false);
 
   // Use useEffect or any other method to handle the success state and display the alert
     useEffect(() => {
-      if (success) {
-        onToggleSnackBarSuccess();
-      
-        navigationV2.navigate('Main');
-       
-      }
+      checkLoginStatus();
       if (error) {
+        console.log(error);
         onToggleSnackBar()
       }
-      
     }, [success, error]);
 
+    const checkLoginStatus = async () => {
+      try {
+        const value = await AsyncStorage.getItem('user');
+  
+        //console.log('value-user', value);
+        if (value !== null) {
+           navigationV2.navigate('Main');
+        } else {
+        }
+      } catch (error) {
+        console.log('Error retrieving installation status:', error);
+      }
+    };
+    
 const handleLogin = async () => {
   try {
     // Check internet connections
@@ -92,49 +99,25 @@ const handleLogin = async () => {
           style={styles.input}
           error={error}
         />
-          <ActivityIndicator  animating={isLoading} color={COLORS.red} />
-
-        
-        <Button mode="contained" onPress={handleLogin} style={styles.button}>
-          Login
+        {
+          visible? <Text style={{color:COLORS.red}} >Mots de passe ou Numéro de téléphone invalide </Text>:<></>
+        }
+       
+        <Button disabled={isLoading} mode="contained" loading={isLoading} onPress={handleLogin} style={styles.button}>
+          Se connecter
         </Button>
 
         <Text style={{ marginVertical: 20, color: COLORS.white, ...FONTS.h2}} 
       onPress={()=> navigation.goBack()} > Retour</Text>
 
-      
       </View>
     <Snackbar
-        visible={visible}
-        onDismiss={onDismissSnackBar}
-        style={{ backgroundColor: COLORS.peach}}
-        wrapperStyle={{ bottom: 30 }}
-        action={{
-          label: 'Annuler',
-          onPress: () => {
-            // Do something
-          },
-        }}
-        >
-        {error}
-      
-        
-      </Snackbar>
-      <Snackbar
-        visible={visibleSuccess}
-        onDismiss={onDismissSnackBarSuccess}
-        style={{ backgroundColor: COLORS.darkgreen}}
-        wrapperStyle={{ bottom: 30 }}
-        
-        action={{
-          label: 'Annuler',
-          onPress: () => {
-            // Do something
-          },
-        }}
-        >
-        Login avec success
-        
+      visible={visible}
+      onDismiss={onDismissSnackBar}
+      style={{ backgroundColor: COLORS.peach}}
+      wrapperStyle={{ bottom: 30 }}
+    >
+       Mots de passe ou Numéro de téléphone invalide
       </Snackbar>
     </ScrollView>
     </KeyboardAvoidingView>
@@ -170,7 +153,7 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 20,
-    padding:10,
+    //padding:10,
     width: '70%',
   },
 });

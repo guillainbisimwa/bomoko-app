@@ -11,7 +11,7 @@ const slides = [
     id: 2,
     lable: 'Interface conviviale',
     subtitle: 'Accès facile aux fonctionnalités',
-    des: "Profitez de notre interface utilisateur intuitive conçue pour faciliter la gestion de votre portefeuille électronique. Lancez-vous et profitez d'un parcours financier sans soucis avec BOMOKO.",
+    des: "Profitez de notre interface utilisateur intuitive conçue pour faciliter la gestion de votre portefeuille électronique. Lancez-vous et profitez d'un parcours financier sans soucis avec African Fintech.",
     imageUrl: require('./../../assets/img/il1.png'),
   },
 
@@ -19,7 +19,7 @@ const slides = [
     id: 3,
     lable: 'Vos revenus et dépenses',
     subtitle: 'Suivez vos finances',
-    des: 'Gardez une trace claire de vos revenus et dépenses. Catégorisez vos dépenses et obtenez des informations détaillées sur votre situation financière. Atteignez vos objectifs financiers avec BOMOKO.',
+    des: 'Gardez une trace claire de vos revenus et dépenses. Catégorisez vos dépenses et obtenez des informations détaillées sur votre situation financière. Atteignez vos objectifs financiers avec African Fintech.',
     imageUrl: require('./../../assets/img/il2.png'),
   },
 ];

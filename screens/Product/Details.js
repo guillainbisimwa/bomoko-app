@@ -8,6 +8,7 @@ import {
   Image,
   ToastAndroid,
   Keyboard,
+  Linking,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Svg } from 'react-native-svg';
@@ -84,6 +85,12 @@ const Details = ({ route, navigation }) => {
 
   const dispatch = useDispatch();
 
+  const handleContactSupport = () => {
+    // Replace with your support email or contact form link
+    const supportEmail = 'info@alphanewgroup.com';
+    Linking.openURL(`mailto:${supportEmail}`);
+  };
+
   // Date Calculation
   const targetStartDate = new Date(route.params.food.startDate);
   const targetEndDate = new Date(route.params.food.endDate);
@@ -108,9 +115,8 @@ const Details = ({ route, navigation }) => {
 
   // Timeline
   const outputTimeLine = route.params.food.timeline.map(item => {
-    const date = new Date(item.timestamp);
-    const formattedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear().toString().substr(-2)}`;
-    
+    const formattedDate = new Date(item.timestamp).toLocaleDateString('en-GB').replace(/\//g, '-');
+
     return {
       time: formattedDate,
       title: item.title,
@@ -123,14 +129,14 @@ const Details = ({ route, navigation }) => {
   const mydateEnd = new Date(targetEndDate);
 
   outputTimeLine.unshift({
-    time:`${mydateEnd.getDate()}/${mydateEnd.getMonth() + 1}/${mydateEnd.getFullYear().toString().substr(-2)}`,
+    time:`${mydateEnd.toLocaleDateString('en-GB').replace(/\//g, '-')}`,
     title: 'Fin probable de la Campagne',
-    description: `Probablelent la campagne prendra fin apres ${daysTotalExc} jours de la date de debut de la collecte`,
-    //lineColor: COLORS.peach,
-    //circleSize: 30,
-    //circleColor: COLORS.peach,
-    //dotColor: COLORS.blue,
-    //innerCircle: 'dot',
+    description: `Probablelent la campagne de collecte de fonds prendra fin apres ${daysTotalExc} jours de la date de debut de la collecte`,
+    lineColor: COLORS.peach,
+    circleSize: 30,
+    circleColor: COLORS.peach,
+    dotColor: COLORS.black,
+    innerCircle: 'dot',
   });
 
   const [expanded, setExpanded] = useState(false);
@@ -683,7 +689,7 @@ const Details = ({ route, navigation }) => {
                 <Image
                   source={{ uri: item.user.profile_pic  }}
                   style={{ width: 40, height: 40, borderRadius:20, borderWidth:1,
-                    elevation:3, borderColor: COLORS.white}}
+                  borderColor: COLORS.white}}
                 />
               ) : (
                 <Image
@@ -855,12 +861,13 @@ const Details = ({ route, navigation }) => {
             </Block>
             <Block m_t={5} row space="between">
               <Text numberOfLines={1} semibold size={16}>
+              Montant collecté(
               {((route.params.food.initialAmount + route.params.food.membres
 .filter(member => member.contribution_status === "ACCEPTED")
-.reduce((sum, member) => sum + member.contribution_amount, 0)) * 100 / route.params.food.amount).toFixed(1)}% d'investissement
+.reduce((sum, member) => sum + member.contribution_amount, 0)) * 100 / route.params.food.amount).toFixed(1)}%)
               </Text>
-              <Text numberOfLines={1} semibold size={16}>
-              {route.params.food.initialAmount} {route.params.food.currency}  reuni
+              <Text numberOfLines={1}>
+              {route.params.food.initialAmount} {route.params.food.currency}
               </Text>
             </Block>
             <Block>
@@ -882,16 +889,22 @@ const Details = ({ route, navigation }) => {
                 <Text numberOfLines={1} semibold>
                   Les parts disponibles:
                 </Text>
-                <Text>{(100 - (route.params.food.initialAmount / (route.params.food.amount / 100))).toFixed(1)} parts</Text>
+                <Text>{(100 - (route.params.food.initialAmount / (route.params.food.amount / 100).toFixed(0))).toFixed(0)} parts</Text>
               </Block>
 
-              <Block row space="between">
+              {/* <Block row space="between">
                 <Text numberOfLines={1} semibold>
                   Le coût total de Revient:
                 </Text>
                 <Text> 0 {route.params.food.currency} </Text>
+              </Block> */}
+              <Block row space="between">
+                <Text numberOfLines={1} semibold>
+                    Taux d'intérêt :
+                  </Text>
+                  <Text> {route.params.food?.tauxInt} % </Text>
+                  </Block>
               </Block>
-            </Block>
             {
               JSON.parse(token)?.user.user.username === route.params.food.owner.username? 
               <Block row space="between" m_t={10}>
@@ -1002,7 +1015,7 @@ const Details = ({ route, navigation }) => {
                 style={{ 
                   data: {
                     fill: ({ datum }) => {
-                      if (datum.x === `Intérêt (5%)`) {
+                      if (datum.x === `Intérêt (${route.params.food.tauxInt}%)`) {
                         return COLORS.primary;
                       } else if (datum.x === `Invest`) {
                         return COLORS.peach;
@@ -1019,7 +1032,7 @@ const Details = ({ route, navigation }) => {
                 categories={{
                   x: [`Total`, 
                   `Disponible`,
-                  `Intérêt (5%)`,
+                  `Intérêt (${route.params.food.tauxInt}%)`,
                   `Invest`
                 ],
                 }}
@@ -1030,7 +1043,7 @@ const Details = ({ route, navigation }) => {
                     .filter(member => member.contribution_status === "ACCEPTED")
                     .reduce((sum, member) => sum + member.contribution_amount, 0))
                   },
-                  { x:  `Intérêt (5%)`, y: interet },
+                  { x:  `Intérêt (${route.params.food.tauxInt}%)`, y: interet },
                   { x: `Invest`, y: sliderValue },
                 ]}
               />
@@ -1048,14 +1061,15 @@ const Details = ({ route, navigation }) => {
             step={route.params.food.amount/100}
             value={sliderValue}
             onValueChange={(sliderValue) => {
-              setInteret((sliderValue *5 )/100)
+              setInteret((sliderValue * route.params.food.tauxInt )/100)
               setSliderValue(sliderValue)}
             }
           />
 
-        <Text bold numberOfLines={2} style={{ color: 'black' }}>
+        <Text bold style={{ color: 'black' }}>
           Vous investissez la somme de : {sliderValue} {route.params.food.currency}.
-           Ceci équivaut à {sliderValue/(route.params.food.amount/100)} parts de {route.params.food.amount/100} {route.params.food.currency} chacun.</Text>
+           Ceci équivaut à {sliderValue/(route.params.food.amount/100)} parts de {route.params.food.amount/100} {route.params.food.currency} chacun.
+           Et votre Intérêt de (${route.params.food.tauxInt}%) est de {interet} {route.params.food.currency} après l'exercice. </Text>
           
         </Block>
 
@@ -1093,6 +1107,36 @@ const Details = ({ route, navigation }) => {
           <Text bold numberOfLines={1}>
             BESOIN D'AIDE?
           </Text>
+        </Block>
+
+        
+          
+        <Block  p_l={20} p_r={20}   >
+          <Text>
+            {`Avez-vous des questions sur ce ${route.params.food.type}? Contactez le propriétaire ou notre expert en financement participatif.`}
+            </Text>
+        <Block row space='between'>
+
+        <View style={styles.columnMembre1}>
+            <Image
+              source={{uri: route.params.food.owner?.profile_pic}}
+              style={styles.imgOwner}
+            />
+            <Text numberOfLines={2} bold >{route.params.food.owner?.name}</Text>
+            <Text numberOfLines={1} style={styles.contentTitle}>Président</Text>
+          </View>
+
+         <Block style={{ justifyContent: 'center' }}>
+         <TouchableOpacity style={styles.contactButton} onPress={handleContactSupport}>
+        <Text style={styles.buttonText}>Contacter l'Admin</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.contactButton2} onPress={handleContactSupport}>
+        <Text style={styles.buttonText}>Contacter le Support</Text>
+      </TouchableOpacity>
+         </Block>
+
+        </Block>
         </Block>
 
         <BottomSheet
@@ -1416,7 +1460,42 @@ const styles = StyleSheet.create({
   },
   buttonError:{
     backgroundColor: COLORS.peach
-  }
+  },
+  imgOwner:{
+    width: 100,
+    height: 100,
+    borderRadius:50,
+  },
+  contentTitle: {
+    fontSize: 13,
+    color: COLORS.peach
+  },
+  columnMembre1: {
+    //flex: 1, // Takes 50% width
+    marginRight: 8, // Adjust the margin as needed
+    paddingVertical:8,
+    alignItems:'center',
+    justifyContent: 'center'   
+  },
+  contactButton: {
+    backgroundColor: 'blue',
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 5,
+    marginTop: 10,
+  },
+  contactButton2: {
+    backgroundColor: 'green',
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 5,
+    marginTop: 10,
+  },
+  buttonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
 });
 
 export default Details;
