@@ -655,9 +655,8 @@ const DetailsAvec = ({ route, navigation }) => {
               <Menu.Item leadingIcon="account-key" title="Credits" />
                 
               <Menu.Item leadingIcon="bank" title="Epargnes" />
-              <Menu.Item leadingIcon="calendar" title="Cotisation Hebdomadaire" />
-              <Menu.Item leadingIcon="cash" title="Caisse solidaire" />
-              <Menu.Item leadingIcon="account-tie" title="Amamdes" />
+              <Menu.Item leadingIcon="cash" title="Cotisation Hebdomadaire" />
+              <Menu.Item leadingIcon="account-tie" title="Amandes" />
 
         </Menu>
         </Block>

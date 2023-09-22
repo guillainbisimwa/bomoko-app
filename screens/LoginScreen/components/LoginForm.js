@@ -17,8 +17,8 @@ export const LoginForm = ({ navigation }) => {
 
   const { error, isLoading, success, user } = useSelector((state) => state.user);
 
-  const [phone, setPhone] = useState('12345678');
-  const [password, setPassword] = useState('test2');
+  const [phone, setPhone] = useState(''); //12345678
+  const [password, setPassword] = useState('');//test2
 
   const [visible, setVisible] = useState(false);
   

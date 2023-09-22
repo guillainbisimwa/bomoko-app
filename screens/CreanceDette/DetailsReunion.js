@@ -35,6 +35,7 @@ const DetailsReunion = ({ route, navigation }) => {
 
   // const { showActionSheetWithOptions } = useActionSheet()
   const [messages, setMessages] = useState([
+   
    {
     author:{
       firstName: route.params?.avec?.owner.name,
@@ -42,10 +43,10 @@ const DetailsReunion = ({ route, navigation }) => {
       imageUrl: 'https://raw.githubusercontent.com/guillainbisimwa/bomoko-app/master/assets/icons/gens.png',
     },
     createdAt: Date.now() ,
-      id: Math.random().toString(),
-      status: 'seen',
-      text: `Et soyez le bienvnues au group AVEC : ${route.params?.avec?.name}`,
-      type: 'text',
+    id: Math.random().toString(),
+    status: 'seen',
+    text: `Bonjour a tous. Soyez les bienvnues a la REUNION NUMERO : ${route.params.reunion.num}`,
+    type: 'text',
    }])
 
   const addMessage = (message) => {
@@ -579,7 +580,7 @@ const DetailsReunion = ({ route, navigation }) => {
         backgroundStyle={{ borderRadius: responsiveScreenWidth(5), backgroundColor:'#eee'}}
         onDismiss={() => hideModalDemandCred()}
       >
-        <BottomSheetScrollView>
+        <BottomSheetScrollView  accessibilityElementsHidden={false}>
         <Block p={17} >
         <Block row space='between'>
           <Block m_b={10} flex={1}>
