@@ -12,7 +12,8 @@
       "backgroundColor": "#ffffff"
     },
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/96544713-72ae-499c-944a-481a090080c3"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -28,7 +29,9 @@
       },
       "package": "com.wezalab.bomoko4",
       "versionCode": 51,
-      "permissions": []
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "favicon": "./assets/app-icon.png"
@@ -45,6 +48,9 @@
           "photosPermission": "The app accesses your photos to let you share them with your friends."
         }
       ]
-    ]
+    ],
+    "runtimeVersion": {
+      "policy": "sdkVersion"
+    }
   }
 }
