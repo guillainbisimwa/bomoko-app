@@ -389,7 +389,7 @@ const handlePrevPage = () => {
                 <FlatList
                   data={currentProducts}
                   keyExtractor={(item) => item._id}
-                  renderItem={({ item }) => <Product  prod={item} navigation={navigation}  />}
+                  renderItem={({ item }) => <Product connectedUser={connectedUser} prod={item} navigation={navigation}  />}
                 />
                 <Text center white bold>Page {currentPage} sur {totalPages}</Text>
                 <Block row style={{columnGap: 15, marginTop: 15}}>

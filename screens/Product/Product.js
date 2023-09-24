@@ -9,6 +9,7 @@ import Text from './Text';
 import { View } from 'react-native';
 
 const Product = (props) => {
+  console.log('connectedUser', props.connectedUser);
 
   const stars = (starsNumber) => {
     const totalStars = 5;
@@ -57,10 +58,9 @@ const Product = (props) => {
 
   return (
     <>
-       
               <TouchableOpacity
                 onPress={() => {
-                  props.navigation.navigate('Details', { food: props.prod });
+                  props.navigation.navigate('Details', { food: props.prod, connectedUser: props.connectedUser });
                 }}
               >
                 <Block color="white" style={styles.container} m_t={14}>

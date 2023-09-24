@@ -17,7 +17,7 @@ const ConfirmPayment = (props, { route }) => {
   // console.log(route?.params);
   // console.log(route);
   useEffect(()=>{
-    console.log(props?.route?.params?.avec.membres.map((v,k)=> v.user.name));
+    //console.log(props?.route?.params?.avec.membres.map((v,k)=> v.user.name));
     
   },[])
 

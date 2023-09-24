@@ -9,6 +9,7 @@ import {
   ToastAndroid,
   Keyboard,
   Linking,
+  TextInput as ReactTextInput
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Svg } from 'react-native-svg';
@@ -66,12 +67,17 @@ const Details = ({ route, navigation }) => {
   const [dateStart, setDateStart] = useState(new Date(route.params.food.startDate));
   const [dateEnd, setDateEnd] = useState(new Date(route.params.food.endDate));
 
+  const [interestValid, setInterestValid] = useState(true); // Validation state for interest
+  const [interest, setInterest] = useState('');
+
   const [currentItem, setCurrentItem] = useState(false)
 
   const [openCout, setOpenCout] = useState(false)
   const [openReject, setOpenReject] = useState(false)
   const [openAccept, setOpenAccept] = useState(false)
   const [openDetailsTrans, setOpenDetailsTrans] = useState(false)
+  const [openContrib, setOpenContrib] = useState(false)
+  
 
   const BackdropElement = useCallback(
     (backdropProps) => (
@@ -89,6 +95,7 @@ const Details = ({ route, navigation }) => {
   const bottomSheetAccept = useRef(null);
   const bottomSheetReject = useRef(null);
   const bottomSheetDetailsTrans = useRef(null);
+  const bottomSheetContrib = useRef(null);
 
   const snapPoints = useMemo(() => ["28%","50%", '70%', '80%', '90%'], []);
 
@@ -144,6 +151,18 @@ const Details = ({ route, navigation }) => {
 
   const hideModalDetailsTrans = () => handleCloseDetailsTrans();
 
+  const openModalContrib = useCallback(() => {
+    bottomSheetContrib.current?.present();
+    setTimeout(() => {
+      setOpenContrib(true);
+    }, 5);
+  }, []);
+
+  const handleCloseContrib = useCallback(() => {
+    bottomSheetContrib.current?.close();
+  }, []);
+
+  const hideModalContrib = () => handleCloseContrib();
 
 
   useEffect(() => {
@@ -165,6 +184,8 @@ const Details = ({ route, navigation }) => {
     //console.log("owner", route.params.food.membres);
     //console.log("token", JSON.parse(token)?.user?.user?.userId,);
     console.log("id",  route.params.food._id);
+    console.log('connectedUser', route.params.connectedUser);
+    
   },[])
 
   const dispatch = useDispatch();
@@ -173,6 +194,19 @@ const Details = ({ route, navigation }) => {
     // Replace with your support email or contact form link
     const supportEmail = 'info@alphanewgroup.com';
     Linking.openURL(`mailto:${supportEmail}`);
+  };
+
+   
+  const handleInterestChange = (text) => {
+    const parts = (100 - (route.params.food.initialAmount / (route.params.food.amount / 100).toFixed(0))).toFixed(0);
+
+    const numericValue = parseFloat(text);
+    if (!isNaN(numericValue) && numericValue >= 1 && numericValue <= parts) {
+      setInterestValid(true); // Interest is valid
+    } else {
+      setInterestValid(false); // Interest is not valid
+    }
+    setInterest(text); // Update interest value
   };
 
   // Date Calculation
@@ -323,6 +357,76 @@ const Details = ({ route, navigation }) => {
               route.params.food.owner._id !== JSON.parse(token)?.user?.user?.userId?
               renderFAaddCout(): <></>
             }
+
+    </BottomSheetModal>
+  )
+
+  const renderBottomContrib= ()=> (
+    <BottomSheetModal
+      ref={bottomSheetContrib}
+      index={1}
+      backdropComponent={BackdropElement}
+      snapPoints={snapPoints}
+      backgroundStyle={{ borderRadius: responsiveScreenWidth(5), backgroundColor:'#eee'}}
+      onDismiss={() => setOpenContrib(false)}
+    >
+      <BottomSheetScrollView style={{ padding: 17}}>
+      <Block row space='between' >
+          <Block >
+            <Text bold h2>CONTRIBUTION</Text>
+            <Text color={COLORS.blue}>{`Achat de parts`}</Text>
+          </Block>
+          <TouchableOpacity onPress={()=> hideModalContrib()}>
+            <IconButton
+              icon="close"
+              iconColor={COLORS.red}
+              size={40}
+            />
+          </TouchableOpacity>
+        </Block>
+        
+        <Block p_b={10}>
+          <Text>{(100 - (route.params.food.initialAmount / (route.params.food.amount / 100).toFixed(0))).toFixed(0)}  parts disponibles</Text>
+
+          <ReactTextInput
+              style={[styles.inputText, !interestValid && styles.inputError]} // Apply red border if not valid
+              value={interest}
+              onChangeText={handleInterestChange}
+              keyboardType="numeric"
+              placeholder="Nombre de parts"
+            />
+            {!interestValid && (
+              <Text style={styles.errorText}>Entre 1 et {(100 - (route.params.food.initialAmount / (route.params.food.amount / 100).toFixed(0))).toFixed(0)} parts</Text>
+            )}
+
+            {interest &&interestValid && (
+              <Text style={styles.label}>Voulez-vous acheter {parseInt(interest)} parts a {
+              parseFloat(parseFloat(interest) * (route.params.food.amount / 100) ).toFixed(2)} {route.params.food.currency}?
+              </Text>
+            )}
+
+
+          <Button mode='contained' disabled={!interestValid}  style={{marginTop:10}} onPress={()=> {
+            setInterest(null);
+            setInterestValid(true);
+            hideModalContrib();
+            navigation.navigate('ConfirmPayment', {
+              somme: parseFloat(parseFloat(interest) * (route.params.food.amount / 100) ).toFixed(2),
+              nombreParts: parseInt(interest),
+              prixParts: parseInt(route.params.food.amount / 100),
+              connectedUser:  route.params.connectedUser,
+              motif:  `Achat de ${parseInt(interest)} parts a ${parseFloat(parseFloat(interest) * (route.params.food.amount / 100) ).toFixed(2)} ${route.params.food.currency}?`,
+              titre: 'Confirmez votre payment',
+              button:'Verifier && confirmer',
+              //avec: route.params.avec,
+              type:'achat'
+
+            })
+          }} >ACHETER</Button>
+          </Block>
+
+      
+      </BottomSheetScrollView>
 
     </BottomSheetModal>
   )
@@ -913,7 +1017,7 @@ const Details = ({ route, navigation }) => {
             </View>
           </View>
           <View style={{ alignItems: 'flex-end' }}>
-  {(!item.admin && route.params.food.owner._id !== JSON.parse(token)?.user?.user?.userId) ? (
+  {(!item.admin && route.params.food.owner._id == JSON.parse(token)?.user?.user?.userId) ? (
     item.admission_req == 'ACCEPTED' ? (
       <>
         <Text style={{ ...FONTS.h5, color: COLORS.red }}>+ {route.params.food.tauxInt} intérêt</Text>
@@ -1104,7 +1208,7 @@ const Details = ({ route, navigation }) => {
                   </Block>
               </Block>
             {
-              JSON.parse(token)?.user.user.username === route.params.food.owner.username? 
+              JSON.parse(token)?.user.user.username == route.params.food.owner.username? 
               <Block row space="between" m_t={10}>
               {/* owner */}
              {
@@ -1151,7 +1255,11 @@ const Details = ({ route, navigation }) => {
                <Button textColor="#fff" elevated buttonColor={COLORS.purple} onPress={()=> showModalAdhesion()} >
                Demande d'Adhesion
              </Button>
+             
               }
+               <Button textColor="#fff" elevated buttonColor={COLORS.darkgreen} onPress={()=> openModalContrib()}>
+                  Contribuer
+                </Button>
              
             </Block>
             }
@@ -1551,6 +1659,8 @@ const Details = ({ route, navigation }) => {
         {renderBottomAccept()}
         {renderBottomReject()}
 
+        {renderBottomContrib()}
+
     </ScrollView>
     </BottomSheetModalProvider>
   );
@@ -1669,6 +1779,24 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
   },
+  inputError: {
+    borderColor: 'red', // Red border for invalid input
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 12,
+  },
+  label: {
+    fontSize: 16,
+    marginBottom: 5,
+  },
+  inputText: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 15,
+  }
 });
 
 export default Details;
