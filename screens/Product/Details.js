@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ImageBackground,
   ScrollView,
@@ -31,6 +31,9 @@ import { fr } from 'date-fns/locale';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { delProduct, soumettreProduct } from '../../redux/prodReducer';
 import { TouchableWithoutFeedback } from 'react-native';
+import { BottomSheetBackdrop, BottomSheetFlatList, BottomSheetFooter, BottomSheetFooterContainer, BottomSheetModal, BottomSheetModalProvider, BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import { responsiveScreenWidth } from 'react-native-responsive-dimensions';
+
 
 const Details = ({ route, navigation }) => {
   const scrollX = useRef(new Animated.Value(0)).current;
@@ -62,6 +65,42 @@ const Details = ({ route, navigation }) => {
 
   const [dateStart, setDateStart] = useState(new Date(route.params.food.startDate));
   const [dateEnd, setDateEnd] = useState(new Date(route.params.food.endDate));
+
+  const [openCout, setOpenCout] = useState(false)
+  const [openReject, setOpenReject] = useState(false)
+  const [openAccept, setOpenAccept] = useState(false)
+  const [openDetailsTrans, setOpenDetailsTrans] = useState(false)
+
+  const BackdropElement = useCallback(
+    (backdropProps) => (
+      <BottomSheetBackdrop
+        {...backdropProps}
+        opacity={0.7}
+        appearsOnIndex={0}
+        disappearsOnIndex={-1}
+      />
+    ),
+    []
+  );
+
+  const bottomSheetCout = useRef(null);
+  const bottomSheetAccept = useRef(null);
+  const bottomSheetReject = useRef(null);
+  const bottomSheetDetailsTrans = useRef(null);
+
+  const snapPoints = useMemo(() => ["28%","50%", '70%', '80%', '90%'], []);
+
+  const openModalCout = useCallback(() => {
+    bottomSheetCout.current?.present();
+    setTimeout(() => {
+      setOpenCout(true);
+    }, 5);
+  }, []);
+
+  const handleCloseCout = useCallback(() => {
+    bottomSheetCout.current?.close();
+  }, []);
+
 
   useEffect(() => {
     const getTokenFromAsyncStorage = async () => {
@@ -205,6 +244,44 @@ const Details = ({ route, navigation }) => {
       </Block>
     );
   };
+
+  const renderBottomCout = ()=> (
+    <BottomSheetModal
+      ref={bottomSheetCout}
+      index={4}
+      backdropComponent={BackdropElement}
+      snapPoints={snapPoints}
+      backgroundStyle={{ borderRadius: responsiveScreenWidth(5), backgroundColor:'#eee'}}
+      onDismiss={() => setOpenCout(false)}
+    >
+      <BottomSheetScrollView>
+
+      <Block style={styles.bottomSheetContent}>
+            <Text style={styles.bottomSheetTitle}>Le coût total de production</Text>
+            <Text style={styles.bottomSheetText}>
+              Il permet de prendre en compte tous les éléments de coût associés à la fabrication,
+              l'achat ou la prestation d'un bien ou d'un service.
+            </Text>
+            <View style={[styles.card,{ marginBottom: route.params.food.owner._id == JSON.parse(token)?.user?.user?.userId? 190 : 100} ]}>
+             {
+                  route.params.food.couts
+                  .map((food, index) => {
+                    return <CoutScreen admin={route.params.food.owner._id !== JSON.parse(token)?.user?.user?.userId}
+                    totAmount={totAmount} handleUpdateItem={handleUpdateItem} handleTrash={handleTrash} currency={route.params.food.currency} key={index} item={food} count={index + 1} />;
+                  })}
+            </View>
+           
+           
+          </Block>
+          </BottomSheetScrollView>
+        
+              {
+              route.params.food.owner._id !== JSON.parse(token)?.user?.user?.userId?
+              renderFAaddCout(): <></>
+            }
+
+    </BottomSheetModal>
+  )
 
   const renderImages = () => {
     return (
@@ -631,7 +708,7 @@ const Details = ({ route, navigation }) => {
     return (
       <Block row space="between" style={styles.floatBlock}>
         <Text bold>Les coûts directs et indirects</Text>
-        <Button textColor="#fff" elevated buttonColor={COLORS.purple} onPress={toggle}>
+        <Button textColor="#fff" elevated buttonColor={COLORS.purple} onPress={()=> openModalCout()}>
           Les coûts
         </Button>
       </Block>
@@ -797,6 +874,7 @@ const Details = ({ route, navigation }) => {
   );
 
   return (
+    <BottomSheetModalProvider>
     <ScrollView showsVerticalScrollIndicator={false} accessibilityElementsHidden={true}>
       <Block flex={1}>
         <Block style={{ height: 180 }}>
@@ -1139,40 +1217,6 @@ const Details = ({ route, navigation }) => {
 
         </Block>
         </Block>
-
-        <BottomSheet
-          visible={visible}
-          onBackButtonPress={toggle}
-          onBackdropPress={toggle}
-          containerStyle={styles.bottomSheetContainer}
-        >
-          <Block style={styles.bottomSheetContent}>
-            <Text style={styles.bottomSheetTitle}>Le coût total de production</Text>
-            <Text style={styles.bottomSheetText}>
-              Il permet de prendre en compte tous les éléments de coût associés à la fabrication,
-              l'achat ou la prestation d'un bien ou d'un service.
-            </Text>
-            <View style={[styles.card,{ marginBottom: route.params.food.owner._id == JSON.parse(token)?.user?.user?.userId? 190 : 100} ]}>
-              <ScrollView
-                //ref={scrollRef}
-                contentContainerStyle={styles.scrollContentContainer}
-                showsVerticalScrollIndicator={false}
-              >
-                {
-                  route.params.food.couts
-                  .map((food, index) => {
-                    return <CoutScreen admin={route.params.food.owner._id == JSON.parse(token)?.user?.user?.userId}
-                    totAmount={totAmount} handleUpdateItem={handleUpdateItem} handleTrash={handleTrash} currency={route.params.food.currency} key={index} item={food} count={index + 1} />;
-                  })}
-              </ScrollView>
-            </View>
-            {
-              route.params.food.owner._id == JSON.parse(token)?.user?.user?.userId?
-              renderFAaddCout(): <></>
-            }
-           
-          </Block>
-        </BottomSheet>
         
       </Block>
       {renderFloatingBlock()}
@@ -1383,7 +1427,10 @@ const Details = ({ route, navigation }) => {
           {error}
         </Snackbar>
 
+        {renderBottomCout()}
+
     </ScrollView>
+    </BottomSheetModalProvider>
   );
 };
 
@@ -1433,12 +1480,15 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
+    borderRadius: 10,
+    elevation: 2
+    
   },
   bottomSheetContainer: {
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   bottomSheetContent: {
-    backgroundColor: 'white',
+    //backgroundColor: 'white',
     padding: 16,
     height: '88%',
     
