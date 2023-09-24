@@ -19,6 +19,7 @@ const product = [
             ""
         ],
         "amount": 222,
+        'tauxInt':'20',
         "initialAmount": 111,
         "type": "service",
         "currency": "USD",
@@ -47,7 +48,157 @@ const product = [
         "couts": [],
         "likes": [],
         "stars": [],
-        "membres": [],
+        "membres": [
+          
+          {
+            "adhesion": {
+                "status": "PENDING",
+                "amountDemande": 0,
+                "timestamp": "2023-09-13T19:19:31.746Z"
+            },
+            "user": {
+                "_id": "64c96038e199bcbfe1e02654",
+                "name": "Gb",
+                "email": "guillain@test.com",
+                "mobile": "+243987654321",
+                "username": "Gb",
+                "role": "user",
+                "status": "PENDING",
+                "profile_pic": "https://res.cloudinary.com/micity/image/upload/v1693134452/j4gwzlhrw55mg8lmk6yc.jpg"
+            },
+            "temoins": [],
+            "type": "MEMBRE",
+            "timestamp": "2023-09-13T19:19:31.746Z",
+            "_id": "65020c768655d8acbb923a61"
+        },
+        {
+            "adhesion": {
+                "status": "PENDING",
+                "amountDemande": 0,
+                "timestamp": "2023-09-13T19:58:43.886Z"
+            },
+            "user": {
+                "_id": "64c8e9e64b2d32dee269983a",
+                "name": "Justin MUHIRE",
+                "email": "guy@gmail.com",
+                "mobile": "0978532756",
+                "username": "Justin MUHIRE",
+                "role": "user",
+                "status": "PENDING",
+                "profile_pic": "https://res.cloudinary.com/micity/image/upload/v1693695208/iap9xrlndwa768rino9w.jpg"
+            },
+            "temoins": [],
+            "type": "MEMBRE",
+            "timestamp": "2023-09-13T19:19:31.746Z",
+            "_id": "65020c768655d8acbb923a62"
+        },
+        {
+            "adhesion": {
+                "status": "PENDING",
+                "amountDemande": 0,
+                "timestamp": "2023-09-13T19:58:43.886Z"
+            },
+            "user": {
+                "_id": "64c8ed6b4b2d32dee269984d",
+                "name": "Guy1",
+                "email": "guy@gmail.comm",
+                "mobile": "09785327566",
+                "username": "Guy1",
+                "role": "user",
+                "status": "PENDING"
+            },
+            "temoins": [],
+            "type": "Gardeurs des clés",
+            "timestamp": "2023-09-13T19:19:31.746Z",
+            "_id": "65020c768655d8acbb923a63"
+        },
+        {
+            "adhesion": {
+                "status": "PENDING",
+                "amountDemande": 0,
+                "timestamp": "2023-09-13T19:58:43.886Z"
+            },
+            "user": {
+                "_id": "64e885f6ff4fb6e53966fc7d",
+                "name": "arrrrr",
+                "email": "arrrrrr@test.me",
+                "mobile": "+123456789090",
+                "username": "Arrrrr",
+                "role": "user",
+                "cover_url": "https://res.cloudinary.com/micity/image/upload/v1693137612/hktwhhh6k2s1qwh2vci4.jpg",
+                "profile_pic": "https://res.cloudinary.com/micity/image/upload/v1693137612/hktwhhh6k2s1qwh2vci4.jpg",
+                "status": "PENDING"
+            },
+            "temoins": [],
+            "type": "MEMBRE",
+            "timestamp": "2023-09-13T19:19:31.746Z",
+            "_id": "65020c768655d8acbb923a64"
+        },
+        {
+            "adhesion": {
+                "status": "PENDING",
+                "amountDemande": 0,
+                "timestamp": "2023-09-13T19:58:43.886Z"
+            },
+            "user": {
+                "_id": "64d3a7a1774f3daebb477a53",
+                "name": "Patrick",
+                "email": "patrickabedi02@gmail.com",
+                "mobile": "0993328512",
+                "username": "Patrick",
+                "role": "user",
+                "status": "PENDING",
+                "profile_pic": "https://res.cloudinary.com/micity/image/upload/v1693137287/uyvld8ipsiljbja3lntw.jpg"
+            },
+            "temoins": [],
+            "type": "Secrétaire",
+            "timestamp": "2023-09-13T19:19:31.746Z",
+            "_id": "65020c768655d8acbb923a65"
+        },
+        {
+            "adhesion": {
+                "status": "PENDING",
+                "amountDemande": 0,
+                "timestamp": "2023-09-13T19:58:43.886Z"
+            },
+            "user": {
+                "_id": "64c9920ac8285d09d37accf5",
+                "name": "Ryanna ADASA",
+                "email": "ryanna@test.me",
+                "mobile": "9876543210",
+                "username": "Ryanna ADASA",
+                "role": "user",
+                "status": "PENDING",
+                "profile_pic": "https://res.cloudinary.com/micity/image/upload/v1693690790/pgnpjhgoytihsa8pi97p.jpg"
+            },
+            "temoins": [],
+            "type": "Trésorier",
+            "timestamp": "2023-09-13T19:19:31.746Z",
+            "_id": "65020c768655d8acbb923a66"
+        },
+        {
+            "adhesion": {
+                "status": "SUBMITTED",
+                "amountDemande": 0,
+                "timestamp": "2023-09-13T19:58:43.886Z"
+            },
+            "user": {
+                "_id": "64f91551149778f65a1876b2",
+                "name": "test",
+                "email": "test@me.com",
+                "mobile": "123456789",
+                "username": "test",
+                "role": "user",
+                "cover_url": "",
+                "profile_pic": "https://raw.githubusercontent.com/guillainbisimwa/bomoko-app/master/assets/icons/gens.png",
+                "status": "PENDING"
+            },
+            "temoins": [],
+            "type": "MEMBRE",
+            "timestamp": "2023-09-13T19:58:43.886Z",
+            "_id": "65021a7fa98a3e8c20cc97fd"
+        }
+        ],
         "__v": 0
     },
     {

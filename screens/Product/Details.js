@@ -78,10 +78,11 @@ const Details = ({ route, navigation }) => {
     getTokenFromAsyncStorage();
   }, []);
 
-  // useEffect(()=> {
-  //   console.log("owner", route.params.food.membres);
-  //   console.log("token", JSON.parse(token)?.user?.user?.userId,);
-  // },[])
+  useEffect(()=> {
+    //console.log("owner", route.params.food.membres);
+    //console.log("token", JSON.parse(token)?.user?.user?.userId,);
+    console.log("id",  route.params.food._id);
+  },[])
 
   const dispatch = useDispatch();
 
@@ -725,7 +726,7 @@ const Details = ({ route, navigation }) => {
   {(!item.admin && route.params.food.owner._id == JSON.parse(token)?.user?.user?.userId) ? (
     item.admission_req == 'ACCEPTED' ? (
       <>
-        <Text style={{ ...FONTS.h5, color: COLORS.red }}>+4% intérêt</Text>
+        <Text style={{ ...FONTS.h5, color: COLORS.red }}>+ {route.params.food.tauxInt} intérêt</Text>
         <View style={{ flexDirection: 'row' }}>
           <Image
             source={icons.calendar}
@@ -769,7 +770,7 @@ const Details = ({ route, navigation }) => {
     </>
   ) : (
     <>
-      <Text style={{ ...FONTS.h5, color: COLORS.red }}>+5% intérêt</Text>
+      <Text style={{ ...FONTS.h5, color: COLORS.red }}>+ {route.params.food.tauxInt}% intérêt</Text>
       <View style={{ flexDirection: 'row', marginTop:20 }}>
         <Image
           source={icons.calendar}
@@ -796,7 +797,7 @@ const Details = ({ route, navigation }) => {
   );
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
+    <ScrollView showsVerticalScrollIndicator={false} accessibilityElementsHidden={true}>
       <Block flex={1}>
         <Block style={{ height: 180 }}>
           {renderImages()}
@@ -985,7 +986,7 @@ const Details = ({ route, navigation }) => {
             renderItem({ admin: true, name: route.params.food.owner.name+" (Admin)", 
             //name: route.params.food.owner._id
             user: {_id: route.params.food.owner._id,  ...route.params.food.owner},
-            contribution: route.params.food.initialAmount, 
+            contribution: route.params.food.initialAmount, tauxInt: route.params.food.tauxInt,
             date: format(new Date(route.params.food.timestamp), 'dd MMMM yyyy', { locale: fr }) })
           }
 
