@@ -16,7 +16,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Block from './Block';
 import Text from './Text';
 import { COLORS, FONTS, icons, SIZES } from '../../constants';
-import { Button, Card, MD3Colors, Modal, ProgressBar, Snackbar, TextInput } from 'react-native-paper';
+import { Button, Card, IconButton, MD3Colors, Modal, ProgressBar, Snackbar, TextInput } from 'react-native-paper';
 import { BottomSheet } from 'react-native-btr';
 import { useDispatch, useSelector } from 'react-redux';
 import CoutScreen from './CoutScreen';
@@ -66,6 +66,8 @@ const Details = ({ route, navigation }) => {
   const [dateStart, setDateStart] = useState(new Date(route.params.food.startDate));
   const [dateEnd, setDateEnd] = useState(new Date(route.params.food.endDate));
 
+  const [currentItem, setCurrentItem] = useState(false)
+
   const [openCout, setOpenCout] = useState(false)
   const [openReject, setOpenReject] = useState(false)
   const [openAccept, setOpenAccept] = useState(false)
@@ -100,6 +102,48 @@ const Details = ({ route, navigation }) => {
   const handleCloseCout = useCallback(() => {
     bottomSheetCout.current?.close();
   }, []);
+
+  const openModalAccept = useCallback(() => {
+    bottomSheetAccept.current?.present();
+    setTimeout(() => {
+      setOpenAccept(true);
+    }, 5);
+  }, []);
+
+  const handleCloseAccept = useCallback(() => {
+    bottomSheetAccept.current?.close();
+  }, []);
+
+  const hideModalAccept = () => handleCloseAccept();
+
+
+  const openModalReject = useCallback(() => {
+    bottomSheetReject.current?.present();
+    setTimeout(() => {
+      setOpenReject(true);
+    }, 5);
+  }, []);
+
+  const handleCloseReject = useCallback(() => {
+    bottomSheetReject.current?.close();
+  }, []);
+
+  const hideModalReject = () => handleCloseReject();
+
+
+  const openModalDetailsTrans = useCallback(() => {
+    bottomSheetDetailsTrans.current?.present();
+    setTimeout(() => {
+      setOpenDetailsTrans(true);
+    }, 5);
+  }, []);
+
+  const handleCloseDetailsTrans = useCallback(() => {
+    bottomSheetDetailsTrans.current?.close();
+  }, []);
+
+  const hideModalDetailsTrans = () => handleCloseDetailsTrans();
+
 
 
   useEffect(() => {
@@ -283,6 +327,73 @@ const Details = ({ route, navigation }) => {
     </BottomSheetModal>
   )
 
+  const renderBottomAccept = (item) => (
+    <BottomSheetModal
+      ref={bottomSheetAccept}
+      index={0}
+      backdropComponent={BackdropElement}
+      snapPoints={snapPoints}
+      backgroundStyle={{ borderRadius: responsiveScreenWidth(5), backgroundColor:'#eee'}}
+      onDismiss={() => setOpenAccept(false)}
+    >
+     <BottomSheetScrollView style={{ padding: 17}}>
+      <Block row space='between' >
+          <Block >
+            <Text bold h2>ACCEPTER</Text>
+            <Text color={COLORS.blue}>{`Accepter la demande d'un investisseur`}</Text>
+          </Block>
+          <TouchableOpacity onPress={()=> hideModalAccept()}>
+            <IconButton
+              icon="close"
+              iconColor={COLORS.red}
+              size={40}
+            />
+          </TouchableOpacity>
+        </Block>
+        <Button buttonColor={COLORS.darkgreen} disabled={isLoading} mode='contained' style={{marginTop:10}} onPress={()=> {
+          handleAcceptReq(currentItem)
+        }}>Accepter</Button>
+
+      
+      </BottomSheetScrollView>
+
+    </BottomSheetModal>
+  )
+
+  const renderBottomReject = (item) => (
+    <BottomSheetModal
+      ref={bottomSheetReject}
+      index={0}
+      backdropComponent={BackdropElement}
+      snapPoints={snapPoints}
+      backgroundStyle={{ borderRadius: responsiveScreenWidth(5), backgroundColor:'#eee'}}
+      onDismiss={() => setOpenReject(false)}
+    >
+      <BottomSheetScrollView style={{ padding: 17}}>
+      <Block row space='between' >
+          <Block >
+            <Text bold h2>REFUSER</Text>
+            <Text color={COLORS.blue}>{`Rejeter la demande d'un investisseur`}</Text>
+          </Block>
+          <TouchableOpacity onPress={()=> hideModalReject()}>
+            <IconButton
+              icon="close"
+              iconColor={COLORS.red}
+              size={40}
+            />
+          </TouchableOpacity>
+        </Block>
+        <Button buttonColor={COLORS.peach}  disabled={isLoading} mode='contained' style={{marginTop:10}} onPress={()=> {
+          handleAcceptReject(currentItem)
+        }}>Rejeter</Button>
+
+      {/*  (item) */}
+      
+      </BottomSheetScrollView>
+
+    </BottomSheetModal>
+  )
+
   const renderImages = () => {
     return (
       <ScrollView
@@ -348,8 +459,8 @@ const Details = ({ route, navigation }) => {
       }));
 
       route.params.food.couts = [
+         ...route.params.food.couts,
         coutObj,
-        ...route.params.food.couts,
       ]
 
       setEditedName('');
@@ -473,16 +584,18 @@ const Details = ({ route, navigation }) => {
        // Check if the member was updated successfully
       if (!error && !isLoading) {
         // Navigate back to the previous screen
-        await navigation.navigate('Main');
+        //await navigation.navigate('Main');
   
       }else {
         console.log('Error ++++++')
-        onToggleSnackBar()
+      ToastAndroid.show(`Une erreur s'est produite`, ToastAndroid.LONG);
+        
+        //onToggleSnackBar()
       }
     } catch(e){
       console.log('Error //////////', e)
-      onToggleSnackBar()
-      showToast()
+      //onToggleSnackBar()
+     // showToast()
     }
   }
 
@@ -800,7 +913,7 @@ const Details = ({ route, navigation }) => {
             </View>
           </View>
           <View style={{ alignItems: 'flex-end' }}>
-  {(!item.admin && route.params.food.owner._id == JSON.parse(token)?.user?.user?.userId) ? (
+  {(!item.admin && route.params.food.owner._id !== JSON.parse(token)?.user?.user?.userId) ? (
     item.admission_req == 'ACCEPTED' ? (
       <>
         <Text style={{ ...FONTS.h5, color: COLORS.red }}>+ {route.params.food.tauxInt} intérêt</Text>
@@ -824,7 +937,10 @@ const Details = ({ route, navigation }) => {
       <Text style={{ ...FONTS.h5, color: COLORS.red }}>Rejeté</Text>
     ) : (
       <Block row space="between">
-        <TouchableOpacity onPress={() => handleAcceptReject(item)}>
+        <TouchableOpacity onPress={() => {
+            setCurrentItem(item)
+            openModalReject()
+          }}>
           {isLoading ? (
             <></>
           ) : (
@@ -832,7 +948,10 @@ const Details = ({ route, navigation }) => {
           )}
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => handleAcceptReq(item)}>
+        <TouchableOpacity onPress={() => {
+            setCurrentItem(item)
+            openModalAccept()
+          }}>
           {isLoading ? (
             <></>
           ) : (
@@ -1428,6 +1547,9 @@ const Details = ({ route, navigation }) => {
         </Snackbar>
 
         {renderBottomCout()}
+
+        {renderBottomAccept()}
+        {renderBottomReject()}
 
     </ScrollView>
     </BottomSheetModalProvider>
