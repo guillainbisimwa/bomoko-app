@@ -17,7 +17,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Block from './Block';
 import Text from './Text';
 import { COLORS, FONTS, icons, SIZES } from '../../constants';
-import { Button, Card, IconButton, MD3Colors, Modal, ProgressBar, Snackbar, TextInput } from 'react-native-paper';
+import { Button, Card, Divider, IconButton, MD3Colors, Modal, ProgressBar, Snackbar, TextInput } from 'react-native-paper';
 import { BottomSheet } from 'react-native-btr';
 import { useDispatch, useSelector } from 'react-redux';
 import CoutScreen from './CoutScreen';
@@ -34,6 +34,8 @@ import { delProduct, soumettreProduct } from '../../redux/prodReducer';
 import { TouchableWithoutFeedback } from 'react-native';
 import { BottomSheetBackdrop, BottomSheetFlatList, BottomSheetFooter, BottomSheetFooterContainer, BottomSheetModal, BottomSheetModalProvider, BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { responsiveScreenWidth } from 'react-native-responsive-dimensions';
+import Transaction from '../CreanceDette/Transaction';
+import { FlatList } from 'react-native';
 
 
 const Details = ({ route, navigation }) => {
@@ -71,6 +73,8 @@ const Details = ({ route, navigation }) => {
   const [interest, setInterest] = useState('');
 
   const [currentItem, setCurrentItem] = useState(false)
+  const [selectedItem, setSelectedItem] = useState([]);
+
 
   const [openCout, setOpenCout] = useState(false)
   const [openReject, setOpenReject] = useState(false)
@@ -195,6 +199,12 @@ const Details = ({ route, navigation }) => {
     const supportEmail = 'info@alphanewgroup.com';
     Linking.openURL(`mailto:${supportEmail}`);
   };
+
+  const onPressTransaction = (item) => {
+    console.log("On press", item);
+    setSelectedItem(item)
+    openModalDetailsTrans();
+  }
 
    
   const handleInterestChange = (text) => {
@@ -885,6 +895,166 @@ const Details = ({ route, navigation }) => {
     );
   };
 
+  const renderDisplayDetail = () => {
+    return (
+      <BottomSheetModal
+        ref={bottomSheetDetailsTrans}
+        index={3}
+        backdropComponent={BackdropElement}
+        snapPoints={snapPoints}
+        backgroundStyle={{ borderRadius: responsiveScreenWidth(5), backgroundColor:'#eee'}}
+        onDismiss={() => hideModalDetailsTrans()}
+      >
+        <BottomSheetScrollView>
+        <Block p={17} >
+        <Block row space='between'>
+          <Block m_b={10} flex={1}>
+            <Text bold h2>Details</Text>
+            <Text color={COLORS.blue}>{`Details de la transaction`}</Text>
+          </Block>
+          <TouchableOpacity onPress={()=> hideModalDetailsTrans()}>
+            <IconButton
+              icon="close"
+              iconColor={COLORS.red}
+              size={40}
+            />
+          </TouchableOpacity>
+          
+        </Block>
+
+        <Block p_b={10} row space='between'>
+          <Block flex={1}>
+          { selectedItem.user?.profile_pic  ? (
+              <Image
+                source={{ uri: selectedItem.user?.profile_pic  }}
+                style={{ width: 80, height: 80, borderRadius:40, borderWidth:1,
+                borderColor: COLORS.white}}
+              />
+            ) : (
+              <Image
+                source={icons.investment}
+                style={{
+                  width: 80,
+                  height: 80,
+                  tintColor: COLORS.black,
+                }}
+              />
+            )}
+                
+          </Block>
+
+          <Block flex={3} middle>
+            <Block row space='between'>
+              <Text bold>A :</Text>
+              <Text gray>{`${route.params.food.owner.name}`}</Text>
+            </Block>
+
+            <Block row space='between'>
+              <Text bold>DE :</Text>
+              <Text gray>{`${selectedItem?.user?.name}`}</Text>
+            </Block>
+
+            <Block row space='between'>
+              <Text bold>DATE :</Text>
+              <Text gray>{`${route.params.food.timestamp}`}</Text>
+            </Block>
+          </Block>
+
+        </Block>
+
+        <Divider />
+          <Block p_t={15} p_b={15} row space='between'>
+            <Text h3 bold>TYPE</Text>
+            <Text >Achat de parts </Text>
+          </Block>
+
+          <Divider />
+          <Block p_t={15} p_b={15} row space='between'>
+            <Text h3 bold>SOMME</Text>
+            <Text >{route.params.food.amount} {route.params.food.currency}</Text>
+          </Block>
+
+          <Divider />
+          <Block p_t={15} p_b={15} row space='between'>
+            <Text h3 bold>TRANSACTION ID</Text>
+            <Text >#123-345</Text>
+          </Block>
+
+          <Divider />
+          <Block p_t={15} p_b={15} row space='between'>
+            <Text h3 bold>STATUS</Text>
+            <Text color={COLORS.peach} >En attente</Text>
+          </Block>
+
+          <Divider />
+          <Block p_t={15} p_b={15} >
+            <Button mode='contained' buttonColor={COLORS.blue} >TELECHARGER PDF</Button>
+          </Block>
+
+          
+      </Block>
+        </BottomSheetScrollView>
+      
+
+    </BottomSheetModal>
+    )
+  }
+
+  const renderListContrib = () => {
+    return (
+      <Block card m={20} p_b={20} >
+        <Block p={17}>
+          <Text bold numberOfLines={1} h2>
+            Achat de parts 
+          </Text>
+          <Block row space='between' >
+          <Text numberOfLines={1} style={{flex: 1, marginRight: 10}}>La liste de toutes les transactions</Text>
+          <TouchableOpacity onPress={()=> console.log('ok')}>
+          <Text color={COLORS.blue}>Voir plus</Text>
+
+          </TouchableOpacity>
+          </Block>
+        </Block>
+        <FlatList
+            data={membresToShow?.slice(0,3)}
+            renderItem={({ item }) => 
+              <Transaction user={item} navigation={navigation} subtitle='Contibution' topRight={route.params.food.amount/100} 
+              bottomRight='10 sep 2023' currency={route.params.food.currency} onPressTransaction={onPressTransaction} />}
+            keyExtractor={(item) => item._id} // Use a unique key for each item
+          />
+       
+        </Block>
+  )};
+
+  const renderMembres = () => (
+        <Block p_l={20} p_r={20}>
+          <Text bold numberOfLines={1}>
+          MEMBRES ({route.params.food.membres.length + 1})
+          </Text>
+
+          {
+            renderItem({ admin: true, name: route.params.food.owner.name+" (Admin)", 
+            //name: route.params.food.owner._id
+            user: {_id: route.params.food.owner._id,  ...route.params.food.owner},
+            contribution: route.params.food.initialAmount, tauxInt: route.params.food.tauxInt,
+            date: format(new Date(route.params.food.timestamp), 'dd MMMM yyyy', { locale: fr }) })
+          }
+
+          {
+            membresToShow.map((membre, index) => renderItem(membre))
+
+          }
+
+          {route.params.food.membres?.length > 1 && ( // Show "Voir plus" only if there are more than 2 users
+            <TouchableOpacity onPress={toggleExpansion}>
+              <Text bold color={COLORS.blue}>
+                {expandedMembre ? 'Voir moins' : 'Voir plus'}
+              </Text>
+            </TouchableOpacity>
+          )}
+        </Block>
+  )
+
   const renderFAaddCout = () => {
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -1279,33 +1449,9 @@ const Details = ({ route, navigation }) => {
           
           </Block>
         </Block>
+          
+          {renderListContrib()}
 
-        <Block p_l={20} p_r={20}>
-          <Text bold numberOfLines={1}>
-          MEMBRES ({route.params.food.membres.length + 1})
-          </Text>
-
-          {
-            renderItem({ admin: true, name: route.params.food.owner.name+" (Admin)", 
-            //name: route.params.food.owner._id
-            user: {_id: route.params.food.owner._id,  ...route.params.food.owner},
-            contribution: route.params.food.initialAmount, tauxInt: route.params.food.tauxInt,
-            date: format(new Date(route.params.food.timestamp), 'dd MMMM yyyy', { locale: fr }) })
-          }
-
-          {
-            membresToShow.map((membre, index) => renderItem(membre))
-
-          }
-
-          {route.params.food.membres?.length > 1 && ( // Show "Voir plus" only if there are more than 2 users
-            <TouchableOpacity onPress={toggleExpansion}>
-              <Text bold color={COLORS.blue}>
-                {expandedMembre ? 'Voir moins' : 'Voir plus'}
-              </Text>
-            </TouchableOpacity>
-          )}
-        </Block>
 
         <Block p={20}>
           <Text bold numberOfLines={1}>
@@ -1407,7 +1553,9 @@ const Details = ({ route, navigation }) => {
           </Text> */}
         </Block>
 
-        <Block p_l={20} p_r={20}>
+        {renderMembres()}
+
+        <Block p_t={20} p_l={20} p_r={20}>
           <Text bold numberOfLines={1}>
             BESOIN D'AIDE?
           </Text>
@@ -1658,6 +1806,8 @@ const Details = ({ route, navigation }) => {
         {renderBottomReject()}
 
         {renderBottomContrib()}
+
+        {renderDisplayDetail()}
 
     </ScrollView>
     </BottomSheetModalProvider>
