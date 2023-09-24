@@ -1245,7 +1245,8 @@ const Details = ({ route, navigation }) => {
               </Button>
 
               {
-                 route.params.food.membres.find(member => member?.admission_req == 'ACCEPTED')? <Button textColor="#fff" elevated buttonColor={COLORS.darkgreen} onPress={()=> showModalContribuer()}>
+                 route.params.food.membres.find(member => member?.admission_req == 'ACCEPTED')? 
+                 <Button textColor="#fff" elevated buttonColor={COLORS.darkgreen} onPress={()=> openModalContrib()}>
                   Contribuer
                 </Button>:
                 <></>
@@ -1257,10 +1258,7 @@ const Details = ({ route, navigation }) => {
              </Button>
              
               }
-               <Button textColor="#fff" elevated buttonColor={COLORS.darkgreen} onPress={()=> openModalContrib()}>
-                  Contribuer
-                </Button>
-             
+              
             </Block>
             }
 
