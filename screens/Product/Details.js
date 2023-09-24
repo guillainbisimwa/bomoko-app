@@ -78,10 +78,10 @@ const Details = ({ route, navigation }) => {
     getTokenFromAsyncStorage();
   }, []);
 
-  useEffect(()=> {
-    console.log("owner", route.params.food.membres);
-    console.log("token", JSON.parse(token)?.user?.user?.userId,);
-  },[])
+  // useEffect(()=> {
+  //   console.log("owner", route.params.food.membres);
+  //   console.log("token", JSON.parse(token)?.user?.user?.userId,);
+  // },[])
 
   const dispatch = useDispatch();
 
@@ -264,8 +264,8 @@ const Details = ({ route, navigation }) => {
         ...route.params.food,
         id: route.params.food._id,
         couts: [
-          coutObj,
           ...route.params.food.couts,
+          coutObj,
         ]
       }));
 
@@ -324,8 +324,8 @@ const Details = ({ route, navigation }) => {
       id: route.params.food._id,
       status: "SUBMITED",
       timeline: [
-        outputTimeLineSoum,
         ...route.params.food.timeline,
+        outputTimeLineSoum,
       ]
     }));
 
