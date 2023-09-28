@@ -6,7 +6,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
-  ToastAndroid,
   Keyboard,
   Linking,
   TextInput as ReactTextInput
@@ -273,10 +272,6 @@ const Details = ({ route, navigation }) => {
   const daysTotalExc = Math.ceil(timeTotalExerc / millisecondsInDay);
 
   console.log(`Days left: ${daysLeft}`);
-
-  const showToast = () => {
-    ToastAndroid.show("Une erreur s'est produite", ToastAndroid.LONG);
-  }
 
   // Timeline
   const outputTimeLine = foodDetails?.timeline.map(item => {
