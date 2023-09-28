@@ -619,8 +619,8 @@ const Details = ({ route, navigation }) => {
       setEditedName('');
       setEditedAmount('');
       // Check if the cout was updated successfully
-      setStatusError(!error && !isLoading)
-      setStatusSuccess(!error && !isLoading)
+      setStatusError(!error && !isLoading);
+      setStatusSuccess(!error && !isLoading);
       if (!statusError && statusSuccess) {
         setMsgSuccess("Cout ajoute avec success");
         setMsgError("");
@@ -639,7 +639,7 @@ const Details = ({ route, navigation }) => {
         onToggleSnackBar();
       }
     } catch(e){
-      console.log('Error //////////', e)
+        console.log('Error //////////', e)
         setMsgError("Une Erreur s'est produite lors de l'ajout de cout");
         setMsgSuccess("");
         setStatusSuccess(false)
@@ -649,16 +649,36 @@ const Details = ({ route, navigation }) => {
   };
 
   const handleDelete = async () => {
-    dispatch(delProduct({
-      id: foodDetails._id
-    }));
+    try{
+      dispatch(delProduct({
+        id: foodDetails._id
+      }));
+      
+      // Update state
+      setStatusError(!error && !isLoading);
+      setStatusSuccess(!error && !isLoading);
 
-     // Check if the product was deleted successfully
-    if (!error) {
-      // Navigate back to the previous screen
-      navigation.navigate('Main');
-    }else {
-      onToggleSnackBar()
+      // Check if the product was deleted successfully
+      if (!statusError && statusSuccess) {
+        setMsgSuccess("Suppression effectuee avec success");
+        setMsgError("");
+        setStatusSuccess(true);
+        setStatusError(false);
+        onToggleSnackBar();
+      }else {
+          setMsgError("Une Erreur s'est produite lors de la suppression");
+          setMsgSuccess("");
+          setStatusSuccess(false);
+          setStatusError(true);
+          onToggleSnackBar();
+      }
+    }
+    catch(e){
+      setMsgError("Une Erreur s'est produite lors de la suppression");
+      setMsgSuccess("");
+      setStatusSuccess(false)
+      setStatusError(true)
+      onToggleSnackBar();
     }
   }
 
