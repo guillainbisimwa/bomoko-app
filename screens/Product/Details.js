@@ -878,6 +878,110 @@ const Details = ({ route, navigation }) => {
     }
   };
 
+  const renderInvestCalculus = () => (
+    <Block p={20}>
+      <Text bold numberOfLines={1}>
+        CALCUL D'INVESTISSEMENT ({foodDetails.currency})
+      </Text>
+      <Text>Projection du retour sur investissement</Text>
+
+      <Svg style={{ width: '100%' }}>
+        <VictoryChart domainPadding={50} theme={VictoryTheme.material} >
+          <VictoryBar
+            style={{ 
+              data: {
+                fill: ({ datum }) => {
+                  if (datum.x === `Intérêt (${foodDetails.tauxInt}%)`) {
+                    return COLORS.primary;
+                  } else if (datum.x === `Invest`) {
+                    return COLORS.peach;
+                  } else if (datum.y > foodDetails.initialAmount) {
+                    return COLORS.purple;
+                  } else {
+                    return COLORS.black;
+                  }
+                }
+              }
+            }}
+            labels={({ datum }) => `${datum.y} ${foodDetails.currency}`}
+
+            categories={{
+              x: [`Total`, 
+              `Disponible`,
+              `Intérêt (${foodDetails.tauxInt}%)`,
+              `Invest`
+            ],
+            }}
+            data={[
+              { x: `Total`, y: foodDetails.amount },
+              { x:  `Disponible`, y: 
+              (foodDetails.initialAmount+foodDetails.membres
+                .filter(member => member.contribution_status === "ACCEPTED")
+                .reduce((sum, member) => sum + member.contribution_amount, 0))
+              },
+              { x:  `Intérêt (${foodDetails.tauxInt}%)`, y: interet },
+              { x: `Invest`, y: sliderValue },
+            ]}
+          />
+        </VictoryChart>
+      </Svg>
+
+      {/*Slider with max, min, step and initial value*/}
+      <Slider
+        maximumValue={(foodDetails.amount-(foodDetails.initialAmount+foodDetails.membres
+          .filter(member => member.contribution_status === "ACCEPTED")
+          .reduce((sum, member) => sum + member.contribution_amount, 0)))}
+        minimumValue={foodDetails.amount/100}
+        minimumTrackTintColor="#307ecc"
+        maximumTrackTintColor="#000000"
+        step={foodDetails.amount/100}
+        value={sliderValue}
+        onValueChange={(sliderValue) => {
+          setInteret((sliderValue * foodDetails.tauxInt )/100)
+          setSliderValue(sliderValue)}
+        }
+      />
+
+      <Text bold style={{ color: 'black' }}>
+        Vous investissez la somme de : {sliderValue} {foodDetails.currency}.
+        Ceci équivaut à {sliderValue/(foodDetails.amount/100)} parts de {foodDetails.amount/100} {foodDetails.currency} chacun.
+        Et votre Intérêt de (${foodDetails.tauxInt}%) est de {interet} {foodDetails.currency} après l'exercice. </Text>
+        
+    </Block>
+  )
+
+  const renderTimeline = () => (
+    <Block p_l={20} p_r={20}>
+        <Text bold numberOfLines={1}>
+        TIMELINE
+      </Text>
+      <Timeline
+        style={styles.list}
+        data={outputTimeLine}
+        circleSize={20}
+        circleColor="rgb(45,156,219)"
+        lineColor="rgb(45,156,219)"
+        timeContainerStyle={{ minWidth: 52, marginTop: -5 }}
+        timeStyle={{
+          textAlign: 'center',
+          backgroundColor: '#ff9797',
+          color: 'white',
+          padding: 5,
+          borderRadius: 13,
+        }}
+        descriptionStyle={{ color: 'gray' }}
+        options={{
+          style: { paddingTop: 5 },
+        }}
+        columnFormat="single-column-left"
+      />
+
+      {/* <Text bold color={COLORS.blue}>
+        {expanded ? 'Voir moins' : 'Voir plus'}
+      </Text> */}
+    </Block>
+  )
+
   const handleUpdateItem = (item,  editedAmount1, editedName1) => {
     // Handle update item event
     try {
@@ -1064,7 +1168,7 @@ const Details = ({ route, navigation }) => {
     return (
       <BottomSheetModal
         ref={bottomSheetDetailsTrans}
-        index={3}
+        index={2}
         backdropComponent={BackdropElement}
         snapPoints={snapPoints}
         backgroundStyle={{ borderRadius: responsiveScreenWidth(5), backgroundColor:'#eee'}}
@@ -1136,31 +1240,31 @@ const Details = ({ route, navigation }) => {
           <Divider />
           <Block p_t={15} p_b={15} row space='between'>
             <Text h3 bold>SOMME</Text>
+            {/* TODO: check and fecth real amount => contribution_amount */}
             <Text >{foodDetails.amount} {foodDetails.currency}</Text>
           </Block>
 
           <Divider />
           <Block p_t={15} p_b={15} row space='between'>
             <Text h3 bold>TRANSACTION ID</Text>
+            {/* TODO: check and fecth real id */}
             <Text >#123-345</Text>
           </Block>
 
           <Divider />
           <Block p_t={15} p_b={15} row space='between'>
             <Text h3 bold>STATUS</Text>
+            {/* TODO: check and fecth real status */}
             <Text color={COLORS.peach} >En attente</Text>
           </Block>
 
           <Divider />
           <Block p_t={15} p_b={15} >
+            {/* TODO: TO BE DONE */}
             <Button mode='contained' buttonColor={COLORS.blue} >TELECHARGER PDF</Button>
           </Block>
-
-          
       </Block>
         </BottomSheetScrollView>
-      
-
     </BottomSheetModal>
     )
   }
@@ -1175,19 +1279,19 @@ const Details = ({ route, navigation }) => {
           <Block row space='between' >
           <Text numberOfLines={1} style={{flex: 1, marginRight: 10}}>La liste de toutes les transactions</Text>
           <TouchableOpacity onPress={()=> console.log('ok')}>
+             {/* TODO: TO BE DONE */}
           <Text color={COLORS.blue}>Voir plus</Text>
-
           </TouchableOpacity>
           </Block>
         </Block>
+        {/* TODO : Use the contribution_amount, and real Date */}
         <FlatList
             data={membresToShow?.slice(0,3)}
             renderItem={({ item }) => 
               <Transaction user={item} navigation={navigation} subtitle='Achat de parts' topRight={foodDetails.amount/100} 
-              bottomRight='10 sep 2023' currency={foodDetails.currency} onPressTransaction={onPressTransaction} />}
-            keyExtractor={(item) => item._id} // Use a unique key for each item
+                bottomRight='10 sep 2023' currency={foodDetails.currency} onPressTransaction={onPressTransaction} />}
+                keyExtractor={(item) => item._id} // Use a unique key for each item
           />
-       
         </Block>
   )};
 
@@ -1200,14 +1304,12 @@ const Details = ({ route, navigation }) => {
           {
             renderItem({ admin: true, name: foodDetails.owner.name+" (Admin)", 
             //name: foodDetails.owner._id
-            user: {_id: foodDetails.owner._id,  ...foodDetails.owner},
+            user: { ...foodDetails.owner, _id: foodDetails.owner._id, },
             contribution: foodDetails.initialAmount, tauxInt: foodDetails.tauxInt,
             date: format(new Date(foodDetails.timestamp), 'dd MMMM yyyy', { locale: fr }) })
           }
-
           {
             membresToShow.map((membre, index) => renderItem(membre))
-
           }
 
           {foodDetails.membres?.length > 1 && ( // Show "Voir plus" only if there are more than 2 users
@@ -1219,6 +1321,46 @@ const Details = ({ route, navigation }) => {
           )}
         </Block>
   )
+
+  const renderQuestion = () => (
+    <Block  p_l={20} p_r={20}   >
+    <Text>
+      {`Avez-vous des questions sur ce ${foodDetails.type}? Contactez le propriétaire ou notre expert en financement participatif.`}
+      </Text>
+        <Block row space='between'>
+
+        <View style={styles.columnMembre1}>
+            <Image
+              source={{uri: foodDetails.owner?.profile_pic}}
+              style={styles.imgOwner}
+            />
+            <Text numberOfLines={2} bold >{foodDetails.owner?.name}</Text>
+            <Text numberOfLines={1} style={styles.contentTitle}>Président</Text>
+          </View>
+
+        <Block style={{ justifyContent: 'center' }}>
+        <TouchableOpacity style={styles.contactButton} onPress={handleContactSupport}>
+        <Text style={styles.buttonText}>Contacter l'Admin</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.contactButton2} onPress={handleContactSupport}>
+        <Text style={styles.buttonText}>Contacter le Support</Text>
+      </TouchableOpacity>
+        </Block>
+
+  </Block>
+</Block>
+  
+
+  )
+  
+  const renderHelp = () => (
+    <Block p_t={20} p_l={20} p_r={20}>
+      <Text bold numberOfLines={1}>
+        BESOIN D'AIDE?
+      </Text>
+    </Block>
+  );
 
   const renderFAaddCout = () => {
     return (
@@ -1244,10 +1386,10 @@ const Details = ({ route, navigation }) => {
           required
         />
 
-      <TouchableOpacity  onPress={() => {
-            Keyboard.dismiss();
-            handleAddCout();
-          }}>
+        <TouchableOpacity  onPress={() => {
+          Keyboard.dismiss();
+          handleAddCout();
+        }}>
           <Ionicons name="add-circle" size={50} color={COLORS.darkgreen} />
         </TouchableOpacity>
        
@@ -1616,148 +1758,16 @@ const Details = ({ route, navigation }) => {
         </Block>
           
           {renderListContrib()}
+          {renderInvestCalculus()}
+          {renderTimeline()}
 
+          {renderMembres()}
 
-        <Block p={20}>
-          <Text bold numberOfLines={1}>
-            CALCUL D'INVESTISSEMENT ({foodDetails.currency})
-          </Text>
-          <Text>Projection du retour sur investissement</Text>
+          {renderHelp()}
 
-          <Svg style={{ width: '100%' }}>
-            <VictoryChart domainPadding={50} theme={VictoryTheme.material} >
-              <VictoryBar
-                style={{ 
-                  data: {
-                    fill: ({ datum }) => {
-                      if (datum.x === `Intérêt (${foodDetails.tauxInt}%)`) {
-                        return COLORS.primary;
-                      } else if (datum.x === `Invest`) {
-                        return COLORS.peach;
-                      } else if (datum.y > foodDetails.initialAmount) {
-                        return COLORS.purple;
-                      } else {
-                        return COLORS.black;
-                      }
-                    }
-                  }
-                 }}
-                labels={({ datum }) => `${datum.y} ${foodDetails.currency}`}
-
-                categories={{
-                  x: [`Total`, 
-                  `Disponible`,
-                  `Intérêt (${foodDetails.tauxInt}%)`,
-                  `Invest`
-                ],
-                }}
-                data={[
-                  { x: `Total`, y: foodDetails.amount },
-                  { x:  `Disponible`, y: 
-                  (foodDetails.initialAmount+foodDetails.membres
-                    .filter(member => member.contribution_status === "ACCEPTED")
-                    .reduce((sum, member) => sum + member.contribution_amount, 0))
-                  },
-                  { x:  `Intérêt (${foodDetails.tauxInt}%)`, y: interet },
-                  { x: `Invest`, y: sliderValue },
-                ]}
-              />
-            </VictoryChart>
-          </Svg>
-
-          {/*Slider with max, min, step and initial value*/}
-          <Slider
-            maximumValue={(foodDetails.amount-(foodDetails.initialAmount+foodDetails.membres
-              .filter(member => member.contribution_status === "ACCEPTED")
-              .reduce((sum, member) => sum + member.contribution_amount, 0)))}
-            minimumValue={foodDetails.amount/100}
-            minimumTrackTintColor="#307ecc"
-            maximumTrackTintColor="#000000"
-            step={foodDetails.amount/100}
-            value={sliderValue}
-            onValueChange={(sliderValue) => {
-              setInteret((sliderValue * foodDetails.tauxInt )/100)
-              setSliderValue(sliderValue)}
-            }
-          />
-
-        <Text bold style={{ color: 'black' }}>
-          Vous investissez la somme de : {sliderValue} {foodDetails.currency}.
-           Ceci équivaut à {sliderValue/(foodDetails.amount/100)} parts de {foodDetails.amount/100} {foodDetails.currency} chacun.
-           Et votre Intérêt de (${foodDetails.tauxInt}%) est de {interet} {foodDetails.currency} après l'exercice. </Text>
-          
+          {renderQuestion()}
         </Block>
-
-        <Block p_l={20} p_r={20}>
-          <Text bold numberOfLines={1}>
-            TIMELINE
-          </Text>
-          <Timeline
-            style={styles.list}
-            data={outputTimeLine}
-            circleSize={20}
-            circleColor="rgb(45,156,219)"
-            lineColor="rgb(45,156,219)"
-            timeContainerStyle={{ minWidth: 52, marginTop: -5 }}
-            timeStyle={{
-              textAlign: 'center',
-              backgroundColor: '#ff9797',
-              color: 'white',
-              padding: 5,
-              borderRadius: 13,
-            }}
-            descriptionStyle={{ color: 'gray' }}
-            options={{
-              style: { paddingTop: 5 },
-            }}
-            columnFormat="single-column-left"
-          />
-
-          {/* <Text bold color={COLORS.blue}>
-            {expanded ? 'Voir moins' : 'Voir plus'}
-          </Text> */}
-        </Block>
-
-        {renderMembres()}
-
-        <Block p_t={20} p_l={20} p_r={20}>
-          <Text bold numberOfLines={1}>
-            BESOIN D'AIDE?
-          </Text>
-        </Block>
-
-        
-          
-        <Block  p_l={20} p_r={20}   >
-          <Text>
-            {`Avez-vous des questions sur ce ${foodDetails.type}? Contactez le propriétaire ou notre expert en financement participatif.`}
-            </Text>
-        <Block row space='between'>
-
-        <View style={styles.columnMembre1}>
-            <Image
-              source={{uri: foodDetails.owner?.profile_pic}}
-              style={styles.imgOwner}
-            />
-            <Text numberOfLines={2} bold >{foodDetails.owner?.name}</Text>
-            <Text numberOfLines={1} style={styles.contentTitle}>Président</Text>
-          </View>
-
-         <Block style={{ justifyContent: 'center' }}>
-         <TouchableOpacity style={styles.contactButton} onPress={handleContactSupport}>
-        <Text style={styles.buttonText}>Contacter l'Admin</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.contactButton2} onPress={handleContactSupport}>
-        <Text style={styles.buttonText}>Contacter le Support</Text>
-      </TouchableOpacity>
-         </Block>
-
-        </Block>
-        </Block>
-        
-      </Block>
-      {renderFloatingBlock()}
+        {renderFloatingBlock()}
 
       {/* Delete Prod/Serv */}
       <Modal
@@ -1951,16 +1961,16 @@ const Details = ({ route, navigation }) => {
       </Modal>
 
       <Snackbar
-          visible={visibleSnackBar}
-          onDismiss={onDismissSnackBar}
-          style={{ backgroundColor: COLORS.peach}}
-          wrapperStyle={{ bottom: 30 }}
-          action={{
-            label: 'Annuler',
-            onPress: () => {
-              // Do something
-            },
-          }}
+        visible={visibleSnackBar}
+        onDismiss={onDismissSnackBar}
+        style={{ backgroundColor: COLORS.peach}}
+        wrapperStyle={{ bottom: 30 }}
+        action={{
+          label: 'Annuler',
+          onPress: () => {
+            // Do something
+          },
+        }}
         >
           {error}
         </Snackbar>
