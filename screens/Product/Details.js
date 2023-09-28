@@ -85,7 +85,8 @@ const Details = ({ route, navigation }) => {
   
   const [loading, setLoading] = useState(true);
   const [foodDetails, setFoodDetails] = useState(true);
-  
+
+  const [connectedUser, setConnectedUser] = useState(null);  
 
   const BackdropElement = useCallback(
     (backdropProps) => (
@@ -177,6 +178,10 @@ const Details = ({ route, navigation }) => {
       try {
         const storedToken = await AsyncStorage.getItem('user');
         setToken(storedToken);
+        reloadScreen(value);
+
+        // Data found, reload the screen
+        reloadScreen(value);
       } catch (error) {
         console.error('Error reading token from AsyncStorage:', error);
       }
@@ -208,30 +213,17 @@ const Details = ({ route, navigation }) => {
 
     fetchUserData();
   }, []);
-
-
-  useEffect(() => {
-    const getTokenFromAsyncStorage = async () => {
-      try {
-        const storedToken = await AsyncStorage.getItem('user');
-        setToken(storedToken);
-       
-      } catch (error) {
-        // Handle AsyncStorage read error if needed
-        console.error('Error reading token from AsyncStorage:', error);
-      }
-    };
-
-    getTokenFromAsyncStorage();
-  }, []);
-
-  useEffect(()=> {
-    //console.log("owner", route.params.food.membres);
-    //console.log("token", JSON.parse(token)?.user?.user?.userId,);
-    console.log("id",  route.params.food._id);
-    console.log('connectedUser', foodDetails);
-    
-  },[])
+ // Function to handle screen reload
+ const reloadScreen = (value) => {
+  // You can put your screen reload logic here
+  console.log('Screen reloaded');
+  const parsedValue = JSON.parse(value);
+  if (parsedValue.user && parsedValue.user.user) {
+    setConnectedUser(parsedValue.user.user);
+    setLoading(false)
+    console.log('Async State:', parsedValue.user.user);
+  }
+};
 
   const dispatch = useDispatch();
 
@@ -391,11 +383,11 @@ const Details = ({ route, navigation }) => {
               Il permet de prendre en compte tous les éléments de coût associés à la fabrication,
               l'achat ou la prestation d'un bien ou d'un service.
             </Text>
-            <View style={[styles.card,{ marginBottom: route.params.food.owner._id == JSON.parse(token)?.user?.user?.userId? 190 : 100} ]}>
+            <View style={[styles.card,{ marginBottom: route.params.food.owner._id == connectedUser.user?.userId? 190 : 100} ]}>
              {
                   route.params.food.couts
                   .map((food, index) => {
-                    return <CoutScreen admin={route.params.food.owner._id == JSON.parse(token)?.user?.user?.userId}
+                    return <CoutScreen admin={route.params.food.owner._id == connectedUser.user?.userId}
                     totAmount={totAmount} handleUpdateItem={handleUpdateItem} handleTrash={handleTrash} currency={route.params.food.currency} key={index} item={food} count={index + 1} />;
                   })}
             </View>
@@ -405,7 +397,7 @@ const Details = ({ route, navigation }) => {
           </BottomSheetScrollView>
         
               {
-              route.params.food.owner._id == JSON.parse(token)?.user?.user?.userId?
+              route.params.food.owner._id == connectedUser.user?.userId?
               renderFAaddCout(): <></>
             }
 
@@ -768,7 +760,7 @@ const Details = ({ route, navigation }) => {
       membres: [
         ...route.params.food.membres,
         {
-          user: JSON.parse(token)?.user?.user?.userId,
+          user: connectedUser.user?.userId,
           admission_req: 'PENDING', 
           contribution_amount: 0,
           contribution_status: 'PENDING', 
@@ -1228,7 +1220,7 @@ const Details = ({ route, navigation }) => {
             </View>
           </View>
           <View style={{ alignItems: 'flex-end' }}>
-  {(!item.admin && route.params.food.owner._id == JSON.parse(token)?.user?.user?.userId) ? (
+  {(!item.admin && route.params.food.owner._id == connectedUser.user?.userId) ? (
     item.admission_req == 'ACCEPTED' ? (
       <>
         <Text style={{ ...FONTS.h5, color: COLORS.red }}>+ {route.params.food.tauxInt} intérêt</Text>
@@ -1419,7 +1411,7 @@ const Details = ({ route, navigation }) => {
                   </Block>
               </Block>
             {
-              JSON.parse(token)?.user.user.username == route.params.food.owner.username? 
+              connectedUser.user.username == route.params.food.owner.username? 
               <Block row space="between" m_t={10}>
               {/* owner */}
              {
@@ -1428,8 +1420,8 @@ const Details = ({ route, navigation }) => {
                 <Button textColor="#fff" elevated buttonColor={COLORS.lightBlue} onPress={()=>
               {
                 // console.log("route.params.food", route.params.food);
-                 navigation.navigate('EditProduct', { owner: JSON.parse(token)?.user?.user?.userId,
-                  username: JSON.parse(token)?.user?.user?.username, productService: route.params.food });
+                 navigation.navigate('EditProduct', { owner: connectedUser.user?.userId,
+                  username: connectedUser.user?.username, productService: route.params.food });
               }}>
                 Modifier
               </Button>
@@ -1449,7 +1441,7 @@ const Details = ({ route, navigation }) => {
             <Block row space="between" m_t={10}>
               {/* other */}
               {
-                route.params.food.membres.some(member => member?.user?._id == JSON.parse(token)?.user?.user?.userId)?
+                route.params.food.membres.some(member => member?.user?._id == connectedUser.user?.userId)?
               <>
               <Button textColor="#fff" elevated buttonColor={COLORS.peach} onPress={()=> showModalQuitter()}>
                 Quitter
@@ -1708,7 +1700,7 @@ const Details = ({ route, navigation }) => {
             title="ATTENTION!" 
           />
           {
-            !token?
+            !connectedUser?
           <>
           <Card.Content>
             <Text variant="titleLarge">Vous devez d'abord vous connecter</Text>
