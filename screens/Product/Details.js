@@ -36,6 +36,7 @@ import { BottomSheetBackdrop, BottomSheetFlatList, BottomSheetFooter, BottomShee
 import { responsiveScreenWidth } from 'react-native-responsive-dimensions';
 import Transaction from '../CreanceDette/Transaction';
 import { FlatList } from 'react-native';
+import NetInfo from "@react-native-community/netinfo";
 
 
 const Details = ({ route, navigation }) => {
@@ -81,6 +82,9 @@ const Details = ({ route, navigation }) => {
   const [openAccept, setOpenAccept] = useState(false)
   const [openDetailsTrans, setOpenDetailsTrans] = useState(false)
   const [openContrib, setOpenContrib] = useState(false)
+  
+  const [loading, setLoading] = useState(true);
+  const [foodDetails, setFoodDetails] = useState(true);
   
 
   const BackdropElement = useCallback(
@@ -167,6 +171,43 @@ const Details = ({ route, navigation }) => {
   }, []);
 
   const hideModalContrib = () => handleCloseContrib();
+  
+  useEffect(() => {
+    const getTokenFromAsyncStorage = async () => {
+      try {
+        const storedToken = await AsyncStorage.getItem('user');
+        setToken(storedToken);
+      } catch (error) {
+        console.error('Error reading token from AsyncStorage:', error);
+      }
+    };
+
+    getTokenFromAsyncStorage();
+
+    const fetchUserData = async () => {
+      const netInfo = await NetInfo.fetch();
+      
+      if (!netInfo.isConnected) {
+        setLoading(false);
+        Alert.alert(
+          'Pas de connexion Internet',
+          'Veuillez vérifier votre connexion Internet et réessayer.'
+        );
+        return;
+      }
+
+      fetch(`https://bomoko-backend.onrender.com/api/product/${route.params.food._id}`)
+        .then(response => response.json())
+        .then(data => {
+          setFoodDetails(data);
+          console.log("data", data);
+          setLoading(false);
+        })
+        .catch(error => console.error('Error fetching user details:', error));
+    };
+
+    fetchUserData();
+  }, []);
 
 
   useEffect(() => {
@@ -188,7 +229,7 @@ const Details = ({ route, navigation }) => {
     //console.log("owner", route.params.food.membres);
     //console.log("token", JSON.parse(token)?.user?.user?.userId,);
     console.log("id",  route.params.food._id);
-    console.log('connectedUser', route.params.connectedUser);
+    console.log('connectedUser', foodDetails);
     
   },[])
 
@@ -354,7 +395,7 @@ const Details = ({ route, navigation }) => {
              {
                   route.params.food.couts
                   .map((food, index) => {
-                    return <CoutScreen admin={route.params.food.owner._id !== JSON.parse(token)?.user?.user?.userId}
+                    return <CoutScreen admin={route.params.food.owner._id == JSON.parse(token)?.user?.user?.userId}
                     totAmount={totAmount} handleUpdateItem={handleUpdateItem} handleTrash={handleTrash} currency={route.params.food.currency} key={index} item={food} count={index + 1} />;
                   })}
             </View>
@@ -364,7 +405,7 @@ const Details = ({ route, navigation }) => {
           </BottomSheetScrollView>
         
               {
-              route.params.food.owner._id !== JSON.parse(token)?.user?.user?.userId?
+              route.params.food.owner._id == JSON.parse(token)?.user?.user?.userId?
               renderFAaddCout(): <></>
             }
 
@@ -1018,7 +1059,7 @@ const Details = ({ route, navigation }) => {
         <FlatList
             data={membresToShow?.slice(0,3)}
             renderItem={({ item }) => 
-              <Transaction user={item} navigation={navigation} subtitle='Contibution' topRight={route.params.food.amount/100} 
+              <Transaction user={item} navigation={navigation} subtitle='Achat de parts' topRight={route.params.food.amount/100} 
               bottomRight='10 sep 2023' currency={route.params.food.currency} onPressTransaction={onPressTransaction} />}
             keyExtractor={(item) => item._id} // Use a unique key for each item
           />
