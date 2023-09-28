@@ -533,7 +533,7 @@ const Details = ({ route, navigation }) => {
           </TouchableOpacity>
         </Block>
         <Button buttonColor={COLORS.peach}  disabled={isLoading} mode='contained' style={{marginTop:10}} onPress={()=> {
-          handleAcceptReject(currentItem)
+          handleReject(currentItem)
         }}>Rejeter</Button>
 
       </BottomSheetScrollView>
@@ -783,7 +783,7 @@ const Details = ({ route, navigation }) => {
     }
   };
 
-  const handleAcceptReject = async (myUser) => {
+  const handleReject = async (myUser) => {
     try{
       const updatedMembres = foodDetails.membres.map((membre) => {
         if (membre.user._id === myUser.user._id) {
@@ -801,21 +801,30 @@ const Details = ({ route, navigation }) => {
         membres: updatedMembres,
       }));
   
-       // Check if the member was updated successfully
-      if (!error && !isLoading) {
-        // Navigate back to the previous screen
-        //await navigation.navigate('Main');
-  
+      setStatusError(!error && !isLoading);
+      setStatusSuccess(!error && !isLoading);
+
+      // Check if the product was deleted successfully
+      if (!statusError && statusSuccess) {
+        setMsgSuccess(`Rejet avec success`);
+        setMsgError("");
+        setStatusSuccess(true);
+        setStatusError(false);
+        onToggleSnackBar();
       }else {
-        console.log('Error ++++++')
-      ToastAndroid.show(`Une erreur s'est produite`, ToastAndroid.LONG);
-        
-        //onToggleSnackBar()
+          setMsgError("Une Erreur s'est produite");
+          setMsgSuccess("");
+          setStatusSuccess(false);
+          setStatusError(true);
+          onToggleSnackBar();
       }
-    } catch(e){
-      console.log('Error //////////', e)
-      //onToggleSnackBar()
-     // showToast()
+    }
+    catch(e){
+      setMsgError("Une Erreur s'est produite");
+      setMsgSuccess("");
+      setStatusSuccess(false);
+      setStatusError(true);
+      onToggleSnackBar();
     }
   }
 
