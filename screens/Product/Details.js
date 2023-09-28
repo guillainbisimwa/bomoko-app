@@ -755,19 +755,31 @@ const Details = ({ route, navigation }) => {
         membres: updatedMembres,
       }));
   
-       // Check if the member was updated successfully
-      if (!error && !isLoading) {
-        // Navigate back to the previous screen
-        await navigation.navigate('Main');
-  
+       // Update state
+      setStatusError(!error && !isLoading);
+      setStatusSuccess(!error && !isLoading);
+
+      // Check if the product was deleted successfully
+      if (!statusError && statusSuccess) {
+        setMsgSuccess(`Accecpte avec success`);
+        setMsgError("");
+        setStatusSuccess(true);
+        setStatusError(false);
+        onToggleSnackBar();
       }else {
-        console.log('Error ++++++')
-        onToggleSnackBar()
+          setMsgError("Une Erreur s'est produite");
+          setMsgSuccess("");
+          setStatusSuccess(false);
+          setStatusError(true);
+          onToggleSnackBar();
       }
-    } catch(e){
-      console.log('Error //////////', e)
-      onToggleSnackBar()
-      showToast()
+    }
+    catch(e){
+      setMsgError("Une Erreur s'est produite");
+      setMsgSuccess("");
+      setStatusSuccess(false);
+      setStatusError(true);
+      onToggleSnackBar();
     }
   };
 
