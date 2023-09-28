@@ -43,6 +43,12 @@ const Details = ({ route, navigation }) => {
 
   const { error, isLoading } = useSelector((state) => state.products);
 
+  const [msgSuccess, setMsgSuccess] = useState("Validation avec success");
+  const [msgError, setMsgError] = useState("Une erreur s'est produite!");
+
+  const [statusSuccess, setStatusSuccess] = useState(false);
+  const [statusError, setStatusError] = useState(false);
+
   const [visible, setVisible] = useState(false);
   const [editedName, setEditedName] = useState('');
   const [editedAmount, setEditedAmount] = useState('');
@@ -264,7 +270,6 @@ const Details = ({ route, navigation }) => {
 
   // Calculate the number of days left
   const daysLeft = Math.ceil(timeDifference / millisecondsInDay);
-  const daysLeftExc = Math.ceil(timeDiffExerc / millisecondsInDay);
   const daysTotalExc = Math.ceil(timeTotalExerc / millisecondsInDay);
 
   console.log(`Days left: ${daysLeft}`);
@@ -291,7 +296,7 @@ const Details = ({ route, navigation }) => {
   outputTimeLine.unshift({
     time:`${mydateEnd.toLocaleDateString('en-GB').replace(/\//g, '-')}`,
     title: 'Fin probable de la Campagne',
-    description: `Probablelent la campagne de collecte de fonds prendra fin apres ${daysTotalExc} jours de la date de debut de la collecte`,
+    description: `Probablement la campagne de collecte de fonds prendra fin apres ${daysTotalExc} jours de la date de debut de la collecte`,
     lineColor: COLORS.peach,
     circleSize: 30,
     circleColor: COLORS.peach,
@@ -305,9 +310,9 @@ const Details = ({ route, navigation }) => {
   // slider * 100 / interet
   const [interet, setInteret] = useState((sliderValue *5 )/100);
 
-  function toggle() {
-    setVisible((visible) => !visible);
-  }
+  // function toggle() {
+  //   setVisible((visible) => !visible);
+  // }
 
   const toggleExpanded = () => {
     setExpanded(!expanded);
@@ -344,7 +349,6 @@ const Details = ({ route, navigation }) => {
 
     // Modal Demande Quit
     const [visibleContribuer, setVisibleContribuer] = useState(false);
-    const showModalContribuer = () => setVisibleContribuer(true);
     const hideModalContribuer = () => setVisibleContribuer(false);
 
     
@@ -532,8 +536,6 @@ const Details = ({ route, navigation }) => {
           handleAcceptReject(currentItem)
         }}>Rejeter</Button>
 
-      {/*  (item) */}
-      
       </BottomSheetScrollView>
 
     </BottomSheetModal>
@@ -586,6 +588,12 @@ const Details = ({ route, navigation }) => {
       if (!editedName || !editedAmount) {
         // Throw UI error if any field is missing
         Alert.alert('Erreur', 'Veuillez remplir tous les champs obligatoires');
+        setMsgError("Veuillez remplir tous les champs obligatoires");
+        setMsgSuccess("");
+        setStatusSuccess(false)
+        setStatusError(true)
+        onToggleSnackBar();
+
         return;
       }
 
@@ -610,17 +618,33 @@ const Details = ({ route, navigation }) => {
 
       setEditedName('');
       setEditedAmount('');
-      // Check if the member was updated successfully
-      if (!error && !isLoading) {
+      // Check if the cout was updated successfully
+      setStatusError(!error && !isLoading)
+      setStatusSuccess(!error && !isLoading)
+      if (!statusError && statusSuccess) {
+        setMsgSuccess("Cout ajoute avec success");
+        setMsgError("");
+        setStatusSuccess(true)
+        setStatusError(false)
+        onToggleSnackBar();
+
         setTotAmount(totAmount + parseFloat(editedAmount));
+
       }else {
         console.log('Error ++++++')
-        onToggleSnackBar()
+        setMsgError("Une Erreur s'est produite lors de l'ajout de cout");
+        setMsgSuccess("");
+        setStatusSuccess(false)
+        setStatusError(true)
+        onToggleSnackBar();
       }
     } catch(e){
       console.log('Error //////////', e)
-      onToggleSnackBar()
-      showToast()
+        setMsgError("Une Erreur s'est produite lors de l'ajout de cout");
+        setMsgSuccess("");
+        setStatusSuccess(false)
+        setStatusError(true)
+        onToggleSnackBar();
     }
   };
 
