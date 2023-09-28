@@ -18,7 +18,6 @@ import Block from './Block';
 import Text from './Text';
 import { COLORS, FONTS, icons, SIZES } from '../../constants';
 import { Button, Card, Divider, IconButton, MD3Colors, Modal, ProgressBar, Snackbar, TextInput } from 'react-native-paper';
-import { BottomSheet } from 'react-native-btr';
 import { useDispatch, useSelector } from 'react-redux';
 import CoutScreen from './CoutScreen';
 import { Alert } from 'react-native';
@@ -32,7 +31,7 @@ import { fr } from 'date-fns/locale';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { delProduct, soumettreProduct } from '../../redux/prodReducer';
 import { TouchableWithoutFeedback } from 'react-native';
-import { BottomSheetBackdrop, BottomSheetFlatList, BottomSheetFooter, BottomSheetFooterContainer, BottomSheetModal, BottomSheetModalProvider, BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import { BottomSheetBackdrop, BottomSheetModal, BottomSheetModalProvider, BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { responsiveScreenWidth } from 'react-native-responsive-dimensions';
 import Transaction from '../CreanceDette/Transaction';
 import { FlatList } from 'react-native';
@@ -48,7 +47,7 @@ const Details = ({ route, navigation }) => {
   const [editedName, setEditedName] = useState('');
   const [editedAmount, setEditedAmount] = useState('');
   const [totAmount, setTotAmount] = useState(
-    route.params.food.couts.reduce((sum, cout) => sum + cout.amount, 0)
+    foodDetails?.couts.reduce((sum, cout) => sum + cout.amount, 0)
   );
 
   // Get token
@@ -64,11 +63,11 @@ const Details = ({ route, navigation }) => {
   };
 
   const membresToShow = expandedMembre
-  ? route.params.food.membres
-  : route.params.food.membres.slice(0, 1); // Show the first two users if not expanded
+  ? foodDetails.membres
+  : foodDetails.membres.slice(0, 1); // Show the first two users if not expanded
 
-  const [dateStart, setDateStart] = useState(new Date(route.params.food.startDate));
-  const [dateEnd, setDateEnd] = useState(new Date(route.params.food.endDate));
+  const [dateStart, setDateStart] = useState(new Date(foodDetails.startDate));
+  const [dateEnd, setDateEnd] = useState(new Date(foodDetails.endDate));
 
   const [interestValid, setInterestValid] = useState(true); // Validation state for interest
   const [interest, setInterest] = useState('');
@@ -241,7 +240,7 @@ const Details = ({ route, navigation }) => {
 
    
   const handleInterestChange = (text) => {
-    const parts = (100 - (route.params.food.initialAmount / (route.params.food.amount / 100).toFixed(0))).toFixed(0);
+    const parts = (100 - (foodDetails.initialAmount / (foodDetails.amount / 100).toFixed(0))).toFixed(0);
 
     const numericValue = parseFloat(text);
     if (!isNaN(numericValue) && numericValue >= 1 && numericValue <= parts) {
@@ -253,8 +252,8 @@ const Details = ({ route, navigation }) => {
   };
 
   // Date Calculation
-  const targetStartDate = new Date(route.params.food.startDate);
-  const targetEndDate = new Date(route.params.food.endDate);
+  const targetStartDate = new Date(foodDetails.startDate);
+  const targetEndDate = new Date(foodDetails.endDate);
   const today = new Date();
   const timeDifference = targetStartDate - today;
   const timeTotalExerc = targetEndDate - targetStartDate;
@@ -275,7 +274,7 @@ const Details = ({ route, navigation }) => {
   }
 
   // Timeline
-  const outputTimeLine = route.params.food.timeline.map(item => {
+  const outputTimeLine = foodDetails?.timeline.map(item => {
     const formattedDate = new Date(item.timestamp).toLocaleDateString('en-GB').replace(/\//g, '-');
 
     return {
@@ -302,7 +301,7 @@ const Details = ({ route, navigation }) => {
 
   const [expanded, setExpanded] = useState(false);
 
-  const [sliderValue, setSliderValue] = useState(route.params.food.amount/100);
+  const [sliderValue, setSliderValue] = useState(foodDetails.amount/100);
   // slider * 100 / interet
   const [interet, setInteret] = useState((sliderValue *5 )/100);
 
@@ -383,21 +382,20 @@ const Details = ({ route, navigation }) => {
               Il permet de prendre en compte tous les éléments de coût associés à la fabrication,
               l'achat ou la prestation d'un bien ou d'un service.
             </Text>
-            <View style={[styles.card,{ marginBottom: route.params.food.owner._id == connectedUser.user?.userId? 190 : 100} ]}>
+            <View style={[styles.card,{ marginBottom: foodDetails.owner._id == connectedUser.user?.userId? 190 : 100} ]}>
              {
-                  route.params.food.couts
+                  foodDetails?.couts && foodDetails?.couts
                   .map((food, index) => {
-                    return <CoutScreen admin={route.params.food.owner._id == connectedUser.user?.userId}
-                    totAmount={totAmount} handleUpdateItem={handleUpdateItem} handleTrash={handleTrash} currency={route.params.food.currency} key={index} item={food} count={index + 1} />;
+                    return <CoutScreen admin={foodDetails.owner._id == connectedUser.user?.userId}
+                    totAmount={totAmount} handleUpdateItem={handleUpdateItem} handleTrash={handleTrash} currency={foodDetails.currency} key={index} item={food} count={index + 1} />;
                   })}
             </View>
-           
            
           </Block>
           </BottomSheetScrollView>
         
               {
-              route.params.food.owner._id == connectedUser.user?.userId?
+              foodDetails.owner._id == connectedUser.user?.userId?
               renderFAaddCout(): <></>
             }
 
@@ -429,7 +427,7 @@ const Details = ({ route, navigation }) => {
         </Block>
         
         <Block p_b={10}>
-          <Text>{(100 - (route.params.food.initialAmount / (route.params.food.amount / 100).toFixed(0))).toFixed(0)}  parts disponibles</Text>
+          <Text>{(100 - (foodDetails.initialAmount / (foodDetails.amount / 100).toFixed(0))).toFixed(0)}  parts disponibles</Text>
 
           <ReactTextInput
               style={[styles.inputText, !interestValid && styles.inputError]} // Apply red border if not valid
@@ -439,12 +437,12 @@ const Details = ({ route, navigation }) => {
               placeholder="Nombre de parts"
             />
             {!interestValid && (
-              <Text style={styles.errorText}>Entre 1 et {(100 - (route.params.food.initialAmount / (route.params.food.amount / 100).toFixed(0))).toFixed(0)} parts</Text>
+              <Text style={styles.errorText}>Entre 1 et {(100 - (foodDetails.initialAmount / (foodDetails.amount / 100).toFixed(0))).toFixed(0)} parts</Text>
             )}
 
             {interest &&interestValid && (
               <Text style={styles.label}>Voulez-vous acheter {parseInt(interest)} parts a {
-              parseFloat(parseFloat(interest) * (route.params.food.amount / 100) ).toFixed(2)} {route.params.food.currency}?
+              parseFloat(parseFloat(interest) * (foodDetails.amount / 100) ).toFixed(2)} {foodDetails.currency}?
               </Text>
             )}
 
@@ -454,11 +452,11 @@ const Details = ({ route, navigation }) => {
             setInterestValid(true);
             hideModalContrib();
             navigation.navigate('ConfirmPayment', {
-              somme: parseFloat(parseFloat(interest) * (route.params.food.amount / 100) ).toFixed(2),
+              somme: parseFloat(parseFloat(interest) * (foodDetails.amount / 100) ).toFixed(2),
               nombreParts: parseInt(interest),
-              prixParts: parseInt(route.params.food.amount / 100),
+              prixParts: parseInt(foodDetails.amount / 100),
               connectedUser:  route.params.connectedUser,
-              motif:  `Achat de ${parseInt(interest)} parts a ${parseFloat(parseFloat(interest) * (route.params.food.amount / 100) ).toFixed(2)} ${route.params.food.currency}?`,
+              motif:  `Achat de ${parseInt(interest)} parts a ${parseFloat(parseFloat(interest) * (foodDetails.amount / 100) ).toFixed(2)} ${foodDetails.currency}?`,
               titre: 'Confirmez votre payment',
               button:'Verifier && confirmer',
               //avec: route.params.avec,
@@ -552,7 +550,7 @@ const Details = ({ route, navigation }) => {
         })}
         scrollEventThrottle={16}
       >
-        {route.params.food.images.map((image, index) => (
+        {foodDetails.images.map((image, index) => (
           <ImageBackground
             key={index}
             source={{ uri: image}}
@@ -597,16 +595,16 @@ const Details = ({ route, navigation }) => {
       };
 
       dispatch(soumettreProduct({
-        ...route.params.food,
-        id: route.params.food._id,
+        ...foodDetails,
+        id: foodDetails._id,
         couts: [
-          ...route.params.food.couts,
+          ...foodDetails.couts,
           coutObj,
         ]
       }));
 
-      route.params.food.couts = [
-         ...route.params.food.couts,
+      foodDetails.couts = [
+         ...foodDetails.couts,
         coutObj,
       ]
 
@@ -628,7 +626,7 @@ const Details = ({ route, navigation }) => {
 
   const handleDelete = async () => {
     dispatch(delProduct({
-      id: route.params.food._id
+      id: foodDetails._id
     }));
 
      // Check if the product was deleted successfully
@@ -652,15 +650,15 @@ const Details = ({ route, navigation }) => {
     const outputTimeLineSoum = {
       time:`${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear().toString().substr(-2)}`,
       title: 'Soumission',
-      details: `Votre ${route.params.food.type} a été soumis à l'équipe African Fintech et est en attente de validation`
+      details: `Votre ${foodDetails.type} a été soumis à l'équipe African Fintech et est en attente de validation`
     };
 
     dispatch(soumettreProduct({
-      ...route.params.food,
-      id: route.params.food._id,
+      ...foodDetails,
+      id: foodDetails._id,
       status: "SUBMITED",
       timeline: [
-        ...route.params.food.timeline,
+        ...foodDetails.timeline,
         outputTimeLineSoum,
       ]
     }));
@@ -678,7 +676,7 @@ const Details = ({ route, navigation }) => {
   const handleAcceptReq = async (myUser) => {
     try{
   
-      const updatedMembres = route.params.food.membres.map((membre) => {
+      const updatedMembres = foodDetails.membres.map((membre) => {
         if (membre.user._id === myUser.user._id) {
           return {
             ...membre,
@@ -689,8 +687,8 @@ const Details = ({ route, navigation }) => {
       });
 
       dispatch(soumettreProduct({
-        ...route.params.food,
-        id: route.params.food._id,
+        ...foodDetails,
+        id: foodDetails._id,
         membres: updatedMembres,
       }));
   
@@ -712,7 +710,7 @@ const Details = ({ route, navigation }) => {
 
   const handleAcceptReject = async (myUser) => {
     try{
-      const updatedMembres = route.params.food.membres.map((membre) => {
+      const updatedMembres = foodDetails.membres.map((membre) => {
         if (membre.user._id === myUser.user._id) {
           return {
             ...membre,
@@ -723,8 +721,8 @@ const Details = ({ route, navigation }) => {
       });
 
       dispatch(soumettreProduct({
-        ...route.params.food,
-        id: route.params.food._id,
+        ...foodDetails,
+        id: foodDetails._id,
         membres: updatedMembres,
       }));
   
@@ -755,10 +753,10 @@ const Details = ({ route, navigation }) => {
 
     // Reuse the soumettreProduct function
     dispatch(soumettreProduct({
-      ...route.params.food,
-      id: route.params.food._id,
+      ...foodDetails,
+      id: foodDetails._id,
       membres: [
-        ...route.params.food.membres,
+        ...foodDetails.membres,
         {
           user: connectedUser.user?.userId,
           admission_req: 'PENDING', 
@@ -797,7 +795,7 @@ const Details = ({ route, navigation }) => {
               // Function to execute when the user presses the "Mettre à jour" button
               console.log('Élément mis à jour', item);
 
-              const updatedCouts = route.params.food.couts.map((cout) => {
+              const updatedCouts = foodDetails.couts.map((cout) => {
                 if (cout._id === item._id) {
                   return {
                     ...cout,
@@ -809,17 +807,17 @@ const Details = ({ route, navigation }) => {
               });
 
               dispatch(soumettreProduct({
-                ...route.params.food,
-                id: route.params.food._id,
+                ...foodDetails,
+                id: foodDetails._id,
                 couts: updatedCouts,
               }));
               
               // Check if the item was updated successfully
               if (!error && !isLoading) {
                 console.log('Élément mis à jour avec succès');
-                setTotAmount(totAmount + parseFloat(editedAmount1) - parseFloat(route.params.food.couts.find(cout => cout._id === item._id).amount));
+                setTotAmount(totAmount + parseFloat(editedAmount1) - parseFloat(foodDetails.couts.find(cout => cout._id === item._id).amount));
 
-                route.params.food.couts = updatedCouts;
+                foodDetails.couts = updatedCouts;
               } else {
                 console.log('Erreur de mise à jour');
                 onToggleSnackBar();
@@ -855,11 +853,11 @@ const Details = ({ route, navigation }) => {
               // Fonction à exécuter lorsque l'utilisateur appuie sur le bouton "Supprimer"
               console.log('Élément supprimé', item);
 
-                const updatedCouts = route.params.food.couts.filter(cout => cout._id !== item._id);
+                const updatedCouts = foodDetails.couts.filter(cout => cout._id !== item._id);
 
                 dispatch(soumettreProduct({
-                  ...route.params.food,
-                  id: route.params.food._id,
+                  ...foodDetails,
+                  id: foodDetails._id,
                   couts: updatedCouts,
                 }));
             
@@ -867,7 +865,7 @@ const Details = ({ route, navigation }) => {
                 if (!error && !isLoading) {
                   setTotAmount(totAmount - parseFloat(item.amount));
 
-                  route.params.food.couts = updatedCouts;
+                  foodDetails.couts = updatedCouts;
             
                 }else {
                   console.log('Error ++++++')
@@ -903,7 +901,7 @@ const Details = ({ route, navigation }) => {
           justifyContent: 'center',
         }}
       >
-        {route.params.food.images.map((image, index) => {
+        {foodDetails.images.map((image, index) => {
           const opacity = dotPosition.interpolate({
             inputRange: [index - 1, index, index + 1],
             outputRange: [0.3, 1, 0.3],
@@ -979,7 +977,7 @@ const Details = ({ route, navigation }) => {
           <Block flex={3} middle>
             <Block row space='between'>
               <Text bold>A :</Text>
-              <Text gray>{`${route.params.food.owner.name}`}</Text>
+              <Text gray>{`${foodDetails.owner.name}`}</Text>
             </Block>
 
             <Block row space='between'>
@@ -989,7 +987,7 @@ const Details = ({ route, navigation }) => {
 
             <Block row space='between'>
               <Text bold>DATE :</Text>
-              <Text gray>{`${route.params.food.timestamp}`}</Text>
+              <Text gray>{`${foodDetails.timestamp}`}</Text>
             </Block>
           </Block>
 
@@ -1004,7 +1002,7 @@ const Details = ({ route, navigation }) => {
           <Divider />
           <Block p_t={15} p_b={15} row space='between'>
             <Text h3 bold>SOMME</Text>
-            <Text >{route.params.food.amount} {route.params.food.currency}</Text>
+            <Text >{foodDetails.amount} {foodDetails.currency}</Text>
           </Block>
 
           <Divider />
@@ -1051,8 +1049,8 @@ const Details = ({ route, navigation }) => {
         <FlatList
             data={membresToShow?.slice(0,3)}
             renderItem={({ item }) => 
-              <Transaction user={item} navigation={navigation} subtitle='Achat de parts' topRight={route.params.food.amount/100} 
-              bottomRight='10 sep 2023' currency={route.params.food.currency} onPressTransaction={onPressTransaction} />}
+              <Transaction user={item} navigation={navigation} subtitle='Achat de parts' topRight={foodDetails.amount/100} 
+              bottomRight='10 sep 2023' currency={foodDetails.currency} onPressTransaction={onPressTransaction} />}
             keyExtractor={(item) => item._id} // Use a unique key for each item
           />
        
@@ -1062,15 +1060,15 @@ const Details = ({ route, navigation }) => {
   const renderMembres = () => (
         <Block p_l={20} p_r={20}>
           <Text bold numberOfLines={1}>
-          MEMBRES ({route.params.food.membres.length + 1})
+          MEMBRES ({foodDetails.membres.length + 1})
           </Text>
 
           {
-            renderItem({ admin: true, name: route.params.food.owner.name+" (Admin)", 
-            //name: route.params.food.owner._id
-            user: {_id: route.params.food.owner._id,  ...route.params.food.owner},
-            contribution: route.params.food.initialAmount, tauxInt: route.params.food.tauxInt,
-            date: format(new Date(route.params.food.timestamp), 'dd MMMM yyyy', { locale: fr }) })
+            renderItem({ admin: true, name: foodDetails.owner.name+" (Admin)", 
+            //name: foodDetails.owner._id
+            user: {_id: foodDetails.owner._id,  ...foodDetails.owner},
+            contribution: foodDetails.initialAmount, tauxInt: foodDetails.tauxInt,
+            date: format(new Date(foodDetails.timestamp), 'dd MMMM yyyy', { locale: fr }) })
           }
 
           {
@@ -1078,7 +1076,7 @@ const Details = ({ route, navigation }) => {
 
           }
 
-          {route.params.food.membres?.length > 1 && ( // Show "Voir plus" only if there are more than 2 users
+          {foodDetails.membres?.length > 1 && ( // Show "Voir plus" only if there are more than 2 users
             <TouchableOpacity onPress={toggleExpansion}>
               <Text bold color={COLORS.blue}>
                 {expandedMembre ? 'Voir moins' : 'Voir plus'}
@@ -1103,7 +1101,7 @@ const Details = ({ route, navigation }) => {
         />
 
         <TextInput
-          label={`Prix tot (${route.params.food.currency})`}
+          label={`Prix tot (${foodDetails.currency})`}
           value={`${editedAmount}`}
           onChangeText={handleAmountChange}
           mode="outlined"
@@ -1215,15 +1213,15 @@ const Details = ({ route, navigation }) => {
                   color: COLORS.darkgray,
                 }}
               >
-                {  item.admin? item?.contribution: item?.contribution_amount }  {route.params.food.currency} 
+                {  item.admin? item?.contribution: item?.contribution_amount }  {foodDetails.currency} 
               </Text>
             </View>
           </View>
           <View style={{ alignItems: 'flex-end' }}>
-  {(!item.admin && route.params.food.owner._id == connectedUser.user?.userId) ? (
+  {(!item.admin && foodDetails.owner._id == connectedUser.user?.userId) ? (
     item.admission_req == 'ACCEPTED' ? (
       <>
-        <Text style={{ ...FONTS.h5, color: COLORS.red }}>+ {route.params.food.tauxInt} intérêt</Text>
+        <Text style={{ ...FONTS.h5, color: COLORS.red }}>+ {foodDetails.tauxInt} intérêt</Text>
         <View style={{ flexDirection: 'row' }}>
           <Image
             source={icons.calendar}
@@ -1273,7 +1271,7 @@ const Details = ({ route, navigation }) => {
     </>
   ) : (
     <>
-      <Text style={{ ...FONTS.h5, color: COLORS.red }}>+ {route.params.food.tauxInt}% intérêt</Text>
+      <Text style={{ ...FONTS.h5, color: COLORS.red }}>+ {foodDetails.tauxInt}% intérêt</Text>
       <View style={{ flexDirection: 'row', marginTop:20 }}>
         <Image
           source={icons.calendar}
@@ -1319,13 +1317,13 @@ const Details = ({ route, navigation }) => {
           }}
         >
           <Text center numberOfLines={1} size={20} bold>
-            {route.params.food.name}
+            {foodDetails.name}
           </Text>
           {
             // "PENDING","SUBMITED", "REJECTED", "ACCEPTED", "BANNED"
-            route.params.food.status == "PENDING"?
+            foodDetails.status == "PENDING"?
               <Text color={COLORS.red} center>[Bruillon]</Text>:
-            route.params.food.status == "SUBMITED"?
+            foodDetails.status == "SUBMITED"?
               <Text color={COLORS.red} center>[en attente de validation]</Text>:
               <Text color={COLORS.darkgreen} center>[Validé]</Text>
           }
@@ -1334,7 +1332,7 @@ const Details = ({ route, navigation }) => {
           {`  au `} {dateEnd.getDate()}/{dateEnd.getMonth() + 1}/{dateEnd.getFullYear().toString().substr(-2)} </Text>
           <Text center>Prix total</Text>
           <Text bold size={30} center color={COLORS.peach}>
-            {route.params.food.amount}  {route.params.food.currency} 
+            {foodDetails.amount}  {foodDetails.currency} 
           </Text>
 
           <Block>
@@ -1342,7 +1340,7 @@ const Details = ({ route, navigation }) => {
               <TouchableOpacity onPress={()=> 
                 {
                   console.log('Images');
-                  navigation.navigate('ShowImages', { images: route.params.food.images})
+                  navigation.navigate('ShowImages', { images: foodDetails.images})
                 }}>
                 <Block row center style={styles.round}>
                     <Ionicons name="md-image" color={COLORS.peach} size={20} />
@@ -1367,12 +1365,12 @@ const Details = ({ route, navigation }) => {
             <Block m_t={5} row space="between">
               <Text numberOfLines={1} semibold size={16}>
               Montant collecté(
-              {((route.params.food.initialAmount + route.params.food.membres
+              {((foodDetails.initialAmount + foodDetails.membres
 .filter(member => member.contribution_status === "ACCEPTED")
-.reduce((sum, member) => sum + member.contribution_amount, 0)) * 100 / route.params.food.amount).toFixed(1)}%)
+.reduce((sum, member) => sum + member.contribution_amount, 0)) * 100 / foodDetails.amount).toFixed(1)}%)
               </Text>
               <Text numberOfLines={1}>
-              {route.params.food.initialAmount} {route.params.food.currency}
+              {foodDetails.initialAmount} {foodDetails.currency}
               </Text>
             </Block>
             <Block>
@@ -1380,48 +1378,48 @@ const Details = ({ route, navigation }) => {
                 <Text numberOfLines={1} semibold>
                   Le coût total de production:
                 </Text>
-                <Text> {totAmount} {route.params.food.currency} </Text>
+                <Text> {totAmount} {foodDetails.currency} </Text>
               </Block>
 
               <Block row space="between">
                 <Text numberOfLines={1} semibold>
                   Le prix d'une part:
                 </Text>
-                <Text> {route.params.food.amount/100} {route.params.food.currency}</Text>
+                <Text> {foodDetails.amount/100} {foodDetails.currency}</Text>
               </Block>
 
               <Block row space="between">
                 <Text numberOfLines={1} semibold>
                   Les parts disponibles:
                 </Text>
-                <Text>{(100 - (route.params.food.initialAmount / (route.params.food.amount / 100).toFixed(0))).toFixed(0)} parts</Text>
+                <Text>{(100 - (foodDetails.initialAmount / (foodDetails.amount / 100).toFixed(0))).toFixed(0)} parts</Text>
               </Block>
 
               {/* <Block row space="between">
                 <Text numberOfLines={1} semibold>
                   Le coût total de Revient:
                 </Text>
-                <Text> 0 {route.params.food.currency} </Text>
+                <Text> 0 {foodDetails.currency} </Text>
               </Block> */}
               <Block row space="between">
                 <Text numberOfLines={1} semibold>
                     Taux d'intérêt :
                   </Text>
-                  <Text> {route.params.food?.tauxInt} % </Text>
+                  <Text> {foodDetails?.tauxInt} % </Text>
                   </Block>
               </Block>
             {
-              connectedUser.user.username == route.params.food.owner.username? 
+              connectedUser.user.username == foodDetails.owner.username? 
               <Block row space="between" m_t={10}>
               {/* owner */}
              {
-              route.params.food.status == 'PENDING'?
+              foodDetails.status == 'PENDING'?
               <>
                 <Button textColor="#fff" elevated buttonColor={COLORS.lightBlue} onPress={()=>
               {
-                // console.log("route.params.food", route.params.food);
+                // console.log("foodDetails", foodDetails);
                  navigation.navigate('EditProduct', { owner: connectedUser.user?.userId,
-                  username: connectedUser.user?.username, productService: route.params.food });
+                  username: connectedUser.user?.username, productService: foodDetails });
               }}>
                 Modifier
               </Button>
@@ -1441,14 +1439,14 @@ const Details = ({ route, navigation }) => {
             <Block row space="between" m_t={10}>
               {/* other */}
               {
-                route.params.food.membres.some(member => member?.user?._id == connectedUser.user?.userId)?
+                foodDetails.membres.some(member => member?.user?._id == connectedUser.user?.userId)?
               <>
               <Button textColor="#fff" elevated buttonColor={COLORS.peach} onPress={()=> showModalQuitter()}>
                 Quitter
               </Button>
 
               {
-                 route.params.food.membres.find(member => member?.admission_req == 'ACCEPTED')? 
+                 foodDetails.membres.find(member => member?.admission_req == 'ACCEPTED')? 
                  <Button textColor="#fff" elevated buttonColor={COLORS.darkgreen} onPress={()=> openModalContrib()}>
                   Contribuer
                 </Button>:
@@ -1470,15 +1468,15 @@ const Details = ({ route, navigation }) => {
 
         <Block p={20} style={{ zIndex: -101 }}>
           <Text color={COLORS.darkgray} numberOfLines={expanded ? undefined : 2} black>
-            {route.params.food.detail}
+            {foodDetails.detail}
           </Text>
-          {route.params.food.detail.length > 50 && (
+          {foodDetails.detail.length > 50 && (
             <Text bold color={COLORS.blue} onPress={toggleExpanded}>
               {expanded ? 'Voir moins' : 'Voir plus'}
             </Text>
           )}
           <Block mt={5}>
-            {stars(route.params.food.stars.length)}
+            {stars(foodDetails.stars.length)}
           
           </Block>
         </Block>
@@ -1488,7 +1486,7 @@ const Details = ({ route, navigation }) => {
 
         <Block p={20}>
           <Text bold numberOfLines={1}>
-            CALCUL D'INVESTISSEMENT ({route.params.food.currency})
+            CALCUL D'INVESTISSEMENT ({foodDetails.currency})
           </Text>
           <Text>Projection du retour sur investissement</Text>
 
@@ -1498,11 +1496,11 @@ const Details = ({ route, navigation }) => {
                 style={{ 
                   data: {
                     fill: ({ datum }) => {
-                      if (datum.x === `Intérêt (${route.params.food.tauxInt}%)`) {
+                      if (datum.x === `Intérêt (${foodDetails.tauxInt}%)`) {
                         return COLORS.primary;
                       } else if (datum.x === `Invest`) {
                         return COLORS.peach;
-                      } else if (datum.y > route.params.food.initialAmount) {
+                      } else if (datum.y > foodDetails.initialAmount) {
                         return COLORS.purple;
                       } else {
                         return COLORS.black;
@@ -1510,23 +1508,23 @@ const Details = ({ route, navigation }) => {
                     }
                   }
                  }}
-                labels={({ datum }) => `${datum.y} ${route.params.food.currency}`}
+                labels={({ datum }) => `${datum.y} ${foodDetails.currency}`}
 
                 categories={{
                   x: [`Total`, 
                   `Disponible`,
-                  `Intérêt (${route.params.food.tauxInt}%)`,
+                  `Intérêt (${foodDetails.tauxInt}%)`,
                   `Invest`
                 ],
                 }}
                 data={[
-                  { x: `Total`, y: route.params.food.amount },
+                  { x: `Total`, y: foodDetails.amount },
                   { x:  `Disponible`, y: 
-                  (route.params.food.initialAmount+route.params.food.membres
+                  (foodDetails.initialAmount+foodDetails.membres
                     .filter(member => member.contribution_status === "ACCEPTED")
                     .reduce((sum, member) => sum + member.contribution_amount, 0))
                   },
-                  { x:  `Intérêt (${route.params.food.tauxInt}%)`, y: interet },
+                  { x:  `Intérêt (${foodDetails.tauxInt}%)`, y: interet },
                   { x: `Invest`, y: sliderValue },
                 ]}
               />
@@ -1535,24 +1533,24 @@ const Details = ({ route, navigation }) => {
 
           {/*Slider with max, min, step and initial value*/}
           <Slider
-            maximumValue={(route.params.food.amount-(route.params.food.initialAmount+route.params.food.membres
+            maximumValue={(foodDetails.amount-(foodDetails.initialAmount+foodDetails.membres
               .filter(member => member.contribution_status === "ACCEPTED")
               .reduce((sum, member) => sum + member.contribution_amount, 0)))}
-            minimumValue={route.params.food.amount/100}
+            minimumValue={foodDetails.amount/100}
             minimumTrackTintColor="#307ecc"
             maximumTrackTintColor="#000000"
-            step={route.params.food.amount/100}
+            step={foodDetails.amount/100}
             value={sliderValue}
             onValueChange={(sliderValue) => {
-              setInteret((sliderValue * route.params.food.tauxInt )/100)
+              setInteret((sliderValue * foodDetails.tauxInt )/100)
               setSliderValue(sliderValue)}
             }
           />
 
         <Text bold style={{ color: 'black' }}>
-          Vous investissez la somme de : {sliderValue} {route.params.food.currency}.
-           Ceci équivaut à {sliderValue/(route.params.food.amount/100)} parts de {route.params.food.amount/100} {route.params.food.currency} chacun.
-           Et votre Intérêt de (${route.params.food.tauxInt}%) est de {interet} {route.params.food.currency} après l'exercice. </Text>
+          Vous investissez la somme de : {sliderValue} {foodDetails.currency}.
+           Ceci équivaut à {sliderValue/(foodDetails.amount/100)} parts de {foodDetails.amount/100} {foodDetails.currency} chacun.
+           Et votre Intérêt de (${foodDetails.tauxInt}%) est de {interet} {foodDetails.currency} après l'exercice. </Text>
           
         </Block>
 
@@ -1598,16 +1596,16 @@ const Details = ({ route, navigation }) => {
           
         <Block  p_l={20} p_r={20}   >
           <Text>
-            {`Avez-vous des questions sur ce ${route.params.food.type}? Contactez le propriétaire ou notre expert en financement participatif.`}
+            {`Avez-vous des questions sur ce ${foodDetails.type}? Contactez le propriétaire ou notre expert en financement participatif.`}
             </Text>
         <Block row space='between'>
 
         <View style={styles.columnMembre1}>
             <Image
-              source={{uri: route.params.food.owner?.profile_pic}}
+              source={{uri: foodDetails.owner?.profile_pic}}
               style={styles.imgOwner}
             />
-            <Text numberOfLines={2} bold >{route.params.food.owner?.name}</Text>
+            <Text numberOfLines={2} bold >{foodDetails.owner?.name}</Text>
             <Text numberOfLines={1} style={styles.contentTitle}>Président</Text>
           </View>
 
@@ -1640,8 +1638,8 @@ const Details = ({ route, navigation }) => {
             title="ATTENTION!" 
           />
           <Card.Content>
-            <Text variant="titleLarge">Voulez-vous vraiment supprimer le {route.params.food.type }
-              {" "}{ route.params.food.name}?</Text>
+            <Text variant="titleLarge">Voulez-vous vraiment supprimer le {foodDetails.type }
+              {" "}{ foodDetails.name}?</Text>
           </Card.Content>
           <Card.Actions style={{ marginTop: 15 }}>
             <Button onPress={hideModalDel}>Annuler</Button>
@@ -1667,10 +1665,10 @@ const Details = ({ route, navigation }) => {
             title="ATTENTION!" 
           />
           <Card.Content>
-            <Text variant="titleLarge">Voulez-vous vraiment Soumettre le {route.params.food.type }
-              {" "}{ route.params.food.name}?</Text>
+            <Text variant="titleLarge">Voulez-vous vraiment Soumettre le {foodDetails.type }
+              {" "}{ foodDetails.name}?</Text>
 
-              <Text color={COLORS.peach} variant="titleLarge">Ceci implique que votre {route.params.food.type} {" "} 
+              <Text color={COLORS.peach} variant="titleLarge">Ceci implique que votre {foodDetails.type} {" "} 
               sera soumis a l'equipe d'African Fintech sera etudier soigneusement pendant deux ou trois jours avant de 
               de le valider ou le rejeter dans la plateforme!</Text>
           </Card.Content>
@@ -1717,12 +1715,12 @@ const Details = ({ route, navigation }) => {
               :
             <>
             <Card.Content>
-            <Text variant="titleLarge">Voulez-vous vraiment Faire parti des insvesitteurs du {route.params.food.type }
-              {" "}{ route.params.food.name}?</Text>
+            <Text variant="titleLarge">Voulez-vous vraiment Faire parti des insvesitteurs du {foodDetails.type }
+              {" "}{ foodDetails.name}?</Text>
 
               <Text color={COLORS.peach} variant="titleLarge">Ceci implique que vous pouvez contribuer une somme
-              d'argent et ganger apres l'exercice! Votre demande d'adhesion sera validee par le proprietaire du {route.params.food.type }
-              {" "}{ route.params.food.name}</Text>
+              d'argent et ganger apres l'exercice! Votre demande d'adhesion sera validee par le proprietaire du {foodDetails.type }
+              {" "}{ foodDetails.name}</Text>
           </Card.Content>
           <Card.Actions style={{ marginTop: 15 }}>
             <Button onPress={hideModalAdhesion}>Annuler</Button>
@@ -1752,8 +1750,8 @@ const Details = ({ route, navigation }) => {
             title="ATTENTION!" 
           />
           <Card.Content>
-            <Text variant="titleLarge">Voulez-vous vraiment quitter le groupe des insvesitteurs du {route.params.food.type }
-              {" "}{ route.params.food.name}?</Text>
+            <Text variant="titleLarge">Voulez-vous vraiment quitter le groupe des insvesitteurs du {foodDetails.type }
+              {" "}{ foodDetails.name}?</Text>
 
              
           </Card.Content>
@@ -1782,8 +1780,8 @@ const Details = ({ route, navigation }) => {
             title="ATTENTION!" 
           />
           <Card.Content>
-            <Text variant="titleLarge">Voulez-vous vraiment contribuer une somme d'argent et ganger apres l'exercice du {route.params.food.type }
-              {" "}{ route.params.food.name}?</Text>
+            <Text variant="titleLarge">Voulez-vous vraiment contribuer une somme d'argent et ganger apres l'exercice du {foodDetails.type }
+              {" "}{ foodDetails.name}?</Text>
 
               <Block m_t={15} center >
                 <TextInput
