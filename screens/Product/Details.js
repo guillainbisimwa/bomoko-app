@@ -914,15 +914,14 @@ const Details = ({ route, navigation }) => {
                 couts: updatedCouts,
               }));
               
-              // Check if the item was updated successfully
 
               // Update state
               setStatusError(!error && !isLoading);
               setStatusSuccess(!error && !isLoading);
 
-              // Check if the user validationhas been made successfully
+              // Check if the item was updated successfully
               if (!statusError && statusSuccess) {
-                setMsgSuccess(`Mis à jour avec succès`);
+                setMsgSuccess(`Mis à jour avec succèss`);
                 setMsgError("");
                 setStatusSuccess(true);
                 setStatusError(false);
@@ -982,14 +981,27 @@ const Details = ({ route, navigation }) => {
                 }));
             
                 // Check if the couts was updated successfully
-                if (!error && !isLoading) {
-                  setTotAmount(totAmount - parseFloat(item.amount));
+                // Update state
+                setStatusError(!error && !isLoading);
+                setStatusSuccess(!error && !isLoading);
 
-                  foodDetails.couts = updatedCouts;
+                // Check if the item was updated successfully
+                if (!statusError && statusSuccess) {
+                  setMsgSuccess(`Suppression avec succèss`);
+                  setMsgError("");
+                  setStatusSuccess(true);
+                  setStatusError(false);
+                  onToggleSnackBar();
+                    setTotAmount(totAmount - parseFloat(item.amount));
+
+                    foodDetails.couts = updatedCouts;
             
                 }else {
-                  console.log('Error ++++++')
-                  onToggleSnackBar()
+                  setMsgError("Erreur de suppression!");
+                  setMsgSuccess("");
+                  setStatusSuccess(false);
+                  setStatusError(true);
+                  onToggleSnackBar();
                 }
               
             },
@@ -998,9 +1010,11 @@ const Details = ({ route, navigation }) => {
       );
 
     } catch(e){
-      console.log('Error //////////', e)
-      onToggleSnackBar()
-      showToast()
+      setMsgError("Erreur de suppression!");
+      setMsgSuccess("");
+      setStatusSuccess(false);
+      setStatusError(true);
+      onToggleSnackBar();
     }
   };
 
