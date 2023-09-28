@@ -712,7 +712,7 @@ const Details = ({ route, navigation }) => {
       setStatusError(!error && !isLoading);
       setStatusSuccess(!error && !isLoading);
 
-      // Check if the product was deleted successfully
+      // Check if the user validationhas been made successfully
       if (!statusError && statusSuccess) {
         setMsgSuccess(`Votre ${foodDetails.type} a ete soumis avec success`);
         setMsgError("");
@@ -759,7 +759,7 @@ const Details = ({ route, navigation }) => {
       setStatusError(!error && !isLoading);
       setStatusSuccess(!error && !isLoading);
 
-      // Check if the product was deleted successfully
+      // Check if the user's rejection has been made successfully
       if (!statusError && statusSuccess) {
         setMsgSuccess(`Accecpte avec success`);
         setMsgError("");
@@ -832,31 +832,49 @@ const Details = ({ route, navigation }) => {
   // Display "Quitter" button while waiting for Admin Validation
   
   const handleAdhesion = async () => {
+    try{
+      // Push current user to member array
 
-    // Push current user to member array
+      // Reuse the soumettreProduct function
+      dispatch(soumettreProduct({
+        ...foodDetails,
+        id: foodDetails._id,
+        membres: [
+          ...foodDetails.membres,
+          {
+            user: connectedUser.user?.userId,
+            admission_req: 'PENDING', 
+            contribution_amount: 0,
+            contribution_status: 'PENDING', 
+          }
+        ]
+      }));
 
-    // Reuse the soumettreProduct function
-    dispatch(soumettreProduct({
-      ...foodDetails,
-      id: foodDetails._id,
-      membres: [
-        ...foodDetails.membres,
-        {
-          user: connectedUser.user?.userId,
-          admission_req: 'PENDING', 
-          contribution_amount: 0,
-          contribution_status: 'PENDING', 
-        }
-      ]
-    }));
+      // Check if the request made successfully
+      setStatusError(!error && !isLoading);
+      setStatusSuccess(!error && !isLoading);
 
-     // Check if the product was deleted successfully
-    if (!error) {
-      // Navigate back to the previous screen
-      navigation.navigate('Main');
-
-    }else {
-      onToggleSnackBar()
+      // Check if user's request has been made successfully
+      if (!statusError && statusSuccess) {
+        setMsgSuccess(`Accecpte avec success`);
+        setMsgError("");
+        setStatusSuccess(true);
+        setStatusError(false);
+        onToggleSnackBar();
+      }else {
+          setMsgError("Une Erreur s'est produite");
+          setMsgSuccess("");
+          setStatusSuccess(false);
+          setStatusError(true);
+          onToggleSnackBar();
+      }
+    }
+    catch(e){
+      setMsgError("Une Erreur s'est produite");
+      setMsgSuccess("");
+      setStatusSuccess(false);
+      setStatusError(true);
+      onToggleSnackBar();
     }
   };
 
@@ -897,23 +915,41 @@ const Details = ({ route, navigation }) => {
               }));
               
               // Check if the item was updated successfully
-              if (!error && !isLoading) {
-                console.log('Élément mis à jour avec succès');
+
+              // Update state
+              setStatusError(!error && !isLoading);
+              setStatusSuccess(!error && !isLoading);
+
+              // Check if the user validationhas been made successfully
+              if (!statusError && statusSuccess) {
+                setMsgSuccess(`Mis à jour avec succès`);
+                setMsgError("");
+                setStatusSuccess(true);
+                setStatusError(false);
+                onToggleSnackBar();
+
                 setTotAmount(totAmount + parseFloat(editedAmount1) - parseFloat(foodDetails.couts.find(cout => cout._id === item._id).amount));
 
-                foodDetails.couts = updatedCouts;
-              } else {
-                console.log('Erreur de mise à jour');
-                onToggleSnackBar();
+                // TODO : update all foodDetails => foodDetails.couts = updatedCouts;
+                setFoodDetails({...foodDetails, 'couts': updatedCouts}); // TODO: To test if is working well
+
+              }else {
+                  setMsgError("Erreur de mise à jour");
+                  setMsgSuccess("");
+                  setStatusSuccess(false);
+                  setStatusError(true);
+                  onToggleSnackBar();
               }
             },
           },
         ]
       );
     } catch (e) {
-      console.log('Erreur //////////', e);
+      setMsgError("Erreur de mise à jour");
+      setMsgSuccess("");
+      setStatusSuccess(false);
+      setStatusError(true);
       onToggleSnackBar();
-      showToast();
     }
   };
   
