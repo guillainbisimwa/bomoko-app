@@ -1963,7 +1963,7 @@ const Details = ({ route, navigation }) => {
       <Snackbar
         visible={visibleSnackBar}
         onDismiss={onDismissSnackBar}
-        style={{ backgroundColor: COLORS.peach}}
+        style={{ backgroundColor:  statusError? COLORS.peach: COLORS.darkgreen}}
         wrapperStyle={{ bottom: 30 }}
         action={{
           label: 'Annuler',
@@ -1972,7 +1972,9 @@ const Details = ({ route, navigation }) => {
           },
         }}
         >
-          {error}
+          {
+            statusError? msgError: msgSuccess
+          }
         </Snackbar>
 
         {renderBottomCout()}
