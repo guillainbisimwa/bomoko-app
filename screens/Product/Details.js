@@ -688,32 +688,51 @@ const Details = ({ route, navigation }) => {
   
   const handleSoumettre = async () => {
 
-    // Pushing the additional object to the output array
-    const today = new Date();
+    try{
+      // Pushing the additional object to the output array
+      const today = new Date();
 
-    const outputTimeLineSoum = {
-      time:`${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear().toString().substr(-2)}`,
-      title: 'Soumission',
-      details: `Votre ${foodDetails.type} a été soumis à l'équipe African Fintech et est en attente de validation`
-    };
+      const outputTimeLineSoum = {
+        time:`${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear().toString().substr(-2)}`,
+        title: 'Soumission',
+        details: `Votre ${foodDetails.type} a été soumis à l'équipe African Fintech et est en attente de validation`
+      };
 
-    dispatch(soumettreProduct({
-      ...foodDetails,
-      id: foodDetails._id,
-      status: "SUBMITED",
-      timeline: [
-        ...foodDetails.timeline,
-        outputTimeLineSoum,
-      ]
-    }));
+      dispatch(soumettreProduct({
+        ...foodDetails,
+        id: foodDetails._id,
+        status: "SUBMITED",
+        timeline: [
+          ...foodDetails.timeline,
+          outputTimeLineSoum,
+        ]
+      }));
 
-     // Check if the product was deleted successfully
-    if (!error) {
-      // Navigate back to the previous screen
-      navigation.navigate('Main');
+      // Update state
+      setStatusError(!error && !isLoading);
+      setStatusSuccess(!error && !isLoading);
 
-    }else {
-      onToggleSnackBar()
+      // Check if the product was deleted successfully
+      if (!statusError && statusSuccess) {
+        setMsgSuccess(`Votre ${foodDetails.type} a ete soumis avec success`);
+        setMsgError("");
+        setStatusSuccess(true);
+        setStatusError(false);
+        onToggleSnackBar();
+      }else {
+          setMsgError("Une Erreur s'est produite lors de la soumission");
+          setMsgSuccess("");
+          setStatusSuccess(false);
+          setStatusError(true);
+          onToggleSnackBar();
+      }
+    }
+    catch(e){
+      setMsgError("Une Erreur s'est produite lors de la soumission");
+      setMsgSuccess("");
+      setStatusSuccess(false);
+      setStatusError(true);
+      onToggleSnackBar();
     }
   };
 
