@@ -889,7 +889,7 @@ const Home = ({ navigation }) => {
     <>
       <ImageBackground
         style={{ flex: 1, position: 'absolute', height: '100%', width: '100%' }}
-        source={require('./../assets/login1_bg.png')}
+        source={require('./../assets/login2_bg.png')}
         blurRadius={10}
       ></ImageBackground>
       <View style={{ flex: 1 }}>

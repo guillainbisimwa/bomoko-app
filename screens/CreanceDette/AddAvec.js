@@ -38,6 +38,12 @@ const AddAvec = ({ navigation, route }) => {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
 
+  const [min, setMin] = useState('1');
+  const [max, setMax] = useState('5');
+
+  const [chiffreAffaire, setChiffreAffaite] = useState();
+  const [profession, setProfrssion] = useState();
+
   const [checkedDevise, setCheckedDevise] = useState('USD');
 
   const [statusLocal, setStatusLocal] = useState(false);
@@ -113,7 +119,7 @@ const AddAvec = ({ navigation, route }) => {
   const handleAddAvec = () => {
     try {
       // Validation: Check if required fields are empty
-      if (!name || !amount  || !detail || !interest || !fraisAdhesion || !prixCaisseSolidaire  || !date) {
+      if (!name || !amount  || !detail || !interest || !fraisAdhesion || !prixCaisseSolidaire  || !date || !chiffreAffaire || !profession) {
         setStatusLocal(false);
         //throw new Error('Please fill in all required fields.');
         if(!interest){
@@ -152,6 +158,8 @@ const AddAvec = ({ navigation, route }) => {
             name: 'Hebdomadaire',
             somme: Number(prixCaisseSolidaire),
           },
+          chiffreAffaire,
+          proffession: profession,
         };
 
         console.log("avec", avec);
@@ -263,10 +271,37 @@ const AddAvec = ({ navigation, route }) => {
           onChangeText={setDetail}
           placeholder="Entrer la description de votre groupe"
         />
+
+      <Block row space='between'>
+        <Block flex={1}>
+          <Text numberOfLines={1} style={styles.label}>{`Parts minimun`}</Text>
+          <TextInput
+            style={[styles.input, !amount && statusLocal && styles.inputError]}
+
+            value={min}
+            onChangeText={setMin}
+            keyboardType="numeric"
+            placeholder="Parts minimum"
+          />
+        </Block>
+        <Block flex={1} m_l={5}>
+        <Text numberOfLines={1} style={styles.label}>Parts maximum</Text>
+        <TextInput
+            style={[styles.input, !interestValid && styles.inputError]} // Apply red border if not valid
+            value={max}
+            onChangeText={setMax}
+            keyboardType="numeric"
+            placeholder="Parts maximum"
+          />
+          {!interestValid && (
+            <Text style={styles.errorText}>Entre 5 et 10%</Text>
+          )}
+        </Block>
+      </Block>
         
       <Block row space='between'>
-        <Block>
-          <Text style={styles.label}>{`Prix d'une part (${checkedDevise})`}</Text>
+        <Block flex={1}>
+          <Text numberOfLines={1} style={styles.label}>{`Prix d'une part (${checkedDevise})`}</Text>
           <TextInput
             style={[styles.input, !amount && statusLocal && styles.inputError]}
 
@@ -276,8 +311,8 @@ const AddAvec = ({ navigation, route }) => {
             placeholder="Enter Prix d'une part"
           />
         </Block>
-        <Block>
-        <Text style={styles.label}>Taux d'intérêt (%)</Text>
+        <Block flex={1} m_l={5}>
+        <Text numberOfLines={1} style={styles.label}>Taux d'intérêt (%)</Text>
         <TextInput
             style={[styles.input, !interestValid && styles.inputError]} // Apply red border if not valid
             value={interest}
@@ -290,11 +325,50 @@ const AddAvec = ({ navigation, route }) => {
           )}
         </Block>
       </Block>
+      <Block flex={1} m_l={5}>
+        <Text numberOfLines={1} style={styles.label}>Taux d'intérêt (%)</Text>
+        <TextInput
+            style={[styles.input, !interestValid && styles.inputError]} // Apply red border if not valid
+            value={interest}
+            onChangeText={handleInterestChange}
+            keyboardType="numeric"
+            placeholder="Taux d'intérêt"
+          />
+          {!interestValid && (
+            <Text style={styles.errorText}>Entre 5 et 10%</Text>
+          )}
+        </Block>
+      <Block>
+      <Text numberOfLines={1} style={styles.label}>Votre profession/domaine d'activite</Text>
+
+      <TextInput
+          value={profession}
+          style={[styles.input, !profession && statusLocal && styles.inputError]}
+          multiline
+          numberOfLines={2}
+          onChangeText={setProfrssion}
+          placeholder="Entrer les details de votre profession/domaine d'activite"
+        />
+          
+      </Block>
+     
+      <Block>
+        <Text numberOfLines={1} style={styles.label}>{`Chiffre d'affaire annuel (${checkedDevise})`}</Text>
+        <TextInput
+            value={chiffreAffaire}
+            style={[styles.input, !chiffreAffaire && statusLocal && styles.inputError]}
+            keyboardType="numeric"
+            onChangeText={setChiffreAffaite}
+            placeholder="Entrer votre chiffre d'affaire annuel"
+          />
+          
+      </Block>
+      
 
       <Block row space='between'>
        
-        <Block>
-        <Text style={styles.label}>{`Frais Adhesion (${checkedDevise})`}</Text>
+        <Block flex={1}>
+        <Text numberOfLines={1} style={styles.label}>{`Frais Adhesion (${checkedDevise})`}</Text>
         <TextInput
           style={[styles.input, !fraisAdhesion && statusLocal && styles.inputError]}
           value={fraisAdhesion}
@@ -303,8 +377,8 @@ const AddAvec = ({ navigation, route }) => {
           placeholder="Le frais d'adhesion"
         />
         </Block>
-        <Block>
-        <Text style={styles.label}>{`Caisse solidaire (${checkedDevise})`}</Text>
+        <Block flex={1} m_l={5}>
+        <Text numberOfLines={1} style={styles.label}>{`Caisse solidaire (${checkedDevise})`}</Text>
         <TextInput
           style={[styles.input, !prixCaisseSolidaire && statusLocal && styles.inputError]}
           value={prixCaisseSolidaire}
@@ -369,12 +443,12 @@ const AddAvec = ({ navigation, route }) => {
         {avecForm()}
 
         <Snackbar
-        visible={visible}
-        onDismiss={onDismissSnackBar}
-        style={{ backgroundColor: COLORS.peach}}
-        wrapperStyle={{ bottom: 30 }}
-       
-        >
+          visible={visible}
+          onDismiss={onDismissSnackBar}
+          style={{ backgroundColor: COLORS.peach}}
+          wrapperStyle={{ bottom: 30 }}
+          >
+            
         <Text style={{color:COLORS.white}} >Veuillez vérifier votre connexion Internet </Text>
       
       </Snackbar>
