@@ -1843,6 +1843,8 @@ export const updateAvec = createAsyncThunk(
         calendarRemboursement,
         credit,
         carnet,
+        chiffreAffaire,
+        proffession,
     }) => {
       const url = `${BASE_URL}api/avec/${id}`; // Concatenate ID to the base URL
       
@@ -1874,6 +1876,8 @@ export const updateAvec = createAsyncThunk(
         calendarRemboursement,
         credit,
         carnet,
+        chiffreAffaire,
+        proffession,
       });
   
       console.log("Edit AVEC---?????? ok==", response.data);

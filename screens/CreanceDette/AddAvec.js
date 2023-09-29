@@ -28,8 +28,6 @@ const AddAvec = ({ navigation, route }) => {
   const [currency, setCurrency] = useState('USD');
   const [cycleName, setCycleName] = useState('Mensuel');
   const [cycleNumber, setCycleNumber] = useState('9');
-  const [nbrPartMax, setNbrPartMax] = useState('5');
-  const [nbrPartMin, setNbrPartMin] = useState('1');
   const [prixCaisseSolidaire, setPrixCaisseSolidaire] = useState();
   const [interest, setInterest] = useState('');
   const [fraisAdhesion, setFraisAdhesion] = useState();
@@ -138,8 +136,8 @@ const AddAvec = ({ navigation, route }) => {
             number: Number(cycleNumber),
           },
           nbrPart: {
-            max: Number(nbrPartMax),
-            min: Number(nbrPartMin),
+            max: Number(max),
+            min: Number(min),
           },
           owner,
           interest,
@@ -166,8 +164,7 @@ const AddAvec = ({ navigation, route }) => {
     
         // Dispatch the action
         dispatch(createAvec(avec));
-    
-        }
+      }
       
   
       setStatusLocal(true);
@@ -287,15 +284,12 @@ const AddAvec = ({ navigation, route }) => {
         <Block flex={1} m_l={5}>
         <Text numberOfLines={1} style={styles.label}>Parts maximum</Text>
         <TextInput
-            style={[styles.input, !interestValid && styles.inputError]} // Apply red border if not valid
+            style={[styles.input, !max && styles.inputError]} // Apply red border if not valid
             value={max}
             onChangeText={setMax}
             keyboardType="numeric"
             placeholder="Parts maximum"
           />
-          {!interestValid && (
-            <Text style={styles.errorText}>Entre 5 et 10%</Text>
-          )}
         </Block>
       </Block>
         
@@ -325,19 +319,7 @@ const AddAvec = ({ navigation, route }) => {
           )}
         </Block>
       </Block>
-      <Block flex={1} m_l={5}>
-        <Text numberOfLines={1} style={styles.label}>Taux d'intérêt (%)</Text>
-        <TextInput
-            style={[styles.input, !interestValid && styles.inputError]} // Apply red border if not valid
-            value={interest}
-            onChangeText={handleInterestChange}
-            keyboardType="numeric"
-            placeholder="Taux d'intérêt"
-          />
-          {!interestValid && (
-            <Text style={styles.errorText}>Entre 5 et 10%</Text>
-          )}
-        </Block>
+      
       <Block>
       <Text numberOfLines={1} style={styles.label}>Votre profession/domaine d'activite</Text>
 
