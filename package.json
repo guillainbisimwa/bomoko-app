@@ -37,7 +37,7 @@
     "moment": "^2.29.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-native": "0.71.8",
+    "react-native": "0.71.14",
     "react-native-btr": "^2.2.0",
     "react-native-document-picker": "8.2.1",
     "react-native-file-viewer": "^2.1.5",
