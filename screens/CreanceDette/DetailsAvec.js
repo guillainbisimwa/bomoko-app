@@ -445,7 +445,7 @@ const DetailsAvec = ({ route, navigation }) => {
     const outputTimeLineSoum = {
       time:`${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear().toString().substr(-2)}`,
       title: 'Soumission',
-      details: `Votre groupe ${route.params.avec.name} a été soumis à l'équipe African Fintech et est en attente de validation`
+      details: `Votre groupe ${route.params.avec.name} a été soumis à l'équipe Afrintech et est en attente de validation`
     };
 
     dispatch(updateAvec({
@@ -1092,7 +1092,7 @@ ont épargné.</Text>
           />
           <Card.Content>
             <Text variant="titleLarge">Vous souhaitez vraiment Soummetre le Groupe : { route.params.avec.name}
-            à l'équipe d'AFRICAN FINTECH pour validation?</Text>
+            à l'équipe d'Afrintech pour validation?</Text>
             {statusLocal == 'failed' && status != 'loading'?
               <Text style={{color: COLORS.peach}}>Une erreur est survenue </Text>:<></>
             }

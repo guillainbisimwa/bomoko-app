@@ -27,7 +27,7 @@ const CustomDrawer = (props) => {
               marginBottom: 5,
             }}
           >
-            African Fintech
+            Afrintech
           </Text>
         </ImageBackground>
         <View style={{ flex: 1, backgroundColor: '#fff', paddingTop: 10 }}>

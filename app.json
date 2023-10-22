@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "African Fintech",
+    "name": "Afrintech",
     "slug": "bomoko-cash",
     "version": "5.3.0",
     "privacy": "public",
@@ -49,7 +49,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "96544713-72ae-499c-944a-481a090080c3"
+        "projectId": "29b5c6ee-165d-4ad5-89a2-727d3426e585"
       }
     }
   }

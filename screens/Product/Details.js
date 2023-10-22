@@ -690,7 +690,7 @@ const Details = ({ route, navigation }) => {
       const outputTimeLineSoum = {
         time:`${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear().toString().substr(-2)}`,
         title: 'Soumission',
-        details: `Votre ${foodDetails.type} a été soumis à l'équipe African Fintech et est en attente de validation`
+        details: `Votre ${foodDetails.type} a été soumis à l'équipe Afrintech et est en attente de validation`
       };
 
       dispatch(soumettreProduct({
@@ -1808,7 +1808,7 @@ const Details = ({ route, navigation }) => {
               {" "}{ foodDetails.name}?</Text>
 
               <Text color={COLORS.peach} variant="titleLarge">Ceci implique que votre {foodDetails.type} {" "} 
-              sera soumis a l'equipe d'African Fintech sera etudier soigneusement pendant deux ou trois jours avant de 
+              sera soumis a l'equipe d'Afrintech sera etudier soigneusement pendant deux ou trois jours avant de 
               de le valider ou le rejeter dans la plateforme!</Text>
           </Card.Content>
           <Card.Actions style={{ marginTop: 15 }}>

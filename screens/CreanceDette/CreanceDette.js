@@ -299,7 +299,7 @@ const handlePrevPage = () => {
           </TouchableOpacity>
           
           <View>
-            <Text style={{ color: COLORS.white, ...FONTS.h2 }}>African Fintech</Text>
+            <Text style={{ color: COLORS.white, ...FONTS.h2 }}>Afrintech</Text>
             <Text style={{ ...FONTS.h3, color: COLORS.gray }}>(Créance et Dettes)</Text>
         </View>
         </View>

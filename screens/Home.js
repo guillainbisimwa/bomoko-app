@@ -106,7 +106,7 @@ const Home = ({ navigation }) => {
             />
           </TouchableOpacity>
 
-          <Text style={{ color: COLORS.white, ...FONTS.h2 }}>African Fintech</Text>
+          <Text style={{ color: COLORS.white, ...FONTS.h2 }}>Afrintech</Text>
         </View>
 
         <TouchableOpacity

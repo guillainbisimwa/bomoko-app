@@ -414,7 +414,7 @@ const ProductScreen2 = ({ navigation, route }) => {
           </TouchableOpacity>
           
           <View>
-            <Text style={{ color: COLORS.white, ...FONTS.h2 }}>African Fintech</Text>
+            <Text style={{ color: COLORS.white, ...FONTS.h2 }}>Afrintech</Text>
             <Text style={{ ...FONTS.h3, color: COLORS.gray }}>(Produits et Services)</Text>
         </View>
         </View>
