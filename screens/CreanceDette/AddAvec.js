@@ -40,7 +40,7 @@ const AddAvec = ({ navigation, route }) => {
   const [max, setMax] = useState('5');
 
   const [chiffreAffaire, setChiffreAffaite] = useState();
-  const [profession, setProfrssion] = useState();
+  const [profession, setProfession] = useState();
 
   const [checkedDevise, setCheckedDevise] = useState('USD');
 
@@ -188,7 +188,7 @@ const AddAvec = ({ navigation, route }) => {
         }}
       >
         <View style={{ paddingVertical: SIZES.padding / 2 }}>
-          <Text style={{ color: COLORS.primary, ...FONTS.h2 }}>African Fintech</Text>
+          <Text style={{ color: COLORS.primary, ...FONTS.h2 }}>Afrintech</Text>
           <Text style={{ ...FONTS.h3, color: COLORS.darkgray }}>(Associations Villageoises d’Epargne Crédit)</Text>
         </View>
       </View>
@@ -328,7 +328,7 @@ const AddAvec = ({ navigation, route }) => {
           style={[styles.input, !profession && statusLocal && styles.inputError]}
           multiline
           numberOfLines={2}
-          onChangeText={setProfrssion}
+          onChangeText={setProfession}
           placeholder="Entrer les details de votre profession/domaine d'activite"
         />
           

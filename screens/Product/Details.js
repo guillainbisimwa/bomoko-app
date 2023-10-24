@@ -233,7 +233,7 @@ const Details = ({ route, navigation }) => {
 
   const handleContactSupport = () => {
     // Replace with your support email or contact form link
-    const supportEmail = 'info@alphanewgroup.com';
+    const supportEmail = 'info@afrintech.org';
     Linking.openURL(`mailto:${supportEmail}`);
   };
 

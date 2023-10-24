@@ -39,7 +39,7 @@ const Privacy = ({  }) => {
 
       <Text style={styles.subtitle}>Vos Choix</Text>
       <Text style={styles.paragraph}>
-        Vous pouvez accéder, corriger ou supprimer vos informations personnelles en nous contactant à info@alphanewgroup.com. Vous avez également le droit de retirer votre consentement à tout moment.
+        Vous pouvez accéder, corriger ou supprimer vos informations personnelles en nous contactant à info@afrintech.org. Vous avez également le droit de retirer votre consentement à tout moment.
       </Text>
 
       <Text style={styles.subtitle}>Mises à Jour de la Politique</Text>
@@ -52,7 +52,7 @@ const Privacy = ({  }) => {
       </Text>
 
       <Text style={styles.contact}>
-        Pour toute question concernant cette Politique de Confidentialité, veuillez nous contacter à info@alphanewgroup.com.
+        Pour toute question concernant cette Politique de Confidentialité, veuillez nous contacter à info@afrintech.org.
       </Text>
         
       </ScrollView>

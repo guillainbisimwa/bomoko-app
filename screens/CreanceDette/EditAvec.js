@@ -12,7 +12,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { fr, registerTranslation, DatePickerModal, DatePickerInput } from 'react-native-paper-dates'
 registerTranslation('fr', fr)
 import { format } from 'date-fns';
-import { fr as myFr, addMonths } from 'date-fns/locale';
+import { fr as myFr } from 'date-fns/locale';
 import moment from 'moment';
 
 const EditAvec = ({ navigation, route }) => {
@@ -45,7 +45,8 @@ const EditAvec = ({ navigation, route }) => {
 
   const [statusLocal, setStatusLocal] = useState(false);
   const [interestValid, setInterestValid] = useState(true); // Validation state for interest
-
+  const [chiffreAffaire, setChiffreAffaire] = useState(avec.currency);
+  const [profession, setProfession] = useState(avec.currency);
 
   const [date, setDate] = useState(new Date(avec.startDate));
 
@@ -151,7 +152,10 @@ const EditAvec = ({ navigation, route }) => {
             name: 'Hebdomadaire',
             somme: Number(prixCaisseSolidaire),
           },
-          reunion: []
+          reunion: [],
+
+          chiffreAffaire,
+          profession,
         };
   
         // console.log("id", avec.id);
@@ -184,7 +188,7 @@ const EditAvec = ({ navigation, route }) => {
         }}
       >
         <View style={{ paddingVertical: SIZES.padding / 2 }}>
-          <Text style={{ color: COLORS.primary, ...FONTS.h2 }}>African Fintech</Text>
+          <Text style={{ color: COLORS.primary, ...FONTS.h2 }}>Afrintech</Text>
           <Text style={{ ...FONTS.h3, color: COLORS.darkgray }}>(Associations Villageoises d’Epargne Crédit)</Text>
         </View>
       </View>
@@ -291,6 +295,33 @@ const EditAvec = ({ navigation, route }) => {
           )}
         </Block>
       </Block>
+
+      <Block>
+      <Text numberOfLines={1} style={styles.label}>Votre profession/domaine d'activite</Text>
+
+      <TextInput
+          value={profession}
+          style={[styles.input, !profession && statusLocal && styles.inputError]}
+          multiline
+          numberOfLines={2}
+          onChangeText={setProfession}
+          placeholder="Entrer les details de votre profession/domaine d'activite"
+        />
+          
+      </Block>
+     
+      <Block>
+        <Text numberOfLines={1} style={styles.label}>{`Chiffre d'affaire annuel (${checkedDevise})`}</Text>
+        <TextInput
+            value={chiffreAffaire}
+            style={[styles.input, !chiffreAffaire && statusLocal && styles.inputError]}
+            keyboardType="numeric"
+            onChangeText={setChiffreAffaire}
+            placeholder="Entrer votre chiffre d'affaire annuel"
+          />
+          
+      </Block>
+      
 
       <Block row space='between'>
        

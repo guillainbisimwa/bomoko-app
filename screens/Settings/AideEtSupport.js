@@ -4,7 +4,7 @@ import { View, Text, ScrollView, StyleSheet, Linking, TouchableOpacity } from 'r
 const AideEtSupport = () => {
   const handleContactSupport = () => {
     // Replace with your support email or contact form link
-    const supportEmail = 'info@alphanewgroup.com';
+    const supportEmail = 'info@afrintech.org';
     Linking.openURL(`mailto:${supportEmail}`);
   };
 
@@ -23,7 +23,7 @@ const AideEtSupport = () => {
       <Text style={styles.subtitle}>Nous Contacter</Text>
       <Text style={styles.paragraph}>
         Si vous avez besoin d'une assistance supplémentaire, n'hésitez pas à nous contacter. Vous pouvez nous envoyer un e-mail à l'adresse suivante :
-         <Text style={styles.link}>info@alphanewgroup.com</Text>.
+         <Text style={styles.link}>info@afrintech.org</Text>.
       </Text>
       <TouchableOpacity style={styles.contactButton} onPress={handleContactSupport}>
         <Text style={styles.buttonText}>Contacter le Support</Text>

@@ -31,7 +31,7 @@ const UseCondition = () => {
 
       <Text style={styles.subtitle}>Contact</Text>
       <Text style={styles.paragraph}>
-        Pour toute question concernant ces conditions d'utilisation, veuillez nous contacter à info@alphanewgroup.com.
+        Pour toute question concernant ces conditions d'utilisation, veuillez nous contacter à info@afrintech.org.
       </Text>
       <Text style={styles.subtitle}></Text>
 
