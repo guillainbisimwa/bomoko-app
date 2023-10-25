@@ -27,7 +27,7 @@ const CustomDrawer = (props) => {
               marginBottom: 5,
             }}
           >
-            Afrintech
+            Afintech
           </Text>
         </ImageBackground>
         <View style={{ flex: 1, backgroundColor: '#fff', paddingTop: 10 }}>

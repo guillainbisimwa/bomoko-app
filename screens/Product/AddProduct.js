@@ -160,7 +160,7 @@ const AddProduct = ({route, navigation}) => {
         }}
       >
         <View style={{ paddingVertical: SIZES.padding / 2 }}>
-          <Text style={{ color: COLORS.primary, ...FONTS.h2 }}>Afrintech</Text>
+          <Text style={{ color: COLORS.primary, ...FONTS.h2 }}>Afintech</Text>
           <Text style={{ ...FONTS.h3, color: COLORS.darkgray }}>(Produits et Services)</Text>
         </View>
       </View>

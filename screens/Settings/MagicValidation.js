@@ -84,7 +84,7 @@ const MagicValidation = () => {
     const outputTimeLineSoum = {
       time:`${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear().toString().substr(-2)}`,
       title: 'Validation',
-      details: `Votre produit ${item.name} a été validé à l'équipe Afrintech!`
+      details: `Votre produit ${item.name} a été validé à l'équipe Afintech!`
     };
 
     console.log();
@@ -110,7 +110,7 @@ const MagicValidation = () => {
     const outputTimeLineSoum = {
       time:`${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear().toString().substr(-2)}`,
       title: 'Validation',
-      details: `Votre groupe ${item.name} a été validé à l'équipe Afrintech!`
+      details: `Votre groupe ${item.name} a été validé à l'équipe Afintech!`
     };
 
     console.log();

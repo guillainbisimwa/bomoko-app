@@ -15,6 +15,6 @@ const App = () => {
   );
 };
 
-AppRegistry.registerComponent('Afrintech', () => App); // Add this line
+AppRegistry.registerComponent('Afintech', () => App); // Add this line
 
 export default App;

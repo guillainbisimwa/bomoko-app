@@ -26,7 +26,7 @@ const product = [
       "timeline": [
           {
               "title": "Validation",
-              "details": "Votre produit Vin de banane a été validé à l'équipe Afrintech!",
+              "details": "Votre produit Vin de banane a été validé à l'équipe Afintech!",
               "timestamp": "2023-09-22T09:30:01.226Z",
               "_id": "650d613b4488c829a98fa07f"
           },
@@ -775,19 +775,19 @@ const product = [
       "timeline": [
           {
               "title": "Validation",
-              "details": "Votre produit SOMILARIS  a été validé à l'équipe Afrintech!",
+              "details": "Votre produit SOMILARIS  a été validé à l'équipe Afintech!",
               "timestamp": "2023-09-22T09:30:01.226Z",
               "_id": "650d6d6c4488c829a98fbce5"
           },
           {
               "title": "Validation",
-              "details": "Votre produit SOMILARIS  a été validé à l'équipe Afrintech!",
+              "details": "Votre produit SOMILARIS  a été validé à l'équipe Afintech!",
               "timestamp": "2023-09-22T09:30:01.226Z",
               "_id": "650d6d574488c829a98fbc07"
           },
           {
               "title": "Soumission",
-              "details": "Votre produit a été soumis à l'équipe Afrintech et est en attente de validation",
+              "details": "Votre produit a été soumis à l'équipe Afintech et est en attente de validation",
               "timestamp": "2023-09-22T09:30:01.226Z",
               "_id": "650d6d344488c829a98fba11"
           },

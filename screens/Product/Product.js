@@ -27,7 +27,7 @@ const Product = (props) => {
     );
   };
 
-  console.log();
+  console.log("props.connectedUser", props.connectedUser);
     const startDate = new Date(props.prod.startDate);
     const endDate = new Date(props.prod.endDate);
 
