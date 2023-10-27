@@ -43,7 +43,7 @@ const MagicValidation = () => {
 
   useEffect(()=>{
     //console.log("error",error)
-  }, [error,status])
+  }, [avecs])
 
 
   const [index, setIndex] = useState(0);
@@ -98,6 +98,8 @@ const MagicValidation = () => {
         outputTimeLineSoum,
       ],
     }))
+
+    
   };
 
 
@@ -178,10 +180,10 @@ const MagicValidation = () => {
       <Text>Status: {item.status}</Text>
       <Block row>
         {
-          item.status !='ACCEPTED'? 
-          <Button disabled={status == 'loading'}
-          loading={status == 'loading'} mode='contained' buttonColor={COLORS.darkgreen} onPress={()=> handlerValidate(item)} > Valider</Button>:
-          <></>
+          // item.status !='ACCEPTED'? 
+          <Button disabled={item.status == 'ACCEPTED'}
+          loading={status == 'loading'} mode='contained' buttonColor={COLORS.darkgreen} onPress={()=> handlerValidate(item)} > Valider</Button>
+          // :<></>
         }
        
       </Block>
@@ -197,10 +199,10 @@ const MagicValidation = () => {
       <Text>Status: {item.status}</Text>
       <Block row>
         {
-          item.status !='ACCEPTED'? 
-          <Button disabled={item.status == 'SUBMITED'}
-          loading={status == 'loading'} mode='contained' buttonColor={COLORS.darkgreen} onPress={()=> handlerValidateProduct(item)} > Valider</Button>:
-          <></>
+          //item.status !='ACCEPTED'? 
+          <Button disabled={item.status == 'ACCEPTED'}
+          loading={status == 'loading'} mode='contained' buttonColor={COLORS.darkgreen} onPress={()=> handlerValidateProduct(item)} > Valider</Button>
+          //:<></>
         }
        
       </Block>

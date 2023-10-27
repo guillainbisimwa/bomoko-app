@@ -211,6 +211,8 @@ const Details = ({ route, navigation }) => {
           .then(response => response.json())
           .then(data => {
             setFoodDetails(data);
+            console.log(connectedUser?.username == foodDetails.owner.username);
+            console.log(connectedUser?.username," -->", foodDetails.owner.username);
 
             setLoading(false);
           })
@@ -954,7 +956,7 @@ const Details = ({ route, navigation }) => {
       <Text bold style={{ color: 'black' }}>
         Vous investissez la somme de : {sliderValue} {foodDetails.currency}.
         Ceci équivaut à {sliderValue/(foodDetails.amount/100)} parts de {foodDetails.amount/100} {foodDetails.currency} chacun.
-        Et votre Intérêt de (${foodDetails.tauxInt}%) est de {interet} {foodDetails.currency} après l'exercice. </Text>
+        Et votre Intérêt de ({foodDetails.tauxInt}%) est de {interet} {foodDetails.currency} après l'exercice. </Text>
         
     </Block>
   )
