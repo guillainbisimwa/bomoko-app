@@ -94,8 +94,8 @@ const MagicValidation = () => {
       id: item._id,
       status: "ACCEPTED",
       timeline: [
-        outputTimeLineSoum,
         ...item.timeline,
+        outputTimeLineSoum,
       ],
     }))
   };
@@ -141,8 +141,8 @@ const MagicValidation = () => {
       id: item._id,
       status: "ACCEPTED",
       timeline: [
-        outputTimeLineSoum,
         ...item.timeline,
+        outputTimeLineSoum,
       ],
       reunion: reunions
     }))
@@ -198,7 +198,7 @@ const MagicValidation = () => {
       <Block row>
         {
           item.status !='ACCEPTED'? 
-          <Button disabled={status == 'loading'}
+          <Button disabled={item.status == 'SUBMITED'}
           loading={status == 'loading'} mode='contained' buttonColor={COLORS.darkgreen} onPress={()=> handlerValidateProduct(item)} > Valider</Button>:
           <></>
         }
