@@ -952,6 +952,7 @@ export const editProduct = createAsyncThunk(
     name,
     detail,
     location,
+    status,
     amount,
     images,
     initialAmount,
@@ -960,25 +961,30 @@ export const editProduct = createAsyncThunk(
     timeline,
     startDate,
     endDate,
+    couts,
+    membres,
     owner,
     tauxInt
   }) => {
     const url = `${BASE_URL}api/product/${id}`; // Concatenate ID to the base URL
     
     const response = await axios.put(url, { // Use PUT request for updating
-      name,
-      detail,
-      location,
-      amount,
-      images,
-      initialAmount,
-      type,
-      currency,
-      timeline,
-      startDate,
-      endDate,
-      owner,
-      tauxInt
+        name,
+        detail,
+        location,
+        status,
+        amount,
+        images,
+        initialAmount,
+        type,
+        currency,
+        timeline,
+        startDate,
+        endDate,
+        couts,
+        membres,
+        owner,
+        tauxInt
     });
 
     console.log("Edit prod---?????? ok==", response.data);

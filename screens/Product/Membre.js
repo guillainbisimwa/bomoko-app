@@ -15,7 +15,7 @@ const Membre = (props,{ navigation } ) => {
   return (
     <TouchableOpacity
       onPress={() => {
-        console.log(props.user.user.name);
+        //console.log(props.user.user.name);
         // navigation.navigate('Profile', { user: props.user.user})
         props.navigation.navigate('Profile', {
           userId: props.user.user._id,

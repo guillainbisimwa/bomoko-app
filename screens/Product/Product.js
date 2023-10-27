@@ -9,7 +9,7 @@ import Text from './Text';
 import { View } from 'react-native';
 
 const Product = (props) => {
-  console.log('connectedUser', props.connectedUser);
+  // console.log('connectedUser', props.connectedUser);
 
   const stars = (starsNumber) => {
     const totalStars = 5;
@@ -27,7 +27,7 @@ const Product = (props) => {
     );
   };
 
-  console.log("props.connectedUser", props.connectedUser);
+  // console.log("props.connectedUser", props.connectedUser);
     const startDate = new Date(props.prod.startDate);
     const endDate = new Date(props.prod.endDate);
 

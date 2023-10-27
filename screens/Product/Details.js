@@ -35,12 +35,13 @@ import { responsiveScreenWidth } from 'react-native-responsive-dimensions';
 import Transaction from '../CreanceDette/Transaction';
 import { FlatList } from 'react-native';
 import NetInfo from "@react-native-community/netinfo";
-
+import { useFocusEffect } from '@react-navigation/native';
 
 const Details = ({ route, navigation }) => {
   const scrollX = useRef(new Animated.Value(0)).current;
 
   const { error, isLoading } = useSelector((state) => state.products);
+  const [foodDetails, setFoodDetails] = useState(route.params.food);
 
   const [msgSuccess, setMsgSuccess] = useState("Validation avec success");
   const [msgError, setMsgError] = useState("Une erreur s'est produite!");
@@ -68,11 +69,11 @@ const Details = ({ route, navigation }) => {
   };
 
   const membresToShow = expandedMembre
-  ? foodDetails.membres
-  : foodDetails.membres.slice(0, 1); // Show the first two users if not expanded
+  ? foodDetails?.membres
+  : foodDetails?.membres?.slice(0, 1); // Show the first two users if not expanded
 
-  const [dateStart, setDateStart] = useState(new Date(foodDetails.startDate));
-  const [dateEnd, setDateEnd] = useState(new Date(foodDetails.endDate));
+  const [dateStart, setDateStart] = useState(new Date(route.params.food.startDate));
+  const [dateEnd, setDateEnd] = useState(new Date(route.params.food.endDate));
 
   const [interestValid, setInterestValid] = useState(true); // Validation state for interest
   const [interest, setInterest] = useState('');
@@ -88,9 +89,8 @@ const Details = ({ route, navigation }) => {
   const [openContrib, setOpenContrib] = useState(false)
   
   const [loading, setLoading] = useState(true);
-  const [foodDetails, setFoodDetails] = useState(true);
 
-  const [connectedUser, setConnectedUser] = useState(null);  
+  const [connectedUser, setConnectedUser] = useState((route.params.connectedUser));  
 
   const BackdropElement = useCallback(
     (backdropProps) => (
@@ -176,47 +176,61 @@ const Details = ({ route, navigation }) => {
   }, []);
 
   const hideModalContrib = () => handleCloseContrib();
+
+  useFocusEffect(
+    useCallback(() => {
+      console.log("route.params.food._id", route.params.food._id);
+      const getTokenFromAsyncStorage = async () => {
+        try {
+          const storedToken = await AsyncStorage.getItem('user');
+          setToken(storedToken);
+          // reloadScreen(value);
   
-  useEffect(() => {
-    const getTokenFromAsyncStorage = async () => {
-      try {
-        const storedToken = await AsyncStorage.getItem('user');
-        setToken(storedToken);
-        reloadScreen(value);
-
-        // Data found, reload the screen
-        reloadScreen(value);
-      } catch (error) {
-        console.error('Error reading token from AsyncStorage:', error);
-      }
-    };
-
-    getTokenFromAsyncStorage();
-
-    const fetchUserData = async () => {
-      const netInfo = await NetInfo.fetch();
-      
-      if (!netInfo.isConnected) {
-        setLoading(false);
-        Alert.alert(
-          'Pas de connexion Internet',
-          'Veuillez vérifier votre connexion Internet et réessayer.'
-        );
-        return;
-      }
-
-      fetch(`https://bomoko-backend.onrender.com/api/product/${route.params.food._id}`)
-        .then(response => response.json())
-        .then(data => {
-          setFoodDetails(data);
-          console.log("data", data);
+          // Data found, reload the screen
+          // reloadScreen(value);
+        } catch (error) {
+          console.error('Error reading token from AsyncStorage:', error);
+        }
+      };
+  
+      getTokenFromAsyncStorage();
+  
+      const fetchUserData = async () => {
+        const netInfo = await NetInfo.fetch();
+        
+        if (!netInfo.isConnected) {
           setLoading(false);
-        })
-        .catch(error => console.error('Error fetching user details:', error));
-    };
+          Alert.alert(
+            'Pas de connexion Internet',
+            'Veuillez vérifier votre connexion Internet et réessayer.'
+          );
+          return;
+        }
+  
+        fetch(`https://bomoko-backend.onrender.com/api/product/${route.params.food._id}`)
+          .then(response => response.json())
+          .then(data => {
+            setFoodDetails(data);
 
-    fetchUserData();
-  }, []);
+            setLoading(false);
+          })
+          .catch(error => console.error('Error fetching user details:', error));
+      };
+  
+      fetchUserData();
+
+      
+      // Return a cleanup function
+      return () => {
+        // You can perform cleanup here if needed
+        console.log('Cleanup function');
+      };
+    }, []) // Empty dependency array to run this effect only once when the screen mounts
+  );
+  
+  // useEffect(() => {
+    
+  // }, []);
  // Function to handle screen reload
  const reloadScreen = (value) => {
   // You can put your screen reload logic here
@@ -381,11 +395,11 @@ const Details = ({ route, navigation }) => {
               Il permet de prendre en compte tous les éléments de coût associés à la fabrication,
               l'achat ou la prestation d'un bien ou d'un service.
             </Text>
-            <View style={[styles.card,{ marginBottom: foodDetails.owner._id == connectedUser.user?.userId? 190 : 100} ]}>
+            <View style={[styles.card,{ marginBottom: foodDetails.owner._id == connectedUser?.userId? 190 : 100} ]}>
              {
                   foodDetails?.couts && foodDetails?.couts
                   .map((food, index) => {
-                    return <CoutScreen admin={foodDetails.owner._id == connectedUser.user?.userId}
+                    return <CoutScreen admin={foodDetails.owner._id == connectedUser?.userId}
                     totAmount={totAmount} handleUpdateItem={handleUpdateItem} handleTrash={handleTrash} currency={foodDetails.currency} key={index} item={food} count={index + 1} />;
                   })}
             </View>
@@ -394,7 +408,7 @@ const Details = ({ route, navigation }) => {
           </BottomSheetScrollView>
         
               {
-              foodDetails.owner._id == connectedUser.user?.userId?
+              foodDetails.owner._id == connectedUser?.userId?
               renderFAaddCout(): <></>
             }
 
@@ -690,7 +704,7 @@ const Details = ({ route, navigation }) => {
       const outputTimeLineSoum = {
         time:`${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear().toString().substr(-2)}`,
         title: 'Soumission',
-        details: `Votre ${foodDetails.type} a été soumis à l'équipe Afrintech et est en attente de validation`
+        details: `Votre ${foodDetails.type} a été soumis à l'équipe Afintech et est en attente de validation`
       };
 
       dispatch(soumettreProduct({
@@ -709,7 +723,7 @@ const Details = ({ route, navigation }) => {
 
       // Check if the user validationhas been made successfully
       if (!statusError && statusSuccess) {
-        setMsgSuccess(`Votre ${foodDetails.type} a ete soumis avec success`);
+        setMsgSuccess(`Votre ${foodDetails.type} a été soumis avec succès`);
         setMsgError("");
         setStatusSuccess(true);
         setStatusError(false);
@@ -837,7 +851,7 @@ const Details = ({ route, navigation }) => {
         membres: [
           ...foodDetails.membres,
           {
-            user: connectedUser.user?.userId,
+            user: connectedUser?.userId,
             admission_req: 'PENDING', 
             contribution_amount: 0,
             contribution_status: 'PENDING', 
@@ -1489,7 +1503,7 @@ const Details = ({ route, navigation }) => {
             </View>
           </View>
           <View style={{ alignItems: 'flex-end' }}>
-  {(!item.admin && foodDetails.owner._id == connectedUser.user?.userId) ? (
+  {(!item.admin && foodDetails.owner._id == connectedUser?.userId) ? (
     item.admission_req == 'ACCEPTED' ? (
       <>
         <Text style={{ ...FONTS.h5, color: COLORS.red }}>+ {foodDetails.tauxInt} intérêt</Text>
@@ -1680,7 +1694,7 @@ const Details = ({ route, navigation }) => {
                   </Block>
               </Block>
             {
-              connectedUser.user.username == foodDetails.owner.username? 
+              connectedUser?.username == foodDetails.owner.username? 
               <Block row space="between" m_t={10}>
               {/* owner */}
              {
@@ -1689,8 +1703,8 @@ const Details = ({ route, navigation }) => {
                 <Button textColor="#fff" elevated buttonColor={COLORS.lightBlue} onPress={()=>
               {
                 // console.log("foodDetails", foodDetails);
-                 navigation.navigate('EditProduct', { owner: connectedUser.user?.userId,
-                  username: connectedUser.user?.username, productService: foodDetails });
+                 navigation.navigate('EditProduct', { owner: connectedUser?.userId,
+                  username: connectedUser?.username, productService: foodDetails });
               }}>
                 Modifier
               </Button>
@@ -1710,7 +1724,7 @@ const Details = ({ route, navigation }) => {
             <Block row space="between" m_t={10}>
               {/* other */}
               {
-                foodDetails.membres.some(member => member?.user?._id == connectedUser.user?.userId)?
+                foodDetails.membres.some(member => member?.user?._id == connectedUser?.userId)?
               <>
               <Button textColor="#fff" elevated buttonColor={COLORS.peach} onPress={()=> showModalQuitter()}>
                 Quitter
@@ -1808,7 +1822,7 @@ const Details = ({ route, navigation }) => {
               {" "}{ foodDetails.name}?</Text>
 
               <Text color={COLORS.peach} variant="titleLarge">Ceci implique que votre {foodDetails.type} {" "} 
-              sera soumis a l'equipe d'Afrintech sera etudier soigneusement pendant deux ou trois jours avant de 
+              sera soumis a l'equipe d'Afintech sera etudier soigneusement pendant deux ou trois jours avant de 
               de le valider ou le rejeter dans la plateforme!</Text>
           </Card.Content>
           <Card.Actions style={{ marginTop: 15 }}>
@@ -2120,3 +2134,36 @@ const styles = StyleSheet.create({
 });
 
 export default Details;
+
+// useEffect(() => {
+//   const fetchData = async () => {
+//     try {
+//       const response = await fetch(`https://bomoko-backend.onrender.com/api/product/${route.params.food._id}`);
+//       const data = await response.json();
+//       setFoodDetails(data);
+
+//       // Update all states
+
+//     setTotAmount(
+//       await data?.couts.reduce((sum, cout) => sum + cout.amount, 0)
+//       );
+//       membresToShow = await expandedMembre
+//       ? data?.membres
+//       : data?.membres?.slice(0, 1); // Show the first two users if not expanded
+    
+
+
+//       setDateStart(await new Date(data?.startDate)|| 0);
+//       setDateEnd(await new Date(data?.endDate)|| 0);
+
+      
+//       setLoading(false);
+//     } catch (error) {
+//       console.error('Error fetching food details:', error);
+//       setLoading(false);
+//     }
+//   };
+
+//   fetchData();
+// }, []); // Dependency array to re-run effect when food._id changes
+// // route.params.food._id
