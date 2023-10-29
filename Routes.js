@@ -25,6 +25,7 @@ import ShoppingCard from './screens/ShoppingCard/ShoppingCard';
 import { AideEtSupport, DataSecurityScreen, DetailsByUser, LanguageSelectionScreen, MagicValidation, Privacy, Profile, ReportProblemScreen, UseCondition } from './screens/Settings';
 import { AddAvec, ConfirmPayment, DetailsAvec, DetailsReunion, EditAvec } from './screens/CreanceDette';
 import { StatusBar } from 'expo-status-bar';
+import CountyPhone from './screens/Auth/Component/CountyPhone';
 
 const theme = {
   ...DefaultTheme,
@@ -285,6 +286,10 @@ const App = () => {
           <Stack.Screen name="AuthScreen" component={AuthScreen} options={{
               headerShown: false,
             }}/>
+
+        <Stack.Screen name="CountyPhone" component={CountyPhone} options={{
+            headerShown: false,
+          }}/>
         </Stack.Navigator>
       </NavigationContainer>
     );
