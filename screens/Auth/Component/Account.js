@@ -17,9 +17,9 @@ const { height, width } = Dimensions.get("window");
 import { ActivityIndicator, Button, TextInput } from "react-native-paper";
 import { COLORS, SIZES } from "../../../constants";
 import { MaterialIcons } from "@expo/vector-icons";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
-// import { ScrollView } from "react-native-gesture-handler";
+import { loginUser, signUpUser } from '../../../redux/userSlice';
 import * as ImagePicker from "expo-image-picker";
 import NetInfo from "@react-native-community/netinfo";
 import Container, { Toast } from 'toastify-react-native';
@@ -27,6 +27,7 @@ import Container, { Toast } from 'toastify-react-native';
 
 const Account = ({ navigation, route }) => {
     const { number } = route.params;
+    const dispatch = useDispatch();
 
     const { errorSignUp, isLoadingSignUp, successSignUp, success, error, isLoading } = useSelector((state) => state.user);
     const [loadPic, setLoadPic] = useState(false);
@@ -170,17 +171,7 @@ const Account = ({ navigation, route }) => {
                     console.log("Invalid email format");
                     setErrorEmail(false)
                 }
-
-                console.log({
-                    username: name,
-                    name,
-                    password,
-                    email,
-                    mobile,
-                    role,
-                    cover_url: '',
-                    profile_pic: selectedImage ? selectedImage : selectedImage1,
-                });
+              
                 //All required fields are filled, dispatch the action
                 dispatch(
                     signUpUser({
@@ -191,7 +182,7 @@ const Account = ({ navigation, route }) => {
                         mobile,
                         role,
                         cover_url: '',
-                        profile_pic: selectedImage,
+                        profile_pic: selectedImage ? selectedImage : selectedImage1,
                     })
                 );
 

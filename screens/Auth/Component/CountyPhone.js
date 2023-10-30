@@ -19,7 +19,7 @@ import { encode } from 'base-64'; // Import the encode function from base-64
 import qs from 'qs';
 import Config from "react-native-config";
 import Container, { Toast } from 'toastify-react-native';
-
+import NetInfo from "@react-native-community/netinfo";
 
 
 const CountyPhone = ({ navigation }) => {
@@ -136,7 +136,7 @@ const CountyPhone = ({ navigation }) => {
                             style={styles.circularButton}
                             icon="arrow-right"
                             mode="contained"
-                            onPress={() => {
+                            onPress={async () => {
                                 setLoad(true);
                                 Keyboard.dismiss();
 
@@ -145,6 +145,14 @@ const CountyPhone = ({ navigation }) => {
                                 console.log("value", value);
 
                                 if (valid) {
+
+                                    // Check internet connections
+                                    const netInfo = await NetInfo.fetch();
+                                    // console.log("netInfo.isConnected", netInfo.isConnected);
+                                    if (!netInfo.isConnected) {
+                                        Alert.alert("Pas de connexion Internet", "Veuillez vérifier votre connexion Internet et réessayer.");
+                                        return;
+                                    }
 
                                     getUserByMobile(formattedValue)
                                         .then((userData) => {
@@ -171,8 +179,10 @@ const CountyPhone = ({ navigation }) => {
                                         .catch((error) => {
                                             // Handle errors, e.g., show an error message
                                             console.error('Error:', error.message);
-                                        });
+                                            Toast.warn('Verifier Votre internet', 'bottom')
+                                            setLoad(false)
 
+                                        });
                                 }
                                 else {
                                     setLoad(false)
