@@ -13,14 +13,45 @@ const { height, width } = Dimensions.get("window");
 import { Button } from "react-native-paper";
 import PhoneInput from "react-native-phone-number-input";
 import { COLORS, SIZES } from "../../../constants";
+import axios from "axios";
+import { encode } from 'base-64'; // Import the encode function from base-64
+import qs from 'qs';
 
 const CountyPhone = ({ navigation }) => {
     const [value, setValue] = useState("");
     const [formattedValue, setFormattedValue] = useState("");
     const [valid, setValid] = useState(false);
-    const [showMessage, setShowMessage] = useState(false);
     const phoneInput = useRef(null);
-
+    
+    const sendCode = async () => {
+        try {
+            const accountSid = 'ACbd9d562b452a2c62459200227432468e';
+            const authToken = '19126edc7133756a922103fbf968f980';
+            const serviceSid = 'VAbc4c08ec516a6fb369a929106aebdb62';
+    
+            const twilioEndpoint = `https://verify.twilio.com/v2/Services/${serviceSid}/Verifications`;
+    
+            const requestData = {
+                // customFriendlyName: 'Afintech',
+                To: formattedValue, // Add the phone number you want to send the verification code to
+                Channel: 'sms',
+            };
+    
+            const base64Credentials = encode(`${accountSid}:${authToken}`);
+            const authHeader = {
+                Authorization: `Basic ${base64Credentials}`,
+            };
+    
+            const response = await axios.post(twilioEndpoint,  
+                qs.stringify(requestData), { headers: authHeader });
+    
+            console.log('Verification request sent successfully:', response.data);
+        } catch (error) {
+            console.error('Error sending verification request:', error.response ? error.response.data : error.message);
+        }
+    };
+    
+    
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -49,7 +80,6 @@ const CountyPhone = ({ navigation }) => {
                         layout="first"
                         onChangeText={(text) => {
                             const checkValid = phoneInput.current?.isValidNumber(text);
-                            setShowMessage(true);
                             setValid(checkValid ? checkValid : false);
                             setValue(text);
                         }}
@@ -76,6 +106,7 @@ const CountyPhone = ({ navigation }) => {
                                 console.log("valid", valid);
                                 console.log("formattedValue", formattedValue);
                                 console.log("value", value);
+                                sendCode();
                                 if (valid) {
                                     navigation.navigate('Account', {
                                         number: formattedValue,
