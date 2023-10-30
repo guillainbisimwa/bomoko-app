@@ -7,7 +7,7 @@ import { COLORS, SIZES } from "../../../constants";
 import PhoneInput from "react-native-phone-number-input";
 
 
-const CountyPhone = () => {
+const CountyPhone = ({navigation}) => {
     const [value, setValue] = useState("");
     const [formattedValue, setFormattedValue] = useState("");
     const [valid, setValid] = useState(false);
@@ -21,23 +21,26 @@ const CountyPhone = () => {
             blurRadius={10}
         ></ImageBackground>
 
-        <Block center middle style={styles.m_5}>
-            <Text bold h2>Votre numéro de téléphone</Text>
+        <Block middle style={styles.m_5}>
+            <Text center bold h2>Votre numéro de téléphone</Text>
             <Text style={styles.input} center>Veuillez confirmer votre code pays et saisir votre numéro de téléphone</Text>
 
-            {showMessage && (
+            {/* {showMessage && (
                 <View style={styles.message}>
                     <Text>Value : {value}</Text>
                     <Text>Formatted Value : {formattedValue}</Text>
                     <Text>Valid : {valid ? "true" : "false"}</Text>
                 </View>
-            )}
+            )} */}
             <PhoneInput
                 ref={phoneInput}
                 defaultValue={value}
                 defaultCode="CD"
                 layout="first"
                 onChangeText={(text) => {
+                    const checkValid = phoneInput.current?.isValidNumber(text);
+                    setShowMessage(true);
+                    setValid(checkValid ? checkValid : false);
                     setValue(text);
                 }}
                 onChangeFormattedText={(text) => {
@@ -46,17 +49,27 @@ const CountyPhone = () => {
                 // withDarkTheme
                 withShadow
                 autoFocus
-            />
-            <TouchableOpacity
-                style={styles.button}
-                onPress={() => {
-                    const checkValid = phoneInput.current?.isValidNumber(value);
-                    setShowMessage(true);
-                    setValid(checkValid ? checkValid : false);
+                containerStyle={{
+                    borderColor: !valid ? COLORS.peach : 'transparent',
+                    borderWidth: 2,
                 }}
-            >
-                <Text>Check</Text>
-            </TouchableOpacity>
+            />
+            <View style={styles.btnContainer}>
+                <TouchableOpacity onPress={()=> navigation.goBack()}>
+                    <Text bold color={COLORS.white}>Annuler</Text>
+                </TouchableOpacity>
+
+                <Button style={styles.circularButton}
+                    icon="arrow-right" mode="contained" onPress={() => {
+                        console.log("valid",valid);
+                        console.log("formattedValue",formattedValue);
+                        console.log("value",value);
+                    }}>
+                    Suivant
+                </Button>
+            </View>
+
+
         </Block>
     </Block>
 }
@@ -69,8 +82,13 @@ const styles = StyleSheet.create({
     input: {
         marginTop: 5,
         marginBottom: 15,
-
     },
+    btnContainer: {
+        marginTop: 25,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems:'center'
+    }
 });
 
 
