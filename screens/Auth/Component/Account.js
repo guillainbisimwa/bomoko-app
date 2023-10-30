@@ -9,6 +9,8 @@ import {
     Platform,
     ScrollView,
     Image,
+    Alert,
+    Keyboard,
 } from "react-native";
 import { Block, Text } from "../../../components";
 const { height, width } = Dimensions.get("window");
@@ -19,18 +21,29 @@ import { useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 // import { ScrollView } from "react-native-gesture-handler";
 import * as ImagePicker from "expo-image-picker";
+import NetInfo from "@react-native-community/netinfo";
+import Container, { Toast } from 'toastify-react-native';
 
 
 const Account = ({ navigation, route }) => {
+    const { number } = route.params;
 
     const { errorSignUp, isLoadingSignUp, successSignUp, success, error, isLoading } = useSelector((state) => state.user);
     const [loadPic, setLoadPic] = useState(false);
 
     const [name, setNom] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
 
     const [email, setEmail] = useState('');
-    const [mobile, setMobile] = useState('');
+
+    const [errorName, setErrorNom] = useState(true);
+    const [errorPassword, setErrorPassword] = useState(true);
+    const [confirmErrorPassword, setConfirmErrorPassword] = useState(true);
+
+    const [errorEmail, setErrorEmail] = useState(true);
+
+    const [mobile, setMobile] = useState(number);
     const [role, setRole] = useState('user');
 
     const [visible, setVisible] = useState(false);
@@ -40,7 +53,6 @@ const Account = ({ navigation, route }) => {
 
     const navigationV2 = useNavigation();
 
-    const { number } = route.params;
 
 
     const handleImageSelection = async () => {
@@ -102,6 +114,100 @@ const Account = ({ navigation, route }) => {
         }
     };
 
+
+    const handleSignUp = async () => {
+        try {
+            Keyboard.dismiss();
+            // Check internet connections
+            const netInfo = await NetInfo.fetch();
+            // console.log("netInfo.isConnected", netInfo.isConnected);
+            if (!netInfo.isConnected) {
+                Alert.alert("Pas de connexion Internet", "Veuillez vérifier votre connexion Internet et réessayer.");
+                return;
+            }
+
+            if (!name || !password || !email || !mobile || !role) {
+                // At least one of the required fields is missing
+                // You can display an error message or take appropriate action
+                console.log('Please fill in all required fields.');
+                // Alert.alert("Attention", "Veuillez completer tous les champs et réessayer.");
+                Toast.error('Veuillez completer tous les champs', 'bottom')
+
+            } else {
+                if (name.length < 3 || name.length > 20) {
+                    setErrorNom(true);
+                    Toast.error('Nom invalide', 'bottom')
+                    return
+                } else {
+                    setErrorNom(false);
+                }
+
+                if (password.length < 3 || password.length > 20) {
+                    setErrorPassword(true);
+                    Toast.error('Mots de passe invalide', 'bottom')
+                    return
+                } else {
+                    setErrorPassword(false);
+                }
+                if (password !== confirmPassword) {
+                    setErrorPassword(true);
+                    setConfirmErrorPassword(true);
+                    Toast.error('Mots de passe ne correspondent pas', 'bottom')
+                    return
+                } else {
+                    setErrorPassword(false);
+                    setConfirmErrorPassword(false);
+                }
+
+                // Regular expression pattern
+                const regex = /[a-zA-Z]+@[a-zA-Z]+\.[a-zA-Z]+/;
+
+                if (!regex.test(email)) {
+                    setErrorEmail(true)
+                    Toast.error('E-mail incorrect', 'bottom')
+                    return
+                } else {
+                    console.log("Invalid email format");
+                    setErrorEmail(false)
+                }
+
+                console.log({
+                    username: name,
+                    name,
+                    password,
+                    email,
+                    mobile,
+                    role,
+                    cover_url: '',
+                    profile_pic: selectedImage ? selectedImage : selectedImage1,
+                });
+                //All required fields are filled, dispatch the action
+                dispatch(
+                    signUpUser({
+                        username: name,
+                        name,
+                        password,
+                        email,
+                        mobile,
+                        role,
+                        cover_url: '',
+                        profile_pic: selectedImage,
+                    })
+                );
+
+                // Handle login functionality
+                dispatch(loginUser({ mobile, password }))
+            }
+
+            //dispatch(loginUser({username:"bvenceslas", password: "1234567890"}))
+
+        } catch (error) {
+            Alert.alert("Attention", "Error occurred during login.");
+
+            console.error("Error occurred during login:", error);
+        }
+    };
+
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -112,7 +218,8 @@ const Account = ({ navigation, route }) => {
                 blurRadius={10}
             ></ImageBackground>
 
-            <ScrollView style={styles.container}>
+            <ScrollView >
+                <Container position="top" style={{ width: '100%' }} duration={6000} />
 
                 <Block style={styles.m_5}>
                     <View
@@ -128,45 +235,45 @@ const Account = ({ navigation, route }) => {
                             borderWidth: 2,
                             borderColor: COLORS.primary,
                             backgroundColor: COLORS.gray
-                        }} 
-                        onPress={handleImageSelection}>
+                        }}
+                            onPress={handleImageSelection}>
                             {
-                                selectedImage?
-                                <Image
-                                source={{ uri: selectedImage }}
-                                style={{
-                                    height: 130,
-                                    width: 130,
-                                    borderRadius: 85,
-                                    //borderWidth: 2,
-                                    borderColor: COLORS.primary,
-                                    backgroundColor: COLORS.gray
-                                }}
-                            />: <></>
+                                selectedImage ?
+                                    <Image
+                                        source={{ uri: selectedImage }}
+                                        style={{
+                                            height: 130,
+                                            width: 130,
+                                            borderRadius: 85,
+                                            //borderWidth: 2,
+                                            borderColor: COLORS.primary,
+                                            backgroundColor: COLORS.gray
+                                        }}
+                                    /> : <></>
                             }
-                            
+
 
                             {/* <ActivityIndicator animating={loadPic} color='red' size={20} style={{ position: 'absolute', top: 80, left: 80 }} /> */}
                             <ActivityIndicator animating={loadPic} color='red' size={50}
                                 style={{ position: 'absolute', top: 39, left: 37 }} />
                             {
-                                 !selectedImage?
-                                 <View
-                                style={{
-                                    position: "absolute",
-                                    top: 50,
-                                    right: 50,
-                                    //zIndex: 9999,
-                                }}
-                            >
-                                <MaterialIcons
-                                    name="photo-camera"
-                                    size={32}
-                                    color={COLORS.primary}
-                                />
-                            </View>: <></>
+                                !selectedImage ?
+                                    <View
+                                        style={{
+                                            position: "absolute",
+                                            top: 50,
+                                            right: 50,
+                                            //zIndex: 9999,
+                                        }}
+                                    >
+                                        <MaterialIcons
+                                            name="photo-camera"
+                                            size={32}
+                                            color={COLORS.primary}
+                                        />
+                                    </View> : <></>
                             }
-                            
+
                         </TouchableOpacity>
                     </View>
                     <Text center bold h2>
@@ -176,7 +283,7 @@ const Account = ({ navigation, route }) => {
                         Veuillez completer les informations de votre profile
                     </Text>
 
-                    <TextInput error={errorSignUp} keyboardType="default" label="Nom d'utilisateur" value={name} onChangeText={setNom}
+                    <TextInput error={errorName} keyboardType="default" label="Nom d'utilisateur" value={name} onChangeText={setNom}
                         style={styles.input} />
                     <TextInput
                         label="Mots de passe"
@@ -184,20 +291,25 @@ const Account = ({ navigation, route }) => {
                         onChangeText={setPassword}
                         secureTextEntry
                         style={styles.input}
-                        error={errorSignUp}
+                        error={errorPassword}
                     />
 
-                  
+                    <TextInput
+                        label="Confirmer le Mots de passe"
+                        value={confirmPassword}
+                        onChangeText={setConfirmPassword}
+                        secureTextEntry
+                        style={styles.input}
+                        error={confirmErrorPassword}
+                    />
 
-
-                    <TextInput error={errorSignUp} keyboardType="default"
+                    <TextInput error={errorEmail} keyboardType="default"
                         label="E-mail" value={email}
                         onChangeText={setEmail} style={styles.input} />
 
                     {
                         visible ? <Text style={{ color: COLORS.red }} >Mots de passe ou Numéro de téléphone invalide </Text> : <></>
                     }
-
 
                     <View style={styles.btnContainer}>
                         <TouchableOpacity onPress={() => {
@@ -213,14 +325,12 @@ const Account = ({ navigation, route }) => {
 
                         <Button
                             style={styles.circularButton}
-                            icon="arrow-right"
-                            mode="contained"
-                            onPress={() => {
-                                console.log("valid");
-
-                            }}
+                            // icon="arrow-right"
+                            disabled={isLoading || isLoadingSignUp || loadPic}
+                            mode="contained" loading={isLoading || isLoadingSignUp || loadPic}
+                            onPress={handleSignUp}
                         >
-                            Suivant
+                            S'inscrire
                         </Button>
                     </View>
 
@@ -241,9 +351,6 @@ const Account = ({ navigation, route }) => {
 const styles = StyleSheet.create({
     mainCon: {
         flex: 1,
-    },
-    container: {
-        // flex: 1,
     },
     m_5: {
         marginTop: 30,
@@ -266,6 +373,9 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         alignItems: "center",
     },
+    circularButton: {
+        padding: 2,
+    }
 });
 
 export default Account;
