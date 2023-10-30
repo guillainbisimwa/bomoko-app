@@ -7,6 +7,7 @@ import {
     TouchableOpacity,
     KeyboardAvoidingView,
     Platform,
+    Keyboard,
 } from "react-native";
 import { Block, Text } from "../../../components";
 const { height, width } = Dimensions.get("window");
@@ -17,12 +18,15 @@ import axios from "axios";
 import { encode } from 'base-64'; // Import the encode function from base-64
 import qs from 'qs';
 import Config from "react-native-config";
-import {ACCOUNT_SID, AUTH_TOKEN} from "@env"
+import Container, { Toast } from 'toastify-react-native';
+
+
 
 const CountyPhone = ({ navigation }) => {
     const [value, setValue] = useState("");
     const [formattedValue, setFormattedValue] = useState("");
     const [valid, setValid] = useState(false);
+    const [load, setLoad] = useState(false);
     const phoneInput = useRef(null);
     
     const sendCode = async () => {
@@ -58,6 +62,23 @@ const CountyPhone = ({ navigation }) => {
             console.error('Error sending verification request:', error.response ? error.response.data : error.message);
         }
     };
+
+    const getUserByMobile = async (mobileNumber) => {
+        try {
+          const response = await axios.get(`https://bomoko-backend.onrender.com/auth/mobile/${encodeURIComponent(mobileNumber)}`);
+          const userData = response.data;
+      
+          // Handle the user data or set state as needed
+          // For example, you can set a state with the user data
+          // setState(userData);
+      
+          return userData; // You can modify this to return the necessary data
+        } catch (error) {
+          // Handle errors, e.g., log or set an error state
+          console.error('Error fetching user data:', error.message);
+          throw error; // Propagate the error if needed
+        }
+      };
     
     
     return (
@@ -72,6 +93,8 @@ const CountyPhone = ({ navigation }) => {
             ></ImageBackground>
 
             <View style={styles.container}>
+            <Container position="top"style={{width: '100%'}} duration={6000}/>
+
                 <Block middle style={styles.m_5}>
                     <Text center bold h2>
                         Votre numéro de téléphone
@@ -107,19 +130,50 @@ const CountyPhone = ({ navigation }) => {
                         </TouchableOpacity>
 
                         <Button
+                            loading={load}
+                            disabled={!!load}
                             style={styles.circularButton}
                             icon="arrow-right"
                             mode="contained"
                             onPress={() => {
+                                setLoad(true);
+                                Keyboard.dismiss();
+
                                 console.log("valid", valid);
                                 console.log("formattedValue", formattedValue);
                                 console.log("value", value);
-                                sendCode();
+                              
                                 if (valid) {
-                                    navigation.navigate('OTP', {
-                                        number: formattedValue,
-                                        code: '1234'
-                                    }) 
+                                    
+                                    getUserByMobile(formattedValue)
+                                    .then((userData) => {
+                                        // Do something with the user data
+                                        // sendCode();
+                                        // navigation.navigate('OTP', {
+                                        //     number: formattedValue,
+                                        //     code: '1234'
+                                        // }) 
+                                        console.log('User data:', userData);
+                                        if (userData?.msg === "User not found!") {
+                                            // Perform your action here
+                                            console.log("User not found! Performing action...");
+                                        }
+                                        else {
+                                            Toast.warn('Numéro de téléphone existe', 'bottom')
+                                            console.log(userData, "exists");
+                                            setLoad(false)
+
+                                        }
+                                    })
+                                    .catch((error) => {
+                                        // Handle errors, e.g., show an error message
+                                        console.error('Error:', error.message);
+                                    });
+                                   
+                                }
+                                else{
+                                    setLoad(false)
+                                    Toast.error('Numéro de téléphone incorrect', 'bottom');
                                 }
                             }}
                         >
