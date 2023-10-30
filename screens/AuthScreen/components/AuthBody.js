@@ -25,18 +25,7 @@ export const AuthBody = ({navigation}) => {
         source={require('./../../../assets/login1_bg.png')}
         blurRadius={10}
       ></ImageBackground>
-      <View
-        style={{
-          position: 'absolute',
-          top: 100,
-          backgroundColor: '#fff',
-          borderRadius: 50,
-          elevation: 5,
-          paddingHorizontal:20
-        }}
-      >
-        <Image style={styles.logo} source={require('./../../../assets/img/logo3.png')} />
-      </View>
+      
       <LottieView
         source={require('./../../../assets/json/welcome.json')}
         autoPlay
@@ -49,7 +38,8 @@ export const AuthBody = ({navigation}) => {
           <Text style={styles.text}>SE CONNECTER</Text>
         </View>
       </TouchableOpacity>
-      <TouchableOpacity  onPress={()=> navigation.navigate('SignUpScreen')}  >
+      <TouchableOpacity  onPress={()=> navigation.navigate('CountyPhone')}  >
+      {/* SignUpScreen */}
         <View
           style={[
             styles.signinContainer,
