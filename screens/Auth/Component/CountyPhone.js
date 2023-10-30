@@ -16,6 +16,8 @@ import { COLORS, SIZES } from "../../../constants";
 import axios from "axios";
 import { encode } from 'base-64'; // Import the encode function from base-64
 import qs from 'qs';
+import Config from "react-native-config";
+import {ACCOUNT_SID, AUTH_TOKEN} from "@env"
 
 const CountyPhone = ({ navigation }) => {
     const [value, setValue] = useState("");
@@ -24,12 +26,15 @@ const CountyPhone = ({ navigation }) => {
     const phoneInput = useRef(null);
     
     const sendCode = async () => {
+        
         try {
-            const accountSid = 'ACbd9d562b452a2c62459200227432468e';
-            const authToken = '19126edc7133756a922103fbf968f980';
-            const serviceSid = 'VAbc4c08ec516a6fb369a929106aebdb62';
+            console.log(process.env.ACCOUNT_SID);
+            console.log(process.env.AUTH_TOKEN);
+            const accountSid = process.env.ACCOUNT_SID;
+            const authToken = process.env.AUTH_TOKEN;
+            const serviceSid = process.env.SERVICE_SID
     
-            const twilioEndpoint = `https://verify.twilio.com/v2/Services/${serviceSid}/Verifications`;
+            // const twilioEndpoint = `https://verify.twilio.com/v2/Services/${serviceSid}/Verifications`;
             const customEndpoint = 'https://api.twilio.com/2010-04-01/Accounts/ACbd9d562b452a2c62459200227432468e/Messages.json'
     
             const requestData = {
