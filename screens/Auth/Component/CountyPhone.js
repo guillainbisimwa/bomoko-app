@@ -113,6 +113,7 @@ const CountyPhone = ({ navigation }) => {
                             const checkValid = phoneInput.current?.isValidNumber(text);
                             setValid(checkValid ? checkValid : false);
                             setValue(text);
+                            setLoad(false)
                         }}
                         onChangeFormattedText={(text) => {
                             setFormattedValue(text);
@@ -147,17 +148,19 @@ const CountyPhone = ({ navigation }) => {
                                     
                                     getUserByMobile(formattedValue)
                                     .then((userData) => {
-                                        // Do something with the user data
-                                        // sendCode();
-                                        // navigation.navigate('OTP', {
-                                        //     number: formattedValue,
-                                        //     code: '1234'
-                                        // }) 
-                                        console.log('User data:', userData);
+                                        
                                         if (userData?.msg === "User not found!") {
                                             // Perform your action here
-                                            console.log("User not found! Performing action...");
-                                        }
+                                            Toast.success('Numéro de téléphone correct', 'bottom')
+
+                                            sendCode();
+                                            setLoad(false)
+                                            navigation.navigate('OTP', {
+                                                number: formattedValue,
+                                                code: '0000'
+                                            }) 
+                                            console.log('User data:', userData);
+                                            }
                                         else {
                                             Toast.warn('Numéro de téléphone existe', 'bottom')
                                             console.log(userData, "exists");
