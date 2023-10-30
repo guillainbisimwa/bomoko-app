@@ -42,16 +42,15 @@ const Account = ({ navigation, route }) => {
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
-            style={styles.mainCon}
         >
-             <ImageBackground
+            <ImageBackground
                 style={{ flex: 1, position: "absolute", height, width }}
                 source={require("./../../../assets/login1_bg.png")}
                 blurRadius={10}
             ></ImageBackground>
-           
 
             <ScrollView style={styles.container}>
+
                 <Block style={styles.m_5}>
                     <View
                         style={{
@@ -70,8 +69,8 @@ const Account = ({ navigation, route }) => {
                             {/* onPress={handleImageSelection} */}
 
                             {/* <ActivityIndicator animating={loadPic} color='red' size={20} style={{ position: 'absolute', top: 80, left: 80 }} /> */}
-                            {/* <ActivityIndicator animating={true} color='red' size={20} 
-                            style={{ position: 'absolute', top: 50, left: 50 }} />  */}
+                            <ActivityIndicator animating={true} color='red' size={50}
+                                style={{ position: 'absolute', top: 39, left: 37 }} />
 
                             <View
                                 style={{
@@ -121,7 +120,7 @@ const Account = ({ navigation, route }) => {
                             navigation.navigate('CountyPhone', {
                                 number: number,
                                 code: '1234'
-                            }) 
+                            })
                         }}>
                             <Text bold color={COLORS.white}>
                                 Annuler
@@ -142,7 +141,7 @@ const Account = ({ navigation, route }) => {
                     </View>
 
                 </Block>
-               
+
                 <View style={{ width: '100%', padding: 10, }}>
                     <Text >
                         En créant le compte vous acceptez
@@ -150,7 +149,7 @@ const Account = ({ navigation, route }) => {
                             <Text color={COLORS.gray}>les conditions de notre service</Text></TouchableOpacity>
                     </Text>
                 </View>
-           </ScrollView>
+            </ScrollView>
         </KeyboardAvoidingView>
     );
 };
@@ -160,7 +159,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     container: {
-        flex: 1,
+        // flex: 1,
     },
     m_5: {
         margin: 30,

@@ -28,35 +28,35 @@ const CountyPhone = ({ navigation }) => {
     const [valid, setValid] = useState(false);
     const [load, setLoad] = useState(false);
     const phoneInput = useRef(null);
-    
+
     const sendCode = async () => {
-        
+
         try {
             console.log(process.env.ACCOUNT_SID);
             console.log(process.env.AUTH_TOKEN);
             const accountSid = process.env.ACCOUNT_SID;
             const authToken = process.env.AUTH_TOKEN;
             const serviceSid = process.env.SERVICE_SID
-    
+
             // const twilioEndpoint = `https://verify.twilio.com/v2/Services/${serviceSid}/Verifications`;
             const customEndpoint = 'https://api.twilio.com/2010-04-01/Accounts/ACbd9d562b452a2c62459200227432468e/Messages.json'
-    
+
             const requestData = {
                 // customFriendlyName: 'Afintech',
                 To: formattedValue, // Add the phone number you want to send the verification code to
                 //Channel: 'sms',
-                From : '+13343758571',
+                From: '+13343758571',
                 Body: 'Bonjour, bienvenue sur AFINTECH. Votre code de validation est 0000. www.afrintech.org'
             };
-    
+
             const base64Credentials = encode(`${accountSid}:${authToken}`);
             const authHeader = {
                 Authorization: `Basic ${base64Credentials}`,
             };
-    
-            const response = await axios.post(customEndpoint,  
+
+            const response = await axios.post(customEndpoint,
                 qs.stringify(requestData), { headers: authHeader });
-    
+
             console.log('Verification request sent successfully:', response.data);
         } catch (error) {
             console.error('Error sending verification request:', error.response ? error.response.data : error.message);
@@ -65,22 +65,22 @@ const CountyPhone = ({ navigation }) => {
 
     const getUserByMobile = async (mobileNumber) => {
         try {
-          const response = await axios.get(`https://bomoko-backend.onrender.com/auth/mobile/${encodeURIComponent(mobileNumber)}`);
-          const userData = response.data;
-      
-          // Handle the user data or set state as needed
-          // For example, you can set a state with the user data
-          // setState(userData);
-      
-          return userData; // You can modify this to return the necessary data
+            const response = await axios.get(`https://bomoko-backend.onrender.com/auth/mobile/${encodeURIComponent(mobileNumber)}`);
+            const userData = response.data;
+
+            // Handle the user data or set state as needed
+            // For example, you can set a state with the user data
+            // setState(userData);
+
+            return userData; // You can modify this to return the necessary data
         } catch (error) {
-          // Handle errors, e.g., log or set an error state
-          console.error('Error fetching user data:', error.message);
-          throw error; // Propagate the error if needed
+            // Handle errors, e.g., log or set an error state
+            console.error('Error fetching user data:', error.message);
+            throw error; // Propagate the error if needed
         }
-      };
-    
-    
+    };
+
+
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -93,7 +93,7 @@ const CountyPhone = ({ navigation }) => {
             ></ImageBackground>
 
             <View style={styles.container}>
-            <Container position="top"style={{width: '100%'}} duration={6000}/>
+                <Container position="top" style={{ width: '100%' }} duration={6000} />
 
                 <Block middle style={styles.m_5}>
                     <Text center bold h2>
@@ -143,38 +143,38 @@ const CountyPhone = ({ navigation }) => {
                                 console.log("valid", valid);
                                 console.log("formattedValue", formattedValue);
                                 console.log("value", value);
-                              
+
                                 if (valid) {
-                                    
+
                                     getUserByMobile(formattedValue)
-                                    .then((userData) => {
-                                        
-                                        if (userData?.msg === "User not found!") {
-                                            // Perform your action here
-                                            Toast.success('Numéro de téléphone correct', 'bottom')
+                                        .then((userData) => {
 
-                                            sendCode();
-                                            setLoad(false)
-                                            navigation.navigate('OTP', {
-                                                number: formattedValue,
-                                                code: '0000'
-                                            }) 
-                                            console.log('User data:', userData);
+                                            if (userData?.msg === "User not found!") {
+                                                // Perform your action here
+                                                Toast.success('Numéro de téléphone correct', 'bottom')
+
+                                                sendCode();
+                                                setLoad(false)
+                                                navigation.navigate('OTP', {
+                                                    number: formattedValue,
+                                                    code: '0000'
+                                                })
+                                                console.log('User data:', userData);
                                             }
-                                        else {
-                                            Toast.warn('Numéro de téléphone existe', 'bottom')
-                                            console.log(userData, "exists");
-                                            setLoad(false)
+                                            else {
+                                                Toast.warn('Numéro de téléphone existe', 'bottom')
+                                                console.log(userData, "exists");
+                                                setLoad(false)
 
-                                        }
-                                    })
-                                    .catch((error) => {
-                                        // Handle errors, e.g., show an error message
-                                        console.error('Error:', error.message);
-                                    });
-                                   
+                                            }
+                                        })
+                                        .catch((error) => {
+                                            // Handle errors, e.g., show an error message
+                                            console.error('Error:', error.message);
+                                        });
+
                                 }
-                                else{
+                                else {
                                     setLoad(false)
                                     Toast.error('Numéro de téléphone incorrect', 'bottom');
                                 }
