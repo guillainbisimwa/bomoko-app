@@ -25,6 +25,7 @@ import { AddAvec, ConfirmPayment, DetailsAvec, DetailsReunion, EditAvec } from '
 import { StatusBar } from 'expo-status-bar';
 import CountyPhone from './screens/Auth/Component/CountyPhone';
 import Account from './screens/Auth/Component/Account';
+import OTP from './screens/Auth/Component/OTP';
 
 const theme = {
   ...DefaultTheme,
@@ -287,6 +288,11 @@ const App = () => {
           }} />
 
           <Stack.Screen name="Account" component={Account} options={{
+            headerShown: false,
+          }} />
+
+
+          <Stack.Screen name="OTP" component={OTP} options={{
             headerShown: false,
           }} />
 
