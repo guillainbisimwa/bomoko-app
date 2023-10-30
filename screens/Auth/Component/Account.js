@@ -7,6 +7,7 @@ import {
     TouchableOpacity,
     KeyboardAvoidingView,
     Platform,
+    ScrollView,
     Image,
 } from "react-native";
 import { Block, Text } from "../../../components";
@@ -16,7 +17,8 @@ import { COLORS, SIZES } from "../../../constants";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
-import { ScrollView } from "react-native-gesture-handler";
+// import { ScrollView } from "react-native-gesture-handler";
+import * as ImagePicker from "expo-image-picker";
 
 
 const Account = ({ navigation, route }) => {
@@ -33,11 +35,72 @@ const Account = ({ navigation, route }) => {
 
     const [visible, setVisible] = useState(false);
 
-    const [selectedImage, setSelectedImage] = useState('https://raw.githubusercontent.com/guillainbisimwa/bomoko-app/master/assets/icons/gens.png');
+    const [selectedImage1, setSelectedImage1] = useState('https://raw.githubusercontent.com/guillainbisimwa/bomoko-app/master/assets/icons/gens.png');
+    const [selectedImage, setSelectedImage] = useState();
 
     const navigationV2 = useNavigation();
 
     const { number } = route.params;
+
+
+    const handleImageSelection = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [4, 4],
+            quality: 1,
+            base64: true,
+        });
+
+        console.log(result);
+
+
+        if (!result.canceled) {
+            const base64Img = `data:image/jpg;base64,${result.assets[0].base64}`; // result.assets[0].base64
+            let imgCb = await onCloudinarySaveCb(base64Img);
+            //setSelectedImage(result.assets[0].uri);
+            setSelectedImage(imgCb);
+        }
+    };
+
+    const onCloudinarySaveCb = async (base64Img) => {
+        try {
+            setLoadPic(true)
+            var pic = "";
+            let apiUrl =
+                'https://api.cloudinary.com/v1_1/micity/image/upload';
+            let data = {
+                file: base64Img,
+                upload_preset: 'ml_default'
+            };
+
+            await fetch(apiUrl, {
+                body: JSON.stringify(data),
+                headers: {
+                    'content-type': 'application/json'
+                },
+                method: 'POST'
+            })
+                .then(async response => {
+                    let data = await response.json();
+                    //console.log(data);
+                    if (await data.secure_url) {
+                        //console.log('Upload successful');
+                        setLoadPic(false);
+                        pic = await data.secure_url;
+                    }
+                })
+                .catch(err => {
+                    console.log('Cannot upload');
+                    setLoadPic(false);
+                    console.log(err);
+                });
+            return pic;
+        } catch (e) {
+            setLoadPic(false);
+            console.log("Error while onCloudinarySave", e);
+        }
+    };
 
     return (
         <KeyboardAvoidingView
@@ -65,14 +128,30 @@ const Account = ({ navigation, route }) => {
                             borderWidth: 2,
                             borderColor: COLORS.primary,
                             backgroundColor: COLORS.gray
-                        }} >
-                            {/* onPress={handleImageSelection} */}
+                        }} 
+                        onPress={handleImageSelection}>
+                            {
+                                selectedImage?
+                                <Image
+                                source={{ uri: selectedImage }}
+                                style={{
+                                    height: 130,
+                                    width: 130,
+                                    borderRadius: 85,
+                                    //borderWidth: 2,
+                                    borderColor: COLORS.primary,
+                                    backgroundColor: COLORS.gray
+                                }}
+                            />: <></>
+                            }
+                            
 
                             {/* <ActivityIndicator animating={loadPic} color='red' size={20} style={{ position: 'absolute', top: 80, left: 80 }} /> */}
-                            <ActivityIndicator animating={true} color='red' size={50}
+                            <ActivityIndicator animating={loadPic} color='red' size={50}
                                 style={{ position: 'absolute', top: 39, left: 37 }} />
-
-                            <View
+                            {
+                                 !selectedImage?
+                                 <View
                                 style={{
                                     position: "absolute",
                                     top: 50,
@@ -85,7 +164,9 @@ const Account = ({ navigation, route }) => {
                                     size={32}
                                     color={COLORS.primary}
                                 />
-                            </View>
+                            </View>: <></>
+                            }
+                            
                         </TouchableOpacity>
                     </View>
                     <Text center bold h2>
@@ -105,6 +186,9 @@ const Account = ({ navigation, route }) => {
                         style={styles.input}
                         error={errorSignUp}
                     />
+
+                  
+
 
                     <TextInput error={errorSignUp} keyboardType="default"
                         label="E-mail" value={email}
@@ -142,7 +226,7 @@ const Account = ({ navigation, route }) => {
 
                 </Block>
 
-                <View style={{ width: '100%', padding: 10, }}>
+                <View style={{ width: '100%', padding: 15, }}>
                     <Text >
                         En créant le compte vous acceptez
                         <TouchableOpacity>
@@ -162,7 +246,9 @@ const styles = StyleSheet.create({
         // flex: 1,
     },
     m_5: {
-        margin: 30,
+        marginTop: 30,
+        marginLeft: 30,
+        marginRight: 30,
         paddingTop: 30
     },
     input: {
