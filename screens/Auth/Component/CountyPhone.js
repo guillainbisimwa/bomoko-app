@@ -1,32 +1,18 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Dimensions, ImageBackground, View, StyleSheet, TouchableOpacity } from "react-native";
 import { Block, Text } from "../../../components";
 const { height, width } = Dimensions.get('window');
-import CountryPicker from 'react-native-country-picker-modal'
-import { Button } from "react-native-paper";
+import { Button, TextInput } from "react-native-paper";
 import { COLORS, SIZES } from "../../../constants";
-import { MaterialIcons } from "@expo/vector-icons";
+import PhoneInput from "react-native-phone-number-input";
+
 
 const CountyPhone = () => {
-    const [countryCode, setCountryCode] = useState('FR');
-    const [country, setCountry] = useState({"callingCode": ["243"], "cca2": "CD", "currency": ["CDF"], "flag": "flag-cd", "name": "DR Congo", "region": "Africa", "subregion": "Middle Africa"})
-    const [withCountryNameButton, setWithCountryNameButton] = useState(
-        false,
-    )
-    const [withFlag, setWithFlag] = useState(true)
-    const [withEmoji, setWithEmoji] = useState(true)
-    const [withFilter, setWithFilter] = useState(true)
-    const [withAlphaFilter, setWithAlphaFilter] = useState(false)
-    const [withCallingCode, setWithCallingCode] = useState(false)
-    const [withModal, setWithModal] = useState(true);
-    const [visible, setVisible] = useState(false);
-    const onSelect = (country) => {
-        setCountryCode(country.cca2)
-        setCountry(country)
-        console.log(country);
-    }
-    const switchVisible = () => setVisible(!visible);
-
+    const [value, setValue] = useState("");
+    const [formattedValue, setFormattedValue] = useState("");
+    const [valid, setValid] = useState(false);
+    const [showMessage, setShowMessage] = useState(false);
+    const phoneInput = useRef(null);
 
     return <Block>
         <ImageBackground
@@ -37,64 +23,54 @@ const CountyPhone = () => {
 
         <Block center middle style={styles.m_5}>
             <Text bold h2>Votre numéro de téléphone</Text>
-            <Text center>Veuillez confirmer votre code pays et saisir votre numéro de téléphone</Text>
-            <TouchableOpacity style={styles.customInput}  onPress={switchVisible}>
-                <View  style={styles.insideCustomInput}>
-                <CountryPicker
-                    {...{
-                        countryCode,
-                        withFilter,
-                        withFlag,
-                        withCountryNameButton,
-                        withAlphaFilter,
-                        withCallingCode,
-                        withEmoji,
-                        onSelect,
-                        withModal,
-                        preferredCountries: ['CD'],
-                        modalProps: { visible },
-                        onClose: () => setVisible(false),
-                        onOpen: () => setVisible(true),
-                    }}
-                    visible
-                />
+            <Text style={styles.input} center>Veuillez confirmer votre code pays et saisir votre numéro de téléphone</Text>
 
-                <Text>{country.name}</Text>
+            {showMessage && (
+                <View style={styles.message}>
+                    <Text>Value : {value}</Text>
+                    <Text>Formatted Value : {formattedValue}</Text>
+                    <Text>Valid : {valid ? "true" : "false"}</Text>
                 </View>
-                
-                <MaterialIcons color={COLORS.darkgray} size={SIZES.base * 3} 
-                name={'arrow-forward'}  />
-
+            )}
+            <PhoneInput
+                ref={phoneInput}
+                defaultValue={value}
+                defaultCode="CD"
+                layout="first"
+                onChangeText={(text) => {
+                    setValue(text);
+                }}
+                onChangeFormattedText={(text) => {
+                    setFormattedValue(text);
+                }}
+                // withDarkTheme
+                withShadow
+                autoFocus
+            />
+            <TouchableOpacity
+                style={styles.button}
+                onPress={() => {
+                    const checkValid = phoneInput.current?.isValidNumber(value);
+                    setShowMessage(true);
+                    setValid(checkValid ? checkValid : false);
+                }}
+            >
+                <Text>Check</Text>
             </TouchableOpacity>
-
-
         </Block>
     </Block>
 }
 
 
 const styles = StyleSheet.create({
-    customInput: {
-        borderColor: COLORS.darkgray,
-        borderWidth: 1,
-        width: '100%',
-        padding: 8,
-        borderRadius: 8,
-        display:'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginTop: 20,
-        justifyContent: 'space-between'
-    },
     m_5: {
-        margin: 30
+        margin: 30,
     },
-    insideCustomInput: {
-        display:'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-    }
+    input: {
+        marginTop: 5,
+        marginBottom: 15,
 
+    },
 });
 
 
