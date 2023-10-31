@@ -202,14 +202,13 @@ const Account = ({ navigation, route }) => {
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
+            <ImageBackground
+                style={{ flex: 1, position: "absolute", height, width }}
+                source={require("./../../../assets/login1_bg.png")}
+                blurRadius={10}
+            ></ImageBackground>
 
             <ScrollView >
-                <ImageBackground
-                    style={{ flex: 1, position: "absolute", height, width }}
-                    source={require("./../../../assets/login1_bg.png")}
-                    blurRadius={10}
-                ></ImageBackground>
-
 
                 <Container position="top" style={{ width: '100%' }} duration={6000} />
 
