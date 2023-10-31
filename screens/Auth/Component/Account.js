@@ -11,6 +11,7 @@ import {
     Image,
     Alert,
     Keyboard,
+    SafeAreaView,
 } from "react-native";
 import { Block, Text } from "../../../components";
 const { height, width } = Dimensions.get("window");
@@ -171,7 +172,7 @@ const Account = ({ navigation, route }) => {
                     console.log("Invalid email format");
                     setErrorEmail(false)
                 }
-              
+
                 //All required fields are filled, dispatch the action
                 dispatch(
                     signUpUser({
@@ -200,16 +201,16 @@ const Account = ({ navigation, route }) => {
     };
 
     return (
-        <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-        >
-            <ImageBackground
-                style={{ flex: 1, position: "absolute", height, width }}
-                source={require("./../../../assets/login1_bg.png")}
-                blurRadius={10}
-            ></ImageBackground>
+        <SafeAreaView style={{ flex: 1 }}>
 
             <ScrollView >
+                <ImageBackground
+                    style={{ flex: 1, position: "absolute", height, width }}
+                    source={require("./../../../assets/login1_bg.png")}
+                    blurRadius={10}
+                ></ImageBackground>
+
+
                 <Container position="top" style={{ width: '100%' }} duration={6000} />
 
                 <Block style={styles.m_5}>
@@ -219,29 +220,24 @@ const Account = ({ navigation, route }) => {
                             marginVertical: 22,
                         }}
                     >
-                        <TouchableOpacity style={{
-                            height: 130,
-                            width: 130,
-                            borderRadius: 85,
-                            borderWidth: 2,
-                            borderColor: COLORS.primary,
-                            backgroundColor: COLORS.gray
-                        }}
-                            onPress={handleImageSelection}>
-                            {
-                                selectedImage ?
-                                    <Image
-                                        source={{ uri: selectedImage }}
-                                        style={{
-                                            height: 130,
-                                            width: 130,
-                                            borderRadius: 85,
-                                            //borderWidth: 2,
-                                            borderColor: COLORS.primary,
-                                            backgroundColor: COLORS.gray
-                                        }}
-                                    /> : <></>
-                            }
+                        <TouchableOpacity
+                            style={{
+                                height: 130,
+                                width: 130,
+                                borderRadius: 65,
+                                borderColor: COLORS.primary,
+                                borderWidth: 2,
+                                backgroundColor: COLORS.gray,
+                                overflow: 'hidden',
+                            }}
+                            onPress={handleImageSelection}
+                        >
+                            {selectedImage && (
+                                <Image
+                                    source={{ uri: selectedImage }}
+                                    style={{ flex: 1, borderRadius: 65 }}
+                                />
+                            )}
 
 
                             {/* <ActivityIndicator animating={loadPic} color='red' size={20} style={{ position: 'absolute', top: 80, left: 80 }} /> */}
@@ -335,7 +331,7 @@ const Account = ({ navigation, route }) => {
                     </Text>
                 </View>
             </ScrollView>
-        </KeyboardAvoidingView>
+        </SafeAreaView>
     );
 };
 
