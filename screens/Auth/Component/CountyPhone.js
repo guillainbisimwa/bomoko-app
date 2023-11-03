@@ -159,7 +159,7 @@ const CountyPhone = ({ navigation }) => {
 
                                             if (userData?.msg === "User not found!") {
                                                 // Perform your action here
-                                                Toast.success('Numéro de téléphone correct', 'bottom')
+                                                // Toast.success('Numéro de téléphone correct', 'bottom')
 
                                                 sendCode();
                                                 setLoad(false)
