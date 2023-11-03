@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
     Dimensions,
     ImageBackground,
     View,
     StyleSheet,
     TouchableOpacity,
-    KeyboardAvoidingView,
-    Platform,
     ScrollView,
     Image,
     Alert,
@@ -25,7 +23,7 @@ import * as ImagePicker from "expo-image-picker";
 import NetInfo from "@react-native-community/netinfo";
 import Container, { Toast } from 'toastify-react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import { BottomSheetBackdrop, BottomSheetModal, BottomSheetModalProvider, BottomSheetScrollView } from '@gorhom/bottom-sheet';
 
 const Account = ({ navigation, route }) => {
     const { number } = route.params;
@@ -56,10 +54,86 @@ const Account = ({ navigation, route }) => {
     const [selectedImage1, setSelectedImage1] = useState('https://raw.githubusercontent.com/guillainbisimwa/bomoko-app/master/assets/icons/gens.png');
     const [selectedImage, setSelectedImage] = useState();
 
+    const snapPoints = useMemo(() => ["28%", "50%", '70%', '80%', '90%'], []);
+    const [open, setOpen] = useState(false)
+
     // Use useEffect or any other method to handle the success state and display the alert
     useEffect(() => {
         checkLoginStatus();
     }, [successSignUp, errorSignUp, success, error]);
+
+    const bottomSheetModalRef = useRef(null);
+
+    const BackdropElement = useCallback(
+        (backdropProps) => (
+            <BottomSheetBackdrop
+                {...backdropProps}
+                opacity={0.7}
+                appearsOnIndex={0}
+                disappearsOnIndex={-1}
+            />
+        ),
+        []
+    );
+
+    const openModal = useCallback(() => {
+        bottomSheetModalRef.current?.present();
+        setTimeout(() => {
+            setOpen(true);
+        }, 5);
+    }, []);
+
+    const renderBottom = () => (
+        <BottomSheetModal
+            ref={bottomSheetModalRef}
+            index={1}
+            backdropComponent={BackdropElement}
+            snapPoints={snapPoints}
+            // backgroundStyle={{ borderRadius: responsiveScreenWidth(5), backgroundColor:'#eee'}}
+            onDismiss={() => setOpen(false)}
+        >
+            <BottomSheetScrollView style={{ padding: 17 }}>
+                <Block row space='between' >
+                    <View style={styles.container}>
+                        <Text style={styles.header}>Conditions d'Utilisation</Text>
+                        <Text style={styles.paragraph}>
+                            En utilisant l'application mobile Afintech ("l'Application"), vous acceptez de respecter les conditions d'utilisation énoncées ci-dessous. Si vous n'acceptez pas ces conditions, veuillez ne pas utiliser l'Application.
+                        </Text>
+
+                        <Text style={styles.subtitle}>Utilisation de l'Application</Text>
+                        <Text style={styles.paragraph}>
+                            Vous vous engagez à utiliser l'Application conformément aux lois et réglementations en vigueur. Vous ne devez pas utiliser l'Application à des fins illégales, frauduleuses ou nuisibles.
+                        </Text>
+
+                        <Text style={styles.subtitle}>Propriété Intellectuelle</Text>
+                        <Text style={styles.paragraph}>
+                            Tous les droits de propriété intellectuelle relatifs à l'Application sont la propriété de Afintech. Vous n'êtes pas autorisé à copier, modifier, distribuer ou reproduire l'Application sans autorisation expresse.
+                        </Text>
+
+                        <Text style={styles.subtitle}>Limitation de Responsabilité</Text>
+                        <Text style={styles.paragraph}>
+                            L'Application est fournie "telle quelle", sans garantie d'aucune sorte. Nous ne serons pas responsables des dommages directs, indirects, spéciaux, consécutifs ou punitifs résultant de l'utilisation de l'Application.
+                        </Text>
+
+                        <Text style={styles.subtitle}>Modifications des Conditions</Text>
+                        <Text style={styles.paragraph}>
+                            Nous nous réservons le droit de modifier ces conditions d'utilisation à tout moment. Les modifications prendront effet dès leur publication sur l'Application. Il vous est conseillé de consulter régulièrement cette page pour rester informé des changements.
+                        </Text>
+
+                        <Text style={styles.subtitle}>Contact</Text>
+                        <Text style={styles.paragraph}>
+                            Pour toute question concernant ces conditions d'utilisation, veuillez nous contacter à info@afrintech.org.
+                        </Text>
+                        <Text style={styles.subtitle}></Text>
+
+                    </View>
+
+                </Block>
+
+            </BottomSheetScrollView>
+
+        </BottomSheetModal>
+    )
 
     const checkLoginStatus = async () => {
         try {
@@ -235,136 +309,141 @@ const Account = ({ navigation, route }) => {
     };
 
     return (
-        <SafeAreaView style={{ flex: 1 }}>
-            <ImageBackground
-                style={{ flex: 1, position: "absolute", height, width }}
-                source={require("./../../../assets/login1_bg.png")}
-                blurRadius={10}
-            ></ImageBackground>
+        <BottomSheetModalProvider>
+            <SafeAreaView style={{ flex: 1 }}>
+                <ImageBackground
+                    style={{ flex: 1, position: "absolute", height, width }}
+                    source={require("./../../../assets/login1_bg.png")}
+                    blurRadius={10}
+                ></ImageBackground>
 
-            <ScrollView >
+                <ScrollView >
 
-                <Container position="top" style={{ width: '100%' }} duration={6000} />
+                    <Container position="top" style={{ width: '100%' }} duration={6000} />
 
-                <Block style={styles.m_5}>
-                    <View
-                        style={{
-                            alignItems: "center",
-                            marginVertical: 22,
-                        }}
-                    >
-                        <TouchableOpacity
+                    <Block style={styles.m_5}>
+                        <View
                             style={{
-                                height: 130,
-                                width: 130,
-                                borderRadius: 65,
-                                borderColor: COLORS.primary,
-                                borderWidth: 2,
-                                backgroundColor: COLORS.gray,
-                                overflow: 'hidden',
+                                alignItems: "center",
+                                marginVertical: 22,
                             }}
-                            onPress={handleImageSelection}
                         >
-                            {selectedImage && (
-                                <Image
-                                    source={{ uri: selectedImage }}
-                                    style={{ flex: 1, borderRadius: 65 }}
-                                />
-                            )}
+                            <TouchableOpacity
+                                style={{
+                                    height: 130,
+                                    width: 130,
+                                    borderRadius: 65,
+                                    borderColor: COLORS.primary,
+                                    borderWidth: 2,
+                                    backgroundColor: COLORS.gray,
+                                    overflow: 'hidden',
+                                }}
+                                onPress={handleImageSelection}
+                            >
+                                {selectedImage && (
+                                    <Image
+                                        source={{ uri: selectedImage }}
+                                        style={{ flex: 1, borderRadius: 65 }}
+                                    />
+                                )}
 
 
-                            {/* <ActivityIndicator animating={loadPic} color='red' size={20} style={{ position: 'absolute', top: 80, left: 80 }} /> */}
-                            <ActivityIndicator animating={loadPic} color='red' size={50}
-                                style={{ position: 'absolute', top: 39, left: 37 }} />
-                            {
-                                !selectedImage ?
-                                    <View
-                                        style={{
-                                            position: "absolute",
-                                            top: 50,
-                                            right: 50,
-                                            //zIndex: 9999,
-                                        }}
-                                    >
-                                        <MaterialIcons
-                                            name="photo-camera"
-                                            size={32}
-                                            color={COLORS.primary}
-                                        />
-                                    </View> : <></>
-                            }
+                                {/* <ActivityIndicator animating={loadPic} color='red' size={20} style={{ position: 'absolute', top: 80, left: 80 }} /> */}
+                                <ActivityIndicator animating={loadPic} color='red' size={50}
+                                    style={{ position: 'absolute', top: 39, left: 37 }} />
+                                {
+                                    !selectedImage ?
+                                        <View
+                                            style={{
+                                                position: "absolute",
+                                                top: 50,
+                                                right: 50,
+                                                //zIndex: 9999,
+                                            }}
+                                        >
+                                            <MaterialIcons
+                                                name="photo-camera"
+                                                size={32}
+                                                color={COLORS.primary}
+                                            />
+                                        </View> : <></>
+                                }
 
-                        </TouchableOpacity>
+                            </TouchableOpacity>
+                        </View>
+                        <Text center bold h2>
+                            {number}
+                        </Text>
+                        <Text style={styles.info} center>
+                            Veuillez completer les informations de votre profile
+                        </Text>
+
+                        <TextInput error={errorName} keyboardType="default" label="Nom d'utilisateur" value={name} onChangeText={setNom}
+                            style={styles.input} />
+                        <TextInput
+                            label="Mots de passe"
+                            value={password}
+                            onChangeText={setPassword}
+                            secureTextEntry
+                            style={styles.input}
+                            error={errorPassword}
+                        />
+
+                        <TextInput
+                            label="Confirmer le Mots de passe"
+                            value={confirmPassword}
+                            onChangeText={setConfirmPassword}
+                            secureTextEntry
+                            style={styles.input}
+                            error={confirmErrorPassword}
+                        />
+
+                        <TextInput error={errorEmail} keyboardType="default"
+                            label="E-mail" value={email}
+                            onChangeText={setEmail} style={styles.input} />
+
+                        {
+                            visible ? <Text style={{ color: COLORS.red }} >Mots de passe ou Numéro de téléphone invalide </Text> : <></>
+                        }
+
+                        <View style={styles.btnContainer}>
+                            <TouchableOpacity onPress={() => {
+                                navigation.navigate('CountyPhone', {
+                                    number: number,
+                                    code: '1234'
+                                })
+                            }}>
+                                <Text bold color={COLORS.white}>
+                                    Annuler
+                                </Text>
+                            </TouchableOpacity>
+
+                            <Button
+                                style={styles.circularButton}
+                                // icon="arrow-right"
+                                disabled={isLoading || isLoadingSignUp || loadPic}
+                                mode="contained" loading={isLoading || isLoadingSignUp || loadPic}
+                                onPress={handleSignUp}
+                            >
+                                S'inscrire
+                            </Button>
+                        </View>
+
+                    </Block>
+
+                    <View style={{ width: '100%', padding: 15, }}>
+                        <Text >
+                            En créant le compte vous acceptez
+                            <TouchableOpacity onPress={() => openModal()}>
+                                <Text color={COLORS.gray}>les conditions de notre service</Text></TouchableOpacity>
+                        </Text>
                     </View>
-                    <Text center bold h2>
-                        {number}
-                    </Text>
-                    <Text style={styles.info} center>
-                        Veuillez completer les informations de votre profile
-                    </Text>
-
-                    <TextInput error={errorName} keyboardType="default" label="Nom d'utilisateur" value={name} onChangeText={setNom}
-                        style={styles.input} />
-                    <TextInput
-                        label="Mots de passe"
-                        value={password}
-                        onChangeText={setPassword}
-                        secureTextEntry
-                        style={styles.input}
-                        error={errorPassword}
-                    />
-
-                    <TextInput
-                        label="Confirmer le Mots de passe"
-                        value={confirmPassword}
-                        onChangeText={setConfirmPassword}
-                        secureTextEntry
-                        style={styles.input}
-                        error={confirmErrorPassword}
-                    />
-
-                    <TextInput error={errorEmail} keyboardType="default"
-                        label="E-mail" value={email}
-                        onChangeText={setEmail} style={styles.input} />
-
-                    {
-                        visible ? <Text style={{ color: COLORS.red }} >Mots de passe ou Numéro de téléphone invalide </Text> : <></>
-                    }
-
-                    <View style={styles.btnContainer}>
-                        <TouchableOpacity onPress={() => {
-                            navigation.navigate('CountyPhone', {
-                                number: number,
-                                code: '1234'
-                            })
-                        }}>
-                            <Text bold color={COLORS.white}>
-                                Annuler
-                            </Text>
-                        </TouchableOpacity>
-
-                        <Button
-                            style={styles.circularButton}
-                            // icon="arrow-right"
-                            disabled={isLoading || isLoadingSignUp || loadPic}
-                            mode="contained" loading={isLoading || isLoadingSignUp || loadPic}
-                            onPress={handleSignUp}
-                        >
-                            S'inscrire
-                        </Button>
-                    </View>
-
-                </Block>
-
-                <View style={{ width: '100%', padding: 15, }}>
-                    <Text >
-                        En créant le compte vous acceptez
-                        <TouchableOpacity>
-                            <Text color={COLORS.gray}>les conditions de notre service</Text></TouchableOpacity>
-                    </Text>
-                </View>
-            </ScrollView>
-        </SafeAreaView>
+                </ScrollView>
+                {
+                    renderBottom()
+                }
+            </SafeAreaView>
+        </BottomSheetModalProvider>
     );
 };
 
@@ -395,7 +474,23 @@ const styles = StyleSheet.create({
     },
     circularButton: {
         padding: 2,
-    }
+    },
+    header: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 20,
+    },
+    subtitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginTop: 15,
+        marginBottom: 10,
+    },
+    paragraph: {
+        fontSize: 16,
+        marginBottom: 15,
+        lineHeight: 22,
+    },
 });
 
 export default Account;

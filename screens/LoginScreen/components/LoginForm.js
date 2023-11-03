@@ -110,22 +110,31 @@ export const LoginForm = ({ navigation }) => {
         }
 
         // Handle login functionality
-        const signUpResult = dispatch(loginUser({ mobile: formattedValue, password }))
+        dispatch(loginUser({ mobile: formattedValue, password })).then((data)=> {
+          console.log('data',data);
+          if (hasErrorKey(data)) {
+            Toast.error("Une erreur s'est produite!!", 'bottom');
+          }
+
+        }).catch((err)=> {
+          Toast.error("Une erreur s'est produite!", 'bottom');
+          console.log('err', err);
+        })
         // console.log('--->>>>>>',signUpResult);
         // console.log('------------------------------------------');
         // Handle login functionality
         // setListenerError()
-        if (error) {
-          // SignUp successful, now dispatch login
-          // dispatch(loginUser({ mobile, password }));
-          // await navigation.navigate('Main');
-          Toast.error("Une erreur s'est produite!!", 'bottom');
+        // if (error) {
+        //   // SignUp successful, now dispatch login
+        //   // dispatch(loginUser({ mobile, password }));
+        //   // await navigation.navigate('Main');
+        //   Toast.error("Une erreur s'est produite!!", 'bottom');
 
-        } else {
-          // Handle signUp failure if needed
-          setPasswordError(true);
-          Toast.error("Une erreur s'est produite!!", 'bottom');
-        }
+        // } else {
+        //   // Handle signUp failure if needed
+        //   setPasswordError(true);
+        //   Toast.error("Une erreur s'est produite!!", 'bottom');
+        // }
       }
 
     } catch (error) {

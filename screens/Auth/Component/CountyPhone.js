@@ -167,7 +167,7 @@ const CountyPhone = ({ navigation }) => {
                                                     number: formattedValue,
                                                     code: '0000'
                                                 })
-                                                console.log('User data:', userData);
+                                                // console.log('User data:', userData);
                                             }
                                             else {
                                                 Toast.warn('Numéro de téléphone existe', 'bottom')
