@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     Dimensions,
     ImageBackground,
@@ -24,6 +24,7 @@ import { loginUser, signUpUser } from '../../../redux/userSlice';
 import * as ImagePicker from "expo-image-picker";
 import NetInfo from "@react-native-community/netinfo";
 import Container, { Toast } from 'toastify-react-native';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 const Account = ({ navigation, route }) => {
@@ -39,6 +40,8 @@ const Account = ({ navigation, route }) => {
 
     const [email, setEmail] = useState('');
 
+    const navigationV2 = useNavigation();
+
     const [errorName, setErrorNom] = useState(true);
     const [errorPassword, setErrorPassword] = useState(true);
     const [confirmErrorPassword, setConfirmErrorPassword] = useState(true);
@@ -53,9 +56,28 @@ const Account = ({ navigation, route }) => {
     const [selectedImage1, setSelectedImage1] = useState('https://raw.githubusercontent.com/guillainbisimwa/bomoko-app/master/assets/icons/gens.png');
     const [selectedImage, setSelectedImage] = useState();
 
-    const navigationV2 = useNavigation();
+// Use useEffect or any other method to handle the success state and display the alert
+useEffect(() => {
+    checkLoginStatus();
+  }, [successSignUp, errorSignUp, success, error]);
 
+  const checkLoginStatus = async () => {
+    try {
+      const value = await AsyncStorage.getItem('user');
 
+      //console.log('value-user', value);
+      if (value !== null) {
+        navigationV2.navigate('Main');
+      } else {
+      }
+    } catch (error) {
+      console.log('Error retrieving installation status:', error);
+      Toast.error("Une erreur s'est produite", 'bottom')
+    }
+  };
+    const  hasErrorKey = (obj) =>{
+        return obj && typeof obj === 'object' && 'error' in obj;
+    }
 
     const handleImageSelection = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -166,29 +188,41 @@ const Account = ({ navigation, route }) => {
 
                 if (!regex.test(email)) {
                     setErrorEmail(true)
-                    Toast.error('E-mail incorrect', 'bottom')
+                    Toast.error('E-mail incorrect', 'bottom');
                     return
                 } else {
-                    console.log("Invalid email format");
                     setErrorEmail(false)
                 }
 
-                //All required fields are filled, dispatch the action
-                dispatch(
-                    signUpUser({
-                        username: name,
-                        name,
-                        password,
-                        email,
-                        mobile,
-                        role,
-                        cover_url: '',
-                        profile_pic: selectedImage ? selectedImage : selectedImage1,
-                    })
-                );
+                                // Dispatch the signUpUser action
+                    const signUpResult = await dispatch(
+                        signUpUser({
+                            username: name,
+                            name,
+                            password,
+                            email,
+                            mobile,
+                            role,
+                            cover_url: '',
+                            profile_pic: selectedImage ? selectedImage : selectedImage1,
+                        })
+                    );
+
+                
 
                 // Handle login functionality
-                dispatch(loginUser({ mobile, password }))
+                // dispatch(loginUser({ mobile, password }))
+                if (!hasErrorKey(signUpResult)) {
+                    // SignUp successful, now dispatch login
+                    dispatch(loginUser({ mobile, password }));
+                    // await navigation.navigate('Main');
+                } else {
+                    // Handle signUp failure if needed
+                    console.log('SignUp failed');
+                    setErrorNom(true);
+                    setErrorEmail(true)
+                    Toast.error("L'e-mail ou le nom existe déjà", 'bottom');
+                }
             }
 
             //dispatch(loginUser({username:"bvenceslas", password: "1234567890"}))

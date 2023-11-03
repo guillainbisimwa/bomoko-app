@@ -167,7 +167,9 @@ const userSlice = createSlice({
         //AsyncStorage.setItem('user', JSON.stringify({ user: action.payload }));
       })
       .addCase(signUpUser.rejected, (state, action) => {
-        console.log("bree *************** ",action.error.message);
+        console.log("bree *************** ",action.error);
+        console.log("bree ***************");
+        console.log("bree ***************");
         state.isLoadingSignUp = false;
         state.errorSignUp = action.error.message;
         state.successSignUp = false
