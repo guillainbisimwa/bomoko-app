@@ -12,7 +12,7 @@ import {
   Platform,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { FAB } from 'react-native-paper';
+import { FAB, IconButton } from 'react-native-paper';
 
 import { COLORS, FONTS, SIZES, icons, images } from '../constants';
 
@@ -21,6 +21,10 @@ import { Svg } from 'react-native-svg';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Avatar, Button, Card, Modal, Text as MText } from 'react-native-paper';
 import { loadCategoriesFromStorage, resetAllCat } from '../redux/catReducer';
+import { Block } from '../components';
+import { fr as myFr } from 'date-fns/locale';
+import { addMonths, addDays } from 'date-fns';
+
 
 const Home = ({ navigation }) => {
   const catList = useSelector((state) => state.categories.categories);
@@ -137,72 +141,69 @@ const Home = ({ navigation }) => {
           borderBottomWidth: 1,
         }}
       >
-        <View style={{ paddingBottom: SIZES.padding * 4 }}>
+        <View style={{}}>
           <Text style={{ ...FONTS.h3, color: COLORS.gray }}>(Portefeuil electronique)</Text>
         </View>
+
+        <View style={{}}>
+
+          <Text style={{
+            ...FONTS.h1, color: COLORS.black, textAlign: 'center',
+            fontWeight: 'bold', marginTop: 10
+          }}> {totalSumDC()} USD </Text>
+        </View>
+
+        <View style={styles.date}>
+          <TouchableOpacity 
+          onPress={()=> {
+            setDate(addDays(date,-1))
+          }}>
+            <IconButton
+              icon="arrow-left-circle"
+              iconColor={COLORS.white}
+              size={20}
+            />
+          </TouchableOpacity>
+
+          <TouchableOpacity >
+            <Text style={{paddingTop: 10}}>{date.toLocaleDateString('fr-FR')}</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity  onPress={()=> {
+            setDate(addDays(date,1))
+          }}>
+            <IconButton
+              icon="arrow-right-circle"
+              iconColor={COLORS.white}
+              size={20}
+            />
+          </TouchableOpacity>
+
+        </View>
+
 
         <View
           style={{
             margin: SIZES.padding,
             zIndex: 10,
             position: 'absolute',
-            top: SIZES.padding * 1.4,
+            top: SIZES.padding * 4.2,
             width: '100%',
-            backgroundColor: COLORS.secondary,
-            paddingTop: SIZES.padding,
+            backgroundColor: '#eef2f7', //   lightGray: ,
+
+            //paddingTop: SIZES.padding,
             borderRadius: SIZES.radius,
             ...styles.shadow,
           }}
         >
-          <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'space-around' }}>
+          <View style={{ display: 'flex', flexDirection: 'row', width: '49%', padding: '1%', justifyContent: 'space-between' }}>
             {renderIncomingExpensesTitle('income')}
             {renderIncomingExpensesTitle('expense')}
           </View>
 
-          <View
-            style={{
-              borderTopWidth: 1,
-              width: '95%',
-              alignSelf: 'center',
-              marginVertical: SIZES.padding / 2,
-              borderColor: COLORS.white,
-            }}
-          >
-            <View
-              style={{ marginHorizontal: SIZES.padding / 1, marginVertical: SIZES.padding / 2 }}
-            >
-              <Text style={{ color: COLORS.white, ...FONTS.body5 }}>
-                BALANCE TOTALE AU {date.toLocaleDateString('fr-FR')}
-              </Text>
-              <Text style={{ ...FONTS.h2, color: COLORS.lightGray }}>{totalSumDC()} USD</Text>
-            </View>
-          </View>
         </View>
 
-        {/* <View style={{ flexDirection: 'row', marginTop: SIZES.padding, alignItems: 'center' }}>
-                    <View style={{
-                        backgroundColor: COLORS.lightGray,
-                        height: 50,
-                        width: 50,
-                        borderRadius: 25,
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                    }}>
-                        <Image
-                            source={icons.calendar}
-                            style={{
-                                width: 20,
-                                height: 20,
-                                tintColor: COLORS.lightBlue
-                            }}
-                        />
-                    </View>
 
-                    <View style={{ marginLeft: SIZES.padding }}>
-                        <Text style={{ color: COLORS.primary, ...FONTS.h3 }}>{date.toLocaleDateString('fr-FR')}</Text>
-                        <Text style={{ ...FONTS.body3, color: COLORS.darkgray }}>18% plus que le mois passé</Text>
-                    </View>
-                </View> */}
       </View>
       // </>
     );
@@ -212,79 +213,10 @@ const Home = ({ navigation }) => {
     return (
       <View
         style={{
-          flexDirection: 'row',
-          padding: SIZES.padding,
-          paddingTop: SIZES.padding * 4.5 + SIZES.padding,
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          backgroundColor: COLORS.lightGray2,
-          // zIndex: -10,
+          //padding: SIZES.padding,
+          paddingTop: SIZES.padding * 2.5,
         }}
       >
-        {/* Title */}
-        <View>
-          <Text
-            style={{ color: Cat == 'expense' ? COLORS.secondary : COLORS.darkgreen, ...FONTS.h3 }}
-          >
-            {Cat == 'income' ? 'Crédit (Entrée)' : 'Débit (Sortie)'}
-          </Text>
-          <Text style={{ color: COLORS.darkgray, ...FONTS.body4 }}>{totalSum()} USD</Text>
-        </View>
-
-        <View style={{ flexDirection: 'row' }}>
-          <TouchableOpacity
-            style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: Cat == 'income' ? COLORS.darkgreen : null,
-              height: 50,
-              width: 50,
-              borderRadius: 25,
-            }}
-            onPress={() => {
-              setCat('income');
-              setCategories(catList.filter((value, key) => value.cat === 'income'));
-              setSelectedCategory(null);
-            }}
-          >
-            <Image
-              source={icons.income}
-              resizeMode="contain"
-              style={{
-                width: 20,
-                height: 20,
-                tintColor: Cat == 'income' ? COLORS.white : COLORS.darkgray,
-              }}
-            />
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: Cat == 'expense' ? COLORS.secondary : null,
-              height: 50,
-              width: 50,
-              borderRadius: 25,
-              marginLeft: SIZES.base,
-            }}
-            onPress={() => {
-              setCat('expense');
-              setCategories(catList.filter((value, key) => value.cat === 'expense'));
-              setSelectedCategory(null);
-            }}
-          >
-            <Image
-              source={icons.expense}
-              resizeMode="contain"
-              style={{
-                width: 20,
-                height: 20,
-                tintColor: Cat == 'expense' ? COLORS.white : COLORS.darkgray,
-              }}
-            />
-          </TouchableOpacity>
-        </View>
       </View>
     );
   }
@@ -337,13 +269,20 @@ const Home = ({ navigation }) => {
 
   function renderIncomingExpensesTitle(myCat) {
     return (
-      <View
+      <TouchableOpacity
         style={{
           borderRadius: 8,
           height: 80,
-          backgroundColor: COLORS.white,
+          backgroundColor: myCat === Cat ? COLORS.white : 'transparent',
           padding: SIZES.padding,
-          elevation: 5,
+          // elevation: 0,
+          width: '100%',
+          margin: '2%'
+        }}
+        onPress={() => {
+          setCat(myCat);
+          setCategories(catList.filter((value, key) => value.cat === myCat));
+          setSelectedCategory(null);
         }}
       >
         {/* Title */}
@@ -355,7 +294,7 @@ const Home = ({ navigation }) => {
         <Text style={{ ...FONTS.h4, color: myCat === 'income' ? COLORS.darkgreen : COLORS.red }}>
           {totalSumDCHome(myCat).toFixed(2) && totalSumDCHome(myCat).toFixed(2)} USD
         </Text>
-      </View>
+      </TouchableOpacity>
     );
   }
 
@@ -464,7 +403,6 @@ const Home = ({ navigation }) => {
 
     return (
       <View>
-        {/* {renderIncomingExpensesTitle()} */}
 
         {incomingExpenses.length > 0 && (
           <View>
@@ -589,7 +527,6 @@ const Home = ({ navigation }) => {
 
     return (
       <View>
-        {/* {renderIncomingExpensesTitle()} */}
 
         {incomingExpenses.length > 0 && (
           <View>
@@ -889,7 +826,7 @@ const Home = ({ navigation }) => {
     <>
       <ImageBackground
         style={{ flex: 1, position: 'absolute', height: '100%', width: '100%' }}
-        source={require('./../assets/login2_bg.png')}
+        source={require('./../assets/login1_bg.png')}
         blurRadius={10}
       ></ImageBackground>
       <View style={{ flex: 1 }}>
@@ -1014,6 +951,11 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 3,
   },
+  date: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+  }
 });
 
 export default Home;
