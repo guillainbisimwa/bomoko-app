@@ -40,7 +40,7 @@ export const LoginForm = ({ navigation }) => {
   // Use useEffect or any other method to handle the success state and display the alert
   useEffect(() => {
     checkLoginStatus();
-    if (error && !success) {
+    if (error && !success && listenerError) {
       console.log("====>",error);
       // Toast.warn("Verifier votre internet!", 'bottom');
 
@@ -111,14 +111,16 @@ export const LoginForm = ({ navigation }) => {
 
         // Handle login functionality
         const signUpResult = dispatch(loginUser({ mobile: formattedValue, password }))
-        console.log('--->>>>>>',signUpResult);
-        console.log('------------------------------------------');
+        // console.log('--->>>>>>',signUpResult);
+        // console.log('------------------------------------------');
         // Handle login functionality
         // setListenerError()
-        if (!hasErrorKey(signUpResult)) {
+        if (error) {
           // SignUp successful, now dispatch login
           // dispatch(loginUser({ mobile, password }));
           // await navigation.navigate('Main');
+          Toast.error("Une erreur s'est produite!!", 'bottom');
+
         } else {
           // Handle signUp failure if needed
           setPasswordError(true);
