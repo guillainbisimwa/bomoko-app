@@ -56,26 +56,27 @@ const Account = ({ navigation, route }) => {
     const [selectedImage1, setSelectedImage1] = useState('https://raw.githubusercontent.com/guillainbisimwa/bomoko-app/master/assets/icons/gens.png');
     const [selectedImage, setSelectedImage] = useState();
 
-// Use useEffect or any other method to handle the success state and display the alert
-useEffect(() => {
-    checkLoginStatus();
-  }, [successSignUp, errorSignUp, success, error]);
+    // Use useEffect or any other method to handle the success state and display the alert
+    useEffect(() => {
+        checkLoginStatus();
+    }, [successSignUp, errorSignUp, success, error]);
 
-  const checkLoginStatus = async () => {
-    try {
-      const value = await AsyncStorage.getItem('user');
+    const checkLoginStatus = async () => {
+        try {
+            const value = await AsyncStorage.getItem('user');
 
-      //console.log('value-user', value);
-      if (value !== null) {
-        navigationV2.navigate('Main');
-      } else {
-      }
-    } catch (error) {
-      console.log('Error retrieving installation status:', error);
-      Toast.error("Une erreur s'est produite", 'bottom')
-    }
-  };
-    const  hasErrorKey = (obj) =>{
+            //console.log('value-user', value);
+            if (value !== null) {
+                navigationV2.navigate('Main');
+            } else {
+                // Toast.error("Une erreur s'est produite", 'bottom')
+            }
+        } catch (error) {
+            console.log('Error retrieving installation status:', error);
+            Toast.error("Une erreur s'est produite", 'bottom')
+        }
+    };
+    const hasErrorKey = (obj) => {
         return obj && typeof obj === 'object' && 'error' in obj;
     }
 
@@ -194,24 +195,23 @@ useEffect(() => {
                     setErrorEmail(false)
                 }
 
-                                // Dispatch the signUpUser action
-                    const signUpResult = await dispatch(
-                        signUpUser({
-                            username: name,
-                            name,
-                            password,
-                            email,
-                            mobile,
-                            role,
-                            cover_url: '',
-                            profile_pic: selectedImage ? selectedImage : selectedImage1,
-                        })
-                    );
+                // Dispatch the signUpUser action
+                const signUpResult = await dispatch(
+                    signUpUser({
+                        username: name,
+                        name,
+                        password,
+                        email,
+                        mobile,
+                        role,
+                        cover_url: '',
+                        profile_pic: selectedImage ? selectedImage : selectedImage1,
+                    })
+                );
 
-                
+
 
                 // Handle login functionality
-                // dispatch(loginUser({ mobile, password }))
                 if (!hasErrorKey(signUpResult)) {
                     // SignUp successful, now dispatch login
                     dispatch(loginUser({ mobile, password }));
