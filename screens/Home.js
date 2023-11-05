@@ -3,7 +3,7 @@ import {
   StyleSheet,
   ScrollView,
   View,
-  Text,
+
   Image,
   ImageBackground,
   TouchableOpacity,
@@ -12,7 +12,7 @@ import {
   Platform,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { FAB, IconButton } from 'react-native-paper';
+import { Divider, FAB, IconButton, TextInput } from 'react-native-paper';
 
 import { COLORS, FONTS, SIZES, icons, images } from '../constants';
 
@@ -22,9 +22,7 @@ import { Avatar, Button, Card, Modal, Text as MText } from 'react-native-paper';
 import { loadCategoriesFromStorage, resetAllCat } from '../redux/catReducer';
 import { addDays } from 'date-fns';
 import { BottomSheetBackdrop, BottomSheetModal, BottomSheetModalProvider, BottomSheetScrollView } from '@gorhom/bottom-sheet';
-import { Block } from '../components';
-import { Picker } from '@react-native-picker/picker';
-
+import { Block, Text } from '../components';
 
 
 const Home = ({ navigation }) => {
@@ -44,14 +42,14 @@ const Home = ({ navigation }) => {
 
   const { open } = state;
 
-  const snapPoints = useMemo(() => ["28%", "50%", '70%', '80%', '90%'], []);
+  const snapPoints = useMemo(() => ["50%", '70%', '80%', '90%'], []);
   const [openDebit, setOpenDebit] = useState(false);
   const [openCredit, setOpenCredit] = useState(false);
   const [openDetails, setOpenDetails] = useState(false);
 
   const [selectedValue, setSelectedValue] = useState('');
-
-
+  const [total, setTotal] = useState('');
+  const [description, setDescription] = useState('');
 
   const bottomSheetDebit = useRef(null);
   const bottomSheetCredit = useRef(null);
@@ -90,51 +88,124 @@ const Home = ({ navigation }) => {
     }, 5);
   }, []);
 
-  const renderBottomDebit = () => (
-    <BottomSheetModal
-      ref={bottomSheetDebit}
-      index={1}
-      backdropComponent={BackdropElement}
-      snapPoints={snapPoints}
-      onDismiss={() => setOpenDebit(false)}
-    >
-      <BottomSheetScrollView style={{ padding: 17 }}>
-        <Block row space='between' >
-          <Text>dEBITS</Text>
-        </Block>
-      </BottomSheetScrollView>
-    </BottomSheetModal>
-  );
+  // const renderBottomDebit = () => (
+  //   <BottomSheetModal
+  //     ref={bottomSheetDebit}
+  //     index={1}
+  //     backdropComponent={BackdropElement}
+  //     snapPoints={snapPoints}
+  //     onDismiss={() => setOpenDebit(false)}
+  //   >
+  //     <BottomSheetScrollView style={{ padding: 17 }}>
+  //       <Block row space='between' >
+  //         <Text>dEBITS</Text>
+  //       </Block>
+  //     </BottomSheetScrollView>
+  //   </BottomSheetModal>
+  // );
 
-  const renderBottomCredit = () => (
-    <BottomSheetModal
-      // style={{ zIndex: 19 }}
-      ref={bottomSheetCredit}
-      index={1}
-      backdropComponent={BackdropElement}
-      snapPoints={snapPoints}
-      onDismiss={() => setOpenCredit(false)}
-    >
-      <BottomSheetScrollView style={{ padding: 17 }}>
-        <Block row space='between' >
-          <Text>cREDIT</Text>
-        </Block>
-      </BottomSheetScrollView>
-    </BottomSheetModal>
-  );
+  // const renderBottomCredit = () => (
+  //   <BottomSheetModal
+  //     // style={{ zIndex: 19 }}
+  //     ref={bottomSheetCredit}
+  //     index={1}
+  //     backdropComponent={BackdropElement}
+  //     snapPoints={snapPoints}
+  //     onDismiss={() => setOpenCredit(false)}
+  //   >
+  //     <BottomSheetScrollView style={{ padding: 17 }}>
+  //       <Block row space='between' >
+  //         <Text>CREDIT</Text>
+  //       </Block>
+  //       {
+  //         addIncome()
+  //       }
+  //     </BottomSheetScrollView>
+  //   </BottomSheetModal>
+  // );
 
   const renderBottomDetails = () => (
+    
     <BottomSheetModal
       ref={bottomSheetDetails}
-      index={1}
+      index={0}
       backdropComponent={BackdropElement}
       snapPoints={snapPoints}
       onDismiss={() => setOpenDetails(false)}
     >
       <BottomSheetScrollView style={{ padding: 17 }}>
-        <Block row space='between' >
-          <Text>Details</Text>
+
+        <Block p={17} >
+          <Block row space='between'>
+            <Block m_b={10} flex={1}>
+              <Text bold h2>Details</Text>
+              <Text color={COLORS.blue}>{`Details de l'opération.`}</Text>
+            </Block>
+            <TouchableOpacity
+            //onPress={() => hideModalDisplayDetail()}
+            >
+              <IconButton
+                icon="close"
+                iconColor={COLORS.red}
+                size={40}
+              />
+            </TouchableOpacity>
+
+          </Block>
+ 
+          <Block style={{ padding: 5 }} row space='between'>
+            <Block flex={1}>
+              <Image
+                source={selectedItem && selectedItem.icon}
+                style={{
+                  width: 50,
+                  height: 50,
+                  tintColor: selectedItem && selectedItem.color,
+                  borderRadius: 25, borderWidth: 1,
+                  borderColor: selectedItem && selectedItem.color,
+                  borderWidth: 1,
+                  padding: 5
+                }}
+              />
+            </Block>
+
+            <Block flex={4} middle>
+              <Block row space='between'>
+                <Text bold>DATE :</Text>
+                <Text gray>{selectedItem && selectedItem.date}</Text>
+              </Block>
+
+              <Block row space='between'>
+                <Text bold>TYPE :</Text>
+                <Text gray>{selectedItem &&  selectedItem.name}</Text>
+              </Block>
+
+
+            </Block>
+
+          </Block>
+
+          <Divider />
+          <Block style={{ marginVertical: 8 }} row space='between'>
+            <Text h3 bold>DESCRIPTION</Text>
+            <Text >{selectedItem && selectedItem.description}
+            </Text>
+          </Block>
+
+          <Divider />
+          <Block style={{ marginVertical: 8 }} row space='between'>
+            <Text h3 bold>SOMME</Text>
+            <Text>{selectedItem && selectedItem.total} USD</Text>
+          </Block>
+
+          <Divider />
+          <Block row space="between" style={{ marginVertical: 8 }} >
+            <Button mode='outlined'>Modifier</Button>
+            <Button mode='contained' buttonColor={COLORS.peach} >Supprimer </Button>
+          </Block> 
+
         </Block>
+
       </BottomSheetScrollView>
     </BottomSheetModal>
   );
@@ -150,7 +221,7 @@ const Home = ({ navigation }) => {
   };
 
   // SELECTED ITEM
-  const [selectedItem, setSelectedItem] = useState(null);
+  const [selectedItem, setSelectedItem] = useState();
 
   useEffect(() => {
     // updatedAsyncStorage();
@@ -323,51 +394,51 @@ const Home = ({ navigation }) => {
     );
   }
 
-  function renderCategoryList() {
-    const renderItem = ({ item }) => (
-      <TouchableOpacity
-        onPress={() => {
-          setSelectedCategory(item);
-          //console.log(item)
-        }}
-        style={{
-          flex: 1,
-          flexDirection: 'row',
-          margin: 5,
-          paddingVertical: SIZES.radius,
-          paddingHorizontal: SIZES.padding,
-          borderRadius: 5,
-          backgroundColor: COLORS.white,
-          ...styles.shadow,
-        }}
-      >
-        <Image
-          source={item.icon}
-          style={{
-            width: 20,
-            height: 20,
-            tintColor: item.color,
-          }}
-        />
-        <Text style={{ marginLeft: SIZES.base, color: COLORS.primary, ...FONTS.h4 }}>
-          {item.name}
-        </Text>
-      </TouchableOpacity>
-    );
+  // function renderCategoryList() {
+  //   const renderItem = ({ item }) => (
+  //     <TouchableOpacity
+  //       onPress={() => {
+  //         setSelectedCategory(item);
+  //         //console.log(item)
+  //       }}
+  //       style={{
+  //         flex: 1,
+  //         flexDirection: 'row',
+  //         margin: 5,
+  //         paddingVertical: SIZES.radius,
+  //         paddingHorizontal: SIZES.padding,
+  //         borderRadius: 5,
+  //         backgroundColor: COLORS.white,
+  //         ...styles.shadow,
+  //       }}
+  //     >
+  //       <Image
+  //         source={item.icon}
+  //         style={{
+  //           width: 20,
+  //           height: 20,
+  //           tintColor: item.color,
+  //         }}
+  //       />
+  //       <Text style={{ marginLeft: SIZES.base, color: COLORS.primary, ...FONTS.h4 }}>
+  //         {item.name}
+  //       </Text>
+  //     </TouchableOpacity>
+  //   );
 
-    return (
-      <View style={{ paddingHorizontal: SIZES.padding - 5 }}>
-        <Animated.View style={{}}>
-          <FlatList
-            data={categories}
-            renderItem={renderItem}
-            keyExtractor={(item) => `${item.id}`}
-            numColumns={2}
-          />
-        </Animated.View>
-      </View>
-    );
-  }
+  //   return (
+  //     <View style={{ paddingHorizontal: SIZES.padding - 5 }}>
+  //       <Animated.View style={{}}>
+  //         <FlatList
+  //           data={categories}
+  //           renderItem={renderItem}
+  //           keyExtractor={(item) => `${item.id}`}
+  //           numColumns={2}
+  //         />
+  //       </Animated.View>
+  //     </View>
+  //   );
+  // }
 
   function renderIncomingExpensesTitle(myCat) {
     return (
@@ -408,9 +479,12 @@ const Home = ({ navigation }) => {
     const renderItem = (item) => (
       <TouchableOpacity
         onPress={() => {
-          console.log(item);
-          setSelectedItem(item);
-          showModal(true);
+          //console.log('------------------',item);
+          setSelectedItem(selectedItem);
+          console.log('------------------',selectedItem);
+
+          // showModal(true);
+          openModalDetails();
         }}
       >
         <View
@@ -536,7 +610,8 @@ const Home = ({ navigation }) => {
         onPress={() => {
           console.log(item);
           setSelectedItem(item);
-          showModal(true);
+          // showModal(true);
+          openModalDetails()
         }}
       >
         <View
@@ -586,7 +661,7 @@ const Home = ({ navigation }) => {
                 />
               </View>
               <View>
-                <Text style={{ ...FONTS.h3, color: item.color }}>{item && item.name}</Text>
+                <Text numberOfLines={1} style={{ ...FONTS.h3, color: item.color }}>{item && item.name}</Text>
                 <Text
                   numberOfLines={1}
                   style={{
@@ -692,7 +767,7 @@ const Home = ({ navigation }) => {
   };
 
   const totalSumDCHome = (myCat) => {
-    console.log(myCat);
+    // console.log(myCat);
     var tot = 0;
     catList
       .filter((a) => a.cat == myCat)
@@ -704,7 +779,7 @@ const Home = ({ navigation }) => {
         tot += total;
         return total;
       });
-    console.log('tot', tot);
+    // console.log('tot', tot);
     return tot;
   };
 
@@ -756,7 +831,7 @@ const Home = ({ navigation }) => {
     let totalExpenseCount = chartData.reduce((a, b) => a + (b.expenseCount || 0), 0);
 
     // console.log('Check Chart');
-    //console.log(chartData)
+    // console.log(chartData)
 
     if (Platform.OS == 'ios') {
       return (
@@ -872,6 +947,7 @@ const Home = ({ navigation }) => {
         onPress={() => {
           let categoryName = item.name;
           setSelectCategoryByName(categoryName);
+          console.log('*****************',item);
         }}
       >
         {/* Name/Category */}
@@ -896,7 +972,7 @@ const Home = ({ navigation }) => {
               ...FONTS.h3,
             }}
           >
-            {item.name}
+            {item.name} 
           </Text>
         </View>
 
@@ -925,60 +1001,13 @@ const Home = ({ navigation }) => {
   }
 
 
-  const addIncome = () => {
-    return (
-      <>
-        <View style={styles.dropdownContainer}>
-          {/* <Picker
-            selectedValue={selectedValue}
-            onValueChange={(itemValue) => setSelectedValue(itemValue)}
-            style={styles.picker}
-          >
-            <Picker.Item label="Selectioner une categorie" value="" />
-            {cat &&
-              cat
-                .filter((value, key) => value.cat === 'income')
-                .map((k, v) => {
-                  return <Picker.Item key={k.id} label={k.name} value={k.name} />;
-                })}
-          </Picker> */}
-        </View>
-        {/* <TextInput
-          label="Description"
-          value={description}
-          onChangeText={setDescription}
-          mode="outlined"
-          style={styles.input}
-          required
-        />
-        <TextInput
-          label="Montant"
-          value={total}
-          onChangeText={setTotal}
-          mode="outlined"
-          keyboardType="numeric"
-          style={styles.input}
-          required
-        /> */}
-        <Button
-          elevated
-          mode="contained"
-          onPress={handleSaveIncome}
-          style={styles.button}
-          icon={({ size, color }) => <FontAwesome name="save" size={size} color={color} />}
-        >
-          Ajouter
-        </Button>
-      </>
-    );
-  };
-
-
   return (
     <BottomSheetModalProvider>
       <ImageBackground
-        style={{ flex: 1, position: 'absolute',
-         height: '100%', width: '100%' }}
+        style={{
+          flex: 1, position: 'absolute',
+          height: '100%', width: '100%'
+        }}
         source={require('./../assets/login1_bg.png')}
         blurRadius={10}
       ></ImageBackground>
@@ -987,17 +1016,17 @@ const Home = ({ navigation }) => {
         {renderNavBar()}
 
         {/* Header section */}
-       
+
 
         <ScrollView
           contentContainerStyle={{
-            paddingBottom: 60,
+            // paddingBottom: 60,
             //backgroundColor: COLORS.lightGray2,
             // zIndex: 100,
           }}
         >
-           {renderHeader()}
-          <View style={{ backgroundColor: COLORS.lightGray2,}}>
+          {renderHeader()}
+          <View style={{ backgroundColor: COLORS.lightGray2, }}>
             {/* Category Header Section */}
             {renderCategoryHeaderSection()}
 
@@ -1074,14 +1103,14 @@ const Home = ({ navigation }) => {
           {
             icon: 'plus-circle',
             label: 'Crédit (Entrée)',
-            onPress: () => openModalCredit(),
-            //onPress: () => navigation.navigate('Income', { cat: catList }),
+            //onPress: () => openModalCredit(),
+            onPress: () => navigation.navigate('Income', { cat: catList }),
           },
           {
             icon: 'minus-circle',
             label: 'Débit (Sortie)',
-            onPress: () => openModalDebit(),
-            //onPress: () => navigation.navigate('Expense', { cat: catList }),
+            // onPress: () => openModalDebit(),
+            onPress: () => navigation.navigate('Expense', { cat: catList }),
           },
         ]}
         onStateChange={onStateChange}
@@ -1092,13 +1121,12 @@ const Home = ({ navigation }) => {
           }
         }}
       />
-      {
+      {/* {
         renderBottomCredit()
-
       }
       {
         renderBottomDebit()
-      }
+      } */}
       {
         renderBottomDetails()
       }
@@ -1128,6 +1156,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     backgroundColor: '#fff',
   },
+
 });
 
 export default Home;
