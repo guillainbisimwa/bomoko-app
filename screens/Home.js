@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   StyleSheet,
   ScrollView,
@@ -18,12 +18,13 @@ import { COLORS, FONTS, SIZES, icons, images } from '../constants';
 
 import { VictoryPie } from 'victory-native';
 import { Svg } from 'react-native-svg';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Avatar, Button, Card, Modal, Text as MText } from 'react-native-paper';
 import { loadCategoriesFromStorage, resetAllCat } from '../redux/catReducer';
+import { addDays } from 'date-fns';
+import { BottomSheetBackdrop, BottomSheetModal, BottomSheetModalProvider, BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { Block } from '../components';
-import { fr as myFr } from 'date-fns/locale';
-import { addMonths, addDays } from 'date-fns';
+import { Picker } from '@react-native-picker/picker';
+
 
 
 const Home = ({ navigation }) => {
@@ -42,6 +43,101 @@ const Home = ({ navigation }) => {
   const onStateChange = ({ open }) => setState({ open });
 
   const { open } = state;
+
+  const snapPoints = useMemo(() => ["28%", "50%", '70%', '80%', '90%'], []);
+  const [openDebit, setOpenDebit] = useState(false);
+  const [openCredit, setOpenCredit] = useState(false);
+  const [openDetails, setOpenDetails] = useState(false);
+
+  const [selectedValue, setSelectedValue] = useState('');
+
+
+
+  const bottomSheetDebit = useRef(null);
+  const bottomSheetCredit = useRef(null);
+  const bottomSheetDetails = useRef(null);
+
+  const BackdropElement = useCallback(
+    (backdropProps) => (
+      <BottomSheetBackdrop
+        {...backdropProps}
+        opacity={0.7}
+        appearsOnIndex={0}
+        disappearsOnIndex={-1}
+      />
+    ),
+    []
+  );
+
+  const openModalDebit = useCallback(() => {
+    bottomSheetDebit.current?.present();
+    setTimeout(() => {
+      setOpenDebit(true);
+    }, 5);
+  }, []);
+
+  const openModalCredit = useCallback(() => {
+    bottomSheetCredit.current?.present();
+    setTimeout(() => {
+      setOpenCredit(true);
+    }, 5);
+  }, []);
+
+  const openModalDetails = useCallback(() => {
+    bottomSheetDetails.current?.present();
+    setTimeout(() => {
+      setOpenDetails(true);
+    }, 5);
+  }, []);
+
+  const renderBottomDebit = () => (
+    <BottomSheetModal
+      ref={bottomSheetDebit}
+      index={1}
+      backdropComponent={BackdropElement}
+      snapPoints={snapPoints}
+      onDismiss={() => setOpenDebit(false)}
+    >
+      <BottomSheetScrollView style={{ padding: 17 }}>
+        <Block row space='between' >
+          <Text>dEBITS</Text>
+        </Block>
+      </BottomSheetScrollView>
+    </BottomSheetModal>
+  );
+
+  const renderBottomCredit = () => (
+    <BottomSheetModal
+      // style={{ zIndex: 19 }}
+      ref={bottomSheetCredit}
+      index={1}
+      backdropComponent={BackdropElement}
+      snapPoints={snapPoints}
+      onDismiss={() => setOpenCredit(false)}
+    >
+      <BottomSheetScrollView style={{ padding: 17 }}>
+        <Block row space='between' >
+          <Text>cREDIT</Text>
+        </Block>
+      </BottomSheetScrollView>
+    </BottomSheetModal>
+  );
+
+  const renderBottomDetails = () => (
+    <BottomSheetModal
+      ref={bottomSheetDetails}
+      index={1}
+      backdropComponent={BackdropElement}
+      snapPoints={snapPoints}
+      onDismiss={() => setOpenDetails(false)}
+    >
+      <BottomSheetScrollView style={{ padding: 17 }}>
+        <Block row space='between' >
+          <Text>Details</Text>
+        </Block>
+      </BottomSheetScrollView>
+    </BottomSheetModal>
+  );
 
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
@@ -154,10 +250,10 @@ const Home = ({ navigation }) => {
         </View>
 
         <View style={styles.date}>
-          <TouchableOpacity 
-          onPress={()=> {
-            setDate(addDays(date,-1))
-          }}>
+          <TouchableOpacity
+            onPress={() => {
+              setDate(addDays(date, -1))
+            }}>
             <IconButton
               icon="arrow-left-circle"
               iconColor={COLORS.white}
@@ -165,12 +261,18 @@ const Home = ({ navigation }) => {
             />
           </TouchableOpacity>
 
-          <TouchableOpacity >
-            <Text style={{paddingTop: 10}}>{date.toLocaleDateString('fr-FR')}</Text>
+          <TouchableOpacity style={{ flexDirection: 'row' }}>
+            <Text style={{ paddingTop: 10 }}>{date.toLocaleDateString('fr-FR')}</Text>
+            <IconButton
+              icon="arrow-down"
+              iconColor={COLORS.black}
+              size={12}
+              style={{ marginLeft: -5 }}
+            />
           </TouchableOpacity>
 
-          <TouchableOpacity  onPress={()=> {
-            setDate(addDays(date,1))
+          <TouchableOpacity onPress={() => {
+            setDate(addDays(date, 1))
           }}>
             <IconButton
               icon="arrow-right-circle"
@@ -185,7 +287,7 @@ const Home = ({ navigation }) => {
         <View
           style={{
             margin: SIZES.padding,
-            zIndex: 10,
+            // zIndex: 10,
             position: 'absolute',
             top: SIZES.padding * 4.2,
             width: '100%',
@@ -822,10 +924,61 @@ const Home = ({ navigation }) => {
     );
   }
 
+
+  const addIncome = () => {
+    return (
+      <>
+        <View style={styles.dropdownContainer}>
+          {/* <Picker
+            selectedValue={selectedValue}
+            onValueChange={(itemValue) => setSelectedValue(itemValue)}
+            style={styles.picker}
+          >
+            <Picker.Item label="Selectioner une categorie" value="" />
+            {cat &&
+              cat
+                .filter((value, key) => value.cat === 'income')
+                .map((k, v) => {
+                  return <Picker.Item key={k.id} label={k.name} value={k.name} />;
+                })}
+          </Picker> */}
+        </View>
+        {/* <TextInput
+          label="Description"
+          value={description}
+          onChangeText={setDescription}
+          mode="outlined"
+          style={styles.input}
+          required
+        />
+        <TextInput
+          label="Montant"
+          value={total}
+          onChangeText={setTotal}
+          mode="outlined"
+          keyboardType="numeric"
+          style={styles.input}
+          required
+        /> */}
+        <Button
+          elevated
+          mode="contained"
+          onPress={handleSaveIncome}
+          style={styles.button}
+          icon={({ size, color }) => <FontAwesome name="save" size={size} color={color} />}
+        >
+          Ajouter
+        </Button>
+      </>
+    );
+  };
+
+
   return (
-    <>
+    <BottomSheetModalProvider>
       <ImageBackground
-        style={{ flex: 1, position: 'absolute', height: '100%', width: '100%' }}
+        style={{ flex: 1, position: 'absolute',
+         height: '100%', width: '100%' }}
         source={require('./../assets/login1_bg.png')}
         blurRadius={10}
       ></ImageBackground>
@@ -834,16 +987,17 @@ const Home = ({ navigation }) => {
         {renderNavBar()}
 
         {/* Header section */}
-        {renderHeader()}
+       
 
         <ScrollView
           contentContainerStyle={{
             paddingBottom: 60,
-            backgroundColor: COLORS.lightGray2,
-            zIndex: 100,
+            //backgroundColor: COLORS.lightGray2,
+            // zIndex: 100,
           }}
         >
-          <View>
+           {renderHeader()}
+          <View style={{ backgroundColor: COLORS.lightGray2,}}>
             {/* Category Header Section */}
             {renderCategoryHeaderSection()}
 
@@ -920,12 +1074,14 @@ const Home = ({ navigation }) => {
           {
             icon: 'plus-circle',
             label: 'Crédit (Entrée)',
-            onPress: () => navigation.navigate('Income', { cat: catList }),
+            onPress: () => openModalCredit(),
+            //onPress: () => navigation.navigate('Income', { cat: catList }),
           },
           {
             icon: 'minus-circle',
             label: 'Débit (Sortie)',
-            onPress: () => navigation.navigate('Expense', { cat: catList }),
+            onPress: () => openModalDebit(),
+            //onPress: () => navigation.navigate('Expense', { cat: catList }),
           },
         ]}
         onStateChange={onStateChange}
@@ -936,7 +1092,17 @@ const Home = ({ navigation }) => {
           }
         }}
       />
-    </>
+      {
+        renderBottomCredit()
+
+      }
+      {
+        renderBottomDebit()
+      }
+      {
+        renderBottomDetails()
+      }
+    </BottomSheetModalProvider>
   );
 };
 
@@ -955,7 +1121,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 10,
-  }
+  },
+  dropdownContainer: {
+    borderWidth: 1.4,
+    borderColor: '#aaa',
+    borderRadius: 4,
+    backgroundColor: '#fff',
+  },
 });
 
 export default Home;

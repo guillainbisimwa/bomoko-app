@@ -55,7 +55,7 @@ const Account = ({ navigation, route }) => {
     const [selectedImage, setSelectedImage] = useState();
 
     const snapPoints = useMemo(() => ["28%", "50%", '70%', '80%', '90%'], []);
-    const [open, setOpen] = useState(false)
+    const [open, setOpen] = useState(false);
 
     // Use useEffect or any other method to handle the success state and display the alert
     useEffect(() => {
