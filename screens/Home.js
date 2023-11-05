@@ -17,7 +17,7 @@ import { COLORS, FONTS, SIZES, icons, images } from '../constants';
 
 import { VictoryPie } from 'victory-native';
 import { Svg } from 'react-native-svg';
-import { Button} from 'react-native-paper';
+import { Button } from 'react-native-paper';
 import { loadCategoriesFromStorage, resetAllCat } from '../redux/catReducer';
 import { addDays } from 'date-fns';
 import { BottomSheetBackdrop, BottomSheetModal, BottomSheetModalProvider, BottomSheetScrollView } from '@gorhom/bottom-sheet';
@@ -33,7 +33,6 @@ const Home = ({ navigation }) => {
   const [Cat, setCat] = useState('income');
   const [selectedCategory, setSelectedCategory] = useState(null);
 
-  const [visible, setVisible] = useState(false);
 
   const [state, setState] = useState({ open: false });
 
@@ -49,6 +48,9 @@ const Home = ({ navigation }) => {
   const [selectedValue, setSelectedValue] = useState('');
   const [total, setTotal] = useState('');
   const [description, setDescription] = useState('');
+
+  const [mod, setMod] = useState(false);
+  const [supp, setSupp] = useState(false);
 
   const bottomSheetDebit = useRef(null);
   const bottomSheetCredit = useRef(null);
@@ -66,19 +68,19 @@ const Home = ({ navigation }) => {
     []
   );
 
-  const openModalDebit = useCallback(() => {
-    bottomSheetDebit.current?.present();
-    setTimeout(() => {
-      setOpenDebit(true);
-    }, 5);
-  }, []);
+  // const openModalDebit = useCallback(() => {
+  //   bottomSheetDebit.current?.present();
+  //   setTimeout(() => {
+  //     setOpenDebit(true);
+  //   }, 5);
+  // }, []);
 
-  const openModalCredit = useCallback(() => {
-    bottomSheetCredit.current?.present();
-    setTimeout(() => {
-      setOpenCredit(true);
-    }, 5);
-  }, []);
+  // const openModalCredit = useCallback(() => {
+  //   bottomSheetCredit.current?.present();
+  //   setTimeout(() => {
+  //     setOpenCredit(true);
+  //   }, 5);
+  // }, []);
 
   const openModalDetails = useCallback(() => {
     bottomSheetDetails.current?.present();
@@ -132,7 +134,7 @@ const Home = ({ navigation }) => {
   // );
 
   const renderBottomDetails = () => (
-    
+
     <BottomSheetModal
       ref={bottomSheetDetails}
       index={0}
@@ -159,57 +161,127 @@ const Home = ({ navigation }) => {
             </TouchableOpacity>
 
           </Block>
- 
-          <Block style={{ padding: 5 }} row space='between'>
-            <Block flex={1}>
-              <Image
-                source={selectedItem && selectedItem.icon}
-                style={{
-                  width: 50,
-                  height: 50,
-                  tintColor: selectedItem && selectedItem.color,
-                  borderRadius: 25, borderWidth: 1,
-                  borderColor: selectedItem && selectedItem.color,
-                  borderWidth: 1,
-                  padding: 5
-                }}
-              />
-            </Block>
 
-            <Block flex={4} middle>
-              <Block row space='between'>
-                <Text bold>DATE :</Text>
-                <Text gray>{selectedItem && selectedItem.date}</Text>
-              </Block>
+          {
+            mod ? <Block><Text>Mod</Text></Block> :
+              supp ? <Block>
+                <Text style={{color: COLORS.red, ...FONTS.body3}}>Voulez-vous vraiment supprimer : </Text>
 
-              <Block row space='between'>
-                <Text bold>TYPE :</Text>
-                <Text gray>{selectedItem &&  selectedItem.name}</Text>
-              </Block>
+                <Block style={{ padding: 5 }} row space='between'>
+                    <Block flex={1}>
+                      <Image
+                        source={selectedItem && selectedItem.icon}
+                        style={{
+                          width: 50,
+                          height: 50,
+                          tintColor: selectedItem && selectedItem.color,
+                          borderRadius: 25, borderWidth: 1,
+                          borderColor: selectedItem && selectedItem.color,
+                          borderWidth: 1,
+                          padding: 5
+                        }}
+                      />
+                    </Block>
+
+                    <Block flex={4} middle>
+                      <Block row space='between'>
+                        <Text bold>DATE :</Text>
+                        <Text gray>{selectedItem && selectedItem.date}</Text>
+                      </Block>
+
+                      <Block row space='between'>
+                        <Text bold>TYPE :</Text>
+                        <Text gray>{selectedItem && selectedItem.name}</Text>
+                      </Block>
+
+                    </Block>
+
+                    
+
+                  </Block>
+                  
+                  <Block style={{ marginVertical: 8 }} row space='between'>
+                    <Text h3 bold>DESCRIPTION</Text>
+                    <Text >{selectedItem && selectedItem.description}
+                    </Text>
+                  </Block>
+
+                  <Divider />
+                  <Block style={{ marginVertical: 8 }} row space='between'>
+                    <Text h3 bold>SOMME</Text>
+                    <Text>{selectedItem && selectedItem.total} USD</Text>
+                  </Block>
+
+                <Button style={{marginTop: 15}} mode='contained' buttonColor={COLORS.peach}
+                      onPress={() => {
+                        // setSupp(true);
+                        // setMod(false)
+                      }} >Supprimer</Button>
+              </Block> :
+                <View >
+
+                  <Block style={{ padding: 5 }} row space='between'>
+                    <Block flex={1}>
+                      <Image
+                        source={selectedItem && selectedItem.icon}
+                        style={{
+                          width: 50,
+                          height: 50,
+                          tintColor: selectedItem && selectedItem.color,
+                          borderRadius: 25, borderWidth: 1,
+                          borderColor: selectedItem && selectedItem.color,
+                          borderWidth: 1,
+                          padding: 5
+                        }}
+                      />
+                    </Block>
+
+                    <Block flex={4} middle>
+                      <Block row space='between'>
+                        <Text bold>DATE :</Text>
+                        <Text gray>{selectedItem && selectedItem.date}</Text>
+                      </Block>
+
+                      <Block row space='between'>
+                        <Text bold>TYPE :</Text>
+                        <Text gray>{selectedItem && selectedItem.name}</Text>
+                      </Block>
 
 
-            </Block>
+                    </Block>
 
-          </Block>
+                    
 
-          <Divider />
-          <Block style={{ marginVertical: 8 }} row space='between'>
-            <Text h3 bold>DESCRIPTION</Text>
-            <Text >{selectedItem && selectedItem.description}
-            </Text>
-          </Block>
+                  </Block>
 
-          <Divider />
-          <Block style={{ marginVertical: 8 }} row space='between'>
-            <Text h3 bold>SOMME</Text>
-            <Text>{selectedItem && selectedItem.total} USD</Text>
-          </Block>
+                  <Divider />
+                  <Block style={{ marginVertical: 8 }} row space='between'>
+                    <Text h3 bold>DESCRIPTION</Text>
+                    <Text >{selectedItem && selectedItem.description}
+                    </Text>
+                  </Block>
 
-          <Divider />
-          <Block row space="between" style={{ marginVertical: 8 }} >
-            <Button mode='outlined'>Modifier</Button>
-            <Button mode='contained' buttonColor={COLORS.peach} >Supprimer </Button>
-          </Block> 
+                  <Divider />
+                  <Block style={{ marginVertical: 8 }} row space='between'>
+                    <Text h3 bold>SOMME</Text>
+                    <Text>{selectedItem && selectedItem.total} USD</Text>
+                  </Block>
+
+                  <Divider />
+                  <Block row space="between" style={{ marginVertical: 8 }} >
+                    <Button mode='outlined' onPress={() => {
+                      setSupp(false)
+                      setMod(true);
+
+                    }}>Modifier</Button>
+                    <Button mode='contained' buttonColor={COLORS.peach}
+                      onPress={() => {
+                        setSupp(true);
+                        setMod(false)
+                      }} >Supprimer </Button>
+                  </Block>
+                </View>
+          }
 
         </Block>
 
@@ -217,15 +289,6 @@ const Home = ({ navigation }) => {
     </BottomSheetModal>
   );
 
-  const showModal = () => setVisible(true);
-  const hideModal = () => setVisible(false);
-  const containerStyle = {
-    backgroundColor: 'white',
-    //padding: 20,
-    width: '85%',
-    borderRadius: 10,
-    alignSelf: 'center',
-  };
 
   // SELECTED ITEM
   const [selectedItem, setSelectedItem] = useState();
@@ -488,9 +551,10 @@ const Home = ({ navigation }) => {
         onPress={() => {
           //console.log('------------------',item);
           setSelectedItem(selectedItem);
-          console.log('------------------',selectedItem);
+          console.log('------------------', selectedItem);
 
-          // showModal(true);
+          setMod(false)
+          setSupp(false)
           openModalDetails();
         }}
       >
@@ -617,6 +681,8 @@ const Home = ({ navigation }) => {
         onPress={() => {
           console.log(item);
           setSelectedItem(item);
+          setMod(false)
+          setSupp(false)
           // showModal(true);
           openModalDetails()
         }}
@@ -954,7 +1020,7 @@ const Home = ({ navigation }) => {
         onPress={() => {
           let categoryName = item.name;
           setSelectCategoryByName(categoryName);
-          console.log('*****************',item);
+          console.log('*****************', item);
         }}
       >
         {/* Name/Category */}
@@ -979,7 +1045,7 @@ const Home = ({ navigation }) => {
               ...FONTS.h3,
             }}
           >
-            {item.name} 
+            {item.name}
           </Text>
         </View>
 
@@ -1047,7 +1113,7 @@ const Home = ({ navigation }) => {
         </ScrollView>
       </View>
 
-      
+
 
       <FAB.Group
         open={open}

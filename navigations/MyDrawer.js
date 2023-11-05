@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import { NavigationContainer } from '@react-navigation/native';
 import { COLORS, SIZES } from '../constants';
 import CustomDrawer from '../components/CustomDrawer';
 import Ionicons from '@expo/vector-icons/Ionicons';
