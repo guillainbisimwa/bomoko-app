@@ -3,7 +3,6 @@ import {
   StyleSheet,
   ScrollView,
   View,
-
   Image,
   ImageBackground,
   TouchableOpacity,
@@ -18,7 +17,7 @@ import { COLORS, FONTS, SIZES, icons, images } from '../constants';
 
 import { VictoryPie } from 'victory-native';
 import { Svg } from 'react-native-svg';
-import { Avatar, Button, Card, Modal, Text as MText } from 'react-native-paper';
+import { Button} from 'react-native-paper';
 import { loadCategoriesFromStorage, resetAllCat } from '../redux/catReducer';
 import { addDays } from 'date-fns';
 import { BottomSheetBackdrop, BottomSheetModal, BottomSheetModalProvider, BottomSheetScrollView } from '@gorhom/bottom-sheet';
@@ -1048,59 +1047,7 @@ const Home = ({ navigation }) => {
         </ScrollView>
       </View>
 
-      <Modal
-        style={{ zIndex: 99 }}
-        visible={visible}
-        onDismiss={hideModal}
-        //contentContainerStyle={containerStyle}
-        contentContainerStyle={[containerStyle, { zIndex: 999 }]} // Set a higher value for the z-index
-      >
-        <Card style={{ padding: 10 }}>
-          <Card.Title
-            titleStyle={{ fontWeight: 'bold', textTransform: 'uppercase' }}
-            title={selectedItem && selectedItem.name}
-            left={() => (
-              <Image
-                source={selectedItem && selectedItem.icon}
-                style={{
-                  width: 40,
-                  height: 40,
-                  tintColor: selectedItem && selectedItem.color,
-                }}
-              />
-            )}
-          />
-          <Card.Content>
-            <Text variant="titleLarge">{selectedItem && selectedItem.description}</Text>
-
-            <View style={{ alignItems: 'flex-end' }}>
-              <Text style={{ ...FONTS.h3, color: COLORS.red }}>
-                {' '}
-                {Cat === 'income' ? '+' : '-'} {selectedItem && selectedItem.total.toFixed(2)} USD{' '}
-              </Text>
-              <View style={{ flexDirection: 'row' }}>
-                <Image
-                  source={icons.calendar}
-                  style={{
-                    width: 12,
-                    height: 12,
-                    tintColor: COLORS.darkgray,
-                    marginRight: 7,
-                    marginTop: 3,
-                  }}
-                />
-                <Text style={{ marginBottom: SIZES.base, color: COLORS.darkgray, ...FONTS.h3 }}>
-                  {selectedItem && selectedItem.date}
-                </Text>
-              </View>
-            </View>
-          </Card.Content>
-          <Card.Actions style={{ marginTop: 15 }}>
-            <Button onPress={hideModal}>Annuler</Button>
-            <Button buttonColor={COLORS.red}>Modifier</Button>
-          </Card.Actions>
-        </Card>
-      </Modal>
+      
 
       <FAB.Group
         open={open}
