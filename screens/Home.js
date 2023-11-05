@@ -88,6 +88,14 @@ const Home = ({ navigation }) => {
     }, 5);
   }, []);
 
+  const handleClosePressDisplayDetail = useCallback(() => {
+    bottomSheetDetails.current?.close();
+  }, []);
+
+  const hideModalDisplayDetail = () => handleClosePressDisplayDetail();
+
+
+
   // const renderBottomDebit = () => (
   //   <BottomSheetModal
   //     ref={bottomSheetDebit}
@@ -142,7 +150,7 @@ const Home = ({ navigation }) => {
               <Text color={COLORS.blue}>{`Details de l'opération.`}</Text>
             </Block>
             <TouchableOpacity
-            //onPress={() => hideModalDisplayDetail()}
+              onPress={() => hideModalDisplayDetail()}
             >
               <IconButton
                 icon="close"
