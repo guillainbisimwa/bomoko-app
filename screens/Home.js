@@ -11,7 +11,7 @@ import {
   Platform,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { Divider, FAB, IconButton, TextInput } from 'react-native-paper';
+import { Card, Divider, FAB, IconButton, Modal, TextInput } from 'react-native-paper';
 
 import { COLORS, FONTS, SIZES, icons, images } from '../constants';
 
@@ -35,7 +35,18 @@ const Home = ({ navigation }) => {
 
   const [Cat, setCat] = useState('income');
   const [selectedCategory, setSelectedCategory] = useState(null);
+  // Modal
+  const [visible, setVisible] = useState(false);
 
+  const showModal = () => setVisible(true);
+  const hideModal = () => setVisible(false);
+  const containerStyle = {
+    backgroundColor: 'white',
+    //padding: 20,
+    width: '85%',
+    borderRadius: 10,
+    alignSelf: 'center',
+  };
 
   const [state, setState] = useState({ open: false });
 
@@ -151,7 +162,7 @@ const Home = ({ navigation }) => {
           <Block row space='between'>
             <Block m_b={10} flex={1}>
               <Text bold h2>Details</Text>
-              <Text color={COLORS.blue}>{supp? `Voulez-vous vraiment supprimer : `:mod? `Voulez-vous vraiment modifer :`: `Details de l'opération.`}</Text>
+              <Text color={COLORS.blue}>{supp ? `Voulez-vous vraiment supprimer : ` : mod ? `Voulez-vous vraiment modifer :` : `Details de l'opération.`}</Text>
             </Block>
             <TouchableOpacity
               onPress={() => hideModalDisplayDetail()}
@@ -193,7 +204,7 @@ const Home = ({ navigation }) => {
                 />
                 <TextInput
                   label="Montant"
-                  value={selectedItem.total+''}
+                  value={selectedItem.total + ''}
                   onChangeText={setTotal}
                   mode="outlined"
                   keyboardType="numeric"
@@ -205,7 +216,7 @@ const Home = ({ navigation }) => {
                   buttonColor={COLORS.blue}
                   mode="contained"
                   //  onPress={handleSaveIncome}
-                  style={{marginTop: 10}}
+                  style={{ marginTop: 10 }}
                   icon={({ size, color }) => <FontAwesome name="edit" size={size} color={color} />}
                 >
                   Modifier
@@ -448,7 +459,8 @@ const Home = ({ navigation }) => {
             />
           </TouchableOpacity>
 
-          <TouchableOpacity style={{ flexDirection: 'row' }}>
+          <TouchableOpacity style={{ flexDirection: 'row' }}
+            onPress={() => showModal(true)}>
             <Text style={{ paddingTop: 10 }}>{date.toLocaleDateString('fr-FR')}</Text>
             <IconButton
               icon="arrow-down"
@@ -1159,6 +1171,49 @@ const Home = ({ navigation }) => {
         </ScrollView>
       </View>
 
+      <Modal
+        style={{ zIndex: 99 }}
+        visible={visible}
+        onDismiss={hideModal}
+        contentContainerStyle={[containerStyle, { zIndex: 999 }]} // Set a higher value for the z-index
+      >
+        <Card style={{ padding: 10 }}>
+          <Card.Title
+            titleStyle={{ fontWeight: 'bold', textTransform: 'uppercase' }}
+            title='Selectionner la date'
+
+          />
+          <Card.Content>
+            <Text variant="titleLarge">Choisir la date</Text>
+            <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              <TouchableOpacity style={{alignItems: 'center'}}>
+                <FontAwesome name="calendar" size={70} color={COLORS.black} />
+                <Text>Plage de date</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={{alignItems: 'center'}}>
+                <FontAwesome name="calendar-o" size={70} color={COLORS.black} />
+                <Text>Ajourdh'ui</Text>
+              </TouchableOpacity>
+            </View>
+
+            <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop:15}}>
+              <TouchableOpacity style={{alignItems: 'center'}}>
+                <FontAwesome name="calendar-plus-o" size={70} color={COLORS.black} />
+                <Text>Ce mois</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={{alignItems: 'center'}}>
+                <FontAwesome name="calendar-check-o" size={70} color={COLORS.black} />
+                <Text>Tous</Text>
+              </TouchableOpacity>
+            </View>
+
+
+          </Card.Content>
+          <Card.Actions style={{ marginTop: 15 }}>
+            <Button onPress={hideModal}>Annuler</Button>
+          </Card.Actions>
+        </Card>
+      </Modal>
 
 
       <FAB.Group
