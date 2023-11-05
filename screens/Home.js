@@ -83,6 +83,44 @@ const Home = ({ navigation }) => {
     [setOpenToday, setDateToday]
   );
 
+  const [openAll, setOpenAll] = useState(false);
+
+  const [dateRange, setDateRange] = useState({ startDate: undefined, endDate: undefined });
+
+  const [openRange, setOpenRange] = useState(false);
+
+  const onConfirmSingleRange = useCallback(
+    ({ startDate, endDate }) => {
+      setOpenRange(false);
+      setDateRange({ startDate, endDate });
+    },
+    [setOpenRange, setDateRange]
+  );
+
+  const onDismissSingleRange = useCallback(() => {
+    setOpenRange(false);
+  }, [setOpenRange]);
+
+
+
+  const [openMonth, setOpenMonth] = useState(false);
+
+  const onDismissSingleMonth = useCallback(() => {
+    setOpenMonth(false);
+  }, [setOpenMonth]);
+
+  const [dateMonth, setDateMonth] = useState(undefined);
+
+  const onConfirmSingleMonth = useCallback(
+    (params) => {
+      setOpenMonth(false);
+      setDateMonth(params.date);
+    },
+    [setOpenMonth, setDateMonth]
+  );
+
+
+
   // const bottomSheetDebit = useRef(null);
   // const bottomSheetCredit = useRef(null);
   const bottomSheetDetails = useRef(null);
@@ -1195,25 +1233,34 @@ const Home = ({ navigation }) => {
         contentContainerStyle={[containerStyle, { zIndex: 999 }]} // Set a higher value for the z-index
       >
         <Card style={{ padding: 10 }}>
-          <Card.Title
-            titleStyle={{ fontWeight: 'bold', textTransform: 'uppercase' }}
-            title='Selectionner la date'
-
-          />
+          
           <Card.Content>
             <Text variant="titleLarge">Choisir la date</Text>
-            <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
 
-              <TouchableOpacity style={{alignItems: 'center'}}>
+              <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => {
+               setOpenRange(true);}}>
                 <FontAwesome name="calendar" size={70} color={COLORS.black} />
-                <Text>Plage de date</Text>
+                <Text>Plage de dates</Text>
+            <DatePickerModal
+            style={{display:'none'}}
+              locale="fr"
+              mode="range"
+              visible={openRange}
+              onDismiss={onDismissSingleRange}
+              startDate={dateRange.startDate}
+              endDate={dateRange.endr}
+              onConfirm={onConfirmSingleRange}
+            />
+               
               </TouchableOpacity>
 
-              <TouchableOpacity style={{alignItems: 'center'}} onPress={()=> setOpenToday(true)}>
+              <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => setOpenToday(true)}>
                 <FontAwesome name="calendar-o" size={70} color={COLORS.black} />
                 <Text>Ajourdh'ui</Text>
-                
+
                 <DatePickerModal
+                style={{display:'none'}}
                   locale="fr"
                   mode="single"
                   visible={openToday}
@@ -1226,14 +1273,27 @@ const Home = ({ navigation }) => {
               </TouchableOpacity>
             </View>
 
-            <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop:15}}>
-              <TouchableOpacity style={{alignItems: 'center'}}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 15 }}>
+              <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => setOpenMonth(true)}>
                 <FontAwesome name="calendar-plus-o" size={70} color={COLORS.black} />
                 <Text>Ce mois</Text>
+                <DatePickerModal
+                style={{display:'none'}}
+                  locale="fr"
+                  mode="single"
+                  visible={openMonth}
+                  onDismiss={onDismissSingleMonth}
+                  date={dateMonth}
+
+                  presentationStyle="pageSheet"
+                  onConfirm={onConfirmSingleMonth}
+                />
               </TouchableOpacity>
-              <TouchableOpacity style={{alignItems: 'center'}}>
+
+              <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => setOpenAll(true)}>
                 <FontAwesome name="calendar-check-o" size={70} color={COLORS.black} />
                 <Text>Tous</Text>
+               
               </TouchableOpacity>
             </View>
 
