@@ -22,6 +22,9 @@ import { loadCategoriesFromStorage, resetAllCat } from '../redux/catReducer';
 import { addDays } from 'date-fns';
 import { BottomSheetBackdrop, BottomSheetModal, BottomSheetModalProvider, BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { Block, Text } from '../components';
+import { Picker } from '@react-native-picker/picker';
+import { FontAwesome } from '@expo/vector-icons';
+
 
 
 const Home = ({ navigation }) => {
@@ -148,7 +151,7 @@ const Home = ({ navigation }) => {
           <Block row space='between'>
             <Block m_b={10} flex={1}>
               <Text bold h2>Details</Text>
-              <Text color={COLORS.blue}>{`Details de l'opération.`}</Text>
+              <Text color={COLORS.blue}>{supp? `Voulez-vous vraiment supprimer : `:mod? `Voulez-vous vraiment modifer :`: `Details de l'opération.`}</Text>
             </Block>
             <TouchableOpacity
               onPress={() => hideModalDisplayDetail()}
@@ -163,60 +166,103 @@ const Home = ({ navigation }) => {
           </Block>
 
           {
-            mod ? <Block><Text>Mod</Text></Block> :
+            mod ?
+
+              <>
+                <View style={styles.dropdownContainer}>
+                  <Picker
+                    selectedValue={selectedItem && selectedItem.name}
+                    onValueChange={(itemValue) => setSelectedValue(itemValue)}
+                    style={styles.picker}
+                  >
+                    <Picker.Item label="Selectioner une categorie" value="" />
+                    {catList &&
+                      catList
+                        .map((k, v) => {
+                          return <Picker.Item key={k.id} label={k.name} value={k.name} />;
+                        })}
+                  </Picker>
+                </View>
+                <TextInput
+                  label="Description"
+                  value={selectedItem.description}
+                  onChangeText={setDescription}
+                  mode="outlined"
+                  style={styles.input}
+                  required
+                />
+                <TextInput
+                  label="Montant"
+                  value={selectedItem.total+''}
+                  onChangeText={setTotal}
+                  mode="outlined"
+                  keyboardType="numeric"
+                  style={styles.input}
+                  required
+                />
+                <Button
+                  elevated
+                  buttonColor={COLORS.blue}
+                  mode="contained"
+                  //  onPress={handleSaveIncome}
+                  style={{marginTop: 10}}
+                  icon={({ size, color }) => <FontAwesome name="edit" size={size} color={color} />}
+                >
+                  Modifier
+                </Button>
+              </>
+
+              :
               supp ? <Block>
-                <Text style={{color: COLORS.red, ...FONTS.body3}}>Voulez-vous vraiment supprimer : </Text>
 
                 <Block style={{ padding: 5 }} row space='between'>
-                    <Block flex={1}>
-                      <Image
-                        source={selectedItem && selectedItem.icon}
-                        style={{
-                          width: 50,
-                          height: 50,
-                          tintColor: selectedItem && selectedItem.color,
-                          borderRadius: 25, borderWidth: 1,
-                          borderColor: selectedItem && selectedItem.color,
-                          borderWidth: 1,
-                          padding: 5
-                        }}
-                      />
+                  <Block flex={1}>
+                    <Image
+                      source={selectedItem && selectedItem.icon}
+                      style={{
+                        width: 50,
+                        height: 50,
+                        tintColor: selectedItem && selectedItem.color,
+                        borderRadius: 25, borderWidth: 1,
+                        borderColor: selectedItem && selectedItem.color,
+                        borderWidth: 1,
+                        padding: 5
+                      }}
+                    />
+                  </Block>
+
+                  <Block flex={4} middle>
+                    <Block row space='between'>
+                      <Text bold>DATE :</Text>
+                      <Text gray>{selectedItem && selectedItem.date}</Text>
                     </Block>
 
-                    <Block flex={4} middle>
-                      <Block row space='between'>
-                        <Text bold>DATE :</Text>
-                        <Text gray>{selectedItem && selectedItem.date}</Text>
-                      </Block>
-
-                      <Block row space='between'>
-                        <Text bold>TYPE :</Text>
-                        <Text gray>{selectedItem && selectedItem.name}</Text>
-                      </Block>
-
+                    <Block row space='between'>
+                      <Text bold>TYPE :</Text>
+                      <Text gray>{selectedItem && selectedItem.name}</Text>
                     </Block>
 
-                    
-
-                  </Block>
-                  
-                  <Block style={{ marginVertical: 8 }} row space='between'>
-                    <Text h3 bold>DESCRIPTION</Text>
-                    <Text >{selectedItem && selectedItem.description}
-                    </Text>
                   </Block>
 
-                  <Divider />
-                  <Block style={{ marginVertical: 8 }} row space='between'>
-                    <Text h3 bold>SOMME</Text>
-                    <Text>{selectedItem && selectedItem.total} USD</Text>
-                  </Block>
+                </Block>
 
-                <Button style={{marginTop: 15}} mode='contained' buttonColor={COLORS.peach}
-                      onPress={() => {
-                        // setSupp(true);
-                        // setMod(false)
-                      }} >Supprimer</Button>
+                <Block style={{ marginVertical: 8 }} row space='between'>
+                  <Text h3 bold>DESCRIPTION</Text>
+                  <Text >{selectedItem && selectedItem.description}
+                  </Text>
+                </Block>
+
+                <Divider />
+                <Block style={{ marginVertical: 8 }} row space='between'>
+                  <Text h3 bold>SOMME</Text>
+                  <Text>{selectedItem && selectedItem.total} USD</Text>
+                </Block>
+
+                <Button style={{ marginTop: 15 }} mode='contained' buttonColor={COLORS.peach}
+                  onPress={() => {
+                    // setSupp(true);
+                    // setMod(false)
+                  }} >Supprimer</Button>
               </Block> :
                 <View >
 
@@ -250,7 +296,7 @@ const Home = ({ navigation }) => {
 
                     </Block>
 
-                    
+
 
                   </Block>
 
@@ -1176,6 +1222,17 @@ const styles = StyleSheet.create({
     borderColor: '#aaa',
     borderRadius: 4,
     backgroundColor: '#fff',
+    marginBottom: 10
+  },
+  input: {
+    borderRadius: 0,
+    borderWidth: 0,
+    borderBottomColor: COLORS.gray,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    marginTop: 10,
+  },
+  hasErrors: {
+    borderBottomColor: COLORS.purple,
   },
 
 });
