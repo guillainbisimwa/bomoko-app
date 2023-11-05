@@ -24,7 +24,7 @@ import { BottomSheetBackdrop, BottomSheetModal, BottomSheetModalProvider, Bottom
 import { Block, Text } from '../components';
 import { Picker } from '@react-native-picker/picker';
 import { FontAwesome } from '@expo/vector-icons';
-
+import { fr, registerTranslation, DatePickerModal, DatePickerInput } from 'react-native-paper-dates'
 
 
 const Home = ({ navigation }) => {
@@ -66,8 +66,25 @@ const Home = ({ navigation }) => {
   const [mod, setMod] = useState(false);
   const [supp, setSupp] = useState(false);
 
-  const bottomSheetDebit = useRef(null);
-  const bottomSheetCredit = useRef(null);
+  // Dates
+  const [openToday, setOpenToday] = useState(false);
+
+  const onDismissSingleToday = useCallback(() => {
+    setOpenToday(false);
+  }, [setOpenToday]);
+
+  const [dateToday, setDateToday] = useState(undefined);
+
+  const onConfirmSingleToday = useCallback(
+    (params) => {
+      setOpenToday(false);
+      setDateToday(params.date);
+    },
+    [setOpenToday, setDateToday]
+  );
+
+  // const bottomSheetDebit = useRef(null);
+  // const bottomSheetCredit = useRef(null);
   const bottomSheetDetails = useRef(null);
 
   const BackdropElement = useCallback(
@@ -1186,13 +1203,26 @@ const Home = ({ navigation }) => {
           <Card.Content>
             <Text variant="titleLarge">Choisir la date</Text>
             <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+
               <TouchableOpacity style={{alignItems: 'center'}}>
                 <FontAwesome name="calendar" size={70} color={COLORS.black} />
                 <Text>Plage de date</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={{alignItems: 'center'}}>
+
+              <TouchableOpacity style={{alignItems: 'center'}} onPress={()=> setOpenToday(true)}>
                 <FontAwesome name="calendar-o" size={70} color={COLORS.black} />
                 <Text>Ajourdh'ui</Text>
+                
+                <DatePickerModal
+                  locale="fr"
+                  mode="single"
+                  visible={openToday}
+                  onDismiss={onDismissSingleToday}
+                  date={dateToday}
+
+                  presentationStyle="pageSheet"
+                  onConfirm={onConfirmSingleToday}
+                />
               </TouchableOpacity>
             </View>
 
