@@ -105,7 +105,7 @@ const AddProduct = ({route, navigation}) => {
         description &&
         amount !== null &&
         initialAmount !== null &&
-        amount > initialAmount && // Check if amount is greater than initialAmount
+        // amount > initialAmount && // Check if amount is greater than initialAmount
         range.startDate &&
         range.endDate && 
         tauxInt
@@ -138,6 +138,15 @@ const AddProduct = ({route, navigation}) => {
         // Handle the case where not all required fields are filled
         console.log('Please fill in all required fields.');
         Alert.alert("Attention", "Veuillez valider tous les champs.");
+
+        console.log('name',name)
+        console.log('description',description)
+        console.log('amount',amount)
+        console.log('initialAmount',initialAmount)
+        console.log('range.startDate',range.startDate)
+        console.log('range.endDate',range.endDate) 
+        console.log('tauxInt',tauxInt)
+        console.log('',  amount > initialAmount);
       }
        setOnSuccess(true)
 

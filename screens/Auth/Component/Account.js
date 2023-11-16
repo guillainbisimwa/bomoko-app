@@ -124,7 +124,16 @@ const Account = ({ navigation, route }) => {
                         <Text style={styles.paragraph}>
                             Pour toute question concernant ces conditions d'utilisation, veuillez nous contacter à info@afrintech.org.
                         </Text>
+                        <Button
+                                style={styles.circularButton}
+                                icon="arrow-right"
+                                mode="contained" 
+                                onPress={() => setOpen(true)}
+                            >
+                                Accepter
+                            </Button>
                         <Text style={styles.subtitle}></Text>
+
 
                     </View>
 
