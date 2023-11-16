@@ -497,7 +497,7 @@ const Home = ({ navigation }) => {
         <View style={{}}>
 
           <Text style={{
-            ...FONTS.h1, color: COLORS.black, textAlign: 'center',
+            ...FONTS.h1, color: COLORS.yellow, textAlign: 'center',
             fontWeight: 'bold', marginTop: 10
           }}> {totalSumDC()} USD </Text>
         </View>
@@ -516,7 +516,7 @@ const Home = ({ navigation }) => {
 
           <TouchableOpacity style={{ flexDirection: 'row' }}
             onPress={() => showModal(true)}>
-            <Text style={{ paddingTop: 10 }}>{date.toLocaleDateString('fr-FR')}</Text>
+            <Text color={COLORS.white} style={{ paddingTop: 10 }}>{date.toLocaleDateString('fr-FR')}</Text>
             <IconButton
               icon="arrow-down"
               iconColor={COLORS.black}
