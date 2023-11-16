@@ -2,7 +2,7 @@
   "expo": {
     "name": "Afintech",
     "slug": "bomoko-cash",
-    "version": "5.9.0",
+    "version": "6.0.0",
     "privacy": "public",
     "orientation": "portrait",
     "icon": "./assets/app-icon.png",
@@ -28,7 +28,7 @@
         "backgroundColor": "#FFFFFF"
       },
       "package": "com.wezalab.bomoko4",
-      "versionCode": 59,
+      "versionCode": 60,
       "permissions": [
         "android.permission.RECORD_AUDIO"
       ]
