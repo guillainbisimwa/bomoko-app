@@ -18,7 +18,7 @@ import { COLORS, FONTS, SIZES, icons, images } from '../constants';
 import { VictoryPie } from 'victory-native';
 import { Svg } from 'react-native-svg';
 import { Button } from 'react-native-paper';
-import { loadCategoriesFromStorage, resetAllCat } from '../redux/catReducer';
+import { addCat, loadCategoriesFromStorage, resetAllCat } from '../redux/catReducer';
 import { addDays, parse } from 'date-fns';
 import { BottomSheetBackdrop, BottomSheetModal, BottomSheetModalProvider, BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { Block, Text } from '../components';
@@ -350,7 +350,7 @@ const Home = ({ navigation }) => {
                       "total": selectedItem.total,
                     };
 
-                    const updatedArr = categories.map(item => {
+                    const updatedArr = catList.map(item => {
                       if (
                         item.cat === criteria.cat &&
                         item.color === criteria.color &&
@@ -373,9 +373,12 @@ const Home = ({ navigation }) => {
                     
                     console.log(JSON.stringify(updatedArr))
                     setCategories(updatedArr)
+                    dispatch(addCat(updatedArr));
+                    // Close Bottom sheet
 
+                    hideModalDisplayDetail()
 
-                  }} >Supprimer ?</Button>
+                  }} >Supprimer</Button>
               </Block> :
                 <View >
 
@@ -908,9 +911,9 @@ const Home = ({ navigation }) => {
             </View>
 
             <View style={{ width: '25%', alignItems: 'flex-end' }}>
-              <Text style={{ ...FONTS.h5, color: COLORS.red }}>
+              <Text style={{ ...FONTS.h5, color: Cat === 'income' ? COLORS.darkgreen : COLORS.red }}>
                 {' '}
-                {Cat === 'income' ? '+' : '-'} {item.total} $
+                {Cat === 'income' ? '+' : '-'} {item.total} $ 
               </Text>
               <View style={{ flexDirection: 'row' }}>
                 <Image
