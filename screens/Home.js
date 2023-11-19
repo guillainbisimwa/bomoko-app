@@ -662,9 +662,9 @@ const Home = ({ navigation }) => {
     const renderItem = (item) => (
       <TouchableOpacity
         onPress={() => {
-          //console.log('------------------',item);
-          setSelectedItem(selectedItem);
-          console.log('------------------', selectedItem);
+          const { data, ...objectWithoutData } = selectedCategory;
+          const newItem = {...item, ...objectWithoutData}
+          setSelectedItem(newItem);
 
           setMod(false)
           setSupp(false)
@@ -792,7 +792,7 @@ const Home = ({ navigation }) => {
     const renderItem = (item, cat) => (
       <TouchableOpacity
         onPress={() => {
-          console.log(item);
+          // console.log(item);
           setSelectedItem(item);
           setMod(false)
           setSupp(false)
@@ -865,7 +865,7 @@ const Home = ({ navigation }) => {
             <View style={{ width: '25%', alignItems: 'flex-end' }}>
               <Text style={{ ...FONTS.h5, color: COLORS.red }}>
                 {' '}
-                {Cat === 'income' ? '+' : '-'} {item.total.toFixed(2)} USD{' '}
+                {Cat === 'income' ? '+' : '-'} {item.total} $
               </Text>
               <View style={{ flexDirection: 'row' }}>
                 <Image
@@ -910,19 +910,19 @@ const Home = ({ navigation }) => {
     );
   }
 
-  const totalSum = () => {
-    var tot = 0;
-    categories.map((item) => {
-      let confirm = item.data; //.filter(a => a.cat == "expense")
-      var total = parseFloat(
-        confirm.reduce((a, b) => parseFloat(a) + (parseFloat(b.total) || 0), 0)
-      );
-      tot += total;
-      return total;
-    });
-    // console.log(tot);
-    return tot;
-  };
+  // const totalSum = () => {
+  //   var tot = 0;
+  //   categories.map((item) => {
+  //     let confirm = item.data; //.filter(a => a.cat == "expense")
+  //     var total = parseFloat(
+  //       confirm.reduce((a, b) => parseFloat(a) + (parseFloat(b.total) || 0), 0)
+  //     );
+  //     tot += total;
+  //     return total;
+  //   });
+  //   // console.log(tot);
+  //   return tot;
+  // };
 
   const totalSumDC = () => {
     var totExpense = 0;
@@ -1133,7 +1133,7 @@ const Home = ({ navigation }) => {
         onPress={() => {
           let categoryName = item.name;
           setSelectCategoryByName(categoryName);
-          console.log('*****************', item);
+          // console.log('*****************', item);
         }}
       >
         {/* Name/Category */}
@@ -1233,26 +1233,27 @@ const Home = ({ navigation }) => {
         contentContainerStyle={[containerStyle, { zIndex: 999 }]} // Set a higher value for the z-index
       >
         <Card style={{ padding: 10 }}>
-          
+
           <Card.Content>
             <Text variant="titleLarge">Choisir la date</Text>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
 
               <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => {
-               setOpenRange(true);}}>
+                setOpenRange(true);
+              }}>
                 <FontAwesome name="calendar" size={70} color={COLORS.black} />
                 <Text>Plage de dates</Text>
-            <DatePickerModal
-            style={{display:'none'}}
-              locale="fr"
-              mode="range"
-              visible={openRange}
-              onDismiss={onDismissSingleRange}
-              startDate={dateRange.startDate}
-              endDate={dateRange.endr}
-              onConfirm={onConfirmSingleRange}
-            />
-               
+                <DatePickerModal
+                  style={{ display: 'none' }}
+                  locale="fr"
+                  mode="range"
+                  visible={openRange}
+                  onDismiss={onDismissSingleRange}
+                  startDate={dateRange.startDate}
+                  endDate={dateRange.endr}
+                  onConfirm={onConfirmSingleRange}
+                />
+
               </TouchableOpacity>
 
               <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => setOpenToday(true)}>
@@ -1260,7 +1261,7 @@ const Home = ({ navigation }) => {
                 <Text>Ajourdh'ui</Text>
 
                 <DatePickerModal
-                style={{display:'none'}}
+                  style={{ display: 'none' }}
                   locale="fr"
                   mode="single"
                   visible={openToday}
@@ -1278,7 +1279,7 @@ const Home = ({ navigation }) => {
                 <FontAwesome name="calendar-plus-o" size={70} color={COLORS.black} />
                 <Text>Ce mois</Text>
                 <DatePickerModal
-                style={{display:'none'}}
+                  style={{ display: 'none' }}
                   locale="fr"
                   mode="single"
                   visible={openMonth}
@@ -1293,7 +1294,7 @@ const Home = ({ navigation }) => {
               <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => setOpenAll(true)}>
                 <FontAwesome name="calendar-check-o" size={70} color={COLORS.black} />
                 <Text>Tous</Text>
-               
+
               </TouchableOpacity>
             </View>
 
