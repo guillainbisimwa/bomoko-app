@@ -62,6 +62,9 @@ const Home = ({ navigation }) => {
   const [selectedValue, setSelectedValue] = useState('');
   const [total, setTotal] = useState('');
   const [description, setDescription] = useState('');
+  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+
+  const [selectedId, setSelectedId] = useState('');
 
   const [mod, setMod] = useState(false);
   const [supp, setSupp] = useState(false);
@@ -206,7 +209,7 @@ const Home = ({ navigation }) => {
 
     <BottomSheetModal
       ref={bottomSheetDetails}
-      index={0}
+      index={mod ? 1 : 0}
       backdropComponent={BackdropElement}
       snapPoints={snapPoints}
       onDismiss={() => setOpenDetails(false)}
@@ -237,21 +240,30 @@ const Home = ({ navigation }) => {
               <>
                 <View style={styles.dropdownContainer}>
                   <Picker
-                    selectedValue={selectedItem && selectedItem.name}
+                    selectedValue={selectedValue}
                     onValueChange={(itemValue) => setSelectedValue(itemValue)}
                     style={styles.picker}
                   >
                     <Picker.Item label="Selectioner une categorie" value="" />
-                    {catList &&
-                      catList
+                    {categories &&
+                      categories
                         .map((k, v) => {
                           return <Picker.Item key={k.id} label={k.name} value={k.name} />;
                         })}
                   </Picker>
                 </View>
                 <TextInput
+                  label="Date"
+                  value={selectedDate}
+                  onChangeText={setSelectedDate}
+                  mode="outlined"
+                  style={styles.input}
+                  required
+                  keyboardType='default'
+                />
+                <TextInput
                   label="Description"
-                  value={selectedItem.description}
+                  value={description}
                   onChangeText={setDescription}
                   mode="outlined"
                   style={styles.input}
@@ -259,7 +271,7 @@ const Home = ({ navigation }) => {
                 />
                 <TextInput
                   label="Montant"
-                  value={selectedItem.total + ''}
+                  value={total + ''}
                   onChangeText={setTotal}
                   mode="outlined"
                   keyboardType="numeric"
@@ -270,11 +282,53 @@ const Home = ({ navigation }) => {
                   elevated
                   buttonColor={COLORS.blue}
                   mode="contained"
-                  //  onPress={handleSaveIncome}
+                  onPress={() => {
+                    console.log('selected.item', selectedItem);
+
+                    const criteria = {
+                      "cat": selectedItem.cat,
+                      "color": selectedItem.color,
+                      "icon": selectedItem.icon,
+                      "name": selectedItem.name,
+                    };
+
+                    const edited = {
+                      "id": selectedItem.id,
+                      "date": selectedDate,
+                      "description": description,
+                      "total": total,
+                    };
+
+
+                    const updatedArr = catList.map(item => {
+                      if (
+                        item.cat === criteria.cat &&
+                        item.color === criteria.color &&
+                        item.icon === criteria.icon &&
+                        item.name === criteria.name
+                      ) {
+                          // Update the object in the data array with matching id
+                          item.data = item.data.map(dataItem => {
+                            if (dataItem.id === edited.id) {
+                              return { ...dataItem, ...edited };
+                            }
+                            return dataItem;
+                          });
+                      }
+                      return item;
+                    });
+
+                    console.log(JSON.stringify(updatedArr))
+                    setCategories(updatedArr)
+                    dispatch(addCat(updatedArr));
+                    // Close Bottom sheet
+                    hideModalDisplayDetail()
+
+                  }}
                   style={{ marginTop: 10 }}
                   icon={({ size, color }) => <FontAwesome name="edit" size={size} color={color} />}
                 >
-                  Modifier
+                  Modifier?
                 </Button>
               </>
 
@@ -359,7 +413,7 @@ const Home = ({ navigation }) => {
                       ) {
                         // Remove the object from data array with the specified date
                         item.data = item.data.filter(dataItem => {
-                          console.log(dataItem.id );
+                          console.log(dataItem.id);
                           console.log(ob.id);
                           console.log(dataItem.id !== ob.id);
                           return (
@@ -370,7 +424,7 @@ const Home = ({ navigation }) => {
                       return item;
                     });
 
-                    
+
                     console.log(JSON.stringify(updatedArr))
                     setCategories(updatedArr)
                     dispatch(addCat(updatedArr));
@@ -431,6 +485,11 @@ const Home = ({ navigation }) => {
                     <Button mode='outlined' onPress={() => {
                       setSupp(false)
                       setMod(true);
+                      setDescription(selectedItem.description);
+                      setTotal(selectedItem.total)
+                      setSelectedValue(selectedItem.name)
+                      setSelectedDate(selectedItem.date)
+                      setSelectedId(selectedItem.id)
 
                     }}>Modifier</Button>
                     <Button mode='contained' buttonColor={COLORS.peach}
@@ -710,7 +769,7 @@ const Home = ({ navigation }) => {
       <TouchableOpacity
         onPress={() => {
           const { data, ...objectWithoutData } = selectedCategory;
-          const newItem = {  ...objectWithoutData, ...item}
+          const newItem = { ...objectWithoutData, ...item }
           setSelectedItem(newItem);
           console.log(newItem);
 
@@ -913,7 +972,7 @@ const Home = ({ navigation }) => {
             <View style={{ width: '25%', alignItems: 'flex-end' }}>
               <Text style={{ ...FONTS.h5, color: Cat === 'income' ? COLORS.darkgreen : COLORS.red }}>
                 {' '}
-                {Cat === 'income' ? '+' : '-'} {item.total} $ 
+                {Cat === 'income' ? '+' : '-'} {item.total} $
               </Text>
               <View style={{ flexDirection: 'row' }}>
                 <Image
