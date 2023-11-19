@@ -243,6 +243,7 @@ const Home = ({ navigation }) => {
                     selectedValue={selectedValue}
                     onValueChange={(itemValue) => setSelectedValue(itemValue)}
                     style={styles.picker}
+                    enabled={false}
                   >
                     <Picker.Item label="Selectioner une categorie" value="" />
                     {categories &&
@@ -296,11 +297,12 @@ const Home = ({ navigation }) => {
                       "id": selectedItem.id,
                       "date": selectedDate,
                       "description": description,
-                      "total": total,
+                      "total": parseFloat(total),
                     };
 
 
                     const updatedArr = catList.map(item => {
+
                       if (
                         item.cat === criteria.cat &&
                         item.color === criteria.color &&
@@ -308,13 +310,31 @@ const Home = ({ navigation }) => {
                         item.name === criteria.name
                       ) {
                           // Update the object in the data array with matching id
-                          item.data = item.data.map(dataItem => {
-                            if (dataItem.id === edited.id) {
-                              return { ...dataItem, ...edited };
-                            }
-                            return dataItem;
-                          });
-                      }
+                          // item.data = item.data.map(dataItem => {
+                          //   if (dataItem.id === edited.id) {
+                          //     return { ...dataItem, ...edited };
+                          //   }
+                          //   return dataItem;
+                          // });
+
+                          // Check if name in criteria has changed
+                          if (criteria.name !== selectedValue ) {
+                            // Push the edited object into the data array of the new name
+                            // item.data.push(edited);
+                            item.data = item.data.map(dataItem => {
+                              console.log(item.data);
+                                // return [ ...dataItem, ...edited ];
+                            });
+                          } else {
+                            // Update the object in the data array with matching id
+                            item.data = item.data.map(dataItem => {
+                              if (dataItem.id === edited.id) {
+                                return { ...dataItem, ...edited };
+                              }
+                              return dataItem;
+                            });
+                          }
+                        }
                       return item;
                     });
 
@@ -383,8 +403,8 @@ const Home = ({ navigation }) => {
                     // setSupp(true);
                     // setMod(false)
                     // Liste all object here :
-                    console.log('');
-                    console.log('');
+                    // console.log('');
+                    // console.log('');
                     //console.log('categories', JSON.stringify(categories))
 
                     // List selected object 
@@ -401,7 +421,7 @@ const Home = ({ navigation }) => {
                       "id": selectedItem.id,
                       "date": selectedItem.date,
                       "description": selectedItem.description,
-                      "total": selectedItem.total,
+                      "total": parseFloat(selectedItem.total),
                     };
 
                     const updatedArr = catList.map(item => {
