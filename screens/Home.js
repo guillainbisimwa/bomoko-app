@@ -19,7 +19,7 @@ import { VictoryPie } from 'victory-native';
 import { Svg } from 'react-native-svg';
 import { Button } from 'react-native-paper';
 import { loadCategoriesFromStorage, resetAllCat } from '../redux/catReducer';
-import { addDays } from 'date-fns';
+import { addDays, parse } from 'date-fns';
 import { BottomSheetBackdrop, BottomSheetModal, BottomSheetModalProvider, BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { Block, Text } from '../components';
 import { Picker } from '@react-native-picker/picker';
@@ -217,7 +217,7 @@ const Home = ({ navigation }) => {
           <Block row space='between'>
             <Block m_b={10} flex={1}>
               <Text bold h2>Details</Text>
-              <Text color={COLORS.blue}>{supp ? `Voulez-vous vraiment supprimer : ` : mod ? `Voulez-vous vraiment modifer :` : `Details de l'opération.`}</Text>
+              <Text color={supp ? COLORS.red : COLORS.blue}>{supp ? `Voulez-vous vraiment supprimer votre ${selectedItem.name}? ` : mod ? `Voulez-vous vraiment modifer :` : `Details de l'opération.`}</Text>
             </Block>
             <TouchableOpacity
               onPress={() => hideModalDisplayDetail()}
@@ -299,12 +299,12 @@ const Home = ({ navigation }) => {
 
                   <Block flex={4} middle>
                     <Block row space='between'>
-                      <Text bold>DATE :</Text>
+                      <Text color={supp ? COLORS.red : COLORS.blue} bold>DATE :</Text>
                       <Text gray>{selectedItem && selectedItem.date}</Text>
                     </Block>
 
                     <Block row space='between'>
-                      <Text bold>TYPE :</Text>
+                      <Text color={supp ? COLORS.red : COLORS.blue} bold>TYPE :</Text>
                       <Text gray>{selectedItem && selectedItem.name}</Text>
                     </Block>
 
@@ -313,14 +313,14 @@ const Home = ({ navigation }) => {
                 </Block>
 
                 <Block style={{ marginVertical: 8 }} row space='between'>
-                  <Text h3 bold>DESCRIPTION</Text>
+                  <Text color={supp ? COLORS.red : COLORS.blue} h3 bold>DESCRIPTION</Text>
                   <Text >{selectedItem && selectedItem.description}
                   </Text>
                 </Block>
 
                 <Divider />
                 <Block style={{ marginVertical: 8 }} row space='between'>
-                  <Text h3 bold>SOMME</Text>
+                  <Text color={supp ? COLORS.red : COLORS.blue} h3 bold>SOMME</Text>
                   <Text>{selectedItem && selectedItem.total} USD</Text>
                 </Block>
 
@@ -328,7 +328,54 @@ const Home = ({ navigation }) => {
                   onPress={() => {
                     // setSupp(true);
                     // setMod(false)
-                  }} >Supprimer</Button>
+                    // Liste all object here :
+                    console.log('');
+                    console.log('');
+                    //console.log('categories', JSON.stringify(categories))
+
+                    // List selected object 
+                    //console.log('selectedItem', selectedItem);
+
+                    const criteria = {
+                      "cat": selectedItem.cat,
+                      "color": selectedItem.color,
+                      "icon": selectedItem.icon,
+                      "name": selectedItem.name,
+                    };
+
+                    const ob = {
+                      "id": selectedItem.id,
+                      "date": selectedItem.date,
+                      "description": selectedItem.description,
+                      "total": selectedItem.total,
+                    };
+
+                    const updatedArr = categories.map(item => {
+                      if (
+                        item.cat === criteria.cat &&
+                        item.color === criteria.color &&
+                        item.icon === criteria.icon &&
+                        item.name === criteria.name
+                      ) {
+                        // Remove the object from data array with the specified date
+                        item.data = item.data.filter(dataItem => {
+                          console.log(dataItem.id );
+                          console.log(ob.id);
+                          console.log(dataItem.id !== ob.id);
+                          return (
+                            dataItem.id !== ob.id
+                          );
+                        });
+                      }
+                      return item;
+                    });
+
+                    
+                    console.log(JSON.stringify(updatedArr))
+                    setCategories(updatedArr)
+
+
+                  }} >Supprimer ?</Button>
               </Block> :
                 <View >
 
@@ -359,10 +406,7 @@ const Home = ({ navigation }) => {
                         <Text gray>{selectedItem && selectedItem.name}</Text>
                       </Block>
 
-
                     </Block>
-
-
 
                   </Block>
 
@@ -663,8 +707,9 @@ const Home = ({ navigation }) => {
       <TouchableOpacity
         onPress={() => {
           const { data, ...objectWithoutData } = selectedCategory;
-          const newItem = {...item, ...objectWithoutData}
+          const newItem = {  ...objectWithoutData, ...item}
           setSelectedItem(newItem);
+          console.log(newItem);
 
           setMod(false)
           setSupp(false)
@@ -779,9 +824,9 @@ const Home = ({ navigation }) => {
 
   function renderAllIncomingExpenses() {
     var fin = [];
-    let category = categories.map((v, k) => {
-      var el = v.data.map((vv, kk) => {
-        return { ...vv, cat: v.cat, color: v.color, icon: v.icon, id: 1, name: v.name };
+    categories.map((v, _k) => {
+      var el = v.data.map((vv, _kk) => {
+        return { ...vv, cat: v.cat, color: v.color, icon: v.icon, name: v.name };
       });
       fin.push(...el);
       return el[0];
@@ -792,7 +837,7 @@ const Home = ({ navigation }) => {
     const renderItem = (item, cat) => (
       <TouchableOpacity
         onPress={() => {
-          // console.log(item);
+          console.log('item', item);
           setSelectedItem(item);
           setMod(false)
           setSupp(false)
