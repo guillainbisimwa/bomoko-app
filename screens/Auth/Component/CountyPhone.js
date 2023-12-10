@@ -38,14 +38,15 @@ const CountyPhone = ({ navigation }) => {
             const authToken = process.env.AUTH_TOKEN;
             const serviceSid = process.env.SERVICE_SID
 
-            // const twilioEndpoint = `https://verify.twilio.com/v2/Services/${serviceSid}/Verifications`;
-            const customEndpoint = 'https://api.twilio.com/2010-04-01/Accounts/ACbd9d562b452a2c62459200227432468e/Messages.json'
+            const customEndpoint = `https://verify.twilio.com/v2/Services/${serviceSid}/Verifications`;
+            //const customEndpoint = 'https://api.twilio.com/2010-04-01/Accounts/ACbd9d562b452a2c62459200227432468e/Messages.json'
 
             const requestData = {
-                // customFriendlyName: 'Afintech',
+                customFriendlyName: 'Afintech',
                 To: formattedValue, // Add the phone number you want to send the verification code to
-                //Channel: 'sms',
+                Channel: 'sms',
                 From: '+13343758571',
+                // From: '+243891979018',
                 Body: 'Bonjour, bienvenue sur AFINTECH. Votre code de validation est 0000. www.afrintech.org'
             };
 

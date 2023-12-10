@@ -27,6 +27,56 @@ import { FontAwesome } from '@expo/vector-icons';
 import { fr, registerTranslation, DatePickerModal, DatePickerInput } from 'react-native-paper-dates'
 
 
+// const filterArrayByDate = (arr, dateCriteria) => {
+//   const currentDate = new Date();
+
+//   return arr.filter(item => {
+//     return item.data.some(dataItem => {
+//       const dataDate = new Date(dataItem.date);
+
+//       // Check if the date is within the specified criteria
+//       if (dateCriteria === 'today') {
+//         return dataDate.toDateString() === currentDate.toDateString();
+//       } else if (dateCriteria === 'thisWeek') {
+//         const startOfWeek = new Date(currentDate);
+//         startOfWeek.setDate(currentDate.getDate() - currentDate.getDay());
+
+//         return dataDate >= startOfWeek && dataDate <= currentDate;
+//       } else if (dateCriteria === 'thisMonth') {
+//         return (
+//           dataDate.getMonth() === currentDate.getMonth() &&
+//           dataDate.getFullYear() === currentDate.getFullYear()
+//         );
+//       } else if (
+//         dateCriteria.startDate &&
+//         dateCriteria.endDate &&
+//         dataDate >= new Date(dateCriteria.startDate) &&
+//         dataDate <= new Date(dateCriteria.endDate)
+//       ) {
+//         return true;
+//       } else if (dateCriteria.selectedDate) {
+//         return dataDate.toDateString() === new Date(dateCriteria.selectedDate).toDateString();
+//       }
+
+//       // Return false if no criteria match
+//       return false;
+//     });
+//   });
+// };
+
+// // Example usage:
+// const todayFiltered = filterArrayByDate(arr, 'today');
+// const thisWeekFiltered = filterArrayByDate(arr, 'thisWeek');
+// const thisMonthFiltered = filterArrayByDate(arr, 'thisMonth');
+// const rangeFiltered = filterArrayByDate(arr, {
+//   startDate: '2023-11-01',
+//   endDate: '2023-11-15',
+// });
+// const selectedDateFiltered = filterArrayByDate(arr, { selectedDate: '2023-11-10' });
+
+
+
+
 const Home = ({ navigation }) => {
   const catList = useSelector((state) => state.categories.categories);
   //console.log('catList', catList);
@@ -611,7 +661,7 @@ const Home = ({ navigation }) => {
         style={{
           zIndex: 10,
           paddingHorizontal: SIZES.padding,
-          paddingVertical: SIZES.padding / 2,
+          paddingBottom: SIZES.padding,
           borderBottomColor: COLORS.gray,
           borderBottomWidth: 1,
         }}
@@ -669,7 +719,7 @@ const Home = ({ navigation }) => {
             margin: SIZES.padding,
             // zIndex: 10,
             position: 'absolute',
-            top: SIZES.padding * 4.2,
+            top: SIZES.padding * 4.6,
             width: '100%',
             backgroundColor: '#eef2f7', //   lightGray: ,
 
@@ -756,10 +806,12 @@ const Home = ({ navigation }) => {
           borderRadius: 8,
           height: 80,
           backgroundColor: myCat === Cat ? COLORS.white : 'transparent',
-          padding: SIZES.padding,
+          // padding: SIZES.padding,
           // elevation: 0,
           width: '100%',
-          margin: '2%'
+          margin: '2%',
+          justifyContent:'center',
+          alignItems:'center'
         }}
         onPress={() => {
           setCat(myCat);

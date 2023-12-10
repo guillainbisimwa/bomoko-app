@@ -16,7 +16,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Block from './Block';
 import Text from './Text';
 import { COLORS, FONTS, icons, SIZES } from '../../constants';
-import { Button, Card, Divider, IconButton, MD3Colors, Modal, ProgressBar, Snackbar, TextInput } from 'react-native-paper';
+import { ActivityIndicator, Button, Card, Divider, IconButton, MD3Colors, Modal, ProgressBar, Snackbar, TextInput } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import CoutScreen from './CoutScreen';
 import { Alert } from 'react-native';
@@ -206,13 +206,11 @@ const Details = ({ route, navigation }) => {
           );
           return;
         }
-  
+
         fetch(`https://bomoko-backend.onrender.com/api/product/${route.params.food._id}`)
           .then(response => response.json())
           .then(data => {
             setFoodDetails(data);
-            console.log(connectedUser?.username == foodDetails.owner.username);
-            console.log(connectedUser?.username," -->", foodDetails.owner.username);
 
             setLoading(false);
           })
@@ -221,7 +219,6 @@ const Details = ({ route, navigation }) => {
   
       fetchUserData();
 
-      
       // Return a cleanup function
       return () => {
         // You can perform cleanup here if needed
@@ -229,20 +226,25 @@ const Details = ({ route, navigation }) => {
       };
     }, []) // Empty dependency array to run this effect only once when the screen mounts
   );
-  
-  // useEffect(() => {
-    
-  // }, []);
+
  // Function to handle screen reload
- const reloadScreen = (value) => {
+ const reloadScreen = async () => {
+  setLoading(true);
+  console.log('reloadScreen');
+
   // You can put your screen reload logic here
-  console.log('Screen reloaded');
-  const parsedValue = JSON.parse(value);
-  if (parsedValue.user && parsedValue.user.user) {
-    setConnectedUser(parsedValue.user.user);
-    setLoading(false)
-    console.log('Async State:', parsedValue.user.user);
-  }
+  await fetch(`https://bomoko-backend.onrender.com/api/product/${route.params.food._id}`)
+  .then(response => response.json())
+  .then(data => {
+    setFoodDetails(data);
+    console.log('reloadScreen ok');
+    setTotAmount(
+      foodDetails?.couts.reduce((sum, cout) => sum + cout.amount, 0)
+    );
+
+    setLoading(false);
+  })
+  .catch(error => console.error('Error fetching user details:', error));
 };
 
   const dispatch = useDispatch();
@@ -392,17 +394,22 @@ const Details = ({ route, navigation }) => {
       <BottomSheetScrollView>
 
       <Block style={styles.bottomSheetContent}>
-            <Text style={styles.bottomSheetTitle}>Le coût total de production</Text>
+      <ActivityIndicator style={{position:'absolute',
+      right:0, left: 0
+       }} size={20} color={COLORS.peach} animating={loading} />
+
+            <Text style={styles.bottomSheetTitle}>Le coût total de production {totAmount} {foodDetails.currency}</Text>
             <Text style={styles.bottomSheetText}>
               Il permet de prendre en compte tous les éléments de coût associés à la fabrication,
-              l'achat ou la prestation d'un bien ou d'un service.
+              l'achat d'un bien ou la prestation d'un service.
             </Text>
             <View style={[styles.card,{ marginBottom: foodDetails.owner._id == connectedUser?.userId? 190 : 100} ]}>
              {
                   foodDetails?.couts && foodDetails?.couts
                   .map((food, index) => {
-                    return <CoutScreen admin={foodDetails.owner._id == connectedUser?.userId}
-                    totAmount={totAmount} handleUpdateItem={handleUpdateItem} handleTrash={handleTrash} currency={foodDetails.currency} key={index} item={food} count={index + 1} />;
+                    return <CoutScreen admin={foodDetails.owner._id == connectedUser?.userId} 
+                    totAmount={totAmount} handleUpdateItem={handleUpdateItem} handleTrash={handleTrash} 
+                    currency={foodDetails.currency} key={index} item={food} count={index + 1} />;
                   })}
             </View>
            
@@ -1028,6 +1035,9 @@ const Details = ({ route, navigation }) => {
                 id: foodDetails._id,
                 couts: updatedCouts,
               }));
+
+              reloadScreen();
+
               
 
               // Update state
@@ -1037,6 +1047,7 @@ const Details = ({ route, navigation }) => {
               // Check if the item was updated successfully
               if (!statusError && statusSuccess) {
                 setMsgSuccess(`Mis à jour avec succèss`);
+                console.log(`Mis à jour avec succèss`);
                 setMsgError("");
                 setStatusSuccess(true);
                 setStatusError(false);
@@ -1045,8 +1056,8 @@ const Details = ({ route, navigation }) => {
                 setTotAmount(totAmount + parseFloat(editedAmount1) - parseFloat(foodDetails.couts.find(cout => cout._id === item._id).amount));
 
                 // TODO : update all foodDetails => foodDetails.couts = updatedCouts;
-                setFoodDetails({...foodDetails, 'couts': updatedCouts}); // TODO: To test if is working well
-
+                // setFoodDetails({...foodDetails, 'couts': updatedCouts}); // TODO: To test if is working well
+                
               }else {
                   setMsgError("Erreur de mise à jour");
                   setMsgSuccess("");
