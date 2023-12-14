@@ -43,7 +43,7 @@ const Details = ({ route, navigation }) => {
   const { error, isLoading } = useSelector((state) => state.products);
   const [foodDetails, setFoodDetails] = useState(route.params.food);
 
-  const [msgSuccess, setMsgSuccess] = useState("Validation avec success");
+  const [msgSuccess, setMsgSuccess] = useState("");
   const [msgError, setMsgError] = useState("Une erreur s'est produite!");
 
   const [statusSuccess, setStatusSuccess] = useState(false);
@@ -87,6 +87,10 @@ const Details = ({ route, navigation }) => {
   const [openAccept, setOpenAccept] = useState(false)
   const [openDetailsTrans, setOpenDetailsTrans] = useState(false)
   const [openContrib, setOpenContrib] = useState(false)
+
+  const [openAdhesion, setOpenAdhesion] = useState(false)
+  const [openQuiter, setOpenQuitter] = useState(false)
+
   
   const [loading, setLoading] = useState(true);
 
@@ -109,6 +113,10 @@ const Details = ({ route, navigation }) => {
   const bottomSheetReject = useRef(null);
   const bottomSheetDetailsTrans = useRef(null);
   const bottomSheetContrib = useRef(null);
+
+  const bottomSheetAdhesion = useRef(null);
+  const bottomSheetQuitter = useRef(null);
+
 
   const snapPoints = useMemo(() => ["28%","50%", '70%', '80%', '90%'], []);
 
@@ -176,6 +184,35 @@ const Details = ({ route, navigation }) => {
   }, []);
 
   const hideModalContrib = () => handleCloseContrib();
+
+  const openModalAdhesion = useCallback(() => {
+    bottomSheetAdhesion.current?.present();
+    setTimeout(() => {
+      setOpenAdhesion(true);
+    }, 5);
+  }, []);
+
+  const handleCloseAdhesion = useCallback(() => {
+    bottomSheetAdhesion.current?.close();
+  }, []);
+
+  const hideModalAdhesion2 = () => handleCloseAdhesion();
+
+
+  const openModalQuitter = useCallback(() => {
+    bottomSheetQuitter.current?.present();
+    setTimeout(() => {
+      setOpenQuitter(true);
+    }, 5);
+  }, []);
+
+  const handleCloseQuiter = useCallback(() => {
+    bottomSheetQuitter.current?.close();
+  }, []);
+
+  const hideModalQuitter2 = () => handleCloseQuiter();
+
+  
 
   useFocusEffect(
     useCallback(() => {
@@ -559,6 +596,50 @@ const Details = ({ route, navigation }) => {
     </BottomSheetModal>
   )
 
+  const renderBottomAdhesion = (item) => (
+    <BottomSheetModal
+      ref={bottomSheetAdhesion}
+      index={1}
+      backdropComponent={BackdropElement}
+      snapPoints={snapPoints}
+      backgroundStyle={{ borderRadius: responsiveScreenWidth(5), backgroundColor:'#eee'}}
+      onDismiss={() => setOpenAdhesion(false)}
+    >
+     <BottomSheetScrollView style={{ padding: 17}}>
+      <Block row space='between' >
+          <Block >
+            <Text bold h2>ADHESION</Text>
+            <Text color={COLORS.blue}>Voulez-vous vraiment Faire parti des insvesitteurs du {foodDetails.type }
+              {" "}{ foodDetails.name}?</Text>
+          </Block>
+          <TouchableOpacity onPress={()=> hideModalAdhesion2()}>
+            <IconButton
+              icon="close"
+              iconColor={COLORS.red}
+              size={40}
+            />
+          </TouchableOpacity>
+        </Block>
+        <Block>
+
+              <Text color={COLORS.peach} variant="titleLarge">Ceci implique que vous pouvez contribuer une somme
+              d'argent et ganger apres l'exercice! Votre demande d'adhesion sera validee par le proprietaire du {foodDetails.type }
+              {" "}{ foodDetails.name}</Text>
+        </Block>
+        <Text>{msgSuccess}</Text>
+        <ActivityIndicator animating={true} />
+        <Button buttonColor={COLORS.peach} disabled={isLoading} mode='contained' style={{marginTop:10}} 
+        onPress={()=> {
+          handleAdhesion()
+         
+        }}>Accepter</Button>
+
+      
+      </BottomSheetScrollView>
+
+    </BottomSheetModal>
+  )
+
   const renderImages = () => {
     return (
       <ScrollView
@@ -779,7 +860,7 @@ const Details = ({ route, navigation }) => {
 
       // Check if the user's rejection has been made successfully
       if (!statusError && statusSuccess) {
-        setMsgSuccess(`Accecpte avec success`);
+        setMsgSuccess(`Accepté avec success`);
         setMsgError("");
         setStatusSuccess(true);
         setStatusError(false);
@@ -874,7 +955,7 @@ const Details = ({ route, navigation }) => {
 
       // Check if user's request has been made successfully
       if (!statusError && statusSuccess) {
-        setMsgSuccess(`Accecpte avec success`);
+        setMsgSuccess(`Adhesion avec success`);
         setMsgError("");
         setStatusSuccess(true);
         setStatusError(false);
@@ -1752,7 +1833,7 @@ const Details = ({ route, navigation }) => {
               }
 
               </> :
-               <Button textColor="#fff" elevated buttonColor={COLORS.purple} onPress={()=> showModalAdhesion()} >
+               <Button textColor="#fff" elevated buttonColor={COLORS.purple} onPress={()=>  openModalAdhesion()} >
                Demande d'Adhesion
              </Button>
              
@@ -2007,6 +2088,8 @@ const Details = ({ route, navigation }) => {
         {renderBottomContrib()}
 
         {renderDisplayDetail()}
+
+        {renderBottomAdhesion()}
 
     </ScrollView>
     </BottomSheetModalProvider>
