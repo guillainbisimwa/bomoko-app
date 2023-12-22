@@ -638,7 +638,8 @@ const DetailsReunion = ({ route, navigation }) => {
                 titre: 'Confirmez votre payment',
                 button: 'Verifier && confirmer',
                 avec: route.params.avec,
-                type: 'achat'
+                type: 'achat',
+                currency: route.params.avec.currency
 
               })
             }} >ACHETER</Button>
@@ -707,7 +708,9 @@ const DetailsReunion = ({ route, navigation }) => {
                   titre: "Confirmer votre demande d'Emprunt",
                   button: 'Confirmer votre demande',
                   avec: route.params.avec,
-                  type: 'emprunt'
+                  type: 'emprunt',
+                  currency: route.params.avec.currency
+
                 })
               }} >Demande d'emprunt</Button>
             </Block>
@@ -762,7 +765,9 @@ const DetailsReunion = ({ route, navigation }) => {
                   titre: "Confirmer votre contribution hebdomadaire",
                   button: 'Contribuer',
                   avec: route.params.avec,
-                  type: 'contrib'
+                  type: 'contrib',
+                  currency: route.params.avec.currency
+
                 })
               }} > {` Contibuer ${route.params.avec.frais_Social.somme}  ${route.params.avec.currency}`}</Button>
             </Block>

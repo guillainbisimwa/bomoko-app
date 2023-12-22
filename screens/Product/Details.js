@@ -518,9 +518,8 @@ const Details = ({ route, navigation }) => {
               motif:  `Achat de ${parseInt(interest)} parts a ${parseFloat(parseFloat(interest) * (foodDetails.amount / 100) ).toFixed(2)} ${foodDetails.currency}?`,
               titre: 'Confirmez votre payment',
               button:'Verifier && confirmer',
-              //avec: route.params.avec,
-              type:'achat'
-
+              currency: foodDetails.currency,
+              type:'achat',
             })
           }} >ACHETER</Button>
           </Block>
@@ -1400,13 +1399,13 @@ const Details = ({ route, navigation }) => {
           </Block>
         </Block>
         {/* TODO : Use the contribution_amount, and real Date */}
-        <FlatList
+        {/* <FlatList
             data={membresToShow?.slice(0,3)}
             renderItem={({ item }) => 
               <Transaction user={item} navigation={navigation} subtitle='Achat de parts' topRight={foodDetails.amount/100} 
                 bottomRight='10 sep 2023' currency={foodDetails.currency} onPressTransaction={onPressTransaction} />}
                 keyExtractor={(item) => item._id} // Use a unique key for each item
-          />
+          /> */}
         </Block>
   )};
 

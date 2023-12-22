@@ -8,18 +8,53 @@ import { TextInput } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import SelectDropdown from 'react-native-select-dropdown';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { GenerateReferenceCode } from '../../constants/generateReferenceCode';
+import axios from 'axios';
 
 
 const ConfirmPayment = (props, { route }) => {
   const navigation = useNavigation();
   const [password, setPassword] = useState();
+  let ref = GenerateReferenceCode();
   
-  // console.log(route?.params);
-  // console.log(route);
-  useEffect(()=>{
-    //console.log(props?.route?.params?.avec.membres.map((v,k)=> v.user.name));
-    
-  },[])
+  const payByFlexPayAPI = async () => {
+    const phone = props?.route?.params?.connectedUser?.mobile;
+    const tokenFlexPay = process.env.TOKEN_FLEXPAY;
+      const data = {
+          type: "1",
+          merchant: `ALPHA_NEW`,
+          reference: ref,
+          amount: props?.route?.params?.somme,
+          currency: props?.route?.params?.currency,
+          description: props?.route?.params?.motif,
+          phone: phone.split('+')[1],
+          // phone: "243891979018",
+          callbackUrl: "http://localhost"
+      }
+      
+      console.log("test", data);
+
+      await fetch(`https://beta-backend.flexpay.cd/api/rest/v1/paymentService`, {
+        body: JSON.stringify(data),
+        headers: {
+          'content-type': 'application/json',
+          Authorization: `Bearer ${tokenFlexPay}`,
+        },
+        method: 'POST'
+      })
+        .then(async response => {
+          let data = await response.json();
+          console.log(data);
+          
+        })
+        .catch(err => {
+          console.log('Cannot ');
+          
+          console.log(err);
+        });
+
+   
+  }
 
   const renderConfirm = () => {
     return <Block p={20} m={20} card >
@@ -55,7 +90,7 @@ const ConfirmPayment = (props, { route }) => {
               iconColor={COLORS.darkgreen}
               size={40}
             />
-          <Text bold>{props?.route?.params?.somme} {props?.route?.params?.avec?.currency}</Text>
+          <Text bold>{props?.route?.params?.somme} {props?.route?.params?.currency}</Text>
         </Block>
 
         <Block center flex={1}>
@@ -79,7 +114,7 @@ const ConfirmPayment = (props, { route }) => {
         </Block>
 
       </Block>
-      <Text center gray style={styles.motif}>{props?.route?.params?.motif}</Text>
+      <Text center gray style={styles.motif}>{props?.route?.params?.motif} </Text>
       
       <Divider />
 
@@ -139,7 +174,7 @@ const ConfirmPayment = (props, { route }) => {
             placeholder="Mots de passe"
             secureTextEntry={true}
           />
-          <Button mode='contained' buttonColor='green' onPress={()=> navigation.goBack()}>{props?.route?.params?.button}</Button>
+          <Button mode='contained' buttonColor='green' onPress={()=> payByFlexPayAPI()}>{props?.route?.params?.button}</Button>
       </Block>
       
     </Block>
