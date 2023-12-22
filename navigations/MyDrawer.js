@@ -51,14 +51,14 @@ export default function MyDrawer() {
       />
 
 
-      <Drawer.Screen
+      {/* <Drawer.Screen
         name="Creances et dettes"
         component={CreanceDette}
         options={{
           headerShown: false,
           drawerIcon: ({ color }) => <Ionicons color={color} size={SIZES.base * 2} name={'cash'} />,
         }}
-      />
+      /> */}
 
       <Drawer.Screen
         name="Parametres"

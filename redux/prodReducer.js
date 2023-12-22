@@ -1061,6 +1061,8 @@ const productSlice = createSlice({
   initialState: {
     products: [],
     isLoading: false,
+    isLoadingAdhesion: false,
+    successAdhesion:"",
     isLoadingAdd: false,
     error: '',
     lastSaved: null,
@@ -1147,16 +1149,21 @@ const productSlice = createSlice({
     })
     .addCase(soumettreProduct.pending, (state) => {
       state.isLoading = true;
+      state.isLoadingAdhesion = true;
       state.error = null;
     })
     .addCase(soumettreProduct.fulfilled, (state, action) => {
       state.isLoading = false;
+      state.isLoadingAdhesion = false;
       state.lastSaved = action.payload;
       state.error = null;
+      state.successAdhesion = "Adhesion avec success";
+
 
     })
     .addCase(soumettreProduct.rejected, (state, action) => {
       state.isLoading = false;
+      state.isLoadingAdhesion = false;
       state.error = action.error.message;
     });
   },

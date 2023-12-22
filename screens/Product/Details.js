@@ -40,7 +40,7 @@ import { useFocusEffect } from '@react-navigation/native';
 const Details = ({ route, navigation }) => {
   const scrollX = useRef(new Animated.Value(0)).current;
 
-  const { error, isLoading } = useSelector((state) => state.products);
+  const { error, isLoading, isLoadingAdhesion, successAdhesion } = useSelector((state) => state.products);
   const [foodDetails, setFoodDetails] = useState(route.params.food);
 
   const [msgSuccess, setMsgSuccess] = useState("");
@@ -326,7 +326,7 @@ const Details = ({ route, navigation }) => {
   const daysLeft = Math.ceil(timeDifference / millisecondsInDay);
   const daysTotalExc = Math.ceil(timeTotalExerc / millisecondsInDay);
 
-  console.log(`Days left: ${daysLeft}`);
+  // console.log(`Days left: ${daysLeft}`);
 
   // Timeline
   const outputTimeLine = foodDetails?.timeline.map(item => {
@@ -622,18 +622,20 @@ const Details = ({ route, navigation }) => {
         </Block>
         <Block>
 
-              <Text color={COLORS.peach} variant="titleLarge">Ceci implique que vous pouvez contribuer une somme
+              {/* <Text color={COLORS.peach} variant="titleLarge">Ceci implique que vous pouvez contribuer une somme
               d'argent et ganger apres l'exercice! Votre demande d'adhesion sera validee par le proprietaire du {foodDetails.type }
-              {" "}{ foodDetails.name}</Text>
+              {" "}{ foodDetails.name}</Text> */}
         </Block>
-        <Text>{msgSuccess}</Text>
-        <ActivityIndicator animating={true} />
+        <Text bold color={COLORS.darkgreen} variant="titleLarge"  center>{msgSuccess}</Text>
+        <Text bold color={COLORS.peach} variant="titleLarge"  center >{msgError}</Text>
+        
+        {isLoadingAdhesion?
+        <ActivityIndicator animating={true} /> :
         <Button buttonColor={COLORS.peach} disabled={isLoading} mode='contained' style={{marginTop:10}} 
         onPress={()=> {
           handleAdhesion()
          
-        }}>Accepter</Button>
-
+        }}>Demande d'Adhesion</Button>}
       
       </BottomSheetScrollView>
 
@@ -932,29 +934,37 @@ const Details = ({ route, navigation }) => {
   
   const handleAdhesion = async () => {
     try{
+      setMsgSuccess("");
+      setMsgError("");
+      
       // Push current user to member array
 
       // Reuse the soumettreProduct function
-      dispatch(soumettreProduct({
+      await dispatch(soumettreProduct({
         ...foodDetails,
         id: foodDetails._id,
         membres: [
           ...foodDetails.membres,
-          {
-            user: connectedUser?.userId,
-            admission_req: 'PENDING', 
-            contribution_amount: 0,
-            contribution_status: 'PENDING', 
-          }
+          // {
+          //   user: connectedUser?.userId,
+          //   admission_req: 'PENDING', 
+          //   contribution_amount: 0,
+          //   contribution_status: 'PENDING', 
+          // }
         ]
       }));
 
       // Check if the request made successfully
-      setStatusError(!error && !isLoading);
-      setStatusSuccess(!error && !isLoading);
+      setStatusError(!successAdhesion && !isLoadingAdhesion);
+      setStatusSuccess(!error && !isLoadingAdhesion);
+
+      console.log("setStatusError", error && !isLoadingAdhesion);
+      console.log("setStatusSuccess",error && !isLoadingAdhesion);
+      console.log("error",error);
+      setMsgSuccess(successAdhesion?successAdhesion:"");
 
       // Check if user's request has been made successfully
-      if (!statusError && statusSuccess) {
+      if (successAdhesion) {
         setMsgSuccess(`Adhesion avec success`);
         setMsgError("");
         setStatusSuccess(true);

@@ -81,7 +81,7 @@ const ProductScreen = ({ navigation, route }) => {
 
 useEffect(() => {
   if(error){
-    Alert.alert(error, "Veuillez vérifier votre connexion Internet et réessayer.");
+    Alert.alert("Pas de connexion Internet", "Veuillez vérifier votre connexion Internet et réessayer.");
   }
 // This effect will run whenever activeTabType, search field, or products change
 
