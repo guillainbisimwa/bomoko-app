@@ -945,38 +945,40 @@ const Details = ({ route, navigation }) => {
         id: foodDetails._id,
         membres: [
           ...foodDetails.membres,
-          // {
-          //   user: connectedUser?.userId,
-          //   admission_req: 'PENDING', 
-          //   contribution_amount: 0,
-          //   contribution_status: 'PENDING', 
-          // }
+          {
+            user: connectedUser?.userId,
+            admission_req: 'PENDING', 
+            contribution_amount: 0,
+            contribution_status: 'PENDING', 
+          }
         ]
       }));
+      await reloadScreen();
+      await hideModalAdhesion2();
 
-      // Check if the request made successfully
-      setStatusError(!successAdhesion && !isLoadingAdhesion);
-      setStatusSuccess(!error && !isLoadingAdhesion);
+      // // Check if the request made successfully
+      // setStatusError(!successAdhesion && !isLoadingAdhesion);
+      // setStatusSuccess(!error && !isLoadingAdhesion);
 
-      console.log("setStatusError", error && !isLoadingAdhesion);
-      console.log("setStatusSuccess",error && !isLoadingAdhesion);
-      console.log("error",error);
-      setMsgSuccess(successAdhesion?successAdhesion:"");
+      // console.log("setStatusError", error && !isLoadingAdhesion);
+      // console.log("setStatusSuccess",error && !isLoadingAdhesion);
+      // console.log("error",error);
+      // setMsgSuccess(successAdhesion?successAdhesion:"");
 
-      // Check if user's request has been made successfully
-      if (successAdhesion) {
-        setMsgSuccess(`Adhesion avec success`);
-        setMsgError("");
-        setStatusSuccess(true);
-        setStatusError(false);
-        onToggleSnackBar();
-      }else {
-          setMsgError("Une Erreur s'est produite");
-          setMsgSuccess("");
-          setStatusSuccess(false);
-          setStatusError(true);
-          onToggleSnackBar();
-      }
+      // // Check if user's request has been made successfully
+      // if (successAdhesion) {
+      //   setMsgSuccess(`Adhesion avec success`);
+      //   setMsgError("");
+      //   setStatusSuccess(true);
+      //   setStatusError(false);
+      //   onToggleSnackBar();
+      // }else {
+      //     setMsgError("Une Erreur s'est produite");
+      //     setMsgSuccess("");
+      //     setStatusSuccess(false);
+      //     setStatusError(true);
+      //     onToggleSnackBar();
+      // }
     }
     catch(e){
       setMsgError("Une Erreur s'est produite");
@@ -1121,7 +1123,7 @@ const Details = ({ route, navigation }) => {
                 return cout;
               });
 
-              dispatch(soumettreProduct({
+              await dispatch(soumettreProduct({
                 ...foodDetails,
                 id: foodDetails._id,
                 couts: updatedCouts,
