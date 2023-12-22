@@ -45,11 +45,11 @@ const ConfirmPayment = (props, { route }) => {
         .then(async response => {
           let data = await response.json();
           console.log(data);
+          navigation.goBack()
           
         })
         .catch(err => {
           console.log('Cannot ');
-          
           console.log(err);
         });
 
