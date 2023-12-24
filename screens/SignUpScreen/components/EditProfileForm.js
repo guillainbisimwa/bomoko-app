@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Alert, View, StyleSheet, ScrollView, ImageBackground, Dimensions, 
   KeyboardAvoidingView, TouchableOpacity, Image } from 'react-native';
-import { Button, TextInput, Text, ActivityIndicator, Snackbar, } from 'react-native-paper';
+import { Button, TextInput, ActivityIndicator, Snackbar, } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import NetInfo from "@react-native-community/netinfo";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -11,6 +11,10 @@ import { COLORS, FONTS } from '../../../constants';
 import { editUser } from '../../../redux/userSlice';
 import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Block, Text } from "../../../components";
+import Container, { Toast } from 'toastify-react-native';
+import { logoutUser } from '../../../redux/authReducer';
+
 
 const { height, width } = Dimensions.get('window');
 
@@ -69,20 +73,17 @@ export const EditProfileForm = ({ navigation }) => {
     // You can put your screen reload logic here
     console.log('Screen reloaded');
     const parsedValue = JSON.parse(value);
+    console.log("parsedValue", parsedValue);
     if (parsedValue.user && parsedValue.user.user) {
       setConnectedUser(parsedValue.user.user);
       setNom(parsedValue.user.user.name)
       setEmail(parsedValue.user.user.email)
       setMobile(parsedValue.user.user.mobile)
       setSelectedImage(parsedValue.user.user.profile_pic)
-      setId(parsedValue.user.user._id)
-      console.log('Async State:', parsedValue.user.user);
+      setId(parsedValue.user.user.userId)
+      //console.log('Async State:', parsedValue.user.user);
     }
   };
-
-  const onToggleSnackBar = () => setVisible(!visible);
-
-  const onDismissSnackBar = () => setVisible(false);
 
   // Use useEffect or any other method to handle the success state and display the alert
     useEffect(() => {
@@ -99,7 +100,7 @@ export const EditProfileForm = ({ navigation }) => {
         navigation.navigate('LoginScreen'); 
       }
       if (onError) {
-        onToggleSnackBar()
+        // Toast.error        
       }
       
     }, [successSignUp, onError, isLoadingSignUp]);
@@ -122,15 +123,15 @@ const handleSignUp = async () => {
       username:name,
       name,
       email,
-      mobile,
-      role,
-      cover_url:'', 
+      // mobile,
+      // role,
+      // cover_url:'', 
       profile_pic: selectedImage
     });
-    dispatch(editUser({
+    await dispatch(editUser({
       ...connectedUser,
-      userId: connectedUser._id,
-      id: connectedUser._id,
+      userId: id,
+      id: id,
       username:name,
       name,
       email,
@@ -139,6 +140,11 @@ const handleSignUp = async () => {
       cover_url:'', 
       profile_pic: selectedImage
     }));
+
+    await Toast.success('Le profile a été modifié!', 'bottom');
+    dispatch(logoutUser());
+
+    navigation.navigate('LoginScreen'); 
 
     setOnSuccess(onSuccess);
     setOnError(true);
@@ -224,6 +230,7 @@ const onCloudinarySaveCb = async (base64Img) => {
         blurRadius={10}
       ></ImageBackground>
       <View style={styles.contentContainer}>
+      <Container position="top" style={{ width: '100%' }} duration={6000} />
      
         <View
           style={{
@@ -267,7 +274,7 @@ const onCloudinarySaveCb = async (base64Img) => {
         label="E-mail" value={email} 
         onChangeText={setEmail} style={styles.input} />
 
-      <TextInput error={onError} keyboardType="default" 
+      <TextInput editable={false} keyboardType="default" 
         label="Téléphone" value={mobile} 
         onChangeText={setMobile} style={styles.input} />
 
@@ -279,23 +286,10 @@ const onCloudinarySaveCb = async (base64Img) => {
           MODIFIER
         </Button>
 
-        <Text style={{ marginVertical: 20, color: COLORS.white, ...FONTS.h2}} 
-      onPress={()=> navigation.goBack()} > Retour</Text>
+        <Text white bold style={{ marginVertical: 20}} 
+      onPress={()=> navigation.goBack()} > Annuler</Text>
 
-      <Snackbar
-        visible={visible}
-        onDismiss={onDismissSnackBar}
-        style={{ backgroundColor: COLORS.peach}}
-        action={{
-          label: 'Annuler',
-          onPress: () => {
-            // Do something
-          },
-        }}
-        >
-        {onError}
-        
-      </Snackbar>
+      
       </View>
     </View>
     </ScrollView>
@@ -321,7 +315,6 @@ const styles = StyleSheet.create({
   scrollContainer: {
     flexGrow: 1,
     paddingBottom: 20,
-    paddingTop: 20,
   },
   animation: {
     width: 300,
