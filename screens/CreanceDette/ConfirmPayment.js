@@ -9,13 +9,20 @@ import { useNavigation } from '@react-navigation/native';
 import SelectDropdown from 'react-native-select-dropdown';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { GenerateReferenceCode } from '../../constants/generateReferenceCode';
+import { useDispatch } from 'react-redux';
+import { soumettreProduct } from '../../redux/prodReducer';
 
 const ConfirmPayment = (props, { route }) => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+
+  const [load, setLoad] = useState(false)
+
   const [password, setPassword] = useState();
   let ref = GenerateReferenceCode();
   
   const payByFlexPayAPI = async () => {
+    setLoad(true)
     const phone = props?.route?.params?.connectedUser?.mobile;
     const tokenFlexPay = process.env.TOKEN_FLEXPAY;
       const data = {
@@ -30,7 +37,7 @@ const ConfirmPayment = (props, { route }) => {
           callbackUrl: "http://afrintech.org/"
       }
       
-      console.log("test", data);
+      //console.log("test", data);
 
       await fetch(`https://beta-backend.flexpay.cd/api/rest/v1/paymentService`, {
         body: JSON.stringify(data),
@@ -42,14 +49,92 @@ const ConfirmPayment = (props, { route }) => {
       })
         .then(async response => {
           let data = await response.json();
-          console.log(data);
+          //console.log("------????", data);
+
+          //console.log(data.orderNumber);
+          console.log();
           // navigation.goBack()
+          // TODO : Add ref info membres [ 
+          //   user ...
+          //   flex_pay_ref
+          // ]
+
+          // console.log("new ob",{
+          //   ...props?.route?.params?.foodDetails,
+          //   id: props?.route?.params?.foodDetails._id,
+          //   membres: [
+          //     ...props?.route?.params?.foodDetails.membres,
+          //     {
+          //       user: props?.route?.params?.connectedUser?.userId,
+          //       // admission_req: 'PENDING',
+          //       contribution_amount: props?.route?.params?.somme,
+          //       // contribution_status: 'PENDING',
+          //       flex_pay_ref:[
+          //         ...(props?.route?.params?.foodDetails?.membres?.flex_pay_ref || []),
+          //         ref
+          //       ],
+          //       flex_pay_order_number: [
+          //         ...(props?.route?.params?.foodDetails?.membres?.flex_pay_order_number || []),
+          //         data.orderNumber
+          //       ]
+          //     }
+          //   ]
+          // });
+
+          const foodDetails = await props?.route?.params?.foodDetails;
+          const connectedUserId = await props?.route?.params?.connectedUser?.userId;
+
+          // Find the index of the member with the specified user ID
+          const memberIndex = foodDetails?.membres.findIndex(member => member.user._id === connectedUserId);
+          foodDetails?.membres.map(member => {
+            
+            console.log("id:::::::",member.user._id, connectedUserId);
+            return member.user === connectedUserId
+          });
+
+          // If the member exists, update its properties
+          if (memberIndex !== -1) {
+            foodDetails.membres[memberIndex] = {
+              ...foodDetails.membres[memberIndex],
+              // Update other properties as needed
+              contribution_amount: props?.route?.params?.somme,
+              flex_pay_ref: [
+                ...(foodDetails.membres[memberIndex].flex_pay_ref || []),
+                await ref,
+              ],
+              flex_pay_order_number: [
+                ...(foodDetails.membres[memberIndex].flex_pay_order_number || []),
+                //...(props?.route?.params?.foodDetails?.membres?.flex_pay_order_number || []),
+               await data.orderNumber,
+              ],
+            };
+          }
+
+          // console.log("Updated foodDetails", {
+          //   ...props?.route?.params?.foodDetails,
+          //   ...foodDetails
+          // });
+
+
+          // Reuse the soumettreProduct function
+
+          dispatch(soumettreProduct({
+            ...props?.route?.params?.foodDetails,
+            ...foodDetails,
+
+            id: foodDetails._id,
+          }));
+
+
+          setLoad(false)
 
           
         })
         .catch(err => {
+          setLoad(false)
+
           console.log('Cannot ');
-          console.log(err);
+          console.log(err.message);
         });
 
   }
@@ -173,7 +258,7 @@ const ConfirmPayment = (props, { route }) => {
             placeholder="Mots de passe"
             secureTextEntry={true}
           />
-          <Button mode='contained' buttonColor='green' onPress={()=> payByFlexPayAPI()}>{props?.route?.params?.button}</Button>
+          <Button disabled={load} loading={load} mode='contained' buttonColor='green' onPress={()=> payByFlexPayAPI()}>{props?.route?.params?.button}</Button>
       </Block>
       
     </Block>

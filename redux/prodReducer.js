@@ -1035,7 +1035,7 @@ export const soumettreProduct = createAsyncThunk(
     });
 
     console.log("Soummetre prod---?????? ok==", { // Use PUT request for updating
-      couts,
+        membres,
     });
 
     return response.data;
@@ -1151,6 +1151,7 @@ const productSlice = createSlice({
       state.isLoading = true;
       state.isLoadingAdhesion = true;
       state.error = null;
+      console.log("pending");
     })
     .addCase(soumettreProduct.fulfilled, (state, action) => {
       state.isLoading = false;
@@ -1158,13 +1159,16 @@ const productSlice = createSlice({
       state.lastSaved = action.payload;
       state.error = null;
       state.successAdhesion = "Adhesion avec success";
-
+      console.log("action.payload", action.payload);
+    
 
     })
     .addCase(soumettreProduct.rejected, (state, action) => {
       state.isLoading = false;
       state.isLoadingAdhesion = false;
       state.error = action.error.message;
+      console.log("error",  action.error.message);
+      
     });
   },
 });
