@@ -520,6 +520,7 @@ const Details = ({ route, navigation }) => {
               button:'Verifier && confirmer',
               currency: foodDetails.currency,
               type:'achat',
+              foodDetails
             })
           }} >ACHETER</Button>
           </Block>
@@ -553,10 +554,11 @@ const Details = ({ route, navigation }) => {
             />
           </TouchableOpacity>
         </Block>
+        {isLoadingAdhesion?
+        <ActivityIndicator animating={true} /> :
         <Button buttonColor={COLORS.darkgreen} disabled={isLoading} mode='contained' style={{marginTop:10}} onPress={()=> {
           handleAcceptReq(currentItem)
-        }}>Accepter</Button>
-
+        }}>Accepter</Button>}
       
       </BottomSheetScrollView>
 
@@ -586,9 +588,11 @@ const Details = ({ route, navigation }) => {
             />
           </TouchableOpacity>
         </Block>
+        {isLoadingAdhesion?
+        <ActivityIndicator animating={true} /> :
         <Button buttonColor={COLORS.peach}  disabled={isLoading} mode='contained' style={{marginTop:10}} onPress={()=> {
           handleReject(currentItem)
-        }}>Rejeter</Button>
+        }}>Rejeter</Button>}
 
       </BottomSheetScrollView>
 
@@ -598,7 +602,7 @@ const Details = ({ route, navigation }) => {
   const renderBottomAdhesion = (item) => (
     <BottomSheetModal
       ref={bottomSheetAdhesion}
-      index={1}
+      index={0}
       backdropComponent={BackdropElement}
       snapPoints={snapPoints}
       backgroundStyle={{ borderRadius: responsiveScreenWidth(5), backgroundColor:'#eee'}}
@@ -625,8 +629,8 @@ const Details = ({ route, navigation }) => {
               d'argent et ganger apres l'exercice! Votre demande d'adhesion sera validee par le proprietaire du {foodDetails.type }
               {" "}{ foodDetails.name}</Text> */}
         </Block>
-        <Text bold color={COLORS.darkgreen} variant="titleLarge"  center>{msgSuccess}</Text>
-        <Text bold color={COLORS.peach} variant="titleLarge"  center >{msgError}</Text>
+        {/* <Text bold color={COLORS.darkgreen} variant="titleLarge"  center>{msgSuccess}</Text>
+        <Text bold color={COLORS.peach} variant="titleLarge"  center >{msgError}</Text> */}
         
         {isLoadingAdhesion?
         <ActivityIndicator animating={true} /> :
@@ -849,30 +853,33 @@ const Details = ({ route, navigation }) => {
         return membre;
       });
 
-      dispatch(soumettreProduct({
+      await dispatch(soumettreProduct({
         ...foodDetails,
         id: foodDetails._id,
         membres: updatedMembres,
       }));
-  
-       // Update state
-      setStatusError(!error && !isLoading);
-      setStatusSuccess(!error && !isLoading);
 
-      // Check if the user's rejection has been made successfully
-      if (!statusError && statusSuccess) {
-        setMsgSuccess(`Accepté avec success`);
-        setMsgError("");
-        setStatusSuccess(true);
-        setStatusError(false);
-        onToggleSnackBar();
-      }else {
-          setMsgError("Une Erreur s'est produite");
-          setMsgSuccess("");
-          setStatusSuccess(false);
-          setStatusError(true);
-          onToggleSnackBar();
-      }
+      await reloadScreen();
+      await hideModalAccept();
+  
+      //  // Update state
+      // setStatusError(!error && !isLoading);
+      // setStatusSuccess(!error && !isLoading);
+
+      // // Check if the user's rejection has been made successfully
+      // if (!statusError && statusSuccess) {
+      //   setMsgSuccess(`Accepté avec success`);
+      //   setMsgError("");
+      //   setStatusSuccess(true);
+      //   setStatusError(false);
+      //   onToggleSnackBar();
+      // }else {
+      //     setMsgError("Une Erreur s'est produite");
+      //     setMsgSuccess("");
+      //     setStatusSuccess(false);
+      //     setStatusError(true);
+      //     onToggleSnackBar();
+      // }
     }
     catch(e){
       setMsgError("Une Erreur s'est produite");
@@ -895,29 +902,32 @@ const Details = ({ route, navigation }) => {
         return membre;
       });
 
-      dispatch(soumettreProduct({
+      await dispatch(soumettreProduct({
         ...foodDetails,
         id: foodDetails._id,
         membres: updatedMembres,
       }));
-  
-      setStatusError(!error && !isLoading);
-      setStatusSuccess(!error && !isLoading);
 
-      // Check if the product was deleted successfully
-      if (!statusError && statusSuccess) {
-        setMsgSuccess(`Rejet avec success`);
-        setMsgError("");
-        setStatusSuccess(true);
-        setStatusError(false);
-        onToggleSnackBar();
-      }else {
-          setMsgError("Une Erreur s'est produite");
-          setMsgSuccess("");
-          setStatusSuccess(false);
-          setStatusError(true);
-          onToggleSnackBar();
-      }
+      await reloadScreen();
+      await hideModalReject();
+  
+      // setStatusError(!error && !isLoading);
+      // setStatusSuccess(!error && !isLoading);
+
+      // // Check if the product was deleted successfully
+      // if (!statusError && statusSuccess) {
+      //   setMsgSuccess(`Rejet avec success`);
+      //   setMsgError("");
+      //   setStatusSuccess(true);
+      //   setStatusError(false);
+      //   onToggleSnackBar();
+      // }else {
+      //     setMsgError("Une Erreur s'est produite");
+      //     setMsgSuccess("");
+      //     setStatusSuccess(false);
+      //     setStatusError(true);
+      //     onToggleSnackBar();
+      // }
     }
     catch(e){
       setMsgError("Une Erreur s'est produite");
@@ -1940,60 +1950,6 @@ const Details = ({ route, navigation }) => {
           </Card.Actions>
         </Card>
       </Modal>
-
-
-      {/* Adhesion */}
-      <Modal
-        style={{ zIndex: 99 }}
-        visible={visibleAdhesion}
-        onDismiss={hideModalAdhesion}
-        contentContainerStyle={[containerStyle, { zIndex: 999 }]} // Set a higher value for the z-index
-      >
-
-        <Card style={{ padding: 10 }}>
-          <Card.Title
-            titleStyle={{ fontWeight: 'bold', textTransform: 'uppercase' }}
-            title="ATTENTION!" 
-          />
-          {
-            !connectedUser?
-          <>
-          <Card.Content>
-            <Text variant="titleLarge">Vous devez d'abord vous connecter</Text>
-          </Card.Content>
-          <Card.Actions style={{ marginTop: 15 }}>
-            <Button onPress={hideModalAdhesion}>Annuler</Button>
-            <Button buttonColor={COLORS.red}
-             onPress={() => {
-              hideModalAdhesion()
-              navigation.navigate('AuthScreen')
-            }} >Connecter</Button>
-          </Card.Actions>
-          </>
-              :
-            <>
-            <Card.Content>
-            <Text variant="titleLarge">Voulez-vous vraiment Faire parti des insvesitteurs du {foodDetails.type }
-              {" "}{ foodDetails.name}?</Text>
-
-              <Text color={COLORS.peach} variant="titleLarge">Ceci implique que vous pouvez contribuer une somme
-              d'argent et ganger apres l'exercice! Votre demande d'adhesion sera validee par le proprietaire du {foodDetails.type }
-              {" "}{ foodDetails.name}</Text>
-          </Card.Content>
-          <Card.Actions style={{ marginTop: 15 }}>
-            <Button onPress={hideModalAdhesion}>Annuler</Button>
-            <Button buttonColor={COLORS.purple}
-             onPress={() => {
-              hideModalDel()
-              handleAdhesion()
-            }} >Adherer</Button>
-          </Card.Actions>
-            </>
-            }
-         
-        </Card>
-      </Modal>
-
 
       {/* Quitter */}
       <Modal
