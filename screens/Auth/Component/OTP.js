@@ -17,7 +17,7 @@ import OTPTextInput from "react-native-otp-textinput";
 const OTP = ({ navigation, route }) => {
     const [code, setCode] = useState('');
 
-    const { number } = route.params;
+    const { number, type, otpCode } = route.params;
 
     return (
         <KeyboardAvoidingView
@@ -35,21 +35,21 @@ const OTP = ({ navigation, route }) => {
                     <Text center bold h2>
                         Verification
                     </Text>
-                    <Text  style={{color:'red'}} center>
-                    code test: 0000
+                    <Text style={{ color: 'red' }} center>
+                        code test: 0000
                     </Text>
                     <Text style={styles.input} center>
-                    Merci de confirmer le code de validation envoyé au {number}
+                        Merci de confirmer le code de validation envoyé au {number}
                     </Text>
 
                     <OTPTextInput
-                        textInputStyle={{ borderWidth:1, color: !code == '0000' ? COLORS.peach : COLORS.darkgreen}}
+                        textInputStyle={{ borderWidth: 1, color: !code == '0000' ? COLORS.peach : COLORS.darkgreen }}
                         handleTextChange={setCode}
                         inputCount={4}
                         inputCellLength={1}
                         tintColor={COLORS.black}
                         keyboardType="numeric"
-                        
+
                     />
 
 
@@ -60,24 +60,50 @@ const OTP = ({ navigation, route }) => {
                             </Text>
                         </TouchableOpacity>
 
-                        <Button
-                            style={styles.circularButton}
-                            icon="arrow-right"
-                            mode="contained"
-                            onPress={() => {
-                                console.log("code",code === '0000'  );
-                                console.log("code",code  );
-                                if (code === '0000' ) {
-                                    setCode('')
-                                    navigation.navigate('Account', {
-                                        number: number,
-                                        code: '0000'
-                                    });
-                                }
-                            }}
-                        >
-                            Suivant
-                        </Button>
+                        {
+                            type == 'account' ?
+                                <Button
+                                    style={styles.circularButton}
+                                    icon="arrow-right"
+                                    mode="contained"
+                                    onPress={() => {
+                                        console.log("code", code === '0000');
+                                        console.log("code", code);
+                                        if (code === '0000') {
+                                            setCode('')
+                                            navigation.navigate('Account', {
+                                                number: number,
+                                                code: '0000'
+                                            });
+                                        }
+                                    }}
+                                >
+                                    Suivant
+                                </Button> :
+
+                                <Button
+                                    style={styles.circularButton}
+                                    icon="arrow-right"
+                                    mode="contained"
+                                    onPress={() => {
+                                        console.log("code", code === '0000');
+                                        console.log("code", code);
+                                        if (code === otpCode) {
+                                            setCode('')
+                                            console.log('reinit')
+                                            // navigation.navigate('Account', {
+                                            //     number: number,
+                                            //     code: '0000'
+                                            // });
+                                        }
+                                    }}
+                                >
+                                    Suivant
+                                </Button>
+
+                        }
+
+
                     </View>
                 </Block>
             </View>

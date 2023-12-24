@@ -166,7 +166,8 @@ const CountyPhone = ({ navigation }) => {
                                                 setLoad(false)
                                                 navigation.navigate('OTP', {
                                                     number: formattedValue,
-                                                    code: '0000'
+                                                    type: 'account',
+                                                    otpCode: '0000'
                                                 })
                                                 // console.log('User data:', userData);
                                             }

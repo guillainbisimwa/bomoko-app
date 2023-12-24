@@ -62,9 +62,15 @@ export const ForgetPassword = ({ navigation }) => {
         qs.stringify(requestData), { headers: authHeader });
 
       console.log('Verification request sent successfully:', response.data);
+       navigation.navigate('OTP', {
+          number: formattedValue,
+          type: 'reinit',
+          otpCode: otp
+      })
 
     } catch (error) {
       console.error('Error sending verification request:', error.response ? error.response.data : error.message);
+      Toast.error('Service des SMS indisponible', 'bottom')
     }
   };
 
@@ -139,7 +145,7 @@ export const ForgetPassword = ({ navigation }) => {
             <Block style={{ marginTop: 15, marginBottom: 20 }} flex={1} row center space="between">
 
 
-              <Button disabled={isLoading} mode="contained" loading={isLoading}
+              <Button  mode="contained"  loading={load} disabled={!!load}
                 onPress={async () => {
                   setLoad(true);
                   Keyboard.dismiss();
@@ -169,9 +175,10 @@ export const ForgetPassword = ({ navigation }) => {
                           setLoad(false)
                           // navigation.navigate('OTP', {
                           //     number: formattedValue,
-                          //     code: '0000'
+                          //     type: 'reinit',
+                          //     otpCode: '0000'
                           // })
-                          //   setLoad(false)
+                            setLoad(false)
 
                         }
                       })
