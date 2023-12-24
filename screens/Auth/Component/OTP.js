@@ -86,7 +86,7 @@ const OTP = ({ navigation, route }) => {
                                     icon="arrow-right"
                                     mode="contained"
                                     onPress={() => {
-                                        console.log("code", code === '0000');
+                                       
                                         console.log("code", code);
                                         if (code === otpCode) {
                                             setCode('')

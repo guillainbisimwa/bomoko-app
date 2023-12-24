@@ -62,6 +62,8 @@ export const ForgetPassword = ({ navigation }) => {
         qs.stringify(requestData), { headers: authHeader });
 
       console.log('Verification request sent successfully:', response.data);
+      setLoad(false)
+
        navigation.navigate('OTP', {
           number: formattedValue,
           type: 'reinit',
@@ -172,14 +174,6 @@ export const ForgetPassword = ({ navigation }) => {
                         }
                         else {
                           sendCode();
-                          setLoad(false)
-                          // navigation.navigate('OTP', {
-                          //     number: formattedValue,
-                          //     type: 'reinit',
-                          //     otpCode: '0000'
-                          // })
-                            setLoad(false)
-
                         }
                       })
                       .catch((error) => {

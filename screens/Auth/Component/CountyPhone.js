@@ -38,8 +38,8 @@ const CountyPhone = ({ navigation }) => {
             const authToken = process.env.AUTH_TOKEN;
             const serviceSid = process.env.SERVICE_SID
 
-            const customEndpoint = `https://verify.twilio.com/v2/Services/${serviceSid}/Verifications`;
-            //const customEndpoint = 'https://api.twilio.com/2010-04-01/Accounts/ACbd9d562b452a2c62459200227432468e/Messages.json'
+           // const customEndpoint = `https://verify.twilio.com/v2/Services/${serviceSid}/Verifications`;
+            const customEndpoint = 'https://api.twilio.com/2010-04-01/Accounts/ACbd9d562b452a2c62459200227432468e/Messages.json'
 
             const requestData = {
                 customFriendlyName: 'Afintech',
@@ -59,8 +59,16 @@ const CountyPhone = ({ navigation }) => {
                 qs.stringify(requestData), { headers: authHeader });
 
             console.log('Verification request sent successfully:', response.data);
+            setLoad(false)
+            navigation.navigate('OTP', {
+                number: formattedValue,
+                type: 'account',
+                otpCode: '0000'
+            })
         } catch (error) {
             console.error('Error sending verification request:', error.response ? error.response.data : error.message);
+            Toast.error('Service des SMS indisponible', 'bottom')
+
         }
     };
 
@@ -163,12 +171,7 @@ const CountyPhone = ({ navigation }) => {
                                                 // Toast.success('Numéro de téléphone correct', 'bottom')
 
                                                 sendCode();
-                                                setLoad(false)
-                                                navigation.navigate('OTP', {
-                                                    number: formattedValue,
-                                                    type: 'account',
-                                                    otpCode: '0000'
-                                                })
+                                                
                                                 // console.log('User data:', userData);
                                             }
                                             else {
