@@ -183,7 +183,7 @@ export const LoginForm = ({ navigation }) => {
                 setFormattedValue(text);
               }}
               containerStyle={{
-                borderColor: !valid ? COLORS.peach : "transparent",
+                borderColor: valid ? COLORS.darkgreen : "transparent",
                 borderWidth: 2,
                 width: '100%'
               }}
@@ -201,7 +201,7 @@ export const LoginForm = ({ navigation }) => {
             <Block row right >
               <Text >
 
-                <TouchableOpacity>
+                <TouchableOpacity onPress={()=> navigation.navigate("ForgetPassword")}>
                   <Text color={COLORS.gray}> Mot de passe oublié?</Text></TouchableOpacity>
               </Text>
             </Block>
@@ -278,6 +278,7 @@ const styles = StyleSheet.create({
     padding: 2,
   },
   button: {
-    width: '100%'
+    width: '100%',
+    padding: 5
   }
 });
