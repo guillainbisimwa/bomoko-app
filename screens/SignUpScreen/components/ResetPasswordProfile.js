@@ -7,8 +7,11 @@ import NetInfo from "@react-native-community/netinfo";
 import { MaterialIcons } from "@expo/vector-icons";
 
 import { COLORS, FONTS } from '../../../constants';
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { Block, Text } from "../../../components";
+import Container, { Toast } from 'toastify-react-native';
+import { loginUser, resetPassword } from '../../../redux/userSlice';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const { height, width } = Dimensions.get('window');
@@ -68,6 +71,35 @@ export const ResetPasswordProfile = ({ navigation, route }) => {
     }, []) // Empty dependency array to run this effect only once when the screen mounts
   );
 
+  const navigationV2 = useNavigation();
+
+  // Use useEffect or any other method to handle the success state and display the alert
+  useEffect(() => {
+    checkLoginStatus();
+  }, [onSuccess, onError]);
+
+  const hasErrorKey = (obj) => {
+    return obj && typeof obj === 'object' && 'error' in obj;
+  }
+
+  const checkLoginStatus = async () => {
+    try {
+      const value = await AsyncStorage.getItem('user');
+
+      //console.log('value-user', value);
+      if (value !== null) {
+        navigationV2.navigate('Main');
+      } else {
+        // Toast.error("Une erreur s'est produite!-", 'bottom')
+        console.log("error", onError);
+        console.log("success", onSuccess);
+      }
+    } catch (error) {
+      console.log('Error retrieving installation status:', error);
+      Toast.error("Une erreur s'est produite!", 'bottom');
+    }
+  };
+
 
   // Function to handle screen reload
   const reloadScreen = (value) => {
@@ -119,37 +151,46 @@ const handleResetPassword = async () => {
       return;
     }
 
-    if(password.length > 3 && (password == confirmPassword)){
+    console.log("password.length > 3 && (password == confirmPassword)", password.length > 3 && (password == confirmPassword));
+    if( password.length < 3){
+      Toast.error('Le mot de passe doit avoir plus de 3 caractères!', 'bottom')
+    }
+    else if(password == confirmPassword){
       // Handle login functionality
       console.log({
         id: id,
         password
       });
+      await dispatch(resetPassword({
+        ...connectedUser,
+        userId: connectedUser._id,
+        id: connectedUser._id,
+        password
+      }));
+
+      await Toast.success('Le mot de passe modifié !', 'bottom')
+
+       // Handle login functionality
+      await dispatch(loginUser({ mobile, password })).then((data) => {
+        console.log('data', data);
+        if (hasErrorKey(data)) {
+          Toast.error("Une erreur s'est produite!!", 'bottom');
+        }
+
+      }).catch((err) => {
+        Toast.error("Une erreur s'est produite!", 'bottom');
+        console.log('err', err);
+      })
+      setOnSuccess(onSuccess);
+      setOnError(true);
     }
     else {
-      Alert.alert("Attention", "Veillez valider le mot de passe!");
+      Toast.error('Les mots de passes de correspondent pas!', 'bottom')
     }
 
-    
-
-    // dispatch(editUser({
-    //   ...connectedUser,
-    //   userId: connectedUser._id,
-    //   id: connectedUser._id,
-    //   username:name,
-    //   name,
-    //   email,
-    //   mobile,
-    //   role,
-    //   cover_url:'', 
-    //   profile_pic: selectedImage
-    // }));
-
-    setOnSuccess(onSuccess);
-    setOnError(true);
- 
   } catch (error) {
-    Alert.alert("Attention", "Une erreur est survenue.");
+    Toast.error('Une erreur est survenue', 'bottom')
+
     setOnError(false)
 
     console.error("Error occurred during login:", error);
@@ -169,7 +210,7 @@ const handleResetPassword = async () => {
         blurRadius={10}
       ></ImageBackground>
       <View style={styles.contentContainer}>
-     
+      <Container position="top" style={{ width: '100%' }} duration={6000} />
         <View
           style={{
             alignItems: "center",
@@ -215,7 +256,8 @@ const handleResetPassword = async () => {
         </Block>
        
 
-        <TextInput error={onError} editable={false} keyboardType="default" label="Nom d'utilisateur" value={name} onChangeText={setNom} style={styles.input} />
+        <TextInput editable={false} keyboardType="default" label="Nom d'utilisateur" 
+        value={name} onChangeText={setNom} style={styles.input} />
         
         {/* <TextInput error={onError} keyboardType="default" 
         label="E-mail" value={email} 
