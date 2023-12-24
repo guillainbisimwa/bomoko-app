@@ -63,7 +63,8 @@ const CountyPhone = ({ navigation }) => {
             navigation.navigate('OTP', {
                 number: formattedValue,
                 type: 'account',
-                otpCode: '0000'
+                otpCode: '0000',
+                userData: null
             })
         } catch (error) {
             console.error('Error sending verification request:', error.response ? error.response.data : error.message);

@@ -32,7 +32,7 @@ export const ForgetPassword = ({ navigation }) => {
 
   const [load, setLoad] = useState(false);
 
-  const sendCode = async () => {
+  const sendCode = async (userData) => {
 
     try {
       console.log(process.env.ACCOUNT_SID);
@@ -67,10 +67,12 @@ export const ForgetPassword = ({ navigation }) => {
        navigation.navigate('OTP', {
           number: formattedValue,
           type: 'reinit',
-          otpCode: otp
+          otpCode: otp,
+          userData
       })
 
     } catch (error) {
+      setLoad(false)
       console.error('Error sending verification request:', error.response ? error.response.data : error.message);
       Toast.error('Service des SMS indisponible', 'bottom')
     }
@@ -173,7 +175,7 @@ export const ForgetPassword = ({ navigation }) => {
                           Toast.warn('Numéro de téléphone non reconnu', 'bottom')
                         }
                         else {
-                          sendCode();
+                          sendCode(userData);
                         }
                       })
                       .catch((error) => {

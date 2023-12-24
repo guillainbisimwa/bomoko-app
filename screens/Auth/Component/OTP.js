@@ -17,7 +17,8 @@ import OTPTextInput from "react-native-otp-textinput";
 const OTP = ({ navigation, route }) => {
     const [code, setCode] = useState('');
 
-    const { number, type, otpCode } = route.params;
+    const { number, type, otpCode, userData } = route.params;
+    console.log("userData", userData);
 
     return (
         <KeyboardAvoidingView
@@ -91,6 +92,7 @@ const OTP = ({ navigation, route }) => {
                                         if (code === otpCode) {
                                             setCode('')
                                             console.log('reinit')
+                                            navigation.navigate('ResetPasswordProfile', { user: userData})
                                             // navigation.navigate('Account', {
                                             //     number: number,
                                             //     code: '0000'
