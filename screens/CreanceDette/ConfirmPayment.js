@@ -9,8 +9,6 @@ import { useNavigation } from '@react-navigation/native';
 import SelectDropdown from 'react-native-select-dropdown';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { GenerateReferenceCode } from '../../constants/generateReferenceCode';
-import axios from 'axios';
-
 
 const ConfirmPayment = (props, { route }) => {
   const navigation = useNavigation();
@@ -27,9 +25,9 @@ const ConfirmPayment = (props, { route }) => {
           amount: props?.route?.params?.somme,
           currency: props?.route?.params?.currency,
           description: props?.route?.params?.motif,
-          phone: phone.split('+')[1],
-          // phone: "243891979018",
-          callbackUrl: "http://localhost"
+          // phone: phone.split('+')[1],
+          phone: "243891979018",
+          callbackUrl: "http://afrintech.org/"
       }
       
       console.log("test", data);
@@ -45,7 +43,8 @@ const ConfirmPayment = (props, { route }) => {
         .then(async response => {
           let data = await response.json();
           console.log(data);
-          navigation.goBack()
+          // navigation.goBack()
+
           
         })
         .catch(err => {
@@ -53,7 +52,6 @@ const ConfirmPayment = (props, { route }) => {
           console.log(err);
         });
 
-   
   }
 
   const renderConfirm = () => {
@@ -114,7 +112,8 @@ const ConfirmPayment = (props, { route }) => {
         </Block>
 
       </Block>
-      <Text center gray style={styles.motif}>{props?.route?.params?.motif} </Text>
+      <Text center >{props?.route?.params?.motif} </Text>
+      <Text center gray style={styles.motif}>Attention, des frais de transfert peuvent s'appliquer</Text>
       
       <Divider />
 

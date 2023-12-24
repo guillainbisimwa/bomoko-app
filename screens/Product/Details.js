@@ -515,7 +515,7 @@ const Details = ({ route, navigation }) => {
               nombreParts: parseInt(interest),
               prixParts: parseInt(foodDetails.amount / 100),
               connectedUser:  route.params.connectedUser,
-              motif:  `Achat de ${parseInt(interest)} parts a ${parseFloat(parseFloat(interest) * (foodDetails.amount / 100) ).toFixed(2)} ${foodDetails.currency}?`,
+              motif:  `Achat de ${parseInt(interest)} parts à ${parseFloat(parseFloat(interest) * (foodDetails.amount / 100) ).toFixed(2)} ${foodDetails.currency}?`,
               titre: 'Confirmez votre payment',
               button:'Verifier && confirmer',
               currency: foodDetails.currency,

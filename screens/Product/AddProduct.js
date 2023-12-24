@@ -290,8 +290,8 @@ const pickImage = async () => {
               </View>
 
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <RadioButton value="FC" color="blue" /> 
-                <Text>FC</Text>
+                <RadioButton value="CDF" color="blue" /> 
+                <Text>CDF</Text>
               </View>
             </RadioButton.Group>
           </Block>
