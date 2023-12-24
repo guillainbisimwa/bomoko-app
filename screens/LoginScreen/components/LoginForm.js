@@ -33,7 +33,7 @@ export const LoginForm = ({ navigation }) => {
   const [phone, setPhone] = useState(''); //12345678
   const [password, setPassword] = useState('');//test2
 
-  const [passwordError, setPasswordError] = useState(true);
+  const [passwordError, setPasswordError] = useState(false);
 
   const navigationV2 = useNavigation();
 
@@ -41,13 +41,13 @@ export const LoginForm = ({ navigation }) => {
   useEffect(() => {
     checkLoginStatus();
     if (error && !success && listenerError) {
-      console.log("====>",error);
+      console.log("====>", error);
       // Toast.warn("Verifier votre internet!", 'bottom');
 
       Toast.error("Une erreur s'est produite", 'bottom');
       setValid(false);
       setPasswordError(true)
-      
+
     }
   }, [success, error]);
 
@@ -64,8 +64,8 @@ export const LoginForm = ({ navigation }) => {
         navigationV2.navigate('Main');
       } else {
         // Toast.error("Une erreur s'est produite!-", 'bottom')
-        console.log("error",error);
-        console.log("success",success);
+        console.log("error", error);
+        console.log("success", success);
       }
     } catch (error) {
       console.log('Error retrieving installation status:', error);
@@ -110,13 +110,13 @@ export const LoginForm = ({ navigation }) => {
         }
 
         // Handle login functionality
-        dispatch(loginUser({ mobile: formattedValue, password })).then((data)=> {
-          console.log('data',data);
+        dispatch(loginUser({ mobile: formattedValue, password })).then((data) => {
+          console.log('data', data);
           if (hasErrorKey(data)) {
             Toast.error("Une erreur s'est produite!!", 'bottom');
           }
 
-        }).catch((err)=> {
+        }).catch((err) => {
           Toast.error("Une erreur s'est produite!", 'bottom');
           console.log('err', err);
         })
@@ -146,7 +146,7 @@ export const LoginForm = ({ navigation }) => {
 
   return (
 
-    <SafeAreaView style={{ flex: 1 }}>
+    <KeyboardAvoidingView style={{ flex: 1 }}>
       <ImageBackground
         style={{ flex: 1, position: "absolute", height, width }}
         source={require('./../../../assets/login1_bg.png')}
@@ -164,6 +164,9 @@ export const LoginForm = ({ navigation }) => {
               autoPlay
               loop
             />
+            <Block center margin={[0, 0, 20, 0]}>
+              <Text white bold h2>CONNECTER</Text>
+            </Block>
 
             <PhoneInput
               ref={phoneInput}
@@ -195,15 +198,20 @@ export const LoginForm = ({ navigation }) => {
               error={passwordError}
             />
 
-            <Block style={{marginTop: 15}} flex={1} row center  space="between">
-              <TouchableOpacity onPress={() => {
-              }}>
-                <Text bold style={{color: COLORS.white}}
-                  onPress={() => navigation.goBack()} > Retour</Text>
-              </TouchableOpacity>
+            <Block row right >
+              <Text >
 
-              <Button disabled={isLoading} mode="contained" loading={isLoading} 
-              onPress={handleLogin} style={styles.button}>
+                <TouchableOpacity>
+                  <Text color={COLORS.gray}> Mot de passe oublié?</Text></TouchableOpacity>
+              </Text>
+            </Block>
+
+
+            <Block style={{ marginTop: 15, marginBottom: 20 }} flex={1} row center space="between">
+
+
+              <Button disabled={isLoading} mode="contained" loading={isLoading}
+                onPress={handleLogin} style={styles.button}>
                 Se connecter
               </Button>
             </Block>
@@ -213,14 +221,17 @@ export const LoginForm = ({ navigation }) => {
 
 
       </ScrollView>
-      <View style={{ width: '100%', padding: 15, }}>
-        <Text >
+      <Block center>
+        <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => {
+        }}>
+          <Text style={{ color: COLORS.gray }}
+            onPress={() => navigation.goBack()} > Nouveau utilisateur? </Text>
+          <Text bold style={{ color: COLORS.white }}
+            onPress={() => navigation.goBack()} > s'enregistrer</Text>
+        </TouchableOpacity>
+      </Block>
 
-          <TouchableOpacity>
-            <Text color={COLORS.gray}> Mot de passe oublié?</Text></TouchableOpacity>
-        </Text>
-      </View>
-    </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -265,5 +276,8 @@ const styles = StyleSheet.create({
   },
   circularButton: {
     padding: 2,
+  },
+  button: {
+    width: '100%'
   }
 });
