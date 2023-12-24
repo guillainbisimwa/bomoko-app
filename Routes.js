@@ -27,6 +27,7 @@ import CountyPhone from './screens/Auth/Component/CountyPhone';
 import Account from './screens/Auth/Component/Account';
 import OTP from './screens/Auth/Component/OTP';
 import { ForgetPassword } from './screens/LoginScreen/components/ForgetPassword';
+import { ResetPasswordProfile } from './screens/SignUpScreen/components/ResetPasswordProfile';
 
 const theme = {
   ...DefaultTheme,
@@ -281,6 +282,10 @@ const App = () => {
           }} />
 
           <Stack.Screen name="ForgetPassword" component={ForgetPassword} options={{
+            headerShown: false,
+          }} />
+
+          <Stack.Screen name="ResetPasswordProfile" component={ResetPasswordProfile} options={{
             headerShown: false,
           }} />
 
