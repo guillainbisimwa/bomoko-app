@@ -59,28 +59,6 @@ const ConfirmPayment = (props, { route }) => {
           //   flex_pay_ref
           // ]
 
-          // console.log("new ob",{
-          //   ...props?.route?.params?.foodDetails,
-          //   id: props?.route?.params?.foodDetails._id,
-          //   membres: [
-          //     ...props?.route?.params?.foodDetails.membres,
-          //     {
-          //       user: props?.route?.params?.connectedUser?.userId,
-          //       // admission_req: 'PENDING',
-          //       contribution_amount: props?.route?.params?.somme,
-          //       // contribution_status: 'PENDING',
-          //       flex_pay_ref:[
-          //         ...(props?.route?.params?.foodDetails?.membres?.flex_pay_ref || []),
-          //         ref
-          //       ],
-          //       flex_pay_order_number: [
-          //         ...(props?.route?.params?.foodDetails?.membres?.flex_pay_order_number || []),
-          //         data.orderNumber
-          //       ]
-          //     }
-          //   ]
-          // });
-
           const foodDetails = await props?.route?.params?.foodDetails;
           const connectedUserId = await props?.route?.params?.connectedUser?.userId;
 

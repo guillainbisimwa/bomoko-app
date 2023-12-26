@@ -29,6 +29,25 @@ const CountyPhone = ({ navigation }) => {
     const [load, setLoad] = useState(false);
     const phoneInput = useRef(null);
 
+    const addNumberToTwillo = () => {
+        // Download the helper library from https://www.twilio.com/docs/node/install
+        // Find your Account SID and Auth Token at twilio.com/console
+        // and set the environment variables. See http://twil.io/secure
+        const accountSid = process.env.ACCOUNT_SID;
+        const authToken = process.env.AUTH_TOKEN;
+        const client = require('twilio')(accountSid, authToken);
+
+        console.log("While");
+
+        client.validationRequests
+        .create({friendlyName: formattedValue, phoneNumber: formattedValue})
+        .then(async validation_request => {
+            console.log(validation_request.friendlyName)
+            //await sendCode();
+            });
+
+    }
+
     const sendCode = async () => {
 
         try {
@@ -38,8 +57,8 @@ const CountyPhone = ({ navigation }) => {
             const authToken = process.env.AUTH_TOKEN;
             const serviceSid = process.env.SERVICE_SID
 
-           // const customEndpoint = `https://verify.twilio.com/v2/Services/${serviceSid}/Verifications`;
-            const customEndpoint = 'https://api.twilio.com/2010-04-01/Accounts/ACbd9d562b452a2c62459200227432468e/Messages.json'
+           const customEndpoint = `https://verify.twilio.com/v2/Services/${serviceSid}/Verifications`;
+            //const customEndpoint = 'https://api.twilio.com/2010-04-01/Accounts/ACbd9d562b452a2c62459200227432468e/Messages.json'
 
             const requestData = {
                 customFriendlyName: 'Afintech',
@@ -170,7 +189,7 @@ const CountyPhone = ({ navigation }) => {
                                             if (userData?.msg === "User not found!") {
                                                 // Perform your action here
                                                 // Toast.success('Numéro de téléphone correct', 'bottom')
-
+                                                // addNumberToTwillo();
                                                 sendCode();
                                                 
                                                 // console.log('User data:', userData);
