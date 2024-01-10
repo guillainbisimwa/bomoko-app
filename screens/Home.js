@@ -204,6 +204,14 @@ const Home = ({ navigation }) => {
   //   }, 5);
   // }, []);
 
+  const updateAsyncStorage = async(updatedArr)=>{
+    console.log("Cat", Cat);
+    await dispatch(addCat(updatedArr));
+    // await setCategories(updatedArr);
+    await setCategories(updatedArr.filter((value, key) => value.cat === 'income'));
+    await setCat('income');
+  }
+
   const openModalDetails = useCallback(() => {
     bottomSheetDetails.current?.present();
     setTimeout(() => {
@@ -334,6 +342,9 @@ const Home = ({ navigation }) => {
                   buttonColor={COLORS.blue}
                   mode="contained"
                   onPress={() => {
+                    console.log('selected.item');
+                    console.log('selected.item');
+                    console.log('selected.item');
                     console.log('selected.item', selectedItem);
 
                     const criteria = {
@@ -389,8 +400,9 @@ const Home = ({ navigation }) => {
                     });
 
                     console.log(JSON.stringify(updatedArr))
-                    setCategories(updatedArr)
-                    dispatch(addCat(updatedArr));
+                    // setCategories(updatedArr)
+                    // dispatch(addCat(updatedArr));
+                    updateAsyncStorage(updatedArr);
                     // Close Bottom sheet
                     hideModalDisplayDetail()
 
@@ -406,7 +418,7 @@ const Home = ({ navigation }) => {
               supp ? <Block>
 
                 <Block style={{ padding: 5 }} row space='between'>
-                  <Block flex={1}>
+                  {/* <Block flex={1}>
                     <Image
                       source={selectedItem && selectedItem.icon}
                       style={{
@@ -419,8 +431,8 @@ const Home = ({ navigation }) => {
                         padding: 5
                       }}
                     />
-                  </Block>
-
+                  </Block> */}
+{/* 
                   <Block flex={4} middle>
                     <Block row space='between'>
                       <Text color={supp ? COLORS.red : COLORS.blue} bold>DATE :</Text>
@@ -432,11 +444,11 @@ const Home = ({ navigation }) => {
                       <Text gray>{selectedItem && selectedItem.name}</Text>
                     </Block>
 
-                  </Block>
+                  </Block> */}
 
                 </Block>
 
-                <Block style={{ marginVertical: 8 }} row space='between'>
+                {/* <Block style={{ marginVertical: 8 }} row space='between'>
                   <Text color={supp ? COLORS.red : COLORS.blue} h3 bold>DESCRIPTION</Text>
                   <Text >{selectedItem && selectedItem.description}
                   </Text>
@@ -446,7 +458,7 @@ const Home = ({ navigation }) => {
                 <Block style={{ marginVertical: 8 }} row space='between'>
                   <Text color={supp ? COLORS.red : COLORS.blue} h3 bold>SOMME</Text>
                   <Text>{selectedItem && selectedItem.total} USD</Text>
-                </Block>
+                </Block> */}
 
                 <Button style={{ marginTop: 15 }} mode='contained' buttonColor={COLORS.peach}
                   onPress={() => {
@@ -459,6 +471,11 @@ const Home = ({ navigation }) => {
 
                     // List selected object 
                     //console.log('selectedItem', selectedItem);
+                    
+                    console.log('selected.item');
+                    console.log('selected.item');
+                    console.log('selected.item');
+                    console.log('selected.item', selectedItem);
 
                     const criteria = {
                       "cat": selectedItem.cat,
@@ -473,6 +490,11 @@ const Home = ({ navigation }) => {
                       "description": selectedItem.description,
                       "total": parseFloat(selectedItem.total),
                     };
+
+                    console.log("catList", catList);
+                    console.log()
+                    console.log()
+
 
                     const updatedArr = catList.map(item => {
                       if (
@@ -494,15 +516,33 @@ const Home = ({ navigation }) => {
                       return item;
                     });
 
+                  //   const deldArr = (givenArray, idToRemove) => {
+                  //     for (let item of givenArray) {
+                  //       // Check if the "data" givenArray exists and has elements
+                  //       if (item.data && item.data.length > 0) {
+                  //         // Find the index of the object with the specified "id" in the "data" givenArray
+                  //         const indexToRemove = item.data.findIndex(obj => obj.id === idToRemove);
+                    
+                  //         // If the object is found, remove it from the "data" givenArray
+                  //         if (indexToRemove !== -1) {
+                  //           // Ensure that the "data" property is declared using "let"
+                  //           item.data = [...item.data.slice(0, indexToRemove), ...item.data.slice(indexToRemove + 1)];
+                  //         }
+                  //       }
+                  //     }
+                  //   };
+                    
 
-                    console.log(JSON.stringify(updatedArr))
-                    setCategories(updatedArr)
-                    dispatch(addCat(updatedArr));
+                  // const updatedArr = deldArr( catList, selectedItem.id)
+
+                    console.log("test",JSON.stringify(updatedArr))
+                  
+                    updateAsyncStorage(updatedArr);
+                    
                     // Close Bottom sheet
-
                     hideModalDisplayDetail()
 
-                  }} >Supprimer</Button>
+                  }} >Confirmer la suppression</Button>
               </Block> :
                 <View >
 
