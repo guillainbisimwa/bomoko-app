@@ -134,17 +134,6 @@ const catSlice = createSlice({
     addCat: (state, action) => {
       state.categories = action.payload;
       AsyncStorage.setItem('categories', JSON.stringify(action.payload));
-
-      // action.payload.forEach(async (category) => {
-      //   const existingCategory = state.categories.find((cat) => cat.name === category.name);
-      //   if (existingCategory) {
-      //     existingCategory.data.push(...category.data);
-      //     console.log('');
-
-      //     console.log('--- ');
-      //     console.log('existingCategory: ', state.categories);
-      //   }
-      // });
     },
     resetAllCat: (state, action) => {
       state.categories = action.payload;

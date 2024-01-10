@@ -25,6 +25,7 @@ import { Block, Text } from '../components';
 import { Picker } from '@react-native-picker/picker';
 import { FontAwesome } from '@expo/vector-icons';
 import { fr, registerTranslation, DatePickerModal, DatePickerInput } from 'react-native-paper-dates'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 // const filterArrayByDate = (arr, dateCriteria) => {
@@ -206,7 +207,11 @@ const Home = ({ navigation }) => {
 
   const updateAsyncStorage = async(updatedArr)=>{
     console.log("Cat", Cat);
+    await AsyncStorage.removeItem('categories');
     await dispatch(addCat(updatedArr));
+
+    //await AsyncStorage.setItem('categories', JSON.stringify(updatedArr));
+
     // await setCategories(updatedArr);
     await setCategories(updatedArr.filter((value, key) => value.cat === 'income'));
     await setCat('income');
