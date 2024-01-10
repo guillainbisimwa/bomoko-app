@@ -29,24 +29,24 @@ const CountyPhone = ({ navigation }) => {
     const [load, setLoad] = useState(false);
     const phoneInput = useRef(null);
 
-    const addNumberToTwillo = () => {
-        // Download the helper library from https://www.twilio.com/docs/node/install
-        // Find your Account SID and Auth Token at twilio.com/console
-        // and set the environment variables. See http://twil.io/secure
-        const accountSid = process.env.ACCOUNT_SID;
-        const authToken = process.env.AUTH_TOKEN;
-        const client = require('twilio')(accountSid, authToken);
+    // const addNumberToTwillo = () => {
+    //     // Download the helper library from https://www.twilio.com/docs/node/install
+    //     // Find your Account SID and Auth Token at twilio.com/console
+    //     // and set the environment variables. See http://twil.io/secure
+    //     const accountSid = process.env.ACCOUNT_SID;
+    //     const authToken = process.env.AUTH_TOKEN;
+    //     const client = require('twilio')(accountSid, authToken);
 
-        console.log("While");
+    //     console.log("While");
 
-        client.validationRequests
-        .create({friendlyName: formattedValue, phoneNumber: formattedValue})
-        .then(async validation_request => {
-            console.log(validation_request.friendlyName)
-            //await sendCode();
-            });
+    //     client.validationRequests
+    //     .create({friendlyName: formattedValue, phoneNumber: formattedValue})
+    //     .then(async validation_request => {
+    //         console.log(validation_request.friendlyName)
+    //         //await sendCode();
+    //         });
 
-    }
+    // }
 
     const sendCode = async () => {
 
