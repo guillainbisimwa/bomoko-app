@@ -49,6 +49,31 @@ const CountyPhone = ({ navigation }) => {
 
     // }
 
+  
+    async function getToken() { // CLIENT_ID, CLIENT_SECRET
+        const credentials = "WEc0RGx5NXlXT0EwZ3AyRzVFV1d0b2NtdHdwMFBrdzM6bFZiSGZURjVTb2xEbEJESg==";
+        const url = 'https://api.orange.com/oauth/v3/token';
+
+        try {
+            const response = await axios.post(
+                url,
+                'grant_type=client_credentials',
+                {
+                    headers: {
+                        'Authorization': `Basic ${credentials}`,
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                }
+            );
+
+            const result = response.data;
+            console.log('Access Token:', result.access_token);
+        } catch (error) {
+            console.error('Error getting access token:', error);
+        }
+    }
+
+
     const sendCode = async (userData) => {
 
         try {
@@ -58,14 +83,14 @@ const CountyPhone = ({ navigation }) => {
             const authToken = process.env.AUTH_TOKEN;
             const serviceSid = process.env.SERVICE_SID
             const otp = GenerateOTPCode();
-            //const customEndpoint = `https://verify.twilio.com/v2/Services/${serviceSid}/Verifications`;
-            const customEndpoint = 'https://api.twilio.com/2010-04-01/Accounts/ACbd9d562b452a2c62459200227432468e/Messages.json'
+            const customEndpoint = `https://verify.twilio.com/v2/Services/${serviceSid}/Verifications`;
+            // const customEndpoint = 'https://api.twilio.com/2010-04-01/Accounts/ACbd9d562b452a2c62459200227432468e/Messages.json'
 
             const requestData = {
                 customFriendlyName: 'Afintech',
                 To: formattedValue, // Add the phone number you want to send the verification code to
                 Channel: 'sms',
-                From: '+13343758571',
+                // From: '+13343758571',
                 // From: '+243891979018',
                 Body: `Bonjour, bienvenue sur AFINTECH. Votre code de validation est ${otp}. www.afrintech.org`
             };
@@ -183,6 +208,8 @@ const CountyPhone = ({ navigation }) => {
                                         Alert.alert("Pas de connexion Internet", "Veuillez vérifier votre connexion Internet et réessayer.");
                                         return;
                                     }
+                                    getToken();
+
 
                                     getUserByMobile(formattedValue)
                                         .then((userData) => {
@@ -191,7 +218,7 @@ const CountyPhone = ({ navigation }) => {
                                                 // Perform your action here
                                                 // Toast.success('Numéro de téléphone correct', 'bottom')
                                                 // addNumberToTwillo();
-                                                sendCode();
+                                                // sendCode();
 
                                                 // console.log('User data:', userData);
                                             }

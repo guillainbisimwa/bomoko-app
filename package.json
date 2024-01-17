@@ -37,6 +37,7 @@
     "immer": "^10.0.2",
     "lottie-react-native": "5.1.4",
     "moment": "^2.29.4",
+    "pusher-js": "^8.4.0-rc2",
     "qs": "^6.11.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
