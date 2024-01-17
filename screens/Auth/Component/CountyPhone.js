@@ -20,6 +20,7 @@ import qs from 'qs';
 import Config from "react-native-config";
 import Container, { Toast } from 'toastify-react-native';
 import NetInfo from "@react-native-community/netinfo";
+import { GenerateOTPCode } from "../../../constants/generateReferenceCode";
 
 
 const CountyPhone = ({ navigation }) => {
@@ -48,7 +49,7 @@ const CountyPhone = ({ navigation }) => {
 
     // }
 
-    const sendCode = async () => {
+    const sendCode = async (userData) => {
 
         try {
             console.log(process.env.ACCOUNT_SID);
@@ -56,9 +57,9 @@ const CountyPhone = ({ navigation }) => {
             const accountSid = process.env.ACCOUNT_SID;
             const authToken = process.env.AUTH_TOKEN;
             const serviceSid = process.env.SERVICE_SID
-
-           const customEndpoint = `https://verify.twilio.com/v2/Services/${serviceSid}/Verifications`;
-            //const customEndpoint = 'https://api.twilio.com/2010-04-01/Accounts/ACbd9d562b452a2c62459200227432468e/Messages.json'
+            const otp = GenerateOTPCode();
+            //const customEndpoint = `https://verify.twilio.com/v2/Services/${serviceSid}/Verifications`;
+            const customEndpoint = 'https://api.twilio.com/2010-04-01/Accounts/ACbd9d562b452a2c62459200227432468e/Messages.json'
 
             const requestData = {
                 customFriendlyName: 'Afintech',
@@ -66,7 +67,7 @@ const CountyPhone = ({ navigation }) => {
                 Channel: 'sms',
                 From: '+13343758571',
                 // From: '+243891979018',
-                Body: 'Bonjour, bienvenue sur AFINTECH. Votre code de validation est 0000. www.afrintech.org'
+                Body: `Bonjour, bienvenue sur AFINTECH. Votre code de validation est ${otp}. www.afrintech.org`
             };
 
             const base64Credentials = encode(`${accountSid}:${authToken}`);
@@ -81,17 +82,17 @@ const CountyPhone = ({ navigation }) => {
             setLoad(false)
             navigation.navigate('OTP', {
                 number: formattedValue,
-                type: 'account',
-                otpCode: '0000',
-                userData: null
+                type: 'reinit',
+                otpCode: otp,
+                userData
             })
+
         } catch (error) {
+            setLoad(false)
             console.error('Error sending verification request:', error.response ? error.response.data : error.message);
             Toast.error('Service des SMS indisponible', 'bottom')
-
         }
     };
-
     const getUserByMobile = async (mobileNumber) => {
         try {
             const response = await axios.get(`https://bomoko-backend.onrender.com/auth/mobile/${encodeURIComponent(mobileNumber)}`);
@@ -191,7 +192,7 @@ const CountyPhone = ({ navigation }) => {
                                                 // Toast.success('Numéro de téléphone correct', 'bottom')
                                                 // addNumberToTwillo();
                                                 sendCode();
-                                                
+
                                                 // console.log('User data:', userData);
                                             }
                                             else {
