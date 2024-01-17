@@ -131,9 +131,11 @@ const catSlice = createSlice({
     categories: [],
   },
   reducers: {
-    addCat: (state, action) => {
-      state.categories = action.payload;
-      AsyncStorage.setItem('categories', JSON.stringify(action.payload));
+    addCat: async (state, action) => {
+      state.categories = await action.payload;
+      await AsyncStorage.removeItem('categories');
+      
+      await AsyncStorage.setItem('categories', JSON.stringify(action.payload));
     },
     resetAllCat: (state, action) => {
       state.categories = action.payload;

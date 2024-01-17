@@ -206,15 +206,22 @@ const Home = ({ navigation }) => {
   // }, []);
 
   const updateAsyncStorage = async(updatedArr)=>{
-    console.log("Cat", Cat);
-    await AsyncStorage.removeItem('categories');
-    await dispatch(addCat(updatedArr));
+    try{
+      console.log("Cat", Cat);
+      await AsyncStorage.removeItem('categories');
+      // await dispatch(addCat([]));
 
-    //await AsyncStorage.setItem('categories', JSON.stringify(updatedArr));
+      await dispatch(addCat(updatedArr));
 
-    // await setCategories(updatedArr);
-    await setCategories(updatedArr.filter((value, key) => value.cat === 'income'));
-    await setCat('income');
+      //await AsyncStorage.setItem('categories', JSON.stringify(updatedArr));
+
+      // await setCategories(updatedArr);
+      await setCategories(updatedArr.filter((value, key) => value.cat === 'income'));
+      await setCat('income');
+
+    }catch(e){
+      console.log('error', e);
+    }
   }
 
   const openModalDetails = useCallback(() => {
