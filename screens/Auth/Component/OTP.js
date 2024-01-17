@@ -13,6 +13,8 @@ const { height, width } = Dimensions.get("window");
 import { Button } from "react-native-paper";
 import { COLORS, SIZES } from "../../../constants";
 import OTPTextInput from "react-native-otp-textinput";
+import Container, { Toast } from 'toastify-react-native';
+
 
 const OTP = ({ navigation, route }) => {
     const [code, setCode] = useState('');
@@ -32,6 +34,8 @@ const OTP = ({ navigation, route }) => {
             ></ImageBackground>
 
             <View style={styles.container}>
+            <Container position="top" style={{ width: '100%' }} duration={6000} />
+
                 <Block middle style={styles.m_5}>
                     <Text center bold h2>
                         Verification
@@ -70,13 +74,13 @@ const OTP = ({ navigation, route }) => {
                                     onPress={() => {
                                         console.log("code", code === '0000');
                                         console.log("code", code);
-                                        if (code === '0000') {
+                                        //if (code === '0000') {
                                             setCode('')
                                             navigation.navigate('Account', {
                                                 number: number,
                                                 code: '0000'
                                             });
-                                        }
+                                        //}
                                     }}
                                 >
                                     Suivant
@@ -87,6 +91,7 @@ const OTP = ({ navigation, route }) => {
                                     icon="arrow-right"
                                     mode="contained"
                                     onPress={() => {
+
                                        
                                         console.log("code", code);
                                         if (code === otpCode) {
@@ -97,6 +102,8 @@ const OTP = ({ navigation, route }) => {
                                             //     number: number,
                                             //     code: '0000'
                                             // });
+                                        }else{
+                                            Toast.error('Code invalide', 'top')
                                         }
                                     }}
                                 >

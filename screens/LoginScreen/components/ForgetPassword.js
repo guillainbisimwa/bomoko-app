@@ -31,6 +31,103 @@ export const ForgetPassword = ({ navigation }) => {
   const [formattedValue, setFormattedValue] = useState("");
 
   const [load, setLoad] = useState(false);
+  const [tokenOrange, setTokenOrange] = useState('');
+
+    async function getToken() {
+        const tokenOrangeSms = process.env.TOKEN_ORANGE_SMS;
+
+        const credentials = tokenOrangeSms;
+        const url = 'https://api.orange.com/oauth/v3/token';
+
+        try {
+            const response = await axios.post(
+                url,
+                'grant_type=client_credentials',
+                {
+                    headers: {
+                        'Authorization': `Basic ${credentials}`,
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                }
+            );
+
+            const result = response.data;
+            console.log('Access Token:', result);
+            setTokenOrange(result.access_token);
+
+        } catch (error) {
+            setLoad(false)
+            Toast.error('Service des SMS indisponible', 'bottom')
+            console.error('Error getting access token:', error);
+        }
+    }
+
+
+  async function send(receiver, message, otp,userData) {
+    const receiverAddress = "tel:" + receiver;
+    const senderAddress = "tel:+243891979018"; // Replace with your actual sender address
+    const credentials = `Bearer ${tokenOrange}`; // Replace with your actual access token
+  
+    const headers = {
+      'Authorization': credentials,
+      'Content-Type': 'application/json'
+    };
+  
+    const body = {
+      outboundSMSMessageRequest: {
+        address: receiverAddress,
+        senderAddress: senderAddress,
+        senderName: "Afintech",
+        outboundSMSTextMessage: {
+          message: message
+        }
+      }
+    };
+  
+    const url = 'https://api.orange.com/smsmessaging/v1/outbound/' + encodeURIComponent(senderAddress) + '/requests';
+  
+    await axios.post(url, body, { headers: headers })
+      .then(response => {
+        if (response.status === 201) {
+            console.log();
+            console.log();
+            console.log('sent', response);
+            console.log();
+            console.log();
+            console.log('Verification request sent successfully:', response.data);
+
+            setLoad(false)
+
+            navigation.navigate('OTP', {
+                number: formattedValue,
+                type: 'reinit',
+                otpCode: otp,
+                userData
+            })
+
+        } else {
+            console.log();
+            console.log();
+
+            console.log('contractsB');
+            console.log();
+            console.log();
+
+        }
+      })
+      .catch(error => {
+
+        setLoad(false)
+        Toast.error('Service des SMS indisponible', 'bottom')
+    
+        console.error('Error sending SMS:', error.message);
+        console.log();
+        console.log();
+
+        // res.render('contractsB');
+      });
+  }
+  
 
   const sendCode = async (userData) => {
 
@@ -169,13 +266,18 @@ export const ForgetPassword = ({ navigation }) => {
                     }
 
                     getUserByMobile(formattedValue)
-                      .then((userData) => {
+                      .then(async(userData) => {
 
                         if (userData?.msg === "User not found!") {
                           Toast.warn('Numéro de téléphone non reconnu', 'bottom')
                         }
                         else {
-                          sendCode(userData);
+                          // sendCode(userData);
+                          const otp = GenerateOTPCode();
+
+                          await getToken();
+                          await send(formattedValue, `Bonjour, bienvenue sur AFINTECH. Votre code de validation est ${otp}. www.afrintech.org`, otp, userData );
+
                         }
                       })
                       .catch((error) => {
