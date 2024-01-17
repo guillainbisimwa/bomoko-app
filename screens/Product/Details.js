@@ -1846,9 +1846,12 @@ const Details = ({ route, navigation }) => {
               </Button>
 
               {
-                 foodDetails.membres.find(member => member?.admission_req == 'ACCEPTED')? 
-                 <Button textColor="#fff" elevated buttonColor={COLORS.darkgreen} onPress={()=> openModalContrib()}>
-                  Contribuer
+                foodDetails.membres.some(member => (member?.user?._id == connectedUser?.userId) && member?.admission_req === 'ACCEPTED')? 
+                 
+                 <Button textColor="#fff" elevated buttonColor={COLORS.darkgreen}
+                  onPress={()=> 
+                  openModalContrib()}> 
+                    Contribuer 
                 </Button>:
                 <></>
               }

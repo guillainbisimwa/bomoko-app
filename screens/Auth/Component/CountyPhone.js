@@ -30,8 +30,6 @@ const CountyPhone = ({ navigation }) => {
     const [load, setLoad] = useState(false);
     const phoneInput = useRef(null);
 
-    const [tokenOrange, setTokenOrange] = useState('');
-
     async function getToken(formattedValue, otp, userData) {
         const tokenOrangeSms = process.env.TOKEN_ORANGE_SMS;
 

@@ -41,7 +41,7 @@ const OTP = ({ navigation, route }) => {
                         Verification
                     </Text>
                     <Text style={{ color: 'red' }} center>
-                        code test: 0000
+                        code : {otpCode}
                     </Text>
                     <Text style={styles.input} center>
                         Merci de confirmer le code de validation envoyé au {number}
