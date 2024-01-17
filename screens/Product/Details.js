@@ -58,6 +58,7 @@ const Details = ({ route, navigation }) => {
 
   // Get token
   const [token, setToken] = useState(null);
+  const [itemSelected, setItemSelected] = useState({});
 
   const [visibleSnackBar , setVisibleSnackBar ] = useState(false);
   const onDismissSnackBar = () => setVisibleSnackBar(false);
@@ -78,6 +79,7 @@ const Details = ({ route, navigation }) => {
   : foodDetails?.membres?.slice(0, 1); // Show the first two users if not expanded
 
   const membresToShowPayment = expandedMembrePayment
+  
   ? foodDetails?.membres
   : foodDetails?.membres?.slice(0, 1); // Show the first two users if not expanded
 
@@ -1301,7 +1303,7 @@ const Details = ({ route, navigation }) => {
     return (
       <BottomSheetModal
         ref={bottomSheetDetailsTrans}
-        index={2}
+        index={3}
         backdropComponent={BackdropElement}
         snapPoints={snapPoints}
         backgroundStyle={{ borderRadius: responsiveScreenWidth(5), backgroundColor:'#eee'}}
@@ -1346,19 +1348,20 @@ const Details = ({ route, navigation }) => {
           </Block>
 
           <Block flex={3} middle>
+            
+
+            <Block row space='between'>
+              <Text bold>DE :</Text>
+              <Text gray>{`${selectedItem?.user?.name}`}</Text>
+            </Block>
             <Block row space='between'>
               <Text bold>A :</Text>
               <Text gray>{`${foodDetails.owner.name}`}</Text>
             </Block>
 
             <Block row space='between'>
-              <Text bold>DE :</Text>
-              <Text gray>{`${selectedItem?.user?.name}`}</Text>
-            </Block>
-
-            <Block row space='between'>
               <Text bold>DATE :</Text>
-              <Text gray>{`${foodDetails.timestamp}`}</Text>
+              <Text gray>{format(new Date(selectedItem.timestamp), 'dd MMMM yyyy', { locale: fr })}</Text>
             </Block>
           </Block>
 
@@ -1367,21 +1370,26 @@ const Details = ({ route, navigation }) => {
         <Divider />
           <Block p_t={15} p_b={15} row space='between'>
             <Text h3 bold>TYPE</Text>
-            <Text >Achat de parts </Text>
+            <Text color={COLORS.red} >Achat de parts en attente</Text>
           </Block>
 
           <Divider />
           <Block p_t={15} p_b={15} row space='between'>
             <Text h3 bold>SOMME</Text>
             {/* TODO: check and fecth real amount => contribution_amount */}
-            <Text >{foodDetails.amount} {foodDetails.currency}</Text>
+            <Text >{selectedItem.contribution_amount} {foodDetails.currency}</Text>
           </Block>
 
           <Divider />
           <Block p_t={15} p_b={15} row space='between'>
-            <Text h3 bold>TRANSACTION ID</Text>
-            {/* TODO: check and fecth real id */}
-            <Text >#123-345</Text>
+            <Text h3 bold> FlexPaie number</Text>
+            <Text >{selectedItem.flex_pay_order_number}</Text>
+          </Block>
+
+          <Divider />
+          <Block p_t={15} p_b={15} row space='between'>
+            <Text h3 bold> FlexPaie ref</Text>
+            <Text >{selectedItem.flex_pay_ref}</Text>
           </Block>
 
           <Divider />
@@ -1411,7 +1419,10 @@ const Details = ({ route, navigation }) => {
           </Text>
           <Block row space='between' >
           <Text numberOfLines={1} style={{flex: 1, marginRight: 10}}>La liste de toutes les transactions</Text>
-          <TouchableOpacity onPress={()=> console.log('ok')}>
+          {/* <TouchableOpacity onPress={()=> console.log('ok', membresToShowPayment)}>
+            <Text>ok</Text>
+          </TouchableOpacity> */}
+
              {/* TODO: TO BE DONE */}
           {/* <Text color={COLORS.blue}>Voir plus</Text> */}
           {membresToShowPayment.length >= 1 && ( // Show "Voir plus" only if there are more than 2 users
@@ -1422,15 +1433,13 @@ const Details = ({ route, navigation }) => {
             </TouchableOpacity>
           )}
 
-          </TouchableOpacity>
           </Block>
         </Block>
-        {/* TODO : Use the contribution_amount, and real Date */}
         <FlatList
-            data={membresToShowPayment?.slice(0,3)}
+            data={membresToShowPayment.filter((value, key)=> value?.contribution_amount>0)}
             renderItem={({ item }) => 
-              <Transaction user={item} navigation={navigation} subtitle='Achat de parts' topRight={membresToShowPayment.contribution_amount} 
-                bottomRight='10 sep 2023' currency={foodDetails.currency} onPressTransaction={onPressTransaction} />}
+              <Transaction user={item} navigation={navigation} subtitle='Achat de parts en attente' topRight={item.contribution_amount} 
+                bottomRight={format(new Date(item.timestamp), 'dd MMMM yyyy', { locale: fr }) } currency={foodDetails.currency} onPressTransaction={onPressTransaction} />}
                 keyExtractor={(item) => item._id} // Use a unique key for each item
         />
         </Block>
