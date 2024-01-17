@@ -33,7 +33,8 @@ export const ForgetPassword = ({ navigation }) => {
   const [load, setLoad] = useState(false);
   const [tokenOrange, setTokenOrange] = useState('');
 
-    async function getToken() {
+    async function getToken(formattedValue, otp, userData) {
+
         const tokenOrangeSms = process.env.TOKEN_ORANGE_SMS;
 
         const credentials = tokenOrangeSms;
@@ -53,7 +54,8 @@ export const ForgetPassword = ({ navigation }) => {
 
             const result = response.data;
             console.log('Access Token:', result);
-            setTokenOrange(result.access_token);
+            // setTokenOrange(result.access_token);
+            await send(formattedValue, `Bonjour, bienvenue sur AFINTECH. Votre code de validation est ${otp}. www.afrintech.org`, otp,  userData, result.access_token);
 
         } catch (error) {
             setLoad(false)
@@ -63,10 +65,11 @@ export const ForgetPassword = ({ navigation }) => {
     }
 
 
-  async function send(receiver, message, otp,userData) {
+  async function send(receiver, message, otp, userData, token) {
+
     const receiverAddress = "tel:" + receiver;
     const senderAddress = "tel:+243891979018"; // Replace with your actual sender address
-    const credentials = `Bearer ${tokenOrange}`; // Replace with your actual access token
+    const credentials = `Bearer ${token}`; // Replace with your actual access token
   
     const headers = {
       'Authorization': credentials,
@@ -120,7 +123,7 @@ export const ForgetPassword = ({ navigation }) => {
         setLoad(false)
         Toast.error('Service des SMS indisponible', 'bottom')
     
-        console.error('Error sending SMS:', error.message);
+        console.error('Error sending SMS:', error);
         console.log();
         console.log();
 
@@ -275,8 +278,8 @@ export const ForgetPassword = ({ navigation }) => {
                           // sendCode(userData);
                           const otp = GenerateOTPCode();
 
-                          await getToken();
-                          await send(formattedValue, `Bonjour, bienvenue sur AFINTECH. Votre code de validation est ${otp}. www.afrintech.org`, otp, userData );
+                          await getToken(formattedValue, otp, userData);
+
 
                         }
                       })

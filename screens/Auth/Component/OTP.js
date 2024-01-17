@@ -20,7 +20,7 @@ const OTP = ({ navigation, route }) => {
     const [code, setCode] = useState('');
 
     const { number, type, otpCode, userData } = route.params;
-    console.log("userData", userData);
+    console.log("userData", otpCode);
 
     return (
         <KeyboardAvoidingView
@@ -72,15 +72,13 @@ const OTP = ({ navigation, route }) => {
                                     icon="arrow-right"
                                     mode="contained"
                                     onPress={() => {
-                                        console.log("code", code === '0000');
-                                        console.log("code", code);
-                                        //if (code === '0000') {
+                                        if (code === otpCode) {
                                             setCode('')
                                             navigation.navigate('Account', {
                                                 number: number,
-                                                code: '0000'
+                                                code: otpCode
                                             });
-                                        //}
+                                        }
                                     }}
                                 >
                                     Suivant
@@ -92,16 +90,11 @@ const OTP = ({ navigation, route }) => {
                                     mode="contained"
                                     onPress={() => {
 
-                                       
                                         console.log("code", code);
                                         if (code === otpCode) {
                                             setCode('')
                                             console.log('reinit')
                                             navigation.navigate('ResetPasswordProfile', { user: userData})
-                                            // navigation.navigate('Account', {
-                                            //     number: number,
-                                            //     code: '0000'
-                                            // });
                                         }else{
                                             Toast.error('Code invalide', 'top')
                                         }

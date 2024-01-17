@@ -32,7 +32,7 @@ const CountyPhone = ({ navigation }) => {
 
     const [tokenOrange, setTokenOrange] = useState('');
 
-    async function getToken() {
+    async function getToken(formattedValue, otp, userData) {
         const tokenOrangeSms = process.env.TOKEN_ORANGE_SMS;
 
         const credentials = tokenOrangeSms;
@@ -50,9 +50,10 @@ const CountyPhone = ({ navigation }) => {
                 }
             );
 
-            const result = response.data;
+            const result = await response.data;
             console.log('Access Token:', result);
-            setTokenOrange(result.access_token);
+            // setTokenOrange(result.access_token);
+            await send(formattedValue, `Bonjour, bienvenue sur AFINTECH. Votre code de validation est ${otp}. www.afrintech.org`, otp,  userData, result.access_token);
 
         } catch (error) {
             setLoad(false)
@@ -61,10 +62,10 @@ const CountyPhone = ({ navigation }) => {
         }
     }
 
-    async function send(receiver, message) {
+    async function send(receiver, message, otp, userData, token) {
         const receiverAddress = "tel:" + receiver;
         const senderAddress = "tel:+243891979018"; // Replace with your actual sender address
-        const credentials = `Bearer ${tokenOrange}`; // Replace with your actual access token
+        const credentials = `Bearer ${token}`; // Replace with your actual access token
       
         const headers = {
           'Authorization': credentials,
@@ -95,7 +96,7 @@ const CountyPhone = ({ navigation }) => {
                 setLoad(false)
                 navigation.navigate('OTP', {
                     number: formattedValue,
-                    type: 'reinit',
+                    type: 'account',
                     otpCode: otp,
                     userData
                 })
@@ -115,7 +116,7 @@ const CountyPhone = ({ navigation }) => {
             setLoad(false)
             Toast.error('Service des SMS indisponible', 'bottom')
         
-            console.error('Error sending SMS:', error.message);
+            console.error('Error sending SMS:', error);
             console.log();
             console.log();
 
@@ -272,8 +273,8 @@ const CountyPhone = ({ navigation }) => {
                                                 // sendCode();
                                                 const otp = GenerateOTPCode();
 
-                                                await getToken();
-                                                await send(formattedValue, `Bonjour, bienvenue sur AFINTECH. Votre code de validation est ${otp}. www.afrintech.org`);
+                                                await getToken(formattedValue, otp, userData);
+                                                // await send(formattedValue, `Bonjour, bienvenue sur AFINTECH. Votre code de validation est ${otp}. www.afrintech.org`, otp,  userData);
             
                                                 // console.log('User data:', userData);
                                             }
