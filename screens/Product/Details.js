@@ -63,12 +63,21 @@ const Details = ({ route, navigation }) => {
   const onDismissSnackBar = () => setVisibleSnackBar(false);
   const onToggleSnackBar = () => setVisibleSnackBar(!visibleSnackBar );
   const [expandedMembre, setExpandedMembre] = useState(false);
+  const [expandedMembrePayment, setExpandedMembrePayment] = useState(false);
 
   const toggleExpansion = () => {
     setExpandedMembre(!expandedMembre);
   };
 
+  const toggleExpansionPayment = () => {
+    setExpandedMembrePayment(!expandedMembrePayment);
+  };
+
   const membresToShow = expandedMembre
+  ? foodDetails?.membres
+  : foodDetails?.membres?.slice(0, 1); // Show the first two users if not expanded
+
+  const membresToShowPayment = expandedMembrePayment
   ? foodDetails?.membres
   : foodDetails?.membres?.slice(0, 1); // Show the first two users if not expanded
 
@@ -1398,24 +1407,32 @@ const Details = ({ route, navigation }) => {
       <Block card m={20} p_b={20} >
         <Block p={17}>
           <Text bold numberOfLines={1} h2>
-            Achat de parts 
+            Achat de parts
           </Text>
           <Block row space='between' >
           <Text numberOfLines={1} style={{flex: 1, marginRight: 10}}>La liste de toutes les transactions</Text>
           <TouchableOpacity onPress={()=> console.log('ok')}>
              {/* TODO: TO BE DONE */}
-          <Text color={COLORS.blue}>Voir plus</Text>
+          {/* <Text color={COLORS.blue}>Voir plus</Text> */}
+          {membresToShowPayment.length >= 1 && ( // Show "Voir plus" only if there are more than 2 users
+            <TouchableOpacity onPress={toggleExpansionPayment}>
+              <Text bold color={COLORS.blue}>
+                {expandedMembrePayment ? 'Voir moins' : 'Voir plus'}
+              </Text>
+            </TouchableOpacity>
+          )}
+
           </TouchableOpacity>
           </Block>
         </Block>
         {/* TODO : Use the contribution_amount, and real Date */}
         <FlatList
-            data={membresToShow?.slice(0,3)}
+            data={membresToShowPayment?.slice(0,3)}
             renderItem={({ item }) => 
-              <Transaction user={item} navigation={navigation} subtitle='Achat de parts' topRight={foodDetails.amount/100} 
+              <Transaction user={item} navigation={navigation} subtitle='Achat de parts' topRight={membresToShowPayment.contribution_amount} 
                 bottomRight='10 sep 2023' currency={foodDetails.currency} onPressTransaction={onPressTransaction} />}
                 keyExtractor={(item) => item._id} // Use a unique key for each item
-          />
+        />
         </Block>
   )};
 
