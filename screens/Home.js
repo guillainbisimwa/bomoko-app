@@ -85,6 +85,11 @@ const Home = ({ navigation }) => {
 
   const [Cat, setCat] = useState('income');
   const [selectedCategory, setSelectedCategory] = useState(null);
+
+  // SELECTED ITEM
+  const [selectedItem, setSelectedItem] = useState();
+
+
   // Modal
   const [visible, setVisible] = useState(false);
 
@@ -335,6 +340,7 @@ const Home = ({ navigation }) => {
                   mode="contained"
                   onPress={() => {
                     console.log('selected.item', selectedItem);
+                    console.log('selected.item');
 
                     const criteria = {
                       "cat": selectedItem.cat,
@@ -459,6 +465,9 @@ const Home = ({ navigation }) => {
 
                     // List selected object 
                     //console.log('selectedItem', selectedItem);
+                    console.log('');
+                    console.log('selected.item', selectedItem);
+                    console.log('');
 
                     const criteria = {
                       "cat": selectedItem.cat,
@@ -495,7 +504,7 @@ const Home = ({ navigation }) => {
                     });
 
 
-                    console.log(JSON.stringify(updatedArr))
+                    console.log("updatedArr : ",JSON.stringify(updatedArr))
                     setCategories(updatedArr)
                     dispatch(addCat(updatedArr));
                     // Close Bottom sheet
@@ -578,8 +587,6 @@ const Home = ({ navigation }) => {
   );
 
 
-  // SELECTED ITEM
-  const [selectedItem, setSelectedItem] = useState();
 
   useEffect(() => {
     // updatedAsyncStorage();

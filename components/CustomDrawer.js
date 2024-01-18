@@ -56,7 +56,7 @@ const CustomDrawer = (props) => {
                 marginLeft: 5,
               }}
             >
-              Version 6.9.0
+              Version 7.0.0
             </Text>
           </View>
         </TouchableOpacity>
