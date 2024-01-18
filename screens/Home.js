@@ -25,7 +25,6 @@ import { Block, Text } from '../components';
 import { Picker } from '@react-native-picker/picker';
 import { FontAwesome } from '@expo/vector-icons';
 import { fr, registerTranslation, DatePickerModal, DatePickerInput } from 'react-native-paper-dates'
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 // const filterArrayByDate = (arr, dateCriteria) => {
@@ -205,25 +204,6 @@ const Home = ({ navigation }) => {
   //   }, 5);
   // }, []);
 
-  const updateAsyncStorage = async(updatedArr)=>{
-    try{
-      console.log("Cat", Cat);
-      await AsyncStorage.removeItem('categories');
-      // await dispatch(addCat([]));
-
-      await dispatch(addCat(updatedArr));
-
-      //await AsyncStorage.setItem('categories', JSON.stringify(updatedArr));
-
-      // await setCategories(updatedArr);
-      await setCategories(updatedArr.filter((value, key) => value.cat === 'income'));
-      await setCat('income');
-
-    }catch(e){
-      console.log('error', e);
-    }
-  }
-
   const openModalDetails = useCallback(() => {
     bottomSheetDetails.current?.present();
     setTimeout(() => {
@@ -354,9 +334,6 @@ const Home = ({ navigation }) => {
                   buttonColor={COLORS.blue}
                   mode="contained"
                   onPress={() => {
-                    console.log('selected.item');
-                    console.log('selected.item');
-                    console.log('selected.item');
                     console.log('selected.item', selectedItem);
 
                     const criteria = {
@@ -412,9 +389,8 @@ const Home = ({ navigation }) => {
                     });
 
                     console.log(JSON.stringify(updatedArr))
-                    // setCategories(updatedArr)
-                    // dispatch(addCat(updatedArr));
-                    updateAsyncStorage(updatedArr);
+                    setCategories(updatedArr)
+                    dispatch(addCat(updatedArr));
                     // Close Bottom sheet
                     hideModalDisplayDetail()
 
@@ -430,7 +406,7 @@ const Home = ({ navigation }) => {
               supp ? <Block>
 
                 <Block style={{ padding: 5 }} row space='between'>
-                  {/* <Block flex={1}>
+                  <Block flex={1}>
                     <Image
                       source={selectedItem && selectedItem.icon}
                       style={{
@@ -443,8 +419,8 @@ const Home = ({ navigation }) => {
                         padding: 5
                       }}
                     />
-                  </Block> */}
-{/* 
+                  </Block>
+
                   <Block flex={4} middle>
                     <Block row space='between'>
                       <Text color={supp ? COLORS.red : COLORS.blue} bold>DATE :</Text>
@@ -456,11 +432,11 @@ const Home = ({ navigation }) => {
                       <Text gray>{selectedItem && selectedItem.name}</Text>
                     </Block>
 
-                  </Block> */}
+                  </Block>
 
                 </Block>
 
-                {/* <Block style={{ marginVertical: 8 }} row space='between'>
+                <Block style={{ marginVertical: 8 }} row space='between'>
                   <Text color={supp ? COLORS.red : COLORS.blue} h3 bold>DESCRIPTION</Text>
                   <Text >{selectedItem && selectedItem.description}
                   </Text>
@@ -470,7 +446,7 @@ const Home = ({ navigation }) => {
                 <Block style={{ marginVertical: 8 }} row space='between'>
                   <Text color={supp ? COLORS.red : COLORS.blue} h3 bold>SOMME</Text>
                   <Text>{selectedItem && selectedItem.total} USD</Text>
-                </Block> */}
+                </Block>
 
                 <Button style={{ marginTop: 15 }} mode='contained' buttonColor={COLORS.peach}
                   onPress={() => {
@@ -483,11 +459,6 @@ const Home = ({ navigation }) => {
 
                     // List selected object 
                     //console.log('selectedItem', selectedItem);
-                    
-                    console.log('selected.item');
-                    console.log('selected.item');
-                    console.log('selected.item');
-                    console.log('selected.item', selectedItem);
 
                     const criteria = {
                       "cat": selectedItem.cat,
@@ -502,11 +473,6 @@ const Home = ({ navigation }) => {
                       "description": selectedItem.description,
                       "total": parseFloat(selectedItem.total),
                     };
-
-                    console.log("catList", catList);
-                    console.log()
-                    console.log()
-
 
                     const updatedArr = catList.map(item => {
                       if (
@@ -528,33 +494,15 @@ const Home = ({ navigation }) => {
                       return item;
                     });
 
-                  //   const deldArr = (givenArray, idToRemove) => {
-                  //     for (let item of givenArray) {
-                  //       // Check if the "data" givenArray exists and has elements
-                  //       if (item.data && item.data.length > 0) {
-                  //         // Find the index of the object with the specified "id" in the "data" givenArray
-                  //         const indexToRemove = item.data.findIndex(obj => obj.id === idToRemove);
-                    
-                  //         // If the object is found, remove it from the "data" givenArray
-                  //         if (indexToRemove !== -1) {
-                  //           // Ensure that the "data" property is declared using "let"
-                  //           item.data = [...item.data.slice(0, indexToRemove), ...item.data.slice(indexToRemove + 1)];
-                  //         }
-                  //       }
-                  //     }
-                  //   };
-                    
 
-                  // const updatedArr = deldArr( catList, selectedItem.id)
-
-                    console.log("test",JSON.stringify(updatedArr))
-                  
-                    updateAsyncStorage(updatedArr);
-                    
+                    console.log(JSON.stringify(updatedArr))
+                    setCategories(updatedArr)
+                    dispatch(addCat(updatedArr));
                     // Close Bottom sheet
+
                     hideModalDisplayDetail()
 
-                  }} >Confirmer la suppression</Button>
+                  }} >Supprimer</Button>
               </Block> :
                 <View >
 
@@ -636,7 +584,7 @@ const Home = ({ navigation }) => {
   useEffect(() => {
     // updatedAsyncStorage();
 
-    setCategories(catList.filter((value, key) => value.cat === 'income'));
+    setCategories(catList?.filter((value, key) => value.cat === 'income'));
     setCat('income');
   }, [catList]);
   const [date, setDate] = useState(new Date());
@@ -1159,7 +1107,7 @@ const Home = ({ navigation }) => {
     var totExpense = 0;
     var totIncome = 0;
     catList
-      .filter((a) => a.cat == 'expense')
+      ?.filter((a) => a.cat == 'expense')
       .map((item) => {
         let confirm = item.data; //.filter(a => a.cat == "expense")
         var total = parseFloat(
@@ -1170,7 +1118,7 @@ const Home = ({ navigation }) => {
       });
 
     catList
-      .filter((a) => a.cat == 'income')
+      ?.filter((a) => a.cat == 'income')
       .map((item) => {
         let confirmI = item.data;
         var totalI = parseFloat(
@@ -1187,7 +1135,7 @@ const Home = ({ navigation }) => {
     // console.log(myCat);
     var tot = 0;
     catList
-      .filter((a) => a.cat == myCat)
+      ?.filter((a) => a.cat == myCat)
       .map((item) => {
         let confirm = item.data;
         var total = parseFloat(

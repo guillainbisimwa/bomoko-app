@@ -56,6 +56,8 @@ const Income = ({ route }) => {
         return category;
       });
 
+      // console.log(t);
+
       dispatch(addCat(t));
 
       // Reset the form
@@ -65,6 +67,8 @@ const Income = ({ route }) => {
 
       navigation.goBack();
     } catch (e) {
+      console.log('error' );
+      console.log('error');
       console.log('error', e);
     }
   };

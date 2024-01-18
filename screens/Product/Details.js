@@ -1361,7 +1361,8 @@ const Details = ({ route, navigation }) => {
 
             <Block row space='between'>
               <Text bold>DATE :</Text>
-              <Text gray>{format(new Date(selectedItem.timestamp), 'dd MMMM yyyy', { locale: fr })}</Text>
+              <Text gray>{selectedItem?.timestamp}</Text>
+              {/* <Text gray>{format(new Date(selectedItem?.timestamp), 'dd MMMM yyyy', { locale: fr })}</Text> */}
             </Block>
           </Block>
 
@@ -1607,7 +1608,7 @@ const Details = ({ route, navigation }) => {
             >
               
 
-              { item.user.profile_pic  ? (
+              { item?.user?.profile_pic  ? (
                 <Image
                   source={{ uri: item.user.profile_pic  }}
                   style={{ width: 40, height: 40, borderRadius:20, borderWidth:1,
