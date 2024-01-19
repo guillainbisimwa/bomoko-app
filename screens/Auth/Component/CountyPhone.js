@@ -8,6 +8,7 @@ import {
     KeyboardAvoidingView,
     Platform,
     Keyboard,
+    ToastAndroid,
 } from "react-native";
 import { Block, Text } from "../../../components";
 const { height, width } = Dimensions.get("window");
@@ -55,7 +56,9 @@ const CountyPhone = ({ navigation }) => {
 
         } catch (error) {
             setLoad(false)
-            Toast.error('Service des SMS indisponible', 'bottom')
+            Toast.error(`Service des SMS indisponible ${error}`, 'bottom');
+            ToastAndroid.show(`Service des SMS indisponible ${error}`, ToastAndroid.LONG);
+
             console.error('Error getting access token:', error);
         }
     }
@@ -112,7 +115,9 @@ const CountyPhone = ({ navigation }) => {
           .catch(error => {
 
             setLoad(false)
-            Toast.error('Service des SMS indisponible', 'bottom')
+            Toast.error(`Service des SMS indisponible ${error}`, 'bottom')
+            ToastAndroid.show(`Service des SMS indisponible ${error}`, ToastAndroid.LONG);
+
         
             console.error('Error sending SMS:', error);
             console.log();
