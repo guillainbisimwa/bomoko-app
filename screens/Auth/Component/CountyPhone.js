@@ -56,7 +56,7 @@ const CountyPhone = ({ navigation }) => {
 
         } catch (error) {
             setLoad(false)
-            Toast.error(`Service des SMS indisponible ${error}`, 'bottom');
+            Toast.error(`Service des SMS indisponible`, 'bottom');
             ToastAndroid.show(`Service des SMS indisponible ${error}`, ToastAndroid.LONG);
 
             console.error('Error getting access token:', error);
@@ -115,7 +115,7 @@ const CountyPhone = ({ navigation }) => {
           .catch(error => {
 
             setLoad(false)
-            Toast.error(`Service des SMS indisponible ${error}`, 'bottom')
+            Toast.error(`Service des SMS indisponible`, 'bottom')
             ToastAndroid.show(`Service des SMS indisponible ${error}`, ToastAndroid.LONG);
 
         
