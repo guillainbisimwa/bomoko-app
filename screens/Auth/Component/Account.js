@@ -270,7 +270,7 @@ const Account = ({ navigation, route }) => {
                 // Regular expression pattern
                 const regex = /[a-zA-Z]+@[a-zA-Z]+\.[a-zA-Z]+/;
 
-                if (!regex.test(email)) {
+                if (email.length < 1 || email.length > 30) {
                     setErrorEmail(true)
                     Toast.error('E-mail incorrect', 'bottom');
                     return
@@ -291,8 +291,6 @@ const Account = ({ navigation, route }) => {
                         profile_pic: selectedImage ? selectedImage : selectedImage1,
                     })
                 );
-
-
 
                 // Handle login functionality
                 if (!hasErrorKey(signUpResult)) {
