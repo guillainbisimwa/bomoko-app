@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import { NavigationContainer } from '@react-navigation/native';
 import { COLORS, SIZES } from '../constants';
 import CustomDrawer from '../components/CustomDrawer';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -15,7 +14,7 @@ export default function MyDrawer() {
   return (
     <Drawer.Navigator
       useLegacyImplementation={true}
-      initialRouteName="ProductScreen"
+      initialRouteName="Home"
       drawerContent={(props) => <CustomDrawer {...props} />}
       screenOptions={{
         //headerShown: false,
@@ -32,6 +31,15 @@ export default function MyDrawer() {
       }}
     >
       <Drawer.Screen
+        name="Revenus et Depenses"
+        component={Home}
+        options={{
+          headerShown: false,
+          drawerIcon: ({ color }) => <Ionicons color={color} size={SIZES.base * 2} name={'home'} />,
+        }}
+      />
+
+      <Drawer.Screen
         name="Produits / services"
         component={ProductScreen}
         options={{
@@ -42,23 +50,15 @@ export default function MyDrawer() {
         }}
       />
 
-      <Drawer.Screen
-        name="Revenus et Depenses"
-        component={Home}
-        options={{
-          headerShown: false,
-          drawerIcon: ({ color }) => <Ionicons color={color} size={SIZES.base * 2} name={'home'} />,
-        }}
-      />
 
-      <Drawer.Screen
+      {/* <Drawer.Screen
         name="Creances et dettes"
         component={CreanceDette}
         options={{
           headerShown: false,
           drawerIcon: ({ color }) => <Ionicons color={color} size={SIZES.base * 2} name={'cash'} />,
         }}
-      />
+      /> */}
 
       <Drawer.Screen
         name="Parametres"

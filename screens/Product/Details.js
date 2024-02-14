@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ImageBackground,
   ScrollView,
@@ -6,9 +6,9 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
-  ToastAndroid,
   Keyboard,
   Linking,
+  TextInput as ReactTextInput
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Svg } from 'react-native-svg';
@@ -16,8 +16,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Block from './Block';
 import Text from './Text';
 import { COLORS, FONTS, icons, SIZES } from '../../constants';
-import { Button, Card, MD3Colors, Modal, ProgressBar, Snackbar, TextInput } from 'react-native-paper';
-import { BottomSheet } from 'react-native-btr';
+import { ActivityIndicator, Button, Card, Divider, IconButton, MD3Colors, Modal, ProgressBar, Snackbar, TextInput } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import CoutScreen from './CoutScreen';
 import { Alert } from 'react-native';
@@ -31,69 +30,301 @@ import { fr } from 'date-fns/locale';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { delProduct, soumettreProduct } from '../../redux/prodReducer';
 import { TouchableWithoutFeedback } from 'react-native';
+import { BottomSheetBackdrop, BottomSheetModal, BottomSheetModalProvider, BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import { responsiveScreenWidth } from 'react-native-responsive-dimensions';
+import Transaction from '../CreanceDette/Transaction';
+import { FlatList } from 'react-native';
+import NetInfo from "@react-native-community/netinfo";
+import { useFocusEffect } from '@react-navigation/native';
 
 const Details = ({ route, navigation }) => {
   const scrollX = useRef(new Animated.Value(0)).current;
 
-  const { error, isLoading } = useSelector((state) => state.products);
+  const { error, isLoading, isLoadingAdhesion, successAdhesion } = useSelector((state) => state.products);
+  const [foodDetails, setFoodDetails] = useState(route.params.food);
+
+  const [msgSuccess, setMsgSuccess] = useState("");
+  const [msgError, setMsgError] = useState("Une erreur s'est produite!");
+
+  const [statusSuccess, setStatusSuccess] = useState(false);
+  const [statusError, setStatusError] = useState(false);
 
   const [visible, setVisible] = useState(false);
   const [editedName, setEditedName] = useState('');
   const [editedAmount, setEditedAmount] = useState('');
   const [totAmount, setTotAmount] = useState(
-    route.params.food.couts.reduce((sum, cout) => sum + cout.amount, 0)
+    foodDetails?.couts.reduce((sum, cout) => sum + cout.amount, 0)
   );
 
   // Get token
   const [token, setToken] = useState(null);
+  const [itemSelected, setItemSelected] = useState({});
 
   const [visibleSnackBar , setVisibleSnackBar ] = useState(false);
   const onDismissSnackBar = () => setVisibleSnackBar(false);
   const onToggleSnackBar = () => setVisibleSnackBar(!visibleSnackBar );
   const [expandedMembre, setExpandedMembre] = useState(false);
+  const [expandedMembrePayment, setExpandedMembrePayment] = useState(false);
 
   const toggleExpansion = () => {
     setExpandedMembre(!expandedMembre);
   };
 
+  const toggleExpansionPayment = () => {
+    setExpandedMembrePayment(!expandedMembrePayment);
+  };
+
   const membresToShow = expandedMembre
-  ? route.params.food.membres
-  : route.params.food.membres.slice(0, 1); // Show the first two users if not expanded
+  ? foodDetails?.membres
+  : foodDetails?.membres?.slice(0, 1); // Show the first two users if not expanded
+
+  const membresToShowPayment = expandedMembrePayment
+  
+  ? foodDetails?.membres
+  : foodDetails?.membres?.slice(0, 1); // Show the first two users if not expanded
 
   const [dateStart, setDateStart] = useState(new Date(route.params.food.startDate));
   const [dateEnd, setDateEnd] = useState(new Date(route.params.food.endDate));
 
-  useEffect(() => {
-    const getTokenFromAsyncStorage = async () => {
-      try {
-        const storedToken = await AsyncStorage.getItem('user');
-        setToken(storedToken);
-       
-      } catch (error) {
-        // Handle AsyncStorage read error if needed
-        console.error('Error reading token from AsyncStorage:', error);
-      }
-    };
+  const [interestValid, setInterestValid] = useState(true); // Validation state for interest
+  const [interest, setInterest] = useState('');
 
-    getTokenFromAsyncStorage();
+  const [currentItem, setCurrentItem] = useState(false)
+  const [selectedItem, setSelectedItem] = useState([]);
+
+
+  const [openCout, setOpenCout] = useState(false)
+  const [openReject, setOpenReject] = useState(false)
+  const [openAccept, setOpenAccept] = useState(false)
+  const [openDetailsTrans, setOpenDetailsTrans] = useState(false)
+  const [openContrib, setOpenContrib] = useState(false)
+
+  const [openAdhesion, setOpenAdhesion] = useState(false)
+  const [openQuiter, setOpenQuitter] = useState(false)
+
+  
+  const [loading, setLoading] = useState(true);
+
+  const [connectedUser, setConnectedUser] = useState((route.params.connectedUser));  
+
+  const BackdropElement = useCallback(
+    (backdropProps) => (
+      <BottomSheetBackdrop
+        {...backdropProps}
+        opacity={0.7}
+        appearsOnIndex={0}
+        disappearsOnIndex={-1}
+      />
+    ),
+    []
+  );
+
+  const bottomSheetCout = useRef(null);
+  const bottomSheetAccept = useRef(null);
+  const bottomSheetReject = useRef(null);
+  const bottomSheetDetailsTrans = useRef(null);
+  const bottomSheetContrib = useRef(null);
+
+  const bottomSheetAdhesion = useRef(null);
+  const bottomSheetQuitter = useRef(null);
+
+
+  const snapPoints = useMemo(() => ["28%","50%", '70%', '80%', '90%'], []);
+
+  const openModalCout = useCallback(() => {
+    bottomSheetCout.current?.present();
+    setTimeout(() => {
+      setOpenCout(true);
+    }, 5);
   }, []);
 
-  useEffect(()=> {
-    console.log("owner", route.params.food.membres);
-    console.log("token", JSON.parse(token)?.user?.user?.userId,);
-  },[])
+  const handleCloseCout = useCallback(() => {
+    bottomSheetCout.current?.close();
+  }, []);
+
+  const openModalAccept = useCallback(() => {
+    bottomSheetAccept.current?.present();
+    setTimeout(() => {
+      setOpenAccept(true);
+    }, 5);
+  }, []);
+
+  const handleCloseAccept = useCallback(() => {
+    bottomSheetAccept.current?.close();
+  }, []);
+
+  const hideModalAccept = () => handleCloseAccept();
+
+
+  const openModalReject = useCallback(() => {
+    bottomSheetReject.current?.present();
+    setTimeout(() => {
+      setOpenReject(true);
+    }, 5);
+  }, []);
+
+  const handleCloseReject = useCallback(() => {
+    bottomSheetReject.current?.close();
+  }, []);
+
+  const hideModalReject = () => handleCloseReject();
+
+
+  const openModalDetailsTrans = useCallback(() => {
+    bottomSheetDetailsTrans.current?.present();
+    setTimeout(() => {
+      setOpenDetailsTrans(true);
+    }, 5);
+  }, []);
+
+  const handleCloseDetailsTrans = useCallback(() => {
+    bottomSheetDetailsTrans.current?.close();
+  }, []);
+
+  const hideModalDetailsTrans = () => handleCloseDetailsTrans();
+
+  const openModalContrib = useCallback(() => {
+    bottomSheetContrib.current?.present();
+    setTimeout(() => {
+      setOpenContrib(true);
+    }, 5);
+  }, []);
+
+  const handleCloseContrib = useCallback(() => {
+    bottomSheetContrib.current?.close();
+  }, []);
+
+  const hideModalContrib = () => handleCloseContrib();
+
+  const openModalAdhesion = useCallback(() => {
+    bottomSheetAdhesion.current?.present();
+    setTimeout(() => {
+      setOpenAdhesion(true);
+    }, 5);
+  }, []);
+
+  const handleCloseAdhesion = useCallback(() => {
+    bottomSheetAdhesion.current?.close();
+  }, []);
+
+  const hideModalAdhesion2 = () => handleCloseAdhesion();
+
+
+  const openModalQuitter = useCallback(() => {
+    bottomSheetQuitter.current?.present();
+    setTimeout(() => {
+      setOpenQuitter(true);
+    }, 5);
+  }, []);
+
+  const handleCloseQuiter = useCallback(() => {
+    bottomSheetQuitter.current?.close();
+  }, []);
+
+  const hideModalQuitter2 = () => handleCloseQuiter();
+
+  
+
+  useFocusEffect(
+    useCallback(() => {
+      console.log("route.params.food._id", route.params.food._id);
+      const getTokenFromAsyncStorage = async () => {
+        try {
+          const storedToken = await AsyncStorage.getItem('user');
+          setToken(storedToken);
+          // reloadScreen(value);
+  
+          // Data found, reload the screen
+          // reloadScreen(value);
+        } catch (error) {
+          console.error('Error reading token from AsyncStorage:', error);
+        }
+      };
+  
+      getTokenFromAsyncStorage();
+  
+      const fetchUserData = async () => {
+        const netInfo = await NetInfo.fetch();
+        
+        if (!netInfo.isConnected) {
+          setLoading(false);
+          Alert.alert(
+            'Pas de connexion Internet',
+            'Veuillez vérifier votre connexion Internet et réessayer.'
+          );
+          return;
+        }
+
+        fetch(`https://bomoko-backend.onrender.com/api/product/${route.params.food._id}`)
+          .then(response => response.json())
+          .then(data => {
+            setFoodDetails(data);
+
+            setLoading(false);
+          })
+          .catch(error => console.error('Error fetching user details:', error));
+      };
+  
+      fetchUserData();
+
+      // Return a cleanup function
+      return () => {
+        // You can perform cleanup here if needed
+        console.log('Cleanup function');
+      };
+    }, []) // Empty dependency array to run this effect only once when the screen mounts
+  );
+
+ // Function to handle screen reload
+ const reloadScreen = async () => {
+  setLoading(true);
+  console.log('reloadScreen');
+
+  // You can put your screen reload logic here
+  await fetch(`https://bomoko-backend.onrender.com/api/product/${route.params.food._id}`)
+  .then(response => response.json())
+  .then(data => {
+    setFoodDetails(data);
+    console.log('reloadScreen ok');
+    setTotAmount(
+      foodDetails?.couts.reduce((sum, cout) => sum + cout.amount, 0)
+    );
+
+    setLoading(false);
+  })
+  .catch(error => console.error('Error fetching user details:', error));
+};
 
   const dispatch = useDispatch();
 
   const handleContactSupport = () => {
     // Replace with your support email or contact form link
-    const supportEmail = 'info@alphanewgroup.com';
+    const supportEmail = 'info@afrintech.org';
     Linking.openURL(`mailto:${supportEmail}`);
   };
 
+  const onPressTransaction = (item) => {
+    console.log("On press", item);
+    setSelectedItem(item)
+    openModalDetailsTrans();
+  }
+
+   
+  const handleInterestChange = (text) => {
+    const parts = (100 - (foodDetails.initialAmount / (foodDetails.amount / 100).toFixed(0))).toFixed(0);
+
+    const numericValue = parseFloat(text);
+    if (!isNaN(numericValue) && numericValue >= 1 && numericValue <= parts) {
+      setInterestValid(true); // Interest is valid
+    } else {
+      setInterestValid(false); // Interest is not valid
+    }
+    setInterest(text); // Update interest value
+  };
+
   // Date Calculation
-  const targetStartDate = new Date(route.params.food.startDate);
-  const targetEndDate = new Date(route.params.food.endDate);
+  const targetStartDate = new Date(foodDetails.startDate);
+  const targetEndDate = new Date(foodDetails.endDate);
   const today = new Date();
   const timeDifference = targetStartDate - today;
   const timeTotalExerc = targetEndDate - targetStartDate;
@@ -104,17 +335,12 @@ const Details = ({ route, navigation }) => {
 
   // Calculate the number of days left
   const daysLeft = Math.ceil(timeDifference / millisecondsInDay);
-  const daysLeftExc = Math.ceil(timeDiffExerc / millisecondsInDay);
   const daysTotalExc = Math.ceil(timeTotalExerc / millisecondsInDay);
 
-  console.log(`Days left: ${daysLeft}`);
-
-  const showToast = () => {
-    ToastAndroid.show("Une erreur s'est produite", ToastAndroid.LONG);
-  }
+  // console.log(`Days left: ${daysLeft}`);
 
   // Timeline
-  const outputTimeLine = route.params.food.timeline.map(item => {
+  const outputTimeLine = foodDetails?.timeline.map(item => {
     const formattedDate = new Date(item.timestamp).toLocaleDateString('en-GB').replace(/\//g, '-');
 
     return {
@@ -131,7 +357,7 @@ const Details = ({ route, navigation }) => {
   outputTimeLine.unshift({
     time:`${mydateEnd.toLocaleDateString('en-GB').replace(/\//g, '-')}`,
     title: 'Fin probable de la Campagne',
-    description: `Probablelent la campagne de collecte de fonds prendra fin apres ${daysTotalExc} jours de la date de debut de la collecte`,
+    description: `Probablement la campagne de collecte de fonds prendra fin apres ${daysTotalExc} jours de la date de debut de la collecte`,
     lineColor: COLORS.peach,
     circleSize: 30,
     circleColor: COLORS.peach,
@@ -141,13 +367,13 @@ const Details = ({ route, navigation }) => {
 
   const [expanded, setExpanded] = useState(false);
 
-  const [sliderValue, setSliderValue] = useState(route.params.food.amount/100);
+  const [sliderValue, setSliderValue] = useState(foodDetails.amount/100);
   // slider * 100 / interet
   const [interet, setInteret] = useState((sliderValue *5 )/100);
 
-  function toggle() {
-    setVisible((visible) => !visible);
-  }
+  // function toggle() {
+  //   setVisible((visible) => !visible);
+  // }
 
   const toggleExpanded = () => {
     setExpanded(!expanded);
@@ -184,7 +410,6 @@ const Details = ({ route, navigation }) => {
 
     // Modal Demande Quit
     const [visibleContribuer, setVisibleContribuer] = useState(false);
-    const showModalContribuer = () => setVisibleContribuer(true);
     const hideModalContribuer = () => setVisibleContribuer(false);
 
     
@@ -205,6 +430,232 @@ const Details = ({ route, navigation }) => {
     );
   };
 
+  const renderBottomCout = ()=> (
+    <BottomSheetModal
+      ref={bottomSheetCout}
+      index={4}
+      backdropComponent={BackdropElement}
+      snapPoints={snapPoints}
+      backgroundStyle={{ borderRadius: responsiveScreenWidth(5), backgroundColor:'#eee'}}
+      onDismiss={() => setOpenCout(false)}
+    >
+      <BottomSheetScrollView>
+
+      <Block style={styles.bottomSheetContent}>
+      <ActivityIndicator style={{position:'absolute',
+      right:0, left: 0
+       }} size={20} color={COLORS.peach} animating={loading} />
+
+            <Text style={styles.bottomSheetTitle}>Le coût total de production {totAmount} {foodDetails.currency}</Text>
+            <Text style={styles.bottomSheetText}>
+              Il permet de prendre en compte tous les éléments de coût associés à la fabrication,
+              l'achat d'un bien ou la prestation d'un service.
+            </Text>
+            <View style={[styles.card,{ marginBottom: foodDetails.owner._id == connectedUser?.userId? 190 : 100} ]}>
+             {
+                  foodDetails?.couts && foodDetails?.couts
+                  .map((food, index) => {
+                    return <CoutScreen admin={foodDetails.owner._id == connectedUser?.userId} 
+                    totAmount={totAmount} handleUpdateItem={handleUpdateItem} handleTrash={handleTrash} 
+                    currency={foodDetails.currency} key={index} item={food} count={index + 1} />;
+                  })}
+            </View>
+           
+          </Block>
+          </BottomSheetScrollView>
+        
+              {
+              foodDetails.owner._id == connectedUser?.userId?
+              renderFAaddCout(): <></>
+            }
+
+    </BottomSheetModal>
+  )
+
+  const renderBottomContrib= ()=> (
+    <BottomSheetModal
+      ref={bottomSheetContrib}
+      index={1}
+      backdropComponent={BackdropElement}
+      snapPoints={snapPoints}
+      backgroundStyle={{ borderRadius: responsiveScreenWidth(5), backgroundColor:'#eee'}}
+      onDismiss={() => setOpenContrib(false)}
+    >
+      <BottomSheetScrollView style={{ padding: 17}}>
+      <Block row space='between' >
+          <Block >
+            <Text bold h2>CONTRIBUTION</Text>
+            <Text color={COLORS.blue}>{`Achat de parts`}</Text>
+          </Block>
+          <TouchableOpacity onPress={()=> hideModalContrib()}>
+            <IconButton
+              icon="close"
+              iconColor={COLORS.red}
+              size={40}
+            />
+          </TouchableOpacity>
+        </Block>
+        
+        <Block p_b={10}>
+          <Text>{(100 - (foodDetails.initialAmount / (foodDetails.amount / 100).toFixed(0))).toFixed(0)}  parts disponibles</Text>
+
+          <ReactTextInput
+              style={[styles.inputText, !interestValid && styles.inputError]} // Apply red border if not valid
+              value={interest}
+              onChangeText={handleInterestChange}
+              keyboardType="numeric"
+              placeholder="Nombre de parts"
+            />
+            {!interestValid && (
+              <Text style={styles.errorText}>Entre 1 et {(100 - (foodDetails.initialAmount / (foodDetails.amount / 100).toFixed(0))).toFixed(0)} parts</Text>
+            )}
+
+            {interest &&interestValid && (
+              <Text style={styles.label}>Voulez-vous acheter {parseInt(interest)} parts a {
+              parseFloat(parseFloat(interest) * (foodDetails.amount / 100) ).toFixed(2)} {foodDetails.currency}?
+              </Text>
+            )}
+
+
+          <Button mode='contained' disabled={!interestValid}  style={{marginTop:10}} onPress={()=> {
+            setInterest(null);
+            setInterestValid(true);
+            hideModalContrib();
+            navigation.navigate('ConfirmPayment', {
+              somme: parseFloat(parseFloat(interest) * (foodDetails.amount / 100) ).toFixed(2),
+              nombreParts: parseInt(interest),
+              prixParts: parseInt(foodDetails.amount / 100),
+              connectedUser:  connectedUser,
+              motif:  `Achat de ${parseInt(interest)} parts à ${parseFloat(parseFloat(interest) * (foodDetails.amount / 100) ).toFixed(2)} ${foodDetails.currency}?`,
+              titre: 'Confirmez votre payment',
+              button:'Verifier && confirmer',
+              currency: foodDetails.currency,
+              type:'achat',
+              foodDetails
+            })
+          }} >ACHETER</Button>
+          </Block>
+
+      
+      </BottomSheetScrollView>
+
+    </BottomSheetModal>
+  )
+
+  const renderBottomAccept = (item) => (
+    <BottomSheetModal
+      ref={bottomSheetAccept}
+      index={0}
+      backdropComponent={BackdropElement}
+      snapPoints={snapPoints}
+      backgroundStyle={{ borderRadius: responsiveScreenWidth(5), backgroundColor:'#eee'}}
+      onDismiss={() => setOpenAccept(false)}
+    >
+     <BottomSheetScrollView style={{ padding: 17}}>
+      <Block row space='between' >
+          <Block >
+            <Text bold h2>ACCEPTER</Text>
+            <Text color={COLORS.blue}>{`Accepter la demande d'un investisseur`}</Text>
+          </Block>
+          <TouchableOpacity onPress={()=> hideModalAccept()}>
+            <IconButton
+              icon="close"
+              iconColor={COLORS.red}
+              size={40}
+            />
+          </TouchableOpacity>
+        </Block>
+        {isLoadingAdhesion?
+        <ActivityIndicator animating={true} /> :
+        <Button buttonColor={COLORS.darkgreen} disabled={isLoading} mode='contained' style={{marginTop:10}} onPress={()=> {
+          handleAcceptReq(currentItem)
+        }}>Accepter</Button>}
+      
+      </BottomSheetScrollView>
+
+    </BottomSheetModal>
+  )
+
+  const renderBottomReject = (item) => (
+    <BottomSheetModal
+      ref={bottomSheetReject}
+      index={0}
+      backdropComponent={BackdropElement}
+      snapPoints={snapPoints}
+      backgroundStyle={{ borderRadius: responsiveScreenWidth(5), backgroundColor:'#eee'}}
+      onDismiss={() => setOpenReject(false)}
+    >
+      <BottomSheetScrollView style={{ padding: 17}}>
+      <Block row space='between' >
+          <Block >
+            <Text bold h2>REFUSER</Text>
+            <Text color={COLORS.blue}>{`Rejeter la demande d'un investisseur`}</Text>
+          </Block>
+          <TouchableOpacity onPress={()=> hideModalReject()}>
+            <IconButton
+              icon="close"
+              iconColor={COLORS.red}
+              size={40}
+            />
+          </TouchableOpacity>
+        </Block>
+        {isLoadingAdhesion?
+        <ActivityIndicator animating={true} /> :
+        <Button buttonColor={COLORS.peach}  disabled={isLoading} mode='contained' style={{marginTop:10}} onPress={()=> {
+          handleReject(currentItem)
+        }}>Rejeter</Button>}
+
+      </BottomSheetScrollView>
+
+    </BottomSheetModal>
+  )
+
+  const renderBottomAdhesion = (item) => (
+    <BottomSheetModal
+      ref={bottomSheetAdhesion}
+      index={0}
+      backdropComponent={BackdropElement}
+      snapPoints={snapPoints}
+      backgroundStyle={{ borderRadius: responsiveScreenWidth(5), backgroundColor:'#eee'}}
+      onDismiss={() => setOpenAdhesion(false)}
+    >
+     <BottomSheetScrollView style={{ padding: 17}}>
+      <Block row space='between' >
+          <Block >
+            <Text bold h2>ADHESION</Text>
+            <Text color={COLORS.blue}>Voulez-vous vraiment Faire parti des insvesitteurs du {foodDetails.type }
+              {" "}{ foodDetails.name}?</Text>
+          </Block>
+          <TouchableOpacity onPress={()=> hideModalAdhesion2()}>
+            <IconButton
+              icon="close"
+              iconColor={COLORS.red}
+              size={40}
+            />
+          </TouchableOpacity>
+        </Block>
+        <Block>
+
+              {/* <Text color={COLORS.peach} variant="titleLarge">Ceci implique que vous pouvez contribuer une somme
+              d'argent et ganger apres l'exercice! Votre demande d'adhesion sera validee par le proprietaire du {foodDetails.type }
+              {" "}{ foodDetails.name}</Text> */}
+        </Block>
+        {/* <Text bold color={COLORS.darkgreen} variant="titleLarge"  center>{msgSuccess}</Text>
+        <Text bold color={COLORS.peach} variant="titleLarge"  center >{msgError}</Text> */}
+        
+        {isLoadingAdhesion?
+        <ActivityIndicator animating={true} /> :
+        <Button buttonColor={COLORS.peach} disabled={isLoading} mode='contained' style={{marginTop:10}} 
+        onPress={()=> {
+          handleAdhesion()
+         
+        }}>Demande d'Adhesion</Button>}
+      
+      </BottomSheetScrollView>
+
+    </BottomSheetModal>
+  )
+
   const renderImages = () => {
     return (
       <ScrollView
@@ -216,7 +667,7 @@ const Details = ({ route, navigation }) => {
         })}
         scrollEventThrottle={16}
       >
-        {route.params.food.images.map((image, index) => (
+        {foodDetails.images.map((image, index) => (
           <ImageBackground
             key={index}
             source={{ uri: image}}
@@ -252,6 +703,12 @@ const Details = ({ route, navigation }) => {
       if (!editedName || !editedAmount) {
         // Throw UI error if any field is missing
         Alert.alert('Erreur', 'Veuillez remplir tous les champs obligatoires');
+        setMsgError("Veuillez remplir tous les champs obligatoires");
+        setMsgSuccess("");
+        setStatusSuccess(false)
+        setStatusError(true)
+        onToggleSnackBar();
+
         return;
       }
 
@@ -261,46 +718,82 @@ const Details = ({ route, navigation }) => {
       };
 
       dispatch(soumettreProduct({
-        ...route.params.food,
-        id: route.params.food._id,
+        ...foodDetails,
+        id: foodDetails._id,
         couts: [
+          ...foodDetails.couts,
           coutObj,
-          ...route.params.food.couts,
         ]
       }));
 
-      route.params.food.couts = [
+      foodDetails.couts = [
+         ...foodDetails.couts,
         coutObj,
-        ...route.params.food.couts,
       ]
 
       setEditedName('');
       setEditedAmount('');
-      // Check if the member was updated successfully
-      if (!error && !isLoading) {
+      // Check if the cout was updated successfully
+      setStatusError(!error && !isLoading);
+      setStatusSuccess(!error && !isLoading);
+      if (!statusError && statusSuccess) {
+        setMsgSuccess("Cout ajoute avec success");
+        setMsgError("");
+        setStatusSuccess(true)
+        setStatusError(false)
+        onToggleSnackBar();
+
         setTotAmount(totAmount + parseFloat(editedAmount));
+
       }else {
         console.log('Error ++++++')
-        onToggleSnackBar()
+        setMsgError("Une Erreur s'est produite lors de l'ajout de cout");
+        setMsgSuccess("");
+        setStatusSuccess(false)
+        setStatusError(true)
+        onToggleSnackBar();
       }
     } catch(e){
-      console.log('Error //////////', e)
-      onToggleSnackBar()
-      showToast()
+        console.log('Error //////////', e)
+        setMsgError("Une Erreur s'est produite lors de l'ajout de cout");
+        setMsgSuccess("");
+        setStatusSuccess(false)
+        setStatusError(true)
+        onToggleSnackBar();
     }
   };
 
   const handleDelete = async () => {
-    dispatch(delProduct({
-      id: route.params.food._id
-    }));
+    try{
+      dispatch(delProduct({
+        id: foodDetails._id
+      }));
+      
+      // Update state
+      setStatusError(!error && !isLoading);
+      setStatusSuccess(!error && !isLoading);
 
-     // Check if the product was deleted successfully
-    if (!error) {
-      // Navigate back to the previous screen
-      navigation.navigate('Main');
-    }else {
-      onToggleSnackBar()
+      // Check if the product was deleted successfully
+      if (!statusError && statusSuccess) {
+        setMsgSuccess("Suppression effectuee avec success");
+        setMsgError("");
+        setStatusSuccess(true);
+        setStatusError(false);
+        onToggleSnackBar();
+      }else {
+          setMsgError("Une Erreur s'est produite lors de la suppression");
+          setMsgSuccess("");
+          setStatusSuccess(false);
+          setStatusError(true);
+          onToggleSnackBar();
+      }
+    }
+    catch(e){
+      setMsgError("Une Erreur s'est produite lors de la suppression");
+      setMsgSuccess("");
+      setStatusSuccess(false)
+      setStatusError(true)
+      onToggleSnackBar();
     }
   }
 
@@ -310,39 +803,58 @@ const Details = ({ route, navigation }) => {
   
   const handleSoumettre = async () => {
 
-    // Pushing the additional object to the output array
-    const today = new Date();
+    try{
+      // Pushing the additional object to the output array
+      const today = new Date();
 
-    const outputTimeLineSoum = {
-      time:`${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear().toString().substr(-2)}`,
-      title: 'Soumission',
-      details: `Votre ${route.params.food.type} a été soumis à l'équipe African Fintech et est en attente de validation`
-    };
+      const outputTimeLineSoum = {
+        time:`${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear().toString().substr(-2)}`,
+        title: 'Soumission',
+        details: `Votre ${foodDetails.type} a été soumis à l'équipe Afintech et est en attente de validation`
+      };
 
-    dispatch(soumettreProduct({
-      ...route.params.food,
-      id: route.params.food._id,
-      status: "SUBMITED",
-      timeline: [
-        outputTimeLineSoum,
-        ...route.params.food.timeline,
-      ]
-    }));
+      dispatch(soumettreProduct({
+        ...foodDetails,
+        id: foodDetails._id,
+        status: "SUBMITED",
+        timeline: [
+          ...foodDetails.timeline,
+          outputTimeLineSoum,
+        ]
+      }));
 
-     // Check if the product was deleted successfully
-    if (!error) {
-      // Navigate back to the previous screen
-      navigation.navigate('Main');
+      // Update state
+      setStatusError(!error && !isLoading);
+      setStatusSuccess(!error && !isLoading);
 
-    }else {
-      onToggleSnackBar()
+      // Check if the user validationhas been made successfully
+      if (!statusError && statusSuccess) {
+        setMsgSuccess(`Votre ${foodDetails.type} a été soumis avec succès`);
+        setMsgError("");
+        setStatusSuccess(true);
+        setStatusError(false);
+        onToggleSnackBar();
+      }else {
+          setMsgError("Une Erreur s'est produite lors de la soumission");
+          setMsgSuccess("");
+          setStatusSuccess(false);
+          setStatusError(true);
+          onToggleSnackBar();
+      }
+    }
+    catch(e){
+      setMsgError("Une Erreur s'est produite lors de la soumission");
+      setMsgSuccess("");
+      setStatusSuccess(false);
+      setStatusError(true);
+      onToggleSnackBar();
     }
   };
 
   const handleAcceptReq = async (myUser) => {
     try{
   
-      const updatedMembres = route.params.food.membres.map((membre) => {
+      const updatedMembres = foodDetails.membres.map((membre) => {
         if (membre.user._id === myUser.user._id) {
           return {
             ...membre,
@@ -352,31 +864,46 @@ const Details = ({ route, navigation }) => {
         return membre;
       });
 
-      dispatch(soumettreProduct({
-        ...route.params.food,
-        id: route.params.food._id,
+      await dispatch(soumettreProduct({
+        ...foodDetails,
+        id: foodDetails._id,
         membres: updatedMembres,
       }));
+
+      await reloadScreen();
+      await hideModalAccept();
   
-       // Check if the member was updated successfully
-      if (!error && !isLoading) {
-        // Navigate back to the previous screen
-        await navigation.navigate('Main');
-  
-      }else {
-        console.log('Error ++++++')
-        onToggleSnackBar()
-      }
-    } catch(e){
-      console.log('Error //////////', e)
-      onToggleSnackBar()
-      showToast()
+      //  // Update state
+      // setStatusError(!error && !isLoading);
+      // setStatusSuccess(!error && !isLoading);
+
+      // // Check if the user's rejection has been made successfully
+      // if (!statusError && statusSuccess) {
+      //   setMsgSuccess(`Accepté avec success`);
+      //   setMsgError("");
+      //   setStatusSuccess(true);
+      //   setStatusError(false);
+      //   onToggleSnackBar();
+      // }else {
+      //     setMsgError("Une Erreur s'est produite");
+      //     setMsgSuccess("");
+      //     setStatusSuccess(false);
+      //     setStatusError(true);
+      //     onToggleSnackBar();
+      // }
+    }
+    catch(e){
+      setMsgError("Une Erreur s'est produite");
+      setMsgSuccess("");
+      setStatusSuccess(false);
+      setStatusError(true);
+      onToggleSnackBar();
     }
   };
 
-  const handleAcceptReject = async (myUser) => {
+  const handleReject = async (myUser) => {
     try{
-      const updatedMembres = route.params.food.membres.map((membre) => {
+      const updatedMembres = foodDetails.membres.map((membre) => {
         if (membre.user._id === myUser.user._id) {
           return {
             ...membre,
@@ -386,25 +913,39 @@ const Details = ({ route, navigation }) => {
         return membre;
       });
 
-      dispatch(soumettreProduct({
-        ...route.params.food,
-        id: route.params.food._id,
+      await dispatch(soumettreProduct({
+        ...foodDetails,
+        id: foodDetails._id,
         membres: updatedMembres,
       }));
+
+      await reloadScreen();
+      await hideModalReject();
   
-       // Check if the member was updated successfully
-      if (!error && !isLoading) {
-        // Navigate back to the previous screen
-        await navigation.navigate('Main');
-  
-      }else {
-        console.log('Error ++++++')
-        onToggleSnackBar()
-      }
-    } catch(e){
-      console.log('Error //////////', e)
-      onToggleSnackBar()
-      showToast()
+      // setStatusError(!error && !isLoading);
+      // setStatusSuccess(!error && !isLoading);
+
+      // // Check if the product was deleted successfully
+      // if (!statusError && statusSuccess) {
+      //   setMsgSuccess(`Rejet avec success`);
+      //   setMsgError("");
+      //   setStatusSuccess(true);
+      //   setStatusError(false);
+      //   onToggleSnackBar();
+      // }else {
+      //     setMsgError("Une Erreur s'est produite");
+      //     setMsgSuccess("");
+      //     setStatusSuccess(false);
+      //     setStatusError(true);
+      //     onToggleSnackBar();
+      // }
+    }
+    catch(e){
+      setMsgError("Une Erreur s'est produite");
+      setMsgSuccess("");
+      setStatusSuccess(false);
+      setStatusError(true);
+      onToggleSnackBar();
     }
   }
 
@@ -412,33 +953,165 @@ const Details = ({ route, navigation }) => {
   // Display "Quitter" button while waiting for Admin Validation
   
   const handleAdhesion = async () => {
+    try{
+      setMsgSuccess("");
+      setMsgError("");
+      
+      // Push current user to member array
 
-    // Push current user to member array
+      // Reuse the soumettreProduct function
+      await dispatch(soumettreProduct({
+        ...foodDetails,
+        id: foodDetails._id,
+        membres: [
+          ...foodDetails.membres,
+          {
+            user: connectedUser?.userId,
+            admission_req: 'PENDING', 
+            contribution_amount: 0,
+            contribution_status: 'PENDING', 
+          }
+        ]
+      }));
+      await reloadScreen();
+      await hideModalAdhesion2();
 
-    // Reuse the soumettreProduct function
-    dispatch(soumettreProduct({
-      ...route.params.food,
-      id: route.params.food._id,
-      membres: [
-        ...route.params.food.membres,
-        {
-          user: JSON.parse(token)?.user?.user?.userId,
-          admission_req: 'PENDING', 
-          contribution_amount: 0,
-          contribution_status: 'PENDING', 
-        }
-      ]
-    }));
+      // // Check if the request made successfully
+      // setStatusError(!successAdhesion && !isLoadingAdhesion);
+      // setStatusSuccess(!error && !isLoadingAdhesion);
 
-     // Check if the product was deleted successfully
-    if (!error) {
-      // Navigate back to the previous screen
-      navigation.navigate('Main');
+      // console.log("setStatusError", error && !isLoadingAdhesion);
+      // console.log("setStatusSuccess",error && !isLoadingAdhesion);
+      // console.log("error",error);
+      // setMsgSuccess(successAdhesion?successAdhesion:"");
 
-    }else {
-      onToggleSnackBar()
+      // // Check if user's request has been made successfully
+      // if (successAdhesion) {
+      //   setMsgSuccess(`Adhesion avec success`);
+      //   setMsgError("");
+      //   setStatusSuccess(true);
+      //   setStatusError(false);
+      //   onToggleSnackBar();
+      // }else {
+      //     setMsgError("Une Erreur s'est produite");
+      //     setMsgSuccess("");
+      //     setStatusSuccess(false);
+      //     setStatusError(true);
+      //     onToggleSnackBar();
+      // }
+    }
+    catch(e){
+      setMsgError("Une Erreur s'est produite");
+      setMsgSuccess("");
+      setStatusSuccess(false);
+      setStatusError(true);
+      onToggleSnackBar();
     }
   };
+
+  const renderInvestCalculus = () => (
+    <Block p={20}>
+      <Text bold numberOfLines={1}>
+        CALCUL D'INVESTISSEMENT ({foodDetails.currency})
+      </Text>
+      <Text>Projection du retour sur investissement</Text>
+
+      <Svg style={{ width: '100%' }}>
+        <VictoryChart domainPadding={50} theme={VictoryTheme.material} >
+          <VictoryBar
+            style={{ 
+              data: {
+                fill: ({ datum }) => {
+                  if (datum.x === `Intérêt (${foodDetails.tauxInt}%)`) {
+                    return COLORS.primary;
+                  } else if (datum.x === `Invest`) {
+                    return COLORS.peach;
+                  } else if (datum.y > foodDetails.initialAmount) {
+                    return COLORS.purple;
+                  } else {
+                    return COLORS.black;
+                  }
+                }
+              }
+            }}
+            labels={({ datum }) => `${datum.y} ${foodDetails.currency}`}
+
+            categories={{
+              x: [`Total`, 
+              `Disponible`,
+              `Intérêt (${foodDetails.tauxInt}%)`,
+              `Invest`
+            ],
+            }}
+            data={[
+              { x: `Total`, y: foodDetails.amount },
+              { x:  `Disponible`, y: 
+              (foodDetails.initialAmount+foodDetails.membres
+                .filter(member => member.contribution_status === "ACCEPTED")
+                .reduce((sum, member) => sum + member.contribution_amount, 0))
+              },
+              { x:  `Intérêt (${foodDetails.tauxInt}%)`, y: interet },
+              { x: `Invest`, y: sliderValue },
+            ]}
+          />
+        </VictoryChart>
+      </Svg>
+
+      {/*Slider with max, min, step and initial value*/}
+      <Slider
+        maximumValue={(foodDetails.amount-(foodDetails.initialAmount+foodDetails.membres
+          .filter(member => member.contribution_status === "ACCEPTED")
+          .reduce((sum, member) => sum + member.contribution_amount, 0)))}
+        minimumValue={foodDetails.amount/100}
+        minimumTrackTintColor="#307ecc"
+        maximumTrackTintColor="#000000"
+        step={foodDetails.amount/100}
+        value={sliderValue}
+        onValueChange={(sliderValue) => {
+          setInteret((sliderValue * foodDetails.tauxInt )/100)
+          setSliderValue(sliderValue)}
+        }
+      />
+
+      <Text bold style={{ color: 'black' }}>
+        Vous investissez la somme de : {sliderValue} {foodDetails.currency}.
+        Ceci équivaut à {sliderValue/(foodDetails.amount/100)} parts de {foodDetails.amount/100} {foodDetails.currency} chacun.
+        Et votre Intérêt de ({foodDetails.tauxInt}%) est de {interet} {foodDetails.currency} après l'exercice. </Text>
+        
+    </Block>
+  )
+
+  const renderTimeline = () => (
+    <Block p_l={20} p_r={20}>
+        <Text bold numberOfLines={1}>
+        TIMELINE
+      </Text>
+      <Timeline
+        style={styles.list}
+        data={outputTimeLine}
+        circleSize={20}
+        circleColor="rgb(45,156,219)"
+        lineColor="rgb(45,156,219)"
+        timeContainerStyle={{ minWidth: 52, marginTop: -5 }}
+        timeStyle={{
+          textAlign: 'center',
+          backgroundColor: '#ff9797',
+          color: 'white',
+          padding: 5,
+          borderRadius: 13,
+        }}
+        descriptionStyle={{ color: 'gray' }}
+        options={{
+          style: { paddingTop: 5 },
+        }}
+        columnFormat="single-column-left"
+      />
+
+      {/* <Text bold color={COLORS.blue}>
+        {expanded ? 'Voir moins' : 'Voir plus'}
+      </Text> */}
+    </Block>
+  )
 
   const handleUpdateItem = (item,  editedAmount1, editedName1) => {
     // Handle update item event
@@ -459,7 +1132,7 @@ const Details = ({ route, navigation }) => {
               // Function to execute when the user presses the "Mettre à jour" button
               console.log('Élément mis à jour', item);
 
-              const updatedCouts = route.params.food.couts.map((cout) => {
+              const updatedCouts = foodDetails.couts.map((cout) => {
                 if (cout._id === item._id) {
                   return {
                     ...cout,
@@ -470,30 +1143,51 @@ const Details = ({ route, navigation }) => {
                 return cout;
               });
 
-              dispatch(soumettreProduct({
-                ...route.params.food,
-                id: route.params.food._id,
+              await dispatch(soumettreProduct({
+                ...foodDetails,
+                id: foodDetails._id,
                 couts: updatedCouts,
               }));
-              
-              // Check if the item was updated successfully
-              if (!error && !isLoading) {
-                console.log('Élément mis à jour avec succès');
-                setTotAmount(totAmount + parseFloat(editedAmount1) - parseFloat(route.params.food.couts.find(cout => cout._id === item._id).amount));
 
-                route.params.food.couts = updatedCouts;
-              } else {
-                console.log('Erreur de mise à jour');
+              reloadScreen();
+
+              
+
+              // Update state
+              setStatusError(!error && !isLoading);
+              setStatusSuccess(!error && !isLoading);
+
+              // Check if the item was updated successfully
+              if (!statusError && statusSuccess) {
+                setMsgSuccess(`Mis à jour avec succèss`);
+                console.log(`Mis à jour avec succèss`);
+                setMsgError("");
+                setStatusSuccess(true);
+                setStatusError(false);
                 onToggleSnackBar();
+
+                setTotAmount(totAmount + parseFloat(editedAmount1) - parseFloat(foodDetails.couts.find(cout => cout._id === item._id).amount));
+
+                // TODO : update all foodDetails => foodDetails.couts = updatedCouts;
+                // setFoodDetails({...foodDetails, 'couts': updatedCouts}); // TODO: To test if is working well
+                
+              }else {
+                  setMsgError("Erreur de mise à jour");
+                  setMsgSuccess("");
+                  setStatusSuccess(false);
+                  setStatusError(true);
+                  onToggleSnackBar();
               }
             },
           },
         ]
       );
     } catch (e) {
-      console.log('Erreur //////////', e);
+      setMsgError("Erreur de mise à jour");
+      setMsgSuccess("");
+      setStatusSuccess(false);
+      setStatusError(true);
       onToggleSnackBar();
-      showToast();
     }
   };
   
@@ -517,23 +1211,36 @@ const Details = ({ route, navigation }) => {
               // Fonction à exécuter lorsque l'utilisateur appuie sur le bouton "Supprimer"
               console.log('Élément supprimé', item);
 
-                const updatedCouts = route.params.food.couts.filter(cout => cout._id !== item._id);
+                const updatedCouts = foodDetails.couts.filter(cout => cout._id !== item._id);
 
                 dispatch(soumettreProduct({
-                  ...route.params.food,
-                  id: route.params.food._id,
+                  ...foodDetails,
+                  id: foodDetails._id,
                   couts: updatedCouts,
                 }));
             
                 // Check if the couts was updated successfully
-                if (!error && !isLoading) {
-                  setTotAmount(totAmount - parseFloat(item.amount));
+                // Update state
+                setStatusError(!error && !isLoading);
+                setStatusSuccess(!error && !isLoading);
 
-                  route.params.food.couts = updatedCouts;
+                // Check if the item was updated successfully
+                if (!statusError && statusSuccess) {
+                  setMsgSuccess(`Suppression avec succèss`);
+                  setMsgError("");
+                  setStatusSuccess(true);
+                  setStatusError(false);
+                  onToggleSnackBar();
+                    setTotAmount(totAmount - parseFloat(item.amount));
+
+                    foodDetails.couts = updatedCouts;
             
                 }else {
-                  console.log('Error ++++++')
-                  onToggleSnackBar()
+                  setMsgError("Erreur de suppression!");
+                  setMsgSuccess("");
+                  setStatusSuccess(false);
+                  setStatusError(true);
+                  onToggleSnackBar();
                 }
               
             },
@@ -542,9 +1249,11 @@ const Details = ({ route, navigation }) => {
       );
 
     } catch(e){
-      console.log('Error //////////', e)
-      onToggleSnackBar()
-      showToast()
+      setMsgError("Erreur de suppression!");
+      setMsgSuccess("");
+      setStatusSuccess(false);
+      setStatusError(true);
+      onToggleSnackBar();
     }
   };
 
@@ -565,7 +1274,7 @@ const Details = ({ route, navigation }) => {
           justifyContent: 'center',
         }}
       >
-        {route.params.food.images.map((image, index) => {
+        {foodDetails.images.map((image, index) => {
           const opacity = dotPosition.interpolate({
             inputRange: [index - 1, index, index + 1],
             outputRange: [0.3, 1, 0.3],
@@ -590,6 +1299,220 @@ const Details = ({ route, navigation }) => {
     );
   };
 
+  const renderDisplayDetail = () => {
+    return (
+      <BottomSheetModal
+        ref={bottomSheetDetailsTrans}
+        index={3}
+        backdropComponent={BackdropElement}
+        snapPoints={snapPoints}
+        backgroundStyle={{ borderRadius: responsiveScreenWidth(5), backgroundColor:'#eee'}}
+        onDismiss={() => hideModalDetailsTrans()}
+      >
+        <BottomSheetScrollView>
+        <Block p={17} >
+        <Block row space='between'>
+          <Block m_b={10} flex={1}>
+            <Text bold h2>Details</Text>
+            <Text color={COLORS.blue}>{`Details de la transaction`}</Text>
+          </Block>
+          <TouchableOpacity onPress={()=> hideModalDetailsTrans()}>
+            <IconButton
+              icon="close"
+              iconColor={COLORS.red}
+              size={40}
+            />
+          </TouchableOpacity>
+          
+        </Block>
+
+        <Block p_b={10} row space='between'>
+          <Block flex={1}>
+          { selectedItem.user?.profile_pic  ? (
+              <Image
+                source={{ uri: selectedItem.user?.profile_pic  }}
+                style={{ width: 80, height: 80, borderRadius:40, borderWidth:1,
+                borderColor: COLORS.white}}
+              />
+            ) : (
+              <Image
+                source={icons.investment}
+                style={{
+                  width: 80,
+                  height: 80,
+                  tintColor: COLORS.black,
+                }}
+              />
+            )}
+                
+          </Block>
+
+          <Block flex={3} middle>
+            
+
+            <Block row space='between'>
+              <Text bold>DE :</Text>
+              <Text gray>{`${selectedItem?.user?.name}`}</Text>
+            </Block>
+            <Block row space='between'>
+              <Text bold>A :</Text>
+              <Text gray>{`${foodDetails.owner.name}`}</Text>
+            </Block>
+
+            <Block row space='between'>
+              <Text bold>DATE :</Text>
+              <Text gray>{selectedItem?.timestamp}</Text>
+              {/* <Text gray>{format(new Date(selectedItem?.timestamp), 'dd MMMM yyyy', { locale: fr })}</Text> */}
+            </Block>
+          </Block>
+
+        </Block>
+
+        <Divider />
+          <Block p_t={15} p_b={15} row space='between'>
+            <Text h3 bold>TYPE</Text>
+            <Text color={COLORS.red} >Achat de parts en attente</Text>
+          </Block>
+
+          <Divider />
+          <Block p_t={15} p_b={15} row space='between'>
+            <Text h3 bold>SOMME</Text>
+            {/* TODO: check and fecth real amount => contribution_amount */}
+            <Text >{selectedItem.contribution_amount} {foodDetails.currency}</Text>
+          </Block>
+
+          <Divider />
+          <Block p_t={15} p_b={15} row space='between'>
+            <Text h3 bold> FlexPaie number</Text>
+            <Text >{selectedItem.flex_pay_order_number}</Text>
+          </Block>
+
+          <Divider />
+          <Block p_t={15} p_b={15} row space='between'>
+            <Text h3 bold> FlexPaie ref</Text>
+            <Text >{selectedItem.flex_pay_ref}</Text>
+          </Block>
+
+          <Divider />
+          <Block p_t={15} p_b={15} row space='between'>
+            <Text h3 bold>STATUS</Text>
+            {/* TODO: check and fecth real status */}
+            <Text color={COLORS.peach} >En attente</Text>
+          </Block>
+
+          <Divider />
+          <Block p_t={15} p_b={15} >
+            {/* TODO: TO BE DONE */}
+            <Button mode='contained' buttonColor={COLORS.blue} >TELECHARGER PDF</Button>
+          </Block>
+      </Block>
+        </BottomSheetScrollView>
+    </BottomSheetModal>
+    )
+  }
+
+  const renderListContrib = () => {
+    return (
+      <Block card m={20} p_b={20} >
+        <Block p={17}>
+          <Text bold numberOfLines={1} h2>
+            Achat de parts
+          </Text>
+          <Block row space='between' >
+          <Text numberOfLines={1} style={{flex: 1, marginRight: 10}}>La liste de toutes les transactions</Text>
+          {/* <TouchableOpacity onPress={()=> console.log('ok', membresToShowPayment)}>
+            <Text>ok</Text>
+          </TouchableOpacity> */}
+
+             {/* TODO: TO BE DONE */}
+          {/* <Text color={COLORS.blue}>Voir plus</Text> */}
+          {membresToShowPayment.length >= 1 && ( // Show "Voir plus" only if there are more than 2 users
+            <TouchableOpacity onPress={toggleExpansionPayment}>
+              <Text bold color={COLORS.blue}>
+                {expandedMembrePayment ? 'Voir moins' : 'Voir plus'}
+              </Text>
+            </TouchableOpacity>
+          )}
+
+          </Block>
+        </Block>
+        <FlatList
+            data={membresToShowPayment.filter((value, key)=> value?.contribution_amount>0)}
+            renderItem={({ item }) => 
+              <Transaction user={item} navigation={navigation} subtitle='Achat de parts en attente' topRight={item.contribution_amount} 
+                bottomRight={format(new Date(item.timestamp), 'dd MMMM yyyy', { locale: fr }) } currency={foodDetails.currency} onPressTransaction={onPressTransaction} />}
+                keyExtractor={(item) => item._id} // Use a unique key for each item
+        />
+        </Block>
+  )};
+
+  const renderMembres = () => (
+        <Block p_l={20} p_r={20}>
+          <Text bold numberOfLines={1}>
+          MEMBRES ({foodDetails.membres.length + 1})
+          </Text>
+
+          {
+            renderItem({ admin: true, name: foodDetails.owner.name+" (Admin)", 
+            //name: foodDetails.owner._id
+            user: { ...foodDetails.owner, _id: foodDetails.owner._id, },
+            contribution: foodDetails.initialAmount, tauxInt: foodDetails.tauxInt,
+            date: format(new Date(foodDetails.timestamp), 'dd MMMM yyyy', { locale: fr }) })
+          }
+          {
+            membresToShow.map((membre, index) => renderItem(membre))
+          }
+
+          {foodDetails.membres?.length > 1 && ( // Show "Voir plus" only if there are more than 2 users
+            <TouchableOpacity onPress={toggleExpansion}>
+              <Text bold color={COLORS.blue}>
+                {expandedMembre ? 'Voir moins' : 'Voir plus'}
+              </Text>
+            </TouchableOpacity>
+          )}
+        </Block>
+  )
+
+  const renderQuestion = () => (
+    <Block  p_l={20} p_r={20}   >
+    <Text>
+      {`Avez-vous des questions sur ce ${foodDetails.type}? Contactez le propriétaire ou notre expert en financement participatif.`}
+      </Text>
+        <Block row space='between'>
+
+        <View style={styles.columnMembre1}>
+            <Image
+              source={{uri: foodDetails.owner?.profile_pic}}
+              style={styles.imgOwner}
+            />
+            <Text numberOfLines={2} bold >{foodDetails.owner?.name}</Text>
+            <Text numberOfLines={1} style={styles.contentTitle}>Président</Text>
+          </View>
+
+        <Block style={{ justifyContent: 'center' }}>
+        <TouchableOpacity style={styles.contactButton} onPress={handleContactSupport}>
+        <Text style={styles.buttonText}>Contacter l'Admin</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.contactButton2} onPress={handleContactSupport}>
+        <Text style={styles.buttonText}>Contacter le Support</Text>
+      </TouchableOpacity>
+        </Block>
+
+  </Block>
+</Block>
+  
+
+  )
+  
+  const renderHelp = () => (
+    <Block p_t={20} p_l={20} p_r={20}>
+      <Text bold numberOfLines={1}>
+        BESOIN D'AIDE?
+      </Text>
+    </Block>
+  );
+
   const renderFAaddCout = () => {
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -605,7 +1528,7 @@ const Details = ({ route, navigation }) => {
         />
 
         <TextInput
-          label={`Prix tot (${route.params.food.currency})`}
+          label={`Prix tot (${foodDetails.currency})`}
           value={`${editedAmount}`}
           onChangeText={handleAmountChange}
           mode="outlined"
@@ -614,10 +1537,10 @@ const Details = ({ route, navigation }) => {
           required
         />
 
-      <TouchableOpacity  onPress={() => {
-            Keyboard.dismiss();
-            handleAddCout();
-          }}>
+        <TouchableOpacity  onPress={() => {
+          Keyboard.dismiss();
+          handleAddCout();
+        }}>
           <Ionicons name="add-circle" size={50} color={COLORS.darkgreen} />
         </TouchableOpacity>
        
@@ -630,7 +1553,7 @@ const Details = ({ route, navigation }) => {
     return (
       <Block row space="between" style={styles.floatBlock}>
         <Text bold>Les coûts directs et indirects</Text>
-        <Button textColor="#fff" elevated buttonColor={COLORS.purple} onPress={toggle}>
+        <Button textColor="#fff" elevated buttonColor={COLORS.purple} onPress={()=> openModalCout()}>
           Les coûts
         </Button>
       </Block>
@@ -685,7 +1608,7 @@ const Details = ({ route, navigation }) => {
             >
               
 
-              { item.user.profile_pic  ? (
+              { item?.user?.profile_pic  ? (
                 <Image
                   source={{ uri: item.user.profile_pic  }}
                   style={{ width: 40, height: 40, borderRadius:20, borderWidth:1,
@@ -717,15 +1640,15 @@ const Details = ({ route, navigation }) => {
                   color: COLORS.darkgray,
                 }}
               >
-                {  item.admin? item?.contribution: item?.contribution_amount }  {route.params.food.currency} 
+                {  item.admin? item?.contribution: item?.contribution_amount }  {foodDetails.currency} 
               </Text>
             </View>
           </View>
           <View style={{ alignItems: 'flex-end' }}>
-  {(!item.admin && route.params.food.owner._id == JSON.parse(token)?.user?.user?.userId) ? (
+  {(!item.admin && foodDetails.owner._id == connectedUser?.userId) ? (
     item.admission_req == 'ACCEPTED' ? (
       <>
-        <Text style={{ ...FONTS.h5, color: COLORS.red }}>+4% intérêt</Text>
+        <Text style={{ ...FONTS.h5, color: COLORS.red }}>+ {foodDetails.tauxInt} intérêt</Text>
         <View style={{ flexDirection: 'row' }}>
           <Image
             source={icons.calendar}
@@ -746,7 +1669,10 @@ const Details = ({ route, navigation }) => {
       <Text style={{ ...FONTS.h5, color: COLORS.red }}>Rejeté</Text>
     ) : (
       <Block row space="between">
-        <TouchableOpacity onPress={() => handleAcceptReject(item)}>
+        <TouchableOpacity onPress={() => {
+            setCurrentItem(item)
+            openModalReject()
+          }}>
           {isLoading ? (
             <></>
           ) : (
@@ -754,7 +1680,10 @@ const Details = ({ route, navigation }) => {
           )}
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => handleAcceptReq(item)}>
+        <TouchableOpacity onPress={() => {
+            setCurrentItem(item)
+            openModalAccept()
+          }}>
           {isLoading ? (
             <></>
           ) : (
@@ -769,7 +1698,7 @@ const Details = ({ route, navigation }) => {
     </>
   ) : (
     <>
-      <Text style={{ ...FONTS.h5, color: COLORS.red }}>+5% intérêt</Text>
+      <Text style={{ ...FONTS.h5, color: COLORS.red }}>+ {foodDetails.tauxInt}% intérêt</Text>
       <View style={{ flexDirection: 'row', marginTop:20 }}>
         <Image
           source={icons.calendar}
@@ -796,7 +1725,8 @@ const Details = ({ route, navigation }) => {
   );
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
+    <BottomSheetModalProvider>
+    <ScrollView showsVerticalScrollIndicator={false} accessibilityElementsHidden={true}>
       <Block flex={1}>
         <Block style={{ height: 180 }}>
           {renderImages()}
@@ -814,13 +1744,13 @@ const Details = ({ route, navigation }) => {
           }}
         >
           <Text center numberOfLines={1} size={20} bold>
-            {route.params.food.name}
+            {foodDetails.name}
           </Text>
           {
             // "PENDING","SUBMITED", "REJECTED", "ACCEPTED", "BANNED"
-            route.params.food.status == "PENDING"?
+            foodDetails.status == "PENDING"?
               <Text color={COLORS.red} center>[Bruillon]</Text>:
-            route.params.food.status == "SUBMITED"?
+            foodDetails.status == "SUBMITED"?
               <Text color={COLORS.red} center>[en attente de validation]</Text>:
               <Text color={COLORS.darkgreen} center>[Validé]</Text>
           }
@@ -829,7 +1759,7 @@ const Details = ({ route, navigation }) => {
           {`  au `} {dateEnd.getDate()}/{dateEnd.getMonth() + 1}/{dateEnd.getFullYear().toString().substr(-2)} </Text>
           <Text center>Prix total</Text>
           <Text bold size={30} center color={COLORS.peach}>
-            {route.params.food.amount}  {route.params.food.currency} 
+            {foodDetails.amount}  {foodDetails.currency} 
           </Text>
 
           <Block>
@@ -837,7 +1767,7 @@ const Details = ({ route, navigation }) => {
               <TouchableOpacity onPress={()=> 
                 {
                   console.log('Images');
-                  navigation.navigate('ShowImages', { images: route.params.food.images})
+                  navigation.navigate('ShowImages', { images: foodDetails.images})
                 }}>
                 <Block row center style={styles.round}>
                     <Ionicons name="md-image" color={COLORS.peach} size={20} />
@@ -862,12 +1792,12 @@ const Details = ({ route, navigation }) => {
             <Block m_t={5} row space="between">
               <Text numberOfLines={1} semibold size={16}>
               Montant collecté(
-              {((route.params.food.initialAmount + route.params.food.membres
+              {((foodDetails.initialAmount + foodDetails.membres
 .filter(member => member.contribution_status === "ACCEPTED")
-.reduce((sum, member) => sum + member.contribution_amount, 0)) * 100 / route.params.food.amount).toFixed(1)}%)
+.reduce((sum, member) => sum + member.contribution_amount, 0)) * 100 / foodDetails.amount).toFixed(1)}%)
               </Text>
               <Text numberOfLines={1}>
-              {route.params.food.initialAmount} {route.params.food.currency}
+              {foodDetails.initialAmount} {foodDetails.currency}
               </Text>
             </Block>
             <Block>
@@ -875,48 +1805,48 @@ const Details = ({ route, navigation }) => {
                 <Text numberOfLines={1} semibold>
                   Le coût total de production:
                 </Text>
-                <Text> {totAmount} {route.params.food.currency} </Text>
+                <Text> {totAmount} {foodDetails.currency} </Text>
               </Block>
 
               <Block row space="between">
                 <Text numberOfLines={1} semibold>
                   Le prix d'une part:
                 </Text>
-                <Text> {route.params.food.amount/100} {route.params.food.currency}</Text>
+                <Text> {foodDetails.amount/100} {foodDetails.currency}</Text>
               </Block>
 
               <Block row space="between">
                 <Text numberOfLines={1} semibold>
                   Les parts disponibles:
                 </Text>
-                <Text>{(100 - (route.params.food.initialAmount / (route.params.food.amount / 100).toFixed(0))).toFixed(0)} parts</Text>
+                <Text>{(100 - (foodDetails.initialAmount / (foodDetails.amount / 100).toFixed(0))).toFixed(0)} parts</Text>
               </Block>
 
               {/* <Block row space="between">
                 <Text numberOfLines={1} semibold>
                   Le coût total de Revient:
                 </Text>
-                <Text> 0 {route.params.food.currency} </Text>
+                <Text> 0 {foodDetails.currency} </Text>
               </Block> */}
               <Block row space="between">
                 <Text numberOfLines={1} semibold>
                     Taux d'intérêt :
                   </Text>
-                  <Text> {route.params.food?.tauxInt} % </Text>
+                  <Text> {foodDetails?.tauxInt} % </Text>
                   </Block>
               </Block>
             {
-              JSON.parse(token)?.user.user.username === route.params.food.owner.username? 
+              connectedUser?.username == foodDetails.owner.username? 
               <Block row space="between" m_t={10}>
               {/* owner */}
              {
-              route.params.food.status == 'PENDING'?
+              foodDetails.status == 'PENDING'?
               <>
                 <Button textColor="#fff" elevated buttonColor={COLORS.lightBlue} onPress={()=>
               {
-                // console.log("route.params.food", route.params.food);
-                 navigation.navigate('EditProduct', { owner: JSON.parse(token)?.user?.user?.userId,
-                  username: JSON.parse(token)?.user?.user?.username, productService: route.params.food });
+                // console.log("foodDetails", foodDetails);
+                 navigation.navigate('EditProduct', { owner: connectedUser?.userId,
+                  username: connectedUser?.username, productService: foodDetails });
               }}>
                 Modifier
               </Button>
@@ -936,25 +1866,30 @@ const Details = ({ route, navigation }) => {
             <Block row space="between" m_t={10}>
               {/* other */}
               {
-                route.params.food.membres.some(member => member?.user?._id == JSON.parse(token)?.user?.user?.userId)?
+                foodDetails.membres.some(member => member?.user?._id == connectedUser?.userId)?
               <>
               <Button textColor="#fff" elevated buttonColor={COLORS.peach} onPress={()=> showModalQuitter()}>
                 Quitter
               </Button>
 
               {
-                 route.params.food.membres.find(member => member?.admission_req == 'ACCEPTED')? <Button textColor="#fff" elevated buttonColor={COLORS.darkgreen} onPress={()=> showModalContribuer()}>
-                  Contribuer
+                foodDetails.membres.some(member => (member?.user?._id == connectedUser?.userId) && member?.admission_req === 'ACCEPTED')? 
+                 
+                 <Button textColor="#fff" elevated buttonColor={COLORS.darkgreen}
+                  onPress={()=> 
+                  openModalContrib()}> 
+                    Contribuer 
                 </Button>:
                 <></>
               }
 
               </> :
-               <Button textColor="#fff" elevated buttonColor={COLORS.purple} onPress={()=> showModalAdhesion()} >
+               <Button textColor="#fff" elevated buttonColor={COLORS.purple} onPress={()=>  openModalAdhesion()} >
                Demande d'Adhesion
              </Button>
-              }
              
+              }
+              
             </Block>
             }
 
@@ -963,218 +1898,30 @@ const Details = ({ route, navigation }) => {
 
         <Block p={20} style={{ zIndex: -101 }}>
           <Text color={COLORS.darkgray} numberOfLines={expanded ? undefined : 2} black>
-            {route.params.food.detail}
+            {foodDetails.detail}
           </Text>
-          {route.params.food.detail.length > 50 && (
+          {foodDetails.detail.length > 50 && (
             <Text bold color={COLORS.blue} onPress={toggleExpanded}>
               {expanded ? 'Voir moins' : 'Voir plus'}
             </Text>
           )}
           <Block mt={5}>
-            {stars(route.params.food.stars.length)}
+            {stars(foodDetails.stars.length)}
           
           </Block>
         </Block>
-
-        <Block p_l={20} p_r={20}>
-          <Text bold numberOfLines={1}>
-          MEMBRES ({route.params.food.membres.length + 1})
-          </Text>
-
-          {
-            renderItem({ admin: true, name: route.params.food.owner.name+" (Admin)", 
-            //name: route.params.food.owner._id
-            user: {_id: route.params.food.owner._id,  ...route.params.food.owner},
-            contribution: route.params.food.initialAmount, 
-            date: format(new Date(route.params.food.timestamp), 'dd MMMM yyyy', { locale: fr }) })
-          }
-
-          {
-            membresToShow.map((membre, index) => renderItem(membre))
-
-          }
-
-          {route.params.food.membres?.length > 1 && ( // Show "Voir plus" only if there are more than 2 users
-            <TouchableOpacity onPress={toggleExpansion}>
-              <Text bold color={COLORS.blue}>
-                {expandedMembre ? 'Voir moins' : 'Voir plus'}
-              </Text>
-            </TouchableOpacity>
-          )}
-        </Block>
-
-        <Block p={20}>
-          <Text bold numberOfLines={1}>
-            CALCUL D'INVESTISSEMENT ({route.params.food.currency})
-          </Text>
-          <Text>Projection du retour sur investissement</Text>
-
-          <Svg style={{ width: '100%' }}>
-            <VictoryChart domainPadding={50} theme={VictoryTheme.material} >
-              <VictoryBar
-                style={{ 
-                  data: {
-                    fill: ({ datum }) => {
-                      if (datum.x === `Intérêt (${route.params.food.tauxInt}%)`) {
-                        return COLORS.primary;
-                      } else if (datum.x === `Invest`) {
-                        return COLORS.peach;
-                      } else if (datum.y > route.params.food.initialAmount) {
-                        return COLORS.purple;
-                      } else {
-                        return COLORS.black;
-                      }
-                    }
-                  }
-                 }}
-                labels={({ datum }) => `${datum.y} ${route.params.food.currency}`}
-
-                categories={{
-                  x: [`Total`, 
-                  `Disponible`,
-                  `Intérêt (${route.params.food.tauxInt}%)`,
-                  `Invest`
-                ],
-                }}
-                data={[
-                  { x: `Total`, y: route.params.food.amount },
-                  { x:  `Disponible`, y: 
-                  (route.params.food.initialAmount+route.params.food.membres
-                    .filter(member => member.contribution_status === "ACCEPTED")
-                    .reduce((sum, member) => sum + member.contribution_amount, 0))
-                  },
-                  { x:  `Intérêt (${route.params.food.tauxInt}%)`, y: interet },
-                  { x: `Invest`, y: sliderValue },
-                ]}
-              />
-            </VictoryChart>
-          </Svg>
-
-          {/*Slider with max, min, step and initial value*/}
-          <Slider
-            maximumValue={(route.params.food.amount-(route.params.food.initialAmount+route.params.food.membres
-              .filter(member => member.contribution_status === "ACCEPTED")
-              .reduce((sum, member) => sum + member.contribution_amount, 0)))}
-            minimumValue={route.params.food.amount/100}
-            minimumTrackTintColor="#307ecc"
-            maximumTrackTintColor="#000000"
-            step={route.params.food.amount/100}
-            value={sliderValue}
-            onValueChange={(sliderValue) => {
-              setInteret((sliderValue * route.params.food.tauxInt )/100)
-              setSliderValue(sliderValue)}
-            }
-          />
-
-        <Text bold style={{ color: 'black' }}>
-          Vous investissez la somme de : {sliderValue} {route.params.food.currency}.
-           Ceci équivaut à {sliderValue/(route.params.food.amount/100)} parts de {route.params.food.amount/100} {route.params.food.currency} chacun.
-           Et votre Intérêt de (${route.params.food.tauxInt}%) est de {interet} {route.params.food.currency} après l'exercice. </Text>
           
+          {renderListContrib()}
+          {renderInvestCalculus()}
+          {renderTimeline()}
+
+          {renderMembres()}
+
+          {renderHelp()}
+
+          {renderQuestion()}
         </Block>
-
-        <Block p_l={20} p_r={20}>
-          <Text bold numberOfLines={1}>
-            TIMELINE
-          </Text>
-          <Timeline
-            style={styles.list}
-            data={outputTimeLine}
-            circleSize={20}
-            circleColor="rgb(45,156,219)"
-            lineColor="rgb(45,156,219)"
-            timeContainerStyle={{ minWidth: 52, marginTop: -5 }}
-            timeStyle={{
-              textAlign: 'center',
-              backgroundColor: '#ff9797',
-              color: 'white',
-              padding: 5,
-              borderRadius: 13,
-            }}
-            descriptionStyle={{ color: 'gray' }}
-            options={{
-              style: { paddingTop: 5 },
-            }}
-            columnFormat="single-column-left"
-          />
-
-          {/* <Text bold color={COLORS.blue}>
-            {expanded ? 'Voir moins' : 'Voir plus'}
-          </Text> */}
-        </Block>
-
-        <Block p_l={20} p_r={20}>
-          <Text bold numberOfLines={1}>
-            BESOIN D'AIDE?
-          </Text>
-        </Block>
-
-        
-          
-        <Block  p_l={20} p_r={20}   >
-          <Text>
-            {`Avez-vous des questions sur ce ${route.params.food.type}? Contactez le propriétaire ou notre expert en financement participatif.`}
-            </Text>
-        <Block row space='between'>
-
-        <View style={styles.columnMembre1}>
-            <Image
-              source={{uri: route.params.food.owner?.profile_pic}}
-              style={styles.imgOwner}
-            />
-            <Text numberOfLines={2} bold >{route.params.food.owner?.name}</Text>
-            <Text numberOfLines={1} style={styles.contentTitle}>Président</Text>
-          </View>
-
-         <Block style={{ justifyContent: 'center' }}>
-         <TouchableOpacity style={styles.contactButton} onPress={handleContactSupport}>
-        <Text style={styles.buttonText}>Contacter l'Admin</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.contactButton2} onPress={handleContactSupport}>
-        <Text style={styles.buttonText}>Contacter le Support</Text>
-      </TouchableOpacity>
-         </Block>
-
-        </Block>
-        </Block>
-
-        <BottomSheet
-          visible={visible}
-          onBackButtonPress={toggle}
-          onBackdropPress={toggle}
-          containerStyle={styles.bottomSheetContainer}
-        >
-          <Block style={styles.bottomSheetContent}>
-            <Text style={styles.bottomSheetTitle}>Le coût total de production</Text>
-            <Text style={styles.bottomSheetText}>
-              Il permet de prendre en compte tous les éléments de coût associés à la fabrication,
-              l'achat ou la prestation d'un bien ou d'un service.
-            </Text>
-            <View style={[styles.card,{ marginBottom: route.params.food.owner._id == JSON.parse(token)?.user?.user?.userId? 190 : 100} ]}>
-              <ScrollView
-                //ref={scrollRef}
-                contentContainerStyle={styles.scrollContentContainer}
-                showsVerticalScrollIndicator={false}
-              >
-                {
-                  route.params.food.couts
-                  .map((food, index) => {
-                    return <CoutScreen admin={route.params.food.owner._id == JSON.parse(token)?.user?.user?.userId}
-                    totAmount={totAmount} handleUpdateItem={handleUpdateItem} handleTrash={handleTrash} currency={route.params.food.currency} key={index} item={food} count={index + 1} />;
-                  })}
-              </ScrollView>
-            </View>
-            {
-              route.params.food.owner._id == JSON.parse(token)?.user?.user?.userId?
-              renderFAaddCout(): <></>
-            }
-           
-          </Block>
-        </BottomSheet>
-        
-      </Block>
-      {renderFloatingBlock()}
+        {renderFloatingBlock()}
 
       {/* Delete Prod/Serv */}
       <Modal
@@ -1189,8 +1936,8 @@ const Details = ({ route, navigation }) => {
             title="ATTENTION!" 
           />
           <Card.Content>
-            <Text variant="titleLarge">Voulez-vous vraiment supprimer le {route.params.food.type }
-              {" "}{ route.params.food.name}?</Text>
+            <Text variant="titleLarge">Voulez-vous vraiment supprimer le {foodDetails.type }
+              {" "}{ foodDetails.name}?</Text>
           </Card.Content>
           <Card.Actions style={{ marginTop: 15 }}>
             <Button onPress={hideModalDel}>Annuler</Button>
@@ -1216,11 +1963,11 @@ const Details = ({ route, navigation }) => {
             title="ATTENTION!" 
           />
           <Card.Content>
-            <Text variant="titleLarge">Voulez-vous vraiment Soumettre le {route.params.food.type }
-              {" "}{ route.params.food.name}?</Text>
+            <Text variant="titleLarge">Voulez-vous vraiment Soumettre le {foodDetails.type }
+              {" "}{ foodDetails.name}?</Text>
 
-              <Text color={COLORS.peach} variant="titleLarge">Ceci implique que votre {route.params.food.type} {" "} 
-              sera soumis a l'equipe d'African Fintech sera etudier soigneusement pendant deux ou trois jours avant de 
+              <Text color={COLORS.peach} variant="titleLarge">Ceci implique que votre {foodDetails.type} {" "} 
+              sera soumis a l'equipe d'Afintech sera etudier soigneusement pendant deux ou trois jours avant de 
               de le valider ou le rejeter dans la plateforme!</Text>
           </Card.Content>
           <Card.Actions style={{ marginTop: 15 }}>
@@ -1233,60 +1980,6 @@ const Details = ({ route, navigation }) => {
           </Card.Actions>
         </Card>
       </Modal>
-
-
-      {/* Adhesion */}
-      <Modal
-        style={{ zIndex: 99 }}
-        visible={visibleAdhesion}
-        onDismiss={hideModalAdhesion}
-        contentContainerStyle={[containerStyle, { zIndex: 999 }]} // Set a higher value for the z-index
-      >
-
-        <Card style={{ padding: 10 }}>
-          <Card.Title
-            titleStyle={{ fontWeight: 'bold', textTransform: 'uppercase' }}
-            title="ATTENTION!" 
-          />
-          {
-            !token?
-          <>
-          <Card.Content>
-            <Text variant="titleLarge">Vous devez d'abord vous connecter</Text>
-          </Card.Content>
-          <Card.Actions style={{ marginTop: 15 }}>
-            <Button onPress={hideModalAdhesion}>Annuler</Button>
-            <Button buttonColor={COLORS.red}
-             onPress={() => {
-              hideModalAdhesion()
-              navigation.navigate('AuthScreen')
-            }} >Connecter</Button>
-          </Card.Actions>
-          </>
-              :
-            <>
-            <Card.Content>
-            <Text variant="titleLarge">Voulez-vous vraiment Faire parti des insvesitteurs du {route.params.food.type }
-              {" "}{ route.params.food.name}?</Text>
-
-              <Text color={COLORS.peach} variant="titleLarge">Ceci implique que vous pouvez contribuer une somme
-              d'argent et ganger apres l'exercice! Votre demande d'adhesion sera validee par le proprietaire du {route.params.food.type }
-              {" "}{ route.params.food.name}</Text>
-          </Card.Content>
-          <Card.Actions style={{ marginTop: 15 }}>
-            <Button onPress={hideModalAdhesion}>Annuler</Button>
-            <Button buttonColor={COLORS.purple}
-             onPress={() => {
-              hideModalDel()
-              handleAdhesion()
-            }} >Adherer</Button>
-          </Card.Actions>
-            </>
-            }
-         
-        </Card>
-      </Modal>
-
 
       {/* Quitter */}
       <Modal
@@ -1301,8 +1994,8 @@ const Details = ({ route, navigation }) => {
             title="ATTENTION!" 
           />
           <Card.Content>
-            <Text variant="titleLarge">Voulez-vous vraiment quitter le groupe des insvesitteurs du {route.params.food.type }
-              {" "}{ route.params.food.name}?</Text>
+            <Text variant="titleLarge">Voulez-vous vraiment quitter le groupe des insvesitteurs du {foodDetails.type }
+              {" "}{ foodDetails.name}?</Text>
 
              
           </Card.Content>
@@ -1331,8 +2024,8 @@ const Details = ({ route, navigation }) => {
             title="ATTENTION!" 
           />
           <Card.Content>
-            <Text variant="titleLarge">Voulez-vous vraiment contribuer une somme d'argent et ganger apres l'exercice du {route.params.food.type }
-              {" "}{ route.params.food.name}?</Text>
+            <Text variant="titleLarge">Voulez-vous vraiment contribuer une somme d'argent et ganger apres l'exercice du {foodDetails.type }
+              {" "}{ foodDetails.name}?</Text>
 
               <Block m_t={15} center >
                 <TextInput
@@ -1368,21 +2061,35 @@ const Details = ({ route, navigation }) => {
       </Modal>
 
       <Snackbar
-          visible={visibleSnackBar}
-          onDismiss={onDismissSnackBar}
-          style={{ backgroundColor: COLORS.peach}}
-          wrapperStyle={{ bottom: 30 }}
-          action={{
-            label: 'Annuler',
-            onPress: () => {
-              // Do something
-            },
-          }}
+        visible={visibleSnackBar}
+        onDismiss={onDismissSnackBar}
+        style={{ backgroundColor:  statusError? COLORS.peach: COLORS.darkgreen}}
+        wrapperStyle={{ bottom: 30 }}
+        action={{
+          label: 'Annuler',
+          onPress: () => {
+            // Do something
+          },
+        }}
         >
-          {error}
+          {
+            statusError? msgError: msgSuccess
+          }
         </Snackbar>
 
+        {renderBottomCout()}
+
+        {renderBottomAccept()}
+        {renderBottomReject()}
+
+        {renderBottomContrib()}
+
+        {renderDisplayDetail()}
+
+        {renderBottomAdhesion()}
+
     </ScrollView>
+    </BottomSheetModalProvider>
   );
 };
 
@@ -1432,12 +2139,15 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
+    borderRadius: 10,
+    elevation: 2
+    
   },
   bottomSheetContainer: {
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   bottomSheetContent: {
-    backgroundColor: 'white',
+    //backgroundColor: 'white',
     padding: 16,
     height: '88%',
     
@@ -1496,6 +2206,57 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
   },
+  inputError: {
+    borderColor: 'red', // Red border for invalid input
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 12,
+  },
+  label: {
+    fontSize: 16,
+    marginBottom: 5,
+  },
+  inputText: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 15,
+  }
 });
 
 export default Details;
+
+// useEffect(() => {
+//   const fetchData = async () => {
+//     try {
+//       const response = await fetch(`https://bomoko-backend.onrender.com/api/product/${route.params.food._id}`);
+//       const data = await response.json();
+//       setFoodDetails(data);
+
+//       // Update all states
+
+//     setTotAmount(
+//       await data?.couts.reduce((sum, cout) => sum + cout.amount, 0)
+//       );
+//       membresToShow = await expandedMembre
+//       ? data?.membres
+//       : data?.membres?.slice(0, 1); // Show the first two users if not expanded
+    
+
+
+//       setDateStart(await new Date(data?.startDate)|| 0);
+//       setDateEnd(await new Date(data?.endDate)|| 0);
+
+      
+//       setLoading(false);
+//     } catch (error) {
+//       console.error('Error fetching food details:', error);
+//       setLoading(false);
+//     }
+//   };
+
+//   fetchData();
+// }, []); // Dependency array to re-run effect when food._id changes
+// // route.params.food._id

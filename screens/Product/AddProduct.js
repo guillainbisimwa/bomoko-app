@@ -105,7 +105,7 @@ const AddProduct = ({route, navigation}) => {
         description &&
         amount !== null &&
         initialAmount !== null &&
-        amount > initialAmount && // Check if amount is greater than initialAmount
+        // amount > initialAmount && // Check if amount is greater than initialAmount
         range.startDate &&
         range.endDate && 
         tauxInt
@@ -138,6 +138,15 @@ const AddProduct = ({route, navigation}) => {
         // Handle the case where not all required fields are filled
         console.log('Please fill in all required fields.');
         Alert.alert("Attention", "Veuillez valider tous les champs.");
+
+        console.log('name',name)
+        console.log('description',description)
+        console.log('amount',amount)
+        console.log('initialAmount',initialAmount)
+        console.log('range.startDate',range.startDate)
+        console.log('range.endDate',range.endDate) 
+        console.log('tauxInt',tauxInt)
+        console.log('',  amount > initialAmount);
       }
        setOnSuccess(true)
 
@@ -160,7 +169,7 @@ const AddProduct = ({route, navigation}) => {
         }}
       >
         <View style={{ paddingVertical: SIZES.padding / 2 }}>
-          <Text style={{ color: COLORS.primary, ...FONTS.h2 }}>African Fintech</Text>
+          <Text style={{ color: COLORS.primary, ...FONTS.h2 }}>Afintech</Text>
           <Text style={{ ...FONTS.h3, color: COLORS.darkgray }}>(Produits et Services)</Text>
         </View>
       </View>
@@ -281,8 +290,8 @@ const pickImage = async () => {
               </View>
 
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <RadioButton value="FC" color="blue" /> 
-                <Text>FC</Text>
+                <RadioButton value="CDF" color="blue" /> 
+                <Text>CDF</Text>
               </View>
             </RadioButton.Group>
           </Block>

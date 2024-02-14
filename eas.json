@@ -1,13 +1,13 @@
 {
   "cli": {
-    "version": ">= 0.52.0"
+    "version": ">= 2.1.0"
   },
   "build": {
     "development": {
       "developmentClient": true,
       "distribution": "internal",
       "ios": {
-        "resourceClass": "m1-medium"
+        "resourceClass": "m-medium"
       },
       "channel": "development"
     },
@@ -17,9 +17,9 @@
     },
     "production": {
       "ios": {
-        "resourceClass": "m1-medium"
+        "resourceClass": "m-medium"
       },
-      "node": "16.13.1",
+      "node": "18.17.1",
       "channel": "production"
     }
   },

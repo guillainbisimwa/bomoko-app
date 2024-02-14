@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 
-import * as Font from 'expo-font';
-
 import { useDispatch, useSelector } from 'react-redux';
 import InitialLoader from './screens/InitialLoader';
 import Onboard from './navigations/Onboard';
@@ -25,6 +23,11 @@ import ShoppingCard from './screens/ShoppingCard/ShoppingCard';
 import { AideEtSupport, DataSecurityScreen, DetailsByUser, LanguageSelectionScreen, MagicValidation, Privacy, Profile, ReportProblemScreen, UseCondition } from './screens/Settings';
 import { AddAvec, ConfirmPayment, DetailsAvec, DetailsReunion, EditAvec } from './screens/CreanceDette';
 import { StatusBar } from 'expo-status-bar';
+import CountyPhone from './screens/Auth/Component/CountyPhone';
+import Account from './screens/Auth/Component/Account';
+import OTP from './screens/Auth/Component/OTP';
+import { ForgetPassword } from './screens/LoginScreen/components/ForgetPassword';
+import { ResetPasswordProfile } from './screens/SignUpScreen/components/ResetPasswordProfile';
 
 const theme = {
   ...DefaultTheme,
@@ -39,8 +42,7 @@ const Stack = createStackNavigator();
 const App = () => {
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
-  const [fontLoading, setFontLoading]=useState(false);
-
+  const [fontLoading, setFontLoading] = useState(false);
 
   const isInstalled = useSelector((state) => state.app.isInstalled);
   const u = useSelector((state) => state?.user);
@@ -154,7 +156,7 @@ const App = () => {
     setTimeout(() => setLoading(false), 2000);
     // AsyncStorage.clear();
     checkInstallationStatus();
-    
+
     checkCategories();
   }, []);
 
@@ -234,11 +236,11 @@ const App = () => {
           <Stack.Screen name="Expense" component={Expense} options={{ title: 'Débit (Sortie)' }} />
           <Stack.Screen name="Details" component={Details} options={{ title: 'Details' }} />
           <Stack.Screen name="AddProduct" component={AddProduct}
-           options={{ title: 'Ajouter un Produit ou Service' }} />
+            options={{ title: 'Ajouter un Produit ou Service' }} />
           <Stack.Screen name="EditProduct" component={EditProduct} options={{ title: 'Modifier Produit' }} />
           <Stack.Screen name="ShowImages" component={ShowImages} options={{ title: 'Images' }} />
           <Stack.Screen name="ShoppingCard" component={ShoppingCard} options={{ title: 'Panier' }} />
-          
+
           <Stack.Screen name="Privacy" component={Privacy} options={{ title: 'Politique de Confidentialité' }} />
           <Stack.Screen name="DataSecurityScreen" component={DataSecurityScreen} options={{ title: 'Sécurité des Données' }} />
           <Stack.Screen name="AideEtSupport" component={AideEtSupport} options={{ title: 'Aide et Support' }} />
@@ -246,45 +248,64 @@ const App = () => {
           <Stack.Screen name="ReportProblemScreen" component={ReportProblemScreen} options={{ title: "Signaler un problème" }} />
           <Stack.Screen name="LanguageSelectionScreen" component={LanguageSelectionScreen} options={{ title: "Choisissez une Langue" }} />
           <Stack.Screen name="MagicValidation" component={MagicValidation} options={{ title: "Magic Validation" }} />
-          
-          
+
           <Stack.Screen name="DetailsByUser" component={DetailsByUser}
-           options={{ title: '' , headerShown: true}}/>
+            options={{ title: '', headerShown: true }} />
 
           <Stack.Screen name="addAvec" component={AddAvec}
-           options={{ title: 'Ajouter un groupe' , headerShown: true}}/>
+            options={{ title: 'Ajouter un groupe', headerShown: true }} />
 
           <Stack.Screen name="DetailsAvec" component={DetailsAvec}
-           options={{ title: 'Details' , headerShown: true}}/>
+            options={{ title: 'Details', headerShown: true }} />
 
+          <Stack.Screen name="DetailsReunion" component={DetailsReunion}
+            options={{ title: 'Details Reunion', headerShown: true }} />
 
-        <Stack.Screen name="DetailsReunion" component={DetailsReunion}
-           options={{ title: 'Details Reunion' , headerShown: true}}/>
+          <Stack.Screen name="ConfirmPayment" component={ConfirmPayment}
+            options={{ title: 'Confirmation', headerShown: true }} />
 
-        <Stack.Screen name="ConfirmPayment" component={ConfirmPayment}
-           options={{ title: 'Confirmation' , headerShown: true}}/>
-
-        <Stack.Screen name="EditAvec" component={EditAvec}
-           options={{ title: 'Modifier AVEC' , headerShown: true}}/>
-    
+          <Stack.Screen name="EditAvec" component={EditAvec}
+            options={{ title: 'Modifier AVEC', headerShown: true }} />
 
           <Stack.Screen name="EditProfile" component={EditProfile} options={{
             headerShown: false,
-          }}/>
-          
+          }} />
+
           <Stack.Screen name="Profile" component={Profile} options={{ title: "Profile" }} />
-          
+
           <Stack.Screen name="LoginScreen" component={LoginScreen} options={{
-              headerShown: false,
-            }}/>
+            headerShown: false,
+          }} />
 
           <Stack.Screen name="SignUpScreen" component={SignUpScreen} options={{
             headerShown: false,
-          }}/>
+          }} />
+
+          <Stack.Screen name="ForgetPassword" component={ForgetPassword} options={{
+            headerShown: false,
+          }} />
+
+          <Stack.Screen name="ResetPasswordProfile" component={ResetPasswordProfile} options={{
+            headerShown: false,
+          }} />
 
           <Stack.Screen name="AuthScreen" component={AuthScreen} options={{
-              headerShown: false,
-            }}/>
+            headerShown: false,
+          }} />
+
+          <Stack.Screen name="CountyPhone" component={CountyPhone} options={{
+            headerShown: false,
+          }} />
+
+          <Stack.Screen name="Account" component={Account} options={{
+            headerShown: false,
+          }} />
+
+
+          <Stack.Screen name="OTP" component={OTP} options={{
+            headerShown: false,
+          }} />
+
         </Stack.Navigator>
       </NavigationContainer>
     );

@@ -6,7 +6,7 @@ const UseCondition = () => {
     <ScrollView style={styles.container}>
       <Text style={styles.header}>Conditions d'Utilisation</Text>
       <Text style={styles.paragraph}>
-        En utilisant l'application mobile African Fintech ("l'Application"), vous acceptez de respecter les conditions d'utilisation énoncées ci-dessous. Si vous n'acceptez pas ces conditions, veuillez ne pas utiliser l'Application.
+        En utilisant l'application mobile Afintech ("l'Application"), vous acceptez de respecter les conditions d'utilisation énoncées ci-dessous. Si vous n'acceptez pas ces conditions, veuillez ne pas utiliser l'Application.
       </Text>
 
       <Text style={styles.subtitle}>Utilisation de l'Application</Text>
@@ -16,7 +16,7 @@ const UseCondition = () => {
 
       <Text style={styles.subtitle}>Propriété Intellectuelle</Text>
       <Text style={styles.paragraph}>
-        Tous les droits de propriété intellectuelle relatifs à l'Application sont la propriété de African Fintech. Vous n'êtes pas autorisé à copier, modifier, distribuer ou reproduire l'Application sans autorisation expresse.
+        Tous les droits de propriété intellectuelle relatifs à l'Application sont la propriété de Afintech. Vous n'êtes pas autorisé à copier, modifier, distribuer ou reproduire l'Application sans autorisation expresse.
       </Text>
 
       <Text style={styles.subtitle}>Limitation de Responsabilité</Text>
@@ -31,7 +31,7 @@ const UseCondition = () => {
 
       <Text style={styles.subtitle}>Contact</Text>
       <Text style={styles.paragraph}>
-        Pour toute question concernant ces conditions d'utilisation, veuillez nous contacter à info@alphanewgroup.com.
+        Pour toute question concernant ces conditions d'utilisation, veuillez nous contacter à info@afrintech.org.
       </Text>
       <Text style={styles.subtitle}></Text>
 

@@ -79,6 +79,23 @@ export const editUser = createAsyncThunk(
   }
 );
 
+
+export const resetPassword = createAsyncThunk(
+  "user/resetPassword",
+  async ({
+    userId,
+    password,
+  }) => {
+    const url = `${BASE_URL}auth/reset-password/${userId}`; // Concatenate ID to the base URL
+    const response = await axios.put(url, { // Use PUT request for updating
+      password,
+    });
+    console.log("Reset---?????? ",response.data);
+    
+    return response.data;
+  }
+);
+
 export const loadInitialUser = async () => {
   try {
     const storedUser = await AsyncStorage.getItem('user');
@@ -168,6 +185,8 @@ const userSlice = createSlice({
       })
       .addCase(signUpUser.rejected, (state, action) => {
         console.log("bree *************** ",action.error);
+        console.log("bree ***************");
+        console.log("bree ***************");
         state.isLoadingSignUp = false;
         state.errorSignUp = action.error.message;
         state.successSignUp = false
@@ -187,8 +206,29 @@ const userSlice = createSlice({
         // Store user data to LocalStorage
         //AsyncStorage.setItem('user', JSON.stringify({ user: action.payload }));
       })
+      .addCase(resetPassword.rejected, (state, action) => {
+        console.log("bree *************** ",action.error.message);
+        state.isLoadingSignUp = false;
+        state.errorSignUp = action.error.message;
+        state.successSignUp = false
+      })
+      .addCase(resetPassword.pending, (state) => {
+        state.isLoadingSignUp = true;
+        state.errorSignUp = null;
+        state.successSignUp = false
+
+      })
+      .addCase(resetPassword.fulfilled, (state, action) => {
+        state.isLoadingSignUp= false;
+        state.userSignUp = action.payload;
+        state.errorSignUp = null;
+        state.successSignUp = true
+
+        // Store user data to LocalStorage
+        //AsyncStorage.setItem('user', JSON.stringify({ user: action.payload }));
+      })
       .addCase(editUser.rejected, (state, action) => {
-        console.log("bree *************** ",action.error);
+        console.log("bree *************** ",action.error.message);
         state.isLoadingSignUp = false;
         state.errorSignUp = action.error.message;
         state.successSignUp = false

@@ -32,67 +32,67 @@ const avecs2 =[
             "timeline": [
                 {
                     "title": "Validation",
-                    "details": "Votre groupe Sambaza(Fretins Frais)V5 a été validé à l'équipe African Fintech!",
+                    "details": "Votre groupe Sambaza(Fretins Frais)V5 a été validé à l'équipe Afintech!",
                     "timestamp": "2023-09-20T14:31:33.022Z",
                     "_id": "650b08c28d04aacb53af7f17"
                 },
                 {
                     "title": "Validation",
-                    "details": "Votre groupe Sambaza(Fretins Frais)V2 a été validé à l'équipe African Fintech!",
+                    "details": "Votre groupe Sambaza(Fretins Frais)V2 a été validé à l'équipe Afintech!",
                     "timestamp": "2023-09-20T14:31:33.022Z",
                     "_id": "650b05a78d04aacb53af773a"
                 },
                 {
                     "title": "Validation",
-                    "details": "Votre groupe Sambaza(Fretins Frais)V2 a été validé à l'équipe African Fintech!",
+                    "details": "Votre groupe Sambaza(Fretins Frais)V2 a été validé à l'équipe Afintech!",
                     "timestamp": "2023-09-20T13:24:04.602Z",
                     "_id": "650afd40a408ae6ad8b0c3e1"
                 },
                 {
                     "title": "Validation",
-                    "details": "Votre groupe Sambaza(Fretins Frais)V2 a été validé à l'équipe African Fintech!",
+                    "details": "Votre groupe Sambaza(Fretins Frais)V2 a été validé à l'équipe Afintech!",
                     "timestamp": "2023-09-20T13:24:04.602Z",
                     "_id": "650afcf0a408ae6ad8b0c12c"
                 },
                 {
                     "title": "Validation",
-                    "details": "Votre groupe Sambaza(Fretins Frais)V2 a été validé à l'équipe African Fintech!",
+                    "details": "Votre groupe Sambaza(Fretins Frais)V2 a été validé à l'équipe Afintech!",
                     "timestamp": "2023-09-20T13:24:04.602Z",
                     "_id": "650afbcda408ae6ad8b0bf58"
                 },
                 {
                     "title": "Validation",
-                    "details": "Votre groupe Sambaza(Fretins Frais)V2 a été validé à l'équipe African Fintech!",
+                    "details": "Votre groupe Sambaza(Fretins Frais)V2 a été validé à l'équipe Afintech!",
                     "timestamp": "2023-09-20T13:24:04.602Z",
                     "_id": "650afb07a408ae6ad8b0be9c"
                 },
                 {
                     "title": "Validation",
-                    "details": "Votre groupe Sambaza(Fretins Frais)V2 a été validé à l'équipe African Fintech!",
+                    "details": "Votre groupe Sambaza(Fretins Frais)V2 a été validé à l'équipe Afintech!",
                     "timestamp": "2023-09-20T13:24:04.602Z",
                     "_id": "650af857a408ae6ad8b0be4b"
                 },
                 {
                     "title": "Validation",
-                    "details": "Votre groupe Sambaza(Fretins Frais)V2 a été validé à l'équipe African Fintech!",
+                    "details": "Votre groupe Sambaza(Fretins Frais)V2 a été validé à l'équipe Afintech!",
                     "timestamp": "2023-09-20T13:24:04.602Z",
                     "_id": "650af72aa408ae6ad8b0bcfd"
                 },
                 {
                     "title": "Validation",
-                    "details": "Votre groupe Sambaza(Fretins Frais) a été validé à l'équipe African Fintech!",
+                    "details": "Votre groupe Sambaza(Fretins Frais) a été validé à l'équipe Afintech!",
                     "timestamp": "2023-09-20T13:24:04.602Z",
                     "_id": "650af5c9a408ae6ad8b0bae5"
                 },
                 {
                     "title": "Soumission",
-                    "details": "Votre groupe Sambaza(Fretins Frais) a été soumis à l'équipe African Fintech et est en attente de validation",
+                    "details": "Votre groupe Sambaza(Fretins Frais) a été soumis à l'équipe Afintech et est en attente de validation",
                     "timestamp": "2023-09-20T13:24:04.602Z",
                     "_id": "650af5b7a408ae6ad8b0ba6d"
                 },
                 {
                     "title": "Validation",
-                    "details": "Votre groupe Sambaza(Fretins Frais) a été validé à l'équipe African Fintech!",
+                    "details": "Votre groupe Sambaza(Fretins Frais) a été validé à l'équipe Afintech!",
                     "timestamp": "2023-09-16T16:00:58.495Z",
                     "_id": "6505d2adf90bb7f97f8e9ccb"
                 },
@@ -104,7 +104,7 @@ const avecs2 =[
                 },
                 {
                     "title": "Soumission",
-                    "details": "Votre groupe Sambaza(Fretins Frais) a été soumis à l'équipe African Fintech et est en attente de validation",
+                    "details": "Votre groupe Sambaza(Fretins Frais) a été soumis à l'équipe Afintech et est en attente de validation",
                     "timestamp": "2023-09-13T19:58:43.964Z",
                     "_id": "65021896a98a3e8c20cc9709"
                 }
@@ -672,13 +672,13 @@ const avecs2 =[
             "timeline": [
                 {
                     "title": "Validation",
-                    "details": "Votre groupe Voitures d'occasion japonaises à vendre a été validé à l'équipe African Fintech!",
+                    "details": "Votre groupe Voitures d'occasion japonaises à vendre a été validé à l'équipe Afintech!",
                     "timestamp": "2023-09-20T14:31:33.022Z",
                     "_id": "650b07448d04aacb53af7ca4"
                 },
                 {
                     "title": "Validation",
-                    "details": "Votre groupe Voitures d'occasion japonaises à vendre a été validé à l'équipe African Fintech!",
+                    "details": "Votre groupe Voitures d'occasion japonaises à vendre a été validé à l'équipe Afintech!",
                     "timestamp": "2023-09-20T14:31:33.022Z",
                     "_id": "650b06f78d04aacb53af7c2f"
                 }
@@ -862,7 +862,7 @@ const avecs2 =[
             "timeline": [
                 {
                     "title": "Validation",
-                    "details": "Votre groupe Test a été validé à l'équipe African Fintech!",
+                    "details": "Votre groupe Test a été validé à l'équipe Afintech!",
                     "timestamp": "2023-09-20T14:31:33.022Z",
                     "_id": "650b09218d04aacb53af800c"
                 },
@@ -1598,55 +1598,55 @@ const avecs2 =[
             "timeline": [
                 {
                     "title": "Validation",
-                    "details": "Votre groupe Test 3 a été validé à l'équipe African Fintech!",
+                    "details": "Votre groupe Test 3 a été validé à l'équipe Afintech!",
                     "timestamp": "2023-09-20T10:16:55.038Z",
                     "_id": "650ac9d80e378bef380106aa"
                 },
                 {
                     "title": "Validation",
-                    "details": "Votre groupe Test 3 a été validé à l'équipe African Fintech!",
+                    "details": "Votre groupe Test 3 a été validé à l'équipe Afintech!",
                     "timestamp": "2023-09-20T08:50:01.526Z",
                     "_id": "650ab29092fa09a25eed020b"
                 },
                 {
                     "title": "Validation",
-                    "details": "Votre groupe Test 3 a été validé à l'équipe African Fintech!",
+                    "details": "Votre groupe Test 3 a été validé à l'équipe Afintech!",
                     "timestamp": "2023-09-20T08:10:26.378Z",
                     "_id": "650aa9221a6530397d89dea6"
                 },
                 {
                     "title": "Validation",
-                    "details": "Votre groupe Test 3 a été validé à l'équipe African Fintech!",
+                    "details": "Votre groupe Test 3 a été validé à l'équipe Afintech!",
                     "timestamp": "2023-09-20T07:05:26.390Z",
                     "_id": "650a9e4c6fc6628d4be8196d"
                 },
                 {
                     "title": "Validation",
-                    "details": "Votre groupe Test 3 a été validé à l'équipe African Fintech!",
+                    "details": "Votre groupe Test 3 a été validé à l'équipe Afintech!",
                     "timestamp": "2023-09-20T07:05:26.390Z",
                     "_id": "650a9dac6fc6628d4be81936"
                 },
                 {
                     "title": "Validation",
-                    "details": "Votre groupe Test 3 a été validé à l'équipe African Fintech!",
+                    "details": "Votre groupe Test 3 a été validé à l'équipe Afintech!",
                     "timestamp": "2023-09-20T07:05:26.390Z",
                     "_id": "650a9cf66fc6628d4be81909"
                 },
                 {
                     "title": "Validation",
-                    "details": "Votre groupe Test 3 a été validé à l'équipe African Fintech!",
+                    "details": "Votre groupe Test 3 a été validé à l'équipe Afintech!",
                     "timestamp": "2023-09-16T16:00:58.495Z",
                     "_id": "6505da18f90bb7f97f8ea029"
                 },
                 {
                     "title": "Validation",
-                    "details": "Votre groupe Test 3 a été validé à l'équipe African Fintech!",
+                    "details": "Votre groupe Test 3 a été validé à l'équipe Afintech!",
                     "timestamp": "2023-09-16T16:00:58.495Z",
                     "_id": "6505d4d0f90bb7f97f8e9f6a"
                 },
                 {
                     "title": "Soumission",
-                    "details": "Votre groupe Test 3 a été soumis à l'équipe African Fintech et est en attente de validation",
+                    "details": "Votre groupe Test 3 a été soumis à l'équipe Afintech et est en attente de validation",
                     "timestamp": "2023-09-16T13:47:39.770Z",
                     "_id": "6505bc4b5af3a6c0c8d3a36c"
                 },
@@ -1843,6 +1843,8 @@ export const updateAvec = createAsyncThunk(
         calendarRemboursement,
         credit,
         carnet,
+        chiffreAffaire,
+        proffession,
     }) => {
       const url = `${BASE_URL}api/avec/${id}`; // Concatenate ID to the base URL
       
@@ -1874,6 +1876,8 @@ export const updateAvec = createAsyncThunk(
         calendarRemboursement,
         credit,
         carnet,
+        chiffreAffaire,
+        proffession,
       });
   
       console.log("Edit AVEC---?????? ok==", response.data);

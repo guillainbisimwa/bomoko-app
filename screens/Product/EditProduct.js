@@ -146,7 +146,7 @@ const EditProduct = ({route, navigation}) => {
         }}
       >
         <View style={{ paddingVertical: SIZES.padding / 2 }}>
-          <Text style={{ color: COLORS.primary, ...FONTS.h2 }}>African Fintech</Text>
+          <Text style={{ color: COLORS.primary, ...FONTS.h2 }}>Afintech</Text>
           <Text style={{ ...FONTS.h3, color: COLORS.darkgray }}>(Produits et Services)</Text>
         </View>
       </View>
@@ -267,8 +267,8 @@ const pickImage = async () => {
               </View>
 
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <RadioButton value="FC" color="blue" /> 
-                <Text>FC</Text>
+                <RadioButton value="CDF" color="blue" /> 
+                <Text>CDF</Text>
               </View>
             </RadioButton.Group>
           </Block>

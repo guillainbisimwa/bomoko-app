@@ -131,20 +131,11 @@ const catSlice = createSlice({
     categories: [],
   },
   reducers: {
-    addCat: (state, action) => {
-      state.categories = action.payload;
-      AsyncStorage.setItem('categories', JSON.stringify(action.payload));
-
-      // action.payload.forEach(async (category) => {
-      //   const existingCategory = state.categories.find((cat) => cat.name === category.name);
-      //   if (existingCategory) {
-      //     existingCategory.data.push(...category.data);
-      //     console.log('');
-
-      //     console.log('--- ');
-      //     console.log('existingCategory: ', state.categories);
-      //   }
-      // });
+    addCat:  (state, action) => {
+      state.categories =  action.payload;
+      // await AsyncStorage.removeItem('categories');
+      
+       AsyncStorage.setItem('categories', JSON.stringify(action.payload));
     },
     resetAllCat: (state, action) => {
       state.categories = action.payload;

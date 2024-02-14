@@ -135,7 +135,7 @@ const CreanceDette = ({ navigation, route }) => {
 // This effect will run whenever activeTabType, search field, or products change
 useEffect(() => {
   if(error){
-    Alert.alert(error, "Veuillez vérifier votre connexion Internet et réessayer.");
+    Alert.alert("Pas de connexion Internet", "Veuillez vérifier votre connexion Internet et réessayer.");
   }
   SetRoutes(prevRoutes => [
     { ...prevRoutes[0], title: `Tous (${countAvec(filteredAvecs).all})` },
@@ -299,7 +299,7 @@ const handlePrevPage = () => {
           </TouchableOpacity>
           
           <View>
-            <Text style={{ color: COLORS.white, ...FONTS.h2 }}>African Fintech</Text>
+            <Text style={{ color: COLORS.white, ...FONTS.h2 }}>Afintech</Text>
             <Text style={{ ...FONTS.h3, color: COLORS.gray }}>(Créance et Dettes)</Text>
         </View>
         </View>

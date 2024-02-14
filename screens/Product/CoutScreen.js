@@ -36,17 +36,18 @@ const CoutScreen = (props) => {
 
   return (
     <TouchableOpacity
-      onLongPress={() => props.admin?showEditBtn(editBtn):''}
-    
+      onLongPress={() => props.admin ? showEditBtn(editBtn) : ''}
+
       style={{
-        width: '90%',
-        borderRadius: 15,
-        margin: 5,
+        width: '100%',
+        borderRadius: !editBtn ? 10 : 0,
+        //margin: 5,
+        padding: 10,
         backgroundColor: editBtn ? COLORS.lightGray : COLORS.white,
         elevation: editBtn ? 2 : 0,
       }}
     >
-      <Block row style={styles.container}>
+      <Block row flex={1} style={styles.container}>
         <Avatar.Text
           size={44}
           label={editBtn ? 'v' : props.count}
@@ -70,55 +71,60 @@ const CoutScreen = (props) => {
             )}
           </Block>
 
-          <Block m_t={5} row space="between" center>
-            <Block>
+          <Block flex={1} m_t={5} row space="between" center>
+            <Block flex={1}>
               {isEditing ? (
                 <TextInput
                   label={`Prix tot (${props.currency})`}
                   value={`${editedAmount}`}
                   onChangeText={handleAmountChange}
                   mode="outlined"
-                  style={[styles.input, { width: 170 }]}
+                  style={[styles.input]}
                   required
+                  keyboardType='decimal-pad'
                 />
               ) : (
-                <View style={{ flex:1, flexDirection:'row', justifyContent:"space-between", width:!editBtn?'80%':'100%' }}>
+                <Block flex={1} row space='between' style={{ width: !editBtn ? '80%' : '100%' }}>
 
-                <Text numberOfLines={1} color={COLORS.peach}>
-                  {props.item.amount} {props.currency}
-                </Text>
-                
-                {
-                  !editBtn?  <Text numberOfLines={1} bold color={COLORS.peach}>
-                  {((props.item.amount/props.totAmount)*100).toFixed(0)} % SUR CR 
-                    </Text>:<></>
-                }
+                  <Text numberOfLines={1} color={COLORS.peach}>
+                    {props.item.amount} {props.currency}
+                  </Text>
 
-                </View>
-              
+                  {
+                    !editBtn ? <Text numberOfLines={1} bold color={COLORS.peach}>
+                      {((props.item.amount / props.totAmount) * 100).toFixed(0)} % SUR CR
+                    </Text> : <></>
+                  }
+
+                </Block>
+
               )}
             </Block>
             <Block row >
               {isEditing ? (
-                <>
-                  <TouchableOpacity style={{ backgroundColor:COLORS.peach, borderRadius:20,padding:3,
-                  margin: 3 }} onPress={handleCancel}>
+                <Block row style={{ alignItems: 'flex-end' }}>
+                  <TouchableOpacity style={{
+                    backgroundColor: COLORS.peach, borderRadius: 20, padding: 3,
+                    margin: 3
+                  }} onPress={handleCancel}>
                     <Ionicons name="close" size={35} color={COLORS.white} />
                   </TouchableOpacity>
-                  <TouchableOpacity style={{ backgroundColor:COLORS.darkgreen, borderRadius:20,padding:3,
-                  margin: 3 }} onPress={()=>{
-                      setEditBtn(false);
-                      handleCancel();
-                      props.handleUpdateItem(props.item, editedAmount, editedName)
-                    }}>
-                    <Ionicons name="checkmark-outline" size={35} color={COLORS.white}  />
+                  <TouchableOpacity style={{
+                    backgroundColor: COLORS.darkgreen, borderRadius: 20, padding: 3,
+                    margin: 3
+                  }} onPress={() => {
+                    setEditBtn(false);
+                    handleCancel();
+                    props.handleUpdateItem(props.item, editedAmount, editedName)
+                  }}>
+                    <Ionicons name="checkmark-outline" size={35} color={COLORS.white} />
                   </TouchableOpacity>
-                </>
+                </Block>
               ) : editBtn ? (
                 <>
-                  <TouchableOpacity onPress={()=>{
+                  <TouchableOpacity onPress={() => {
                     handleEdit();
-                    }}>
+                  }}>
                     <Ionicons
                       name="create"
                       size={30}
@@ -126,11 +132,11 @@ const CoutScreen = (props) => {
                       style={{ marginRight: 12 }}
                     />
                   </TouchableOpacity>
-                  <TouchableOpacity onPress={()=>{
-                      setEditBtn(false)
-                      props.handleTrash(props.item)
-                    }
-                    }>
+                  <TouchableOpacity onPress={() => {
+                    setEditBtn(false)
+                    props.handleTrash(props.item)
+                  }
+                  }>
                     <Ionicons name="trash" size={30} color={COLORS.peach} />
                   </TouchableOpacity>
                 </>
@@ -147,9 +153,9 @@ const CoutScreen = (props) => {
 
 const styles = StyleSheet.create({
   container: {
-    width: SIZES.width,
+    //width: SIZES.width,
 
-    padding: 4,
+    //padding: 4,
   },
   input: {
     borderRadius: 0,
@@ -158,9 +164,9 @@ const styles = StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
   containerText: {
-    width: SIZES.width - 200,
-    overflow: 'hidden',
-    marginRight: 50,
+    //width: SIZES.width - 200,
+    //overflow: 'hidden',
+    //marginRight: 50,
   },
 });
 

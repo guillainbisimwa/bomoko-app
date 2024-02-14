@@ -33,7 +33,7 @@ const ProductScreen = ({ navigation, route }) => {
   const [activeTabType, setActiveTabType] = useState("Tous");
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(4); // Number of items to display per page
+  const [itemsPerPage] = useState(12); // Number of items to display per page
 
 
   // Calculate the range of items to display for the current page
@@ -81,7 +81,7 @@ const ProductScreen = ({ navigation, route }) => {
 
 useEffect(() => {
   if(error){
-    Alert.alert(error, "Veuillez vérifier votre connexion Internet et réessayer.");
+    Alert.alert("Pas de connexion Internet", "Veuillez vérifier votre connexion Internet et réessayer.");
   }
 // This effect will run whenever activeTabType, search field, or products change
 
@@ -226,7 +226,7 @@ const handlePrevPage = () => {
           </TouchableOpacity>
           
           <View>
-            <Text style={{ color: COLORS.white, ...FONTS.h2 }}>African Fintech</Text>
+            <Text style={{ color: COLORS.white, ...FONTS.h2 }}>Afintech</Text>
             <Text style={{ ...FONTS.h3, color: COLORS.gray }}>(Produits et Services)</Text>
         </View>
         </View>
@@ -389,7 +389,7 @@ const handlePrevPage = () => {
                 <FlatList
                   data={currentProducts}
                   keyExtractor={(item) => item._id}
-                  renderItem={({ item }) => <Product  prod={item} navigation={navigation}  />}
+                  renderItem={({ item }) => <Product connectedUser={connectedUser} prod={item} navigation={navigation}  />}
                 />
                 <Text center white bold>Page {currentPage} sur {totalPages}</Text>
                 <Block row style={{columnGap: 15, marginTop: 15}}>

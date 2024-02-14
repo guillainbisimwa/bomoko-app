@@ -4,7 +4,7 @@ import { View, Text, ScrollView, StyleSheet, Linking, TouchableOpacity } from 'r
 const AideEtSupport = () => {
   const handleContactSupport = () => {
     // Replace with your support email or contact form link
-    const supportEmail = 'info@alphanewgroup.com';
+    const supportEmail = 'info@afrintech.org';
     Linking.openURL(`mailto:${supportEmail}`);
   };
 
@@ -12,7 +12,7 @@ const AideEtSupport = () => {
     <ScrollView style={styles.container}>
       <Text style={styles.header}>Aide et Support</Text>
       <Text style={styles.paragraph}>
-        Bienvenue dans la section d'aide et de support de l'application African Fintech. Nous sommes là pour vous aider à résoudre tout problème que vous pourriez rencontrer lors de l'utilisation de notre application.
+        Bienvenue dans la section d'aide et de support de l'application Afintech. Nous sommes là pour vous aider à résoudre tout problème que vous pourriez rencontrer lors de l'utilisation de notre application.
       </Text>
 
       <Text style={styles.subtitle}>FAQ</Text>
@@ -23,7 +23,7 @@ const AideEtSupport = () => {
       <Text style={styles.subtitle}>Nous Contacter</Text>
       <Text style={styles.paragraph}>
         Si vous avez besoin d'une assistance supplémentaire, n'hésitez pas à nous contacter. Vous pouvez nous envoyer un e-mail à l'adresse suivante :
-         <Text style={styles.link}>info@alphanewgroup.com</Text>.
+         <Text style={styles.link}>info@afrintech.org</Text>.
       </Text>
       <TouchableOpacity style={styles.contactButton} onPress={handleContactSupport}>
         <Text style={styles.buttonText}>Contacter le Support</Text>
@@ -31,7 +31,7 @@ const AideEtSupport = () => {
 
       <Text style={styles.subtitle}>Centre d'Aide</Text>
       <Text style={styles.paragraph}>
-        Visitez notre centre d'aide en ligne pour accéder à des guides détaillés, des tutoriels et des ressources pour vous aider à tirer le meilleur parti de l'application African Fintech.
+        Visitez notre centre d'aide en ligne pour accéder à des guides détaillés, des tutoriels et des ressources pour vous aider à tirer le meilleur parti de l'application Afintech.
       </Text>
       <TouchableOpacity style={styles.helpCenterButton}>
         <Text style={styles.buttonText}>Accéder au Centre d'Aide</Text>

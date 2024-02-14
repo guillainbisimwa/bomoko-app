@@ -43,7 +43,7 @@ const MagicValidation = () => {
 
   useEffect(()=>{
     //console.log("error",error)
-  }, [error,status])
+  }, [avecs])
 
 
   const [index, setIndex] = useState(0);
@@ -84,7 +84,7 @@ const MagicValidation = () => {
     const outputTimeLineSoum = {
       time:`${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear().toString().substr(-2)}`,
       title: 'Validation',
-      details: `Votre produit ${item.name} a été validé à l'équipe African Fintech!`
+      details: `Votre produit ${item.name} a été validé à l'équipe Afintech!`
     };
 
     console.log();
@@ -94,10 +94,12 @@ const MagicValidation = () => {
       id: item._id,
       status: "ACCEPTED",
       timeline: [
-        outputTimeLineSoum,
         ...item.timeline,
+        outputTimeLineSoum,
       ],
     }))
+
+    
   };
 
 
@@ -110,7 +112,7 @@ const MagicValidation = () => {
     const outputTimeLineSoum = {
       time:`${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear().toString().substr(-2)}`,
       title: 'Validation',
-      details: `Votre groupe ${item.name} a été validé à l'équipe African Fintech!`
+      details: `Votre groupe ${item.name} a été validé à l'équipe Afintech!`
     };
 
     console.log();
@@ -141,8 +143,8 @@ const MagicValidation = () => {
       id: item._id,
       status: "ACCEPTED",
       timeline: [
-        outputTimeLineSoum,
         ...item.timeline,
+        outputTimeLineSoum,
       ],
       reunion: reunions
     }))
@@ -178,10 +180,10 @@ const MagicValidation = () => {
       <Text>Status: {item.status}</Text>
       <Block row>
         {
-          item.status !='ACCEPTED'? 
-          <Button disabled={status == 'loading'}
-          loading={status == 'loading'} mode='contained' buttonColor={COLORS.darkgreen} onPress={()=> handlerValidate(item)} > Valider</Button>:
-          <></>
+          // item.status !='ACCEPTED'? 
+          <Button disabled={item.status == 'ACCEPTED'}
+          loading={status == 'loading'} mode='contained' buttonColor={COLORS.darkgreen} onPress={()=> handlerValidate(item)} > Valider</Button>
+          // :<></>
         }
        
       </Block>
@@ -197,10 +199,10 @@ const MagicValidation = () => {
       <Text>Status: {item.status}</Text>
       <Block row>
         {
-          item.status !='ACCEPTED'? 
-          <Button disabled={status == 'loading'}
-          loading={status == 'loading'} mode='contained' buttonColor={COLORS.darkgreen} onPress={()=> handlerValidateProduct(item)} > Valider</Button>:
-          <></>
+          //item.status !='ACCEPTED'? 
+          <Button disabled={item.status == 'ACCEPTED'}
+          loading={status == 'loading'} mode='contained' buttonColor={COLORS.darkgreen} onPress={()=> handlerValidateProduct(item)} > Valider</Button>
+          //:<></>
         }
        
       </Block>

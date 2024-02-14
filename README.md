@@ -4,7 +4,7 @@ tags: []
 
 ---
 
-# African Fintech APP
+# Afintech APP
 
 > Help Congolese small-scale farmers who are unbanked to have access to affordable loans using mobile phones (USSD). Our solution is to facilitate the financial inclusion of farmers and use mobile phones to give loans to smallholder farmers. Built with: React Native, Redux, Couchbase, Docker, and NodeJs. Play store, Official website,
 
@@ -50,7 +50,7 @@ Now that we have set up our build profile and app signing, running a build for i
 
 Once the update is built and uploaded to EAS and the command completes, force close and reopen your app up to two times to download and view the update.
 
-`eas update --branch preview --message "Updating the app"`
+`eas update --branch production --message "Updating the app"`
 
 ## Author
 

@@ -1,14 +1,14 @@
 import React from 'react';
 import { View, Text, ImageBackground, Image, TouchableOpacity } from 'react-native';
 import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
-
+import Ionicons from '@expo/vector-icons/Ionicons';
 import * as Icon from '@expo/vector-icons';
 import { COLORS, SIZES } from '../constants';
 
 
 const CustomDrawer = (props) => {
 
-  const clearAll = async () => {};
+  const clearAll = async () => { };
 
   return (
     <View style={{ flex: 1 }}>
@@ -27,13 +27,25 @@ const CustomDrawer = (props) => {
               marginBottom: 5,
             }}
           >
-            African Fintech
+            Afintech
           </Text>
         </ImageBackground>
         <View style={{ flex: 1, backgroundColor: '#fff', paddingTop: 10 }}>
           <DrawerItemList {...props} />
+          {/* <TouchableOpacity
+              style={{
+                padding: 10,
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}
+            
+            >
+              <Ionicons name="add" size={24} color="#333" style={{ marginRight: 8 }} />
+              <Text style={{ fontSize: 16, color: '#333' }}>Custom Button</Text>
+            </TouchableOpacity> */}
         </View>
       </DrawerContentScrollView>
+
       <View style={{ padding: 20, borderTopWidth: 1, borderTopColor: '#ccc' }}>
         <TouchableOpacity onPress={() => clearAll()} style={{ paddingVertical: 15 }}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -44,7 +56,7 @@ const CustomDrawer = (props) => {
                 marginLeft: 5,
               }}
             >
-              Version 5.3.0
+              Version 7.2.0
             </Text>
           </View>
         </TouchableOpacity>
