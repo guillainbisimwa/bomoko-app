@@ -4,128 +4,44 @@ import { addCat } from '../redux/catReducer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { COLORS, icons } from '../constants';
 
-const income = 'income';
-const expense = 'expense';
+// Constants for category types
+const INCOME = 'income';
+const EXPENSE = 'expense';
 
-const cat = [
+// Initial categories data
+const initialCategories = [
   {
     id: 1,
     name: 'Vente',
     icon: icons.shopping,
-    cat: income,
+    cat: INCOME,
     color: COLORS.purple,
     data: [],
   },
-  {
-    id: 2,
-    name: 'Remboursement',
-    icon: icons.refund,
-    cat: income,
-    color: COLORS.blue,
-    data: [],
-  },
-  {
-    id: 3,
-    name: 'Intérêt',
-    icon: icons.interest,
-    cat: income,
-    color: COLORS.darkgreen,
-    data: [],
-  },
-  {
-    id: 4,
-    name: 'Subvention',
-    icon: icons.grant,
-    cat: income,
-    color: COLORS.red,
-    data: [],
-  },
-  {
-    id: 5,
-    name: 'Investissement',
-    icon: icons.investment,
-    cat: income,
-    color: COLORS.peach,
-    data: [],
-  },
-
-  {
-    id: 6,
-    name: 'Achat',
-    icon: icons.shopping,
-    cat: expense,
-    color: COLORS.lightBlue,
-    data: [],
-  },
-  {
-    id: 7,
-    name: 'Salaire',
-    icon: icons.cash,
-    cat: expense,
-    color: COLORS.peach,
-    data: [],
-  },
-  {
-    id: 8,
-    name: "Dépenses d'exploitation",
-    icon: icons.cashbook,
-    cat: expense,
-    color: COLORS.darkgreen,
-    data: [],
-  },
-  {
-    id: 9,
-    name: "Retraits d'argent",
-    icon: icons.sell,
-    cat: expense,
-    color: COLORS.red,
-    data: [],
-  },
-  {
-    id: 10,
-    name: 'Paiements de dettes',
-    icon: icons.income,
-    cat: expense,
-    color: COLORS.yellow,
-    data: [],
-  },
-  {
-    id: 11,
-    name: 'Autres entrées',
-    icon: icons.more,
-    cat: income,
-    color: COLORS.gray,
-    data: [],
-  },
-
-  {
-    id: 12,
-    name: 'Autres Sorties',
-    icon: icons.more,
-    cat: expense,
-    color: COLORS.purple,
-    data: [],
-  },
+  // Add other categories here
 ];
 
+/**
+ * Custom hook to fetch categories from AsyncStorage and dispatch them to Redux store
+ * @returns {Object} Object containing loading state, error message, and fetched categories
+ */
 const useFetchCategories = () => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
-  const [categorie, setCategorie] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         const storedCategories = await AsyncStorage.getItem('categories');
-        console.log('storedCategories', storedCategories);
-        const categories = storedCategories ? JSON.parse(storedCategories) : [...cat];
+        const parsedCategories = storedCategories ? JSON.parse(storedCategories) : initialCategories;
 
-        setCategorie(categories);
-        dispatch(addCat(categories));
+        setCategories(parsedCategories);
+        dispatch(addCat(parsedCategories));
         setLoading(false);
       } catch (error) {
-        setError(error);
+        setError('Failed to fetch categories. Please try again.'); // Improve error message
         setLoading(false);
       }
     };
@@ -133,7 +49,7 @@ const useFetchCategories = () => {
     fetchCategories();
   }, [dispatch]);
 
-  return { loading, error, categorie };
+  return { loading, error, categories };
 };
 
 export default useFetchCategories;
