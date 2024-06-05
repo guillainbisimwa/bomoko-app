@@ -17,6 +17,8 @@ import { SafeAreaView } from 'react-native';
 import { Block, Text } from '../../../components';
 import axios from 'axios';
 import { GenerateOTPCode } from '../../../constants/generateReferenceCode';
+import { BASE_URL } from '../../../constants/utils';
+
 
 const { width, height } = Dimensions.get('window');
 
@@ -180,7 +182,7 @@ export const ForgetPassword = ({ navigation }) => {
 
   const getUserByMobile = async (mobileNumber) => {
     try {
-      const response = await axios.get(`https://bomoko-backend.onrender.com/auth/mobile/${encodeURIComponent(mobileNumber)}`);
+      const response = await axios.get(`${BASE_URL}auth/mobile/${encodeURIComponent(mobileNumber)}`);
       const userData = response.data;
 
       // Handle the user data or set state as needed

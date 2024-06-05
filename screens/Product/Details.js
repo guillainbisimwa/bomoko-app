@@ -36,6 +36,8 @@ import Transaction from '../CreanceDette/Transaction';
 import { FlatList } from 'react-native';
 import NetInfo from "@react-native-community/netinfo";
 import { useFocusEffect } from '@react-navigation/native';
+import { BASE_URL } from '../../constants/utils';
+
 
 const Details = ({ route, navigation }) => {
   const scrollX = useRef(new Animated.Value(0)).current;
@@ -255,7 +257,7 @@ const Details = ({ route, navigation }) => {
           return;
         }
 
-        fetch(`https://bomoko-backend.onrender.com/api/product/${route.params.food._id}`)
+        fetch(`${BASE_URL}api/product/${route.params.food._id}`)
           .then(response => response.json())
           .then(data => {
             setFoodDetails(data);
@@ -281,7 +283,7 @@ const Details = ({ route, navigation }) => {
   console.log('reloadScreen');
 
   // You can put your screen reload logic here
-  await fetch(`https://bomoko-backend.onrender.com/api/product/${route.params.food._id}`)
+  await fetch(`${BASE_URL}api/product/${route.params.food._id}`)
   .then(response => response.json())
   .then(data => {
     setFoodDetails(data);
@@ -2231,7 +2233,7 @@ export default Details;
 // useEffect(() => {
 //   const fetchData = async () => {
 //     try {
-//       const response = await fetch(`https://bomoko-backend.onrender.com/api/product/${route.params.food._id}`);
+//       const response = await fetch(`${BASE_URL}api/product/${route.params.food._id}`);
 //       const data = await response.json();
 //       setFoodDetails(data);
 

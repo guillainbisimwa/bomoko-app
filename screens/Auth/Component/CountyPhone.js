@@ -18,11 +18,12 @@ import { COLORS, SIZES } from "../../../constants";
 import axios from "axios";
 import { encode } from 'base-64'; // Import the encode function from base-64
 import qs from 'qs';
-import Config from "react-native-config";
+// import Config from "react-native-config";
 import Container, { Toast } from 'toastify-react-native';
 import NetInfo from "@react-native-community/netinfo";
 import { GenerateOTPCode } from "../../../constants/generateReferenceCode";
 
+import { BASE_URL } from '../../../constants/utils';
 
 
 const CountyPhone = ({ navigation }) => {
@@ -177,7 +178,7 @@ const CountyPhone = ({ navigation }) => {
         console.log("userData: ");
 
         try {
-            const response = await axios.get(`https://bomoko-backend.onrender.com/auth/mobile/${encodeURIComponent(mobileNumber)}`);
+            const response = await axios.get(`${BASE_URL}auth/mobile/${encodeURIComponent(mobileNumber)}`);
             const userData = response.data;
 
             // Handle the user data or set state as needed
