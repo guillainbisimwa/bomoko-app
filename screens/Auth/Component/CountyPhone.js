@@ -275,10 +275,10 @@ const CountyPhone = ({ navigation }) => {
                                             if (userData?.msg === "User not found!") {
                                                 // Toast.success('Numéro de téléphone correct', 'bottom')
                                                 // addNumberToTwillo();
-                                                // sendCode();
-                                                const otp = GenerateOTPCode();
+                                                sendCode();
+                                                // const otp = GenerateOTPCode();
 
-                                                await getToken(formattedValue, otp, userData);
+                                                //await getToken(formattedValue, otp, userData);
                                                 // await send(formattedValue, `Bonjour, bienvenue sur AFINTECH. Votre code de validation est ${otp}. www.afrintech.org`, otp,  userData);
             
                                                 // console.log('User data:', userData);
