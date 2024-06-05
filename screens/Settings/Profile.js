@@ -21,6 +21,7 @@ import { SceneMap, TabBar, TabView } from "react-native-tab-view";
 import Product_service from '../Product/Product_service';
 import NetInfo from "@react-native-community/netinfo";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { BASE_URL } from '../../constants/utils';
 
 
 const countByOwner = (products, type, id) => {
@@ -93,7 +94,7 @@ const Profile = ({ route, navigation }) => {
         return;
       }
 
-      fetch(`https://bomoko-backend.onrender.com/auth/${route.params.userId}`)
+      fetch(`${BASE_URL}auth/${route.params.userId}`)
         .then(response => response.json())
         .then(data => {
           setUserDetails(data);
@@ -103,7 +104,7 @@ const Profile = ({ route, navigation }) => {
     };
 
     const fetchProducts = () => {
-      fetch(`https://bomoko-backend.onrender.com/api/product`)
+      fetch(`${BASE_URL}api/product`)
         .then(response => response.json())
         .then(data => {
           setLoadingProd(false);

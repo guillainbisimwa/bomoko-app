@@ -24,6 +24,7 @@ import NetInfo from "@react-native-community/netinfo";
 import { GenerateOTPCode } from "../../../constants/generateReferenceCode";
 
 
+
 const CountyPhone = ({ navigation }) => {
     const [value, setValue] = useState("");
     const [formattedValue, setFormattedValue] = useState("");
