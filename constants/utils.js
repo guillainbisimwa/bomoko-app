@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// export const BASE_URL = 'https://bomoko-backend.onrender.com/';
-export const BASE_URL = 'https://bomoko-backend-production.up.railway.app/';
+export const BASE_URL = 'https://bomoko-backend.onrender.com/';
+// export const BASE_URL = 'https://bomoko-backend-production.up.railway.app/';
 
 export const checkAuth = async () => {
   try {
