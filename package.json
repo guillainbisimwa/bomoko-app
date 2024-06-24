@@ -70,7 +70,6 @@
     "react-redux": "^8.0.5",
     "redux-form": "^8.3.10",
     "toastify-react-native": "^3.1.0",
-    "twilio": "^5.2.0",
     "victory-native": "^36.6.10"
   },
   "devDependencies": {
