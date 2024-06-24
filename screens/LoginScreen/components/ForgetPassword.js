@@ -35,123 +35,25 @@ export const ForgetPassword = ({ navigation }) => {
   const [load, setLoad] = useState(false);
   const [tokenOrange, setTokenOrange] = useState('');
 
-    async function getToken(formattedValue, otp, userData) {
-
-        const tokenOrangeSms = process.env.TOKEN_ORANGE_SMS;
-
-        const credentials = tokenOrangeSms;
-        const url = 'https://api.orange.com/oauth/v3/token';
-
-        try {
-            const response = await axios.post(
-                url,
-                'grant_type=client_credentials',
-                {
-                    headers: {
-                        'Authorization': `Basic ${credentials}`,
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                }
-            );
-
-            const result = response.data;
-            console.log('Access Token:', result);
-            // setTokenOrange(result.access_token);
-            await send(formattedValue, `Bonjour, bienvenue sur AFINTECH. Votre code de validation est ${otp}. www.afrintech.org`, otp,  userData, result.access_token);
-
-        } catch (error) {
-            setLoad(false)
-            Toast.error('Service des SMS indisponible', 'bottom')
-            console.error('Error getting access token:', error);
-        }
-    }
-
-
-  async function send(receiver, message, otp, userData, token) {
-
-    const receiverAddress = "tel:" + receiver;
-    const senderAddress = "tel:+243891979018"; // Replace with your actual sender address
-    const credentials = `Bearer ${token}`; // Replace with your actual access token
-  
-    const headers = {
-      'Authorization': credentials,
-      'Content-Type': 'application/json'
-    };
-  
-    const body = {
-      outboundSMSMessageRequest: {
-        address: receiverAddress,
-        senderAddress: senderAddress,
-        senderName: "Afintech",
-        outboundSMSTextMessage: {
-          message: message
-        }
-      }
-    };
-  
-    const url = 'https://api.orange.com/smsmessaging/v1/outbound/' + encodeURIComponent(senderAddress) + '/requests';
-  
-    await axios.post(url, body, { headers: headers })
-      .then(response => {
-        if (response.status === 201) {
-            console.log();
-            console.log();
-            console.log('sent', response);
-            console.log();
-            console.log();
-            console.log('Verification request sent successfully:', response.data);
-
-            setLoad(false)
-
-            navigation.navigate('OTP', {
-                number: formattedValue,
-                type: 'reinit',
-                otpCode: otp,
-                userData
-            })
-
-        } else {
-            console.log();
-            console.log();
-
-            console.log('contractsB');
-            console.log();
-            console.log();
-
-        }
-      })
-      .catch(error => {
-
-        setLoad(false)
-        Toast.error('Service des SMS indisponible', 'bottom')
     
-        console.error('Error sending SMS:', error);
-        console.log();
-        console.log();
-
-        // res.render('contractsB');
-      });
-  }
-  
 
   const sendCode = async (userData) => {
 
     try {
-      console.log(process.env.ACCOUNT_SID);
-      console.log(process.env.AUTH_TOKEN);
+    
       const accountSid = process.env.ACCOUNT_SID;
       const authToken = process.env.AUTH_TOKEN;
       const serviceSid = process.env.SERVICE_SID
+      const sid = process.env.SERVICE_SID
       const otp = GenerateOTPCode();
-      //const customEndpoint = `https://verify.twilio.com/v2/Services/${serviceSid}/Verifications`;
-      const customEndpoint = 'https://api.twilio.com/2010-04-01/Accounts/ACbd9d562b452a2c62459200227432468e/Messages.json'
+      const customEndpoint = `${process.env.TWILIO}`;
+
 
       const requestData = {
         customFriendlyName: 'Afintech',
         To: formattedValue, // Add the phone number you want to send the verification code to
         Channel: 'sms',
-        From: '+13343758571',
-        // From: '+243891979018',
+        From: '+15067132942',
         Body: `Bonjour, bienvenue sur AFINTECH. Votre code de validation est ${otp}. www.afrintech.org`
       };
 
@@ -277,11 +179,8 @@ export const ForgetPassword = ({ navigation }) => {
                           Toast.warn('Numéro de téléphone non reconnu', 'bottom')
                         }
                         else {
-                          // sendCode(userData);
-                          const otp = GenerateOTPCode();
-
-                          await getToken(formattedValue, otp, userData);
-
+                          sendCode(userData);
+                         
 
                         }
                       })

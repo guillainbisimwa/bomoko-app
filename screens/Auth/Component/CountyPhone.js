@@ -32,49 +32,38 @@ const CountyPhone = ({ navigation }) => {
   const [load, setLoad] = useState(false);
   const phoneInput = useRef(null);
 
-
   const sendCode = async (userData) => {
     try {
-      console.log(process.env.ACCOUNT_SID);
-      console.log(process.env.AUTH_TOKEN);
-      const accountSid = process.env.ACCOUNT_SID;
+      // console.log(process.env.SID);
+      // console.log(process.env.AUTH_TOKEN);
+      const accountSid = process.env.SID;
       const authToken = process.env.AUTH_TOKEN;
       const serviceSid = process.env.SERVICE_SID;
+      const sid = process.env.SID;
       const otp = GenerateOTPCode();
-      // const customEndpoint = `https://verify.twilio.com/v2/Services/${serviceSid}/Verifications`;
-      // const customEndpoint = 'https://api.twilio.com/2010-04-01/Accounts/ACbd9d562b452a2c62459200227432468e/Messages.json'
 
-    //   const customEndpoint =
-    //     'https://api.twilio.com/2010-04-01/Accounts/AC426ceb48a38bd60749831ac18e790fec/Messages.json';
-    //   const requestData = {
-    //     customFriendlyName: 'Afintech',
-    //     To: formattedValue, // Add the phone number you want to send the verification code to
-    //     Channel: 'sms',
-    //     // From: '+13343758571',
-    //     // From: '+243891979018',
-    //     From: '+15067132942',
-    //     Body: `Bonjour, bienvenue sur AFINTECH. Votre code de validation est ${otp}. www.afrintech.org`,
-    //   };
+      const base64Credentials = encode(`${accountSid}:${authToken}`);
+      const authHeader = {
+        Authorization: `Basic ${base64Credentials}`,
+      };
 
-    //   const base64Credentials = encode(`${accountSid}:${authToken}`);
-    //   const authHeader = {
-    //     Authorization: `Basic ${base64Credentials}`,
-    //   };
+      const customEndpoint = `${process.env.TWILIO}`;
 
-    //   const response = await axios.post(customEndpoint, qs.stringify(requestData), {
-    //     headers: authHeader,
-    //   });
+      const requestData = {
+        customFriendlyName: 'Afintech',
+        To: formattedValue,
+        From: '+15067132942',
+        Body: `Bonjour, bienvenue sur AFINTECH. Votre code de validation est ${otp}. www.afrintech.org`
+      }
+    
+      // Define the URL
 
-      const client = require('twilio')(accountSid, authToken);
 
-      client.messages
-        .create({
-          body: `Bonjour, bienvenue sur AFINTECH. Votre code de validation est ${otp}. www.afrintech.org`,
-          to: formattedValue,
-          from: '+15067132942',
-        })
-        .then((message) => {
-          console.log(message.sid);
+      // Make the POST request using axios
+      axios.post(customEndpoint, qs.stringify(requestData), {  headers: authHeader, })
+        .then((response) => {
+          console.log('Message sent successfully:', response.data);
+          // console.log(response.sid);
           console.log('Verification request sent successfully:', response.data);
           setLoad(false);
           navigation.navigate('OTP', {
@@ -83,9 +72,10 @@ const CountyPhone = ({ navigation }) => {
             otpCode: otp,
             userData,
           });
+        })
+        .catch((error) => {
+          console.error('Error sending message:', error);
         });
-
-     
     } catch (error) {
       setLoad(false);
       console.error(
@@ -175,6 +165,7 @@ const CountyPhone = ({ navigation }) => {
                 setLoad(true);
                 Keyboard.dismiss();
 
+
                 console.log('valid', valid);
                 console.log('formattedValue', formattedValue);
                 console.log('value', value);
@@ -191,18 +182,11 @@ const CountyPhone = ({ navigation }) => {
                     return;
                   }
 
+
                   getUserByMobile(formattedValue)
                     .then(async (userData) => {
-                      sendCode();
-
                       if (userData?.msg === 'User not found!') {
-                        // Toast.success('Numéro de téléphone correct', 'bottom')
-                        // addNumberToTwillo();
-                        // sendCode();
-                        // const otp = GenerateOTPCode();
-                        //await getToken(formattedValue, otp, userData);
-                        // await send(formattedValue, `Bonjour, bienvenue sur AFINTECH. Votre code de validation est ${otp}. www.afrintech.org`, otp,  userData);
-                        // console.log('User data:', userData);
+                        sendCode();
                       } else {
                         Toast.warn('Numéro de téléphone existe', 'bottom');
                         console.log(userData, 'exists');
