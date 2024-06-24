@@ -40,7 +40,8 @@ export const ForgetPassword = ({ navigation }) => {
   const sendCode = async (userData) => {
 
     try {
-    
+      console.log(process.env.ACCOUNT_SID);
+      console.log(process.env.AUTH_TOKEN);
       const accountSid = process.env.ACCOUNT_SID;
       const authToken = process.env.AUTH_TOKEN;
       const serviceSid = process.env.SERVICE_SID
@@ -54,6 +55,7 @@ export const ForgetPassword = ({ navigation }) => {
         To: formattedValue, // Add the phone number you want to send the verification code to
         Channel: 'sms',
         From: '+15067132942',
+        // From: '+243891979018',
         Body: `Bonjour, bienvenue sur AFINTECH. Votre code de validation est ${otp}. www.afrintech.org`
       };
 
