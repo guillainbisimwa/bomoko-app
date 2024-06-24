@@ -55,7 +55,10 @@ export const ForgetPassword = ({ navigation }) => {
         To: formattedValue, // Add the phone number you want to send the verification code to
         Channel: 'sms',
         From: '+15067132942',
+<<<<<<< HEAD
         // From: '+243891979018',
+=======
+>>>>>>> 6485563 (Fix issues 2)
         Body: `Bonjour, bienvenue sur AFINTECH. Votre code de validation est ${otp}. www.afrintech.org`
       };
 

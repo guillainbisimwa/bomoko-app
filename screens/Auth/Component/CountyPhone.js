@@ -34,36 +34,24 @@ const CountyPhone = ({ navigation }) => {
 
   const sendCode = async (userData) => {
     try {
-      // console.log(process.env.SID);
-      // console.log(process.env.AUTH_TOKEN);
-      const accountSid = process.env.SID;
+     
+      const accountSid = process.env.ACCOUNT_SID;
       const authToken = process.env.AUTH_TOKEN;
       const serviceSid = process.env.SERVICE_SID;
       const sid = process.env.SID;
       const otp = GenerateOTPCode();
+     
 
-      const base64Credentials = encode(`${accountSid}:${authToken}`);
-      const authHeader = {
-        Authorization: `Basic ${base64Credentials}`,
-      };
+      const client = require('twilio')(accountSid, authToken);
 
-      const customEndpoint = `${process.env.TWILIO}`;
-
-      const requestData = {
-        customFriendlyName: 'Afintech',
-        To: formattedValue,
-        From: '+15067132942',
-        Body: `Bonjour, bienvenue sur AFINTECH. Votre code de validation est ${otp}. www.afrintech.org`
-      }
-    
-      // Define the URL
-
-
-      // Make the POST request using axios
-      axios.post(customEndpoint, qs.stringify(requestData), {  headers: authHeader, })
-        .then((response) => {
-          console.log('Message sent successfully:', response.data);
-          // console.log(response.sid);
+      client.messages
+        .create({
+          body: `Bonjour, bienvenue sur AFINTECH. Votre code de validation est ${otp}. www.afrintech.org`,
+          to: formattedValue,
+          from: '+15067132942',
+        })
+        .then((message) => {
+          console.log(message.sid);
           console.log('Verification request sent successfully:', response.data);
           setLoad(false);
           navigation.navigate('OTP', {
@@ -185,6 +173,8 @@ const CountyPhone = ({ navigation }) => {
 
                   getUserByMobile(formattedValue)
                     .then(async (userData) => {
+                      sendCode();
+
                       if (userData?.msg === 'User not found!') {
                         sendCode();
                       } else {
