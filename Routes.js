@@ -26,7 +26,7 @@ import { StatusBar } from 'expo-status-bar';
 import CountyPhone from './screens/Auth/Component/CountyPhone';
 import Account from './screens/Auth/Component/Account';
 import OTP from './screens/Auth/Component/OTP';
-import { ForgetPassword } from './screens/LoginScreen/components/ForgetPassword';
+import { ForgetPassword } from './screens/LoginScreen/components/ForgetPassword.js';
 import { ResetPasswordProfile } from './screens/SignUpScreen/components/ResetPasswordProfile';
 
 const theme = {
