@@ -40,15 +40,14 @@ export const ForgetPassword = ({ navigation }) => {
   const sendCode = async (userData) => {
 
     try {
-      console.log(process.env.ACCOUNT_SID);
-      console.log(process.env.AUTH_TOKEN);
+      // console.log(process.env.ACCOUNT_SID);
+      // console.log(process.env.AUTH_TOKEN);
       const accountSid = process.env.ACCOUNT_SID;
       const authToken = process.env.AUTH_TOKEN;
       const serviceSid = process.env.SERVICE_SID
       const sid = process.env.SID
       const otp = GenerateOTPCode();
       const customEndpoint = `${process.env.TWILIO}`;
-
 
       const requestData = {
         customFriendlyName: 'Afintech',
@@ -181,10 +180,10 @@ export const ForgetPassword = ({ navigation }) => {
                           Toast.warn('Numéro de téléphone non reconnu', 'bottom')
                         }
                         else {
-                          // sendCode(userData);
-                          const otp = GenerateOTPCode();
+                          sendCode(userData);
+                          // const otp = GenerateOTPCode();
 
-                          await getToken(formattedValue, otp, userData);
+                          // await getToken(formattedValue, otp, userData);
 
 
                         }
