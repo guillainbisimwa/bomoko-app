@@ -50,9 +50,9 @@ const CountyPhone = ({ navigation }) => {
       const customEndpoint = `${process.env.TWILIO}`;
 
       const requestData = {
-        customFriendlyName: 'Afintech',
+        // customFriendlyName: 'Afintech',
         To: formattedValue,
-        From: '+15067132942',
+        From: 'Afintech',
         Body: `Bonjour, bienvenue sur AFINTECH. Votre code de validation est ${otp}. www.afrintech.org`
       }
     

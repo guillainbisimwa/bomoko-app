@@ -133,6 +133,13 @@ const AddProduct = ({route, navigation}) => {
           endDate: `${range.endDate}`,
           owner: owner,
           tauxInt: tauxInt !== null ? parseInt(tauxInt) : 0,
+          // statusVisibility  ["HIDDEN","PUBLIC"],
+          // typeInvestment: { type: String, enum: ["INVESTISSEMENT", "CREDIT", "DON"] },
+          // nbrPart:  {
+          //   type: Number,
+          //   default: 100,
+          // },
+
         }));
       } else {
         // Handle the case where not all required fields are filled

@@ -50,11 +50,11 @@ export const ForgetPassword = ({ navigation }) => {
       const customEndpoint = `${process.env.TWILIO}`;
 
       const requestData = {
-        customFriendlyName: 'Afintech',
+        // customFriendlyName: 'Afintech',
         To: formattedValue, // Add the phone number you want to send the verification code to
-        Channel: 'sms',
-        From: '+15067132942',
-        // From: '+243891979018',
+        // Channel: 'sms',
+        // From: '+15067132942',
+        From: 'Afintech',
         Body: `Bonjour, bienvenue sur AFINTECH. Votre code de validation est ${otp}. www.afrintech.org`
       };
 
