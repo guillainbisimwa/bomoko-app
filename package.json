@@ -45,7 +45,7 @@
     "react-native-btr": "^2.2.0",
     "react-native-config": "^1.5.1",
     "react-native-country-picker-modal": "^2.0.0",
-    "react-native-document-picker": "8.2.1",
+    "react-native-document-picker": "9.1.1",
     "react-native-dotenv": "^3.4.9",
     "react-native-file-viewer": "^2.1.5",
     "react-native-gesture-handler": "2.9.0",
